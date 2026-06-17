@@ -1,0 +1,8 @@
+Model,n_layers,skip_cnn,use_se,use_gated_residual,use_mlp_head,use_llrd,Mean (1-71)
+Exp-00,4,True,True,True,True,True,0.3564
+Exp-06,4,True,True,True,True,True,0.3355
+Exp-04,4,True,True,False,True,True,0.3352
+Exp-03,4,True,True,True,False,True,0.3338
+Exp-02,4,True,False,True,True,True,0.3292
+Exp-05,4,True,True,True,True,False,0.3039
+Exp-01,4,True,True,True,True,True,0.2112

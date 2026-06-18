@@ -1,0 +1,13 @@
+dataset,model,run_type,epochs_requested,epochs_completed_mean,best_epoch_mean,n_histories
+weissbart_tf64,FCNN,subject_specific_baseline,100.0,13.307692307692308,2.3076923076923075,13
+weissbart_tf64,CNN,subject_specific_baseline,92.6923076923077,15.384615384615385,4.923076923076923,13
+weissbart_tf64,EEGNet,subject_specific_baseline,100.0,29.153846153846153,18.153846153846153,13
+etard_tf64,FCNN,subject_specific_baseline,100.0,13.65,2.65,20
+etard_tf64,CNN,subject_specific_baseline,100.0,16.45,5.45,20
+etard_tf64,EEGNet,subject_specific_baseline,100.0,28.65,17.65,20
+hugo_sample_tf64,ADT-exact,pooled_exact_port,100.0,22.0,11.0,1
+hugo_sample_tf64,VLAAI-exact,pooled_exact_port,100.0,17.0,6.0,1
+weissbart_tf64,ADT-exact,pooled_exact_port,100.0,25.0,14.0,1
+weissbart_tf64,VLAAI-exact,pooled_exact_port,100.0,17.0,6.0,1
+etard_tf64,ADT-exact,pooled_exact_port,100.0,16.0,5.0,1
+etard_tf64,VLAAI-exact,pooled_exact_port,100.0,16.0,5.0,1

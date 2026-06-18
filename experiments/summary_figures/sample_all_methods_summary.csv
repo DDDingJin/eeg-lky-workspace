@@ -1,0 +1,12 @@
+dataset,model_id,display_name,group,mean_metric,n_subjects,metric_name,run_scope,training_budget,source
+hugo_sample_tf64,ridge,Ridge,Linear / correlation baseline,0.1458517387848564,13,test_pearson,full_subject,existing_local_run,E:\decode\experiments\summary_figures\model_mean_overview_full_subjects.csv
+hugo_sample_tf64,avgdec_ridge,AvgDec-Ridge,Linear / correlation baseline,0.1219946268516091,13,test_pearson,full_subject,existing_local_run,E:\decode\experiments\summary_figures\model_mean_overview_full_subjects.csv
+hugo_sample_tf64,avgcorr_ridge,AvgCorr-Ridge,Linear / correlation baseline,0.1449313192413403,13,test_pearson,full_subject,existing_local_run,E:\decode\experiments\summary_figures\model_mean_overview_full_subjects.csv
+hugo_sample_tf64,cca_recon,CCA,Linear / correlation baseline,0.1139376730427752,13,test_recon_corr,full_subject,existing_local_run,E:\decode\experiments\summary_figures\model_mean_overview_full_subjects.csv
+hugo_sample_tf64,fcnn,FCNN,Neural benchmark,0.2058497890405762,13,test_pearson,full_subject,existing_local_run,E:\decode\experiments\summary_figures\model_mean_overview_full_subjects.csv
+hugo_sample_tf64,cnn,CNN,Neural benchmark,0.2176293768084175,13,test_pearson,full_subject,existing_local_run,E:\decode\experiments\summary_figures\model_mean_overview_full_subjects.csv
+hugo_sample_tf64,eegnet,EEGNet,Neural benchmark,0.2171225347551694,13,test_pearson,full_subject,existing_local_run,E:\decode\experiments\summary_figures\model_mean_overview_full_subjects.csv
+hugo_sample_tf64,vlaai_lite,VLAAI-lite,Approximate deep port,0.1176625584509253,13,test_pearson,full_subject,existing_local_run,E:\decode\experiments\summary_figures\model_mean_overview_full_subjects.csv
+hugo_sample_tf64,adt_lite,ADT-lite,Approximate deep port,0.2119865136637385,13,test_pearson,full_subject,existing_local_run,E:\decode\experiments\summary_figures\model_mean_overview_full_subjects.csv
+hugo_sample_tf64,adt_exact,ADT-exact,Exact structural port,0.14465793564410045,13,pearson_metric,full_subject,"epochs=100,early_stop",E:\decode\experiments\adt_exact_reference\hugo_sample_tf64_all_e100\summary.json
+hugo_sample_tf64,vlaai_exact,VLAAI-exact,Exact structural port,0.1477499904970351,13,pearson_metric,full_subject,"epochs=100,early_stop",E:\decode\experiments\vlaai_exact_reference\hugo_sample_tf64_all_e100\summary.json

@@ -1,0 +1,198 @@
+# DECODE Audit Branch
+
+This branch is a review package for the current auditory EEG decoding benchmark workspace.
+
+It is not the full project snapshot. It is a compact audit bundle intended to let an external reviewer judge:
+
+- whether the current reproduction workflow is methodologically reasonable
+- whether the current implementations and results look internally consistent
+- what should be standardized or improved next before claiming a paper-grade benchmark
+
+## Scope
+
+Current focus:
+
+- auditory EEG
+- speech envelope reconstruction / related decoding
+- baseline reproduction and benchmark unification
+
+Current non-goals of this branch:
+
+- storing raw datasets
+- storing full training artifacts
+- storing environment snapshots
+- serving as the final public benchmark release
+
+## What Is Included
+
+This branch currently exposes four kinds of material.
+
+### 1. Review documents
+
+- `docs/CURRENT_EVALUATION_STATUS.md`
+- `docs/reproduction_audit_note.tex`
+
+These explain:
+
+- which datasets are already in the unified pipeline
+- which methods are currently comparable
+- how train/val/test is being done
+- what is already methodologically correct
+- what is still not fully standardized
+
+### 2. Result tables and figures
+
+- `experiments/summary_figures/unified_reference_main_summary.csv`
+- `experiments/summary_figures/unified_reference_main_overview.png`
+- `experiments/summary_figures/sample_all_methods_summary.csv`
+- `experiments/summary_figures/sample_all_methods_overview.png`
+- `experiments/summary_figures/reproduction_audit_training_curves.csv`
+- `experiments/summary_figures/reproduction_audit_training_curves.png`
+- `experiments/summary_figures/reproduction_audit_model_protocols.csv`
+- `experiments/summary_figures/reproduction_audit_run_metadata.csv`
+
+These cover:
+
+- unified benchmark means on current datasets
+- development-sample method panorama
+- validation curves for audit
+- protocol metadata for each model family
+- run metadata such as requested epochs, completed epochs, and best-validation epoch
+
+### 3. Core implementation files
+
+- `src/repro/reference_baselines.py`
+- `src/repro/adt_exact.py`
+- `src/repro/vlaai_exact.py`
+
+These are the most important code files for judging whether the current benchmark logic is plausible.
+
+### 4. Audit package generator
+
+- `scripts/generate_reproduction_audit_package.py`
+
+This script regenerates the current audit tables, curves, and LaTeX note from local experiment outputs.
+
+## Current Benchmark Picture
+
+At the moment, the most important distinction is:
+
+- subject-specific baselines:
+  - Ridge
+  - CCA
+  - FCNN
+  - CNN
+  - EEGNet
+- pooled exact structural ports:
+  - ADT-exact
+  - VLAAI-exact
+
+This means the current main comparison is informative, but not yet a perfectly apples-to-apples final leaderboard.
+
+That caveat is explicit and intentional in the audit materials.
+
+## Datasets Currently Reflected In This Branch
+
+The unified pipeline currently covers:
+
+- `hugo_sample_tf64`
+- `weissbart_tf64`
+- `etard_tf64`
+
+Interpretation:
+
+- `hugo_sample_tf64` is mainly a development / smoke-test style dataset
+- `weissbart_tf64` and `etard_tf64` are the current more serious reconstruction benchmarks
+
+Datasets downloaded or planned but not yet fully unified into the same benchmark adapter are outside the scope of this branch.
+
+## Recommended Reading Order
+
+If you are reviewing this branch, read in this order:
+
+1. `docs/CURRENT_EVALUATION_STATUS.md`
+2. `docs/reproduction_audit_note.tex`
+3. `experiments/summary_figures/unified_reference_main_summary.csv`
+4. `experiments/summary_figures/unified_reference_main_overview.png`
+5. `experiments/summary_figures/reproduction_audit_training_curves.png`
+6. `experiments/summary_figures/reproduction_audit_model_protocols.csv`
+7. `experiments/summary_figures/reproduction_audit_run_metadata.csv`
+8. `src/repro/reference_baselines.py`
+9. `src/repro/adt_exact.py`
+10. `src/repro/vlaai_exact.py`
+
+## What A Reviewer Should Judge
+
+The most useful feedback at this stage is not "is the score high enough?"
+
+The most useful feedback is:
+
+1. Is the current workflow structurally reasonable for an auditory EEG benchmark?
+2. Are any of the reported results obviously suspicious or internally inconsistent?
+3. Are disagreements between methods more likely to come from implementation bugs, protocol mismatch, or genuine task difficulty?
+4. What should be standardized next to turn this into a stronger benchmark paper?
+
+## Known Caveats
+
+The current branch is intentionally transparent about the main limitations:
+
+- subject-specific baselines and pooled exact ports are not trained under identical regimes
+- scalar-sample reconstruction baselines and sequence-to-sequence deep models do not optimize exactly the same target
+- some sample-dataset runs are development-grade rather than final article-grade runs
+- more datasets still need to be integrated into the same adapter and evaluation layer
+
+## What Is Not Included
+
+This branch does not include:
+
+- raw EEG / stimulus data
+- large HDF5 files
+- downloaded archives
+- environment directories
+- temporary caches
+- all local exploratory scripts and outputs
+
+That is deliberate. The goal here is reviewability, not full archival completeness.
+
+## Suggested External Review Prompt
+
+You can send reviewers the branch link together with a prompt like this:
+
+```text
+Please review this branch as a methodological audit package for an auditory EEG decoding benchmark workspace.
+
+I want feedback on:
+1. whether the current reproduction / benchmark workflow is structurally reasonable;
+2. whether the current implementations and results look internally consistent;
+3. which parts are already acceptable as baseline benchmark code;
+4. which parts should be standardized or redesigned next before claiming a paper-grade benchmark.
+
+Please prioritize the following files:
+- docs/CURRENT_EVALUATION_STATUS.md
+- docs/reproduction_audit_note.tex
+- experiments/summary_figures/unified_reference_main_summary.csv
+- experiments/summary_figures/unified_reference_main_overview.png
+- experiments/summary_figures/reproduction_audit_training_curves.png
+- experiments/summary_figures/reproduction_audit_model_protocols.csv
+- experiments/summary_figures/reproduction_audit_run_metadata.csv
+- src/repro/reference_baselines.py
+- src/repro/adt_exact.py
+- src/repro/vlaai_exact.py
+
+Please distinguish clearly between:
+- possible implementation bugs
+- protocol mismatch / unfair comparison issues
+- expected performance differences caused by task difficulty or model family
+
+I care more about whether the workflow and comparison logic are correct than about whether the current scores are already optimal.
+```
+
+## Branch Intent
+
+This branch should be read as:
+
+- a serious intermediate benchmark audit
+- not yet the final benchmark release
+- not yet the final paper table
+
+It exists to make the current state inspectable and criticizable before more datasets and methods are added.

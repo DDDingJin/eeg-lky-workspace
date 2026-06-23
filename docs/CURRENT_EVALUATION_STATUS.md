@@ -1,6 +1,6 @@
 # Current Evaluation Status
 
-Last updated: 2026-06-17
+Last updated: 2026-06-23
 
 This note records:
 
@@ -59,12 +59,21 @@ The following methods are currently integrated into the unified `reference_split
 
 - `adt_exact`
 - `vlaai_exact`
+- `happyquokka_gcon`
 
 These can now run on:
 
 - `hugo_sample_tf64`
 - `weissbart_tf64`
 - `etard_tf64`
+
+Important:
+
+- `happyquokka_gcon` is not a plain pooled model
+- the current run uses `g_con=True`
+- this means subject identity is provided as an auxiliary conditioner
+- this is acceptable for the current within-subject split protocol
+- it should be reported separately from non-conditioned baselines
 
 ## 3. Current Results
 
@@ -87,6 +96,7 @@ Current mean full-subject results:
 - `VLAAI-lite`: `0.1177`
 - `ADT-exact`: `0.1447`
 - `VLAAI-exact`: `0.1477`
+- `HappyQuokka (g-con)`: `0.1105`
 
 Associated figure:
 
@@ -108,6 +118,36 @@ Current `100`-epoch-requested, early-stopped runs:
   - `hugo_sample_tf64`: `0.1477`
   - `weissbart_tf64`: `0.1389`
   - `etard_tf64`: `0.1128`
+- `HappyQuokka (g-con)`
+  - `hugo_sample_tf64` is still a `20`-epoch fixed-budget reference run
+  - `hugo_sample_tf64`: `0.1105`
+  - `weissbart_tf64`: `0.1577` using the new `100`-epoch run
+  - `etard_tf64`: `0.1287` using the new `100`-epoch run
+
+### 3.3 HappyQuokka conditioning check on article-oriented datasets
+
+Source files:
+
+- [happyquokka_conditioning_summary.csv](/E:/decode/experiments/summary_figures/happyquokka_conditioning_summary.csv)
+- [happyquokka_conditioning_overview.png](/E:/decode/experiments/summary_figures/happyquokka_conditioning_overview.png)
+- [happyquokka_training_curves.png](/E:/decode/experiments/summary_figures/happyquokka_training_curves.png)
+
+Current `100`-epoch runs:
+
+- `weissbart_tf64`
+  - `g_con=True`: `0.1577`
+  - `g_con=False`: `0.1434`
+- `etard_tf64`
+  - `g_con=True`: `0.1287`
+  - `g_con=False`: `0.1118`
+
+Interpretation:
+
+- the model benefits from subject conditioning on both datasets
+- the gain is about `+0.0143` on `weissbart_tf64`
+- the gain is about `+0.0169` on `etard_tf64`
+- for a strict cross-method comparison, `g_con=False` is the fairer row to place next to non-conditioned baselines
+- for a within-subject system comparison, `g_con=True` is a valid and stronger configuration
 
 Associated figure:
 
@@ -115,18 +155,19 @@ Associated figure:
 
 ## 4. How The Current Training Procedure Works
 
-For the exact structural ports, the current procedure is:
+For the exact structural ports and current HappyQuokka reference runs, the current procedure is:
 
 1. load `train` split recordings
 2. generate sliding windows dynamically from `train`
 3. train one epoch on those windows
 4. evaluate on `val`
 5. keep the best checkpoint according to validation loss / validation Pearson metric
-6. continue training until either:
+6. for `adt_exact` and `vlaai_exact`, continue until:
    - `epochs_requested` is reached, or
    - early stopping is triggered after `patience` stale validation epochs
-7. restore the best validation checkpoint
-8. run final evaluation once on the `test` split
+7. for `happyquokka_gcon`, continue for the fixed requested epoch budget
+8. restore the best validation checkpoint
+9. run final evaluation once on the `test` split
 
 This means:
 
@@ -169,6 +210,11 @@ The current code should later be improved to also store:
 - `stopped_early`
 - `selection_metric`
 
+For `happyquokka_gcon`, `epochs_completed` is already stored, and the current benchmark now also includes:
+
+- a `100`-epoch conditioned run
+- a matched `100`-epoch non-conditioned comparison run
+
 ## 6. Is This Evaluation Procedure Reasonable?
 
 ### 6.1 What is already correct
@@ -186,6 +232,7 @@ The following issues remain:
 
 - not all baseline models are yet evaluated on the same dataset family
 - sample-only methods and unified-dataset exact ports are still partially separated
+- subject-conditioned and non-conditioned deep models are now separated for `HappyQuokka`, but not yet for the whole model family
 - subject-independent evaluation is not yet standardized
 - external generalization datasets are not yet in the same pipeline
 - exact-port logs do not currently expose `epochs_completed`, which makes the stopping behavior harder to audit
@@ -220,6 +267,7 @@ The next more standardized evaluation layer should look like this:
    - `eegnet`
    - `adt_exact`
    - `vlaai_exact`
+   - `happyquokka_gcon`
 3. keep one fixed split rule
 4. keep one fixed metric definition
 5. keep one fixed checkpoint-selection rule
@@ -234,6 +282,7 @@ The next more standardized evaluation layer should look like this:
 Right now:
 
 - the current exact-port evaluation logic is not fundamentally wrong
+- the current `HappyQuokka` integration is operational and GPU-trainable
 - the current results are useful
 - but the current benchmark is still not fully standardized across methods
 

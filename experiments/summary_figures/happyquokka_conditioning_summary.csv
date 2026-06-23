@@ -1,0 +1,5 @@
+dataset,label,g_con,epochs_requested,epochs_completed,best_epoch,best_val_metric,mean_test_metric,std_test_metric,n_subjects,source
+weissbart_tf64,HappyQuokka g_con=True,True,100,100,90,0.17779912068389164,0.15765976905822754,0.05383545532822609,13,E:\decode\experiments\happyquokka_reference\weissbart_tf64_e100_gcon\summary.json
+weissbart_tf64,HappyQuokka g_con=False,False,100,100,99,0.16327869649282478,0.14342540502548218,0.044194892048835754,13,E:\decode\experiments\happyquokka_reference\weissbart_tf64_e100_nogcon\summary.json
+etard_tf64,HappyQuokka g_con=True,True,100,100,94,0.1418153626879454,0.12868241965770721,0.05073249340057373,20,E:\decode\experiments\happyquokka_reference\etard_tf64_e100_gcon\summary.json
+etard_tf64,HappyQuokka g_con=False,False,100,100,86,0.11882644142604347,0.11179657280445099,0.05113265663385391,20,E:\decode\experiments\happyquokka_reference\etard_tf64_e100_nogcon\summary.json

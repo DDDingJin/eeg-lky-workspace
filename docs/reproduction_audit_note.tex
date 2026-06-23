@@ -8,7 +8,7 @@
 \usepackage{array}
 
 \title{Current Auditory EEG Reproduction Audit Note}
-\date{2026-06-18}
+\date{2026-06-23}
 
 \begin{document}
 \maketitle
@@ -29,6 +29,7 @@ Therefore, a short result table is not sufficient. A reviewer needs enough detai
 \item an optimizer or checkpoint-selection issue
 \item a data split mismatch
 \item a non-comparable training regime
+\item subject conditioning that is present in one model but absent in another
 \end{itemize}
 
 \section*{Evaluation Setup}
@@ -53,6 +54,19 @@ The current main table should not yet be interpreted as a perfect apples-to-appl
 \begin{itemize}
 \item \texttt{Ridge}, \texttt{CCA}, \texttt{FCNN}, \texttt{CNN}, and \texttt{EEGNet} are currently run as \emph{subject-specific} models
 \item \texttt{ADT-exact} and \texttt{VLAAI-exact} are currently run as \emph{pooled multi-subject} models on the training and validation windows, followed by subject-wise test reporting
+\item \texttt{HappyQuokka} now has both a \texttt{g\_con=True} subject-conditioned version and a matched \texttt{g\_con=False} non-conditioned version
+\end{itemize}
+
+\paragraph{What \texttt{g\_con} means.}
+In the upstream \texttt{HappyQuokka} implementation, \texttt{g\_con} enables a global conditioner based on subject identity.
+\begin{itemize}
+\item \texttt{g\_con=True}: the network receives EEG input plus an explicit subject identity embedding
+\item \texttt{g\_con=False}: the network receives EEG input only
+\end{itemize}
+This distinction matters methodologically:
+\begin{itemize}
+\item \texttt{g\_con=True} is a stronger within-subject configuration
+\item \texttt{g\_con=False} is the fairer row for comparison against baselines that do not receive subject identity
 \end{itemize}
 
 \section*{Implementation Summary}
@@ -72,6 +86,8 @@ ADT exact model & src/repro/adt\_exact.py & exact structural port, pooled sequen
 VLAAI exact model & src/repro/vlaai\_exact.py & exact structural port, pooled sequence training, subject-wise test report \\
 exact batch runner & scripts/run\_reference\_exact\_suite.py & standardized launcher for exact reference runs \\
 archive summary builder & scripts/archive\_benchmark\_results.py & aggregates method outputs into comparison CSV and publication-style figures \\
+HappyQuokka adapter & src/repro/happyquokka\_reference.py & official PyTorch HappyQuokka wrapper on unified reference splits, with explicit \texttt{g\_con} control \\
+HappyQuokka summary builder & scripts/summarize\_happyquokka\_runs.py & produces paired conditioned/non-conditioned tables and training-curve figures \\
 \bottomrule
 \end{longtable}
 
@@ -92,6 +108,8 @@ unified\_baseline & CNN & upstream mldecoders CNN & 64 x 50 window & scalar enve
 unified\_baseline & EEGNet & EEGNet-style regressor & 64 x 50 window & scalar envelope sample & window 50, target at last sample & NAdam lr=1e-3 wd=1e-4 & best validation correlation, patience=10 & subject-specific & temporal\_filters=8, depth\_multiplier=2, separable\_filters=16, dropout=0.25 \\
 exact\_port & ADT-exact & sequence-to-sequence structural port & 320 x 64 window & 320 x 1 envelope sequence & window 320, hop 64 & Adam lr=1e-3 + ReduceLROnPlateau & best pooled validation Pearson checkpoint, patience=10 & pooled multi-subject train/val, subject-wise test report & spatio-temporal conv frontend + anti-causal transformer decoder \\
 exact\_port & VLAAI-exact & sequence-to-sequence structural port & 320 x 64 window & 320 x 1 envelope sequence & window 320, hop 64 & Adam lr=1e-3 + ReduceLROnPlateau & best pooled validation Pearson checkpoint, patience=10 & pooled multi-subject train/val, subject-wise test report & shared extractor/output-context modules, 4 blocks \\
+conditioned\_deep & HappyQuokka \texttt{g\_con=True} & official PyTorch reference wrapper & 640 x 64 window & 640 x 1 envelope sequence & window 640, random train crops & Adam lr=5e-4 + StepLR & best validation Pearson checkpoint within fixed 100-epoch budget & pooled multi-subject train/val, subject-wise test report & subject identity embedding is provided as a global conditioner \\
+conditioned\_deep & HappyQuokka \texttt{g\_con=False} & official PyTorch reference wrapper & 640 x 64 window & 640 x 1 envelope sequence & window 640, random train crops & Adam lr=5e-4 + StepLR & best validation Pearson checkpoint within fixed 100-epoch budget & pooled multi-subject train/val, subject-wise test report & same network family, but without subject identity input \\
 \bottomrule
 \end{longtable}
 
@@ -117,6 +135,10 @@ weissbart\_tf64 & ADT-exact & pooled\_exact\_port & 100.0 & 25.0 & 14.0 & 1 \\
 weissbart\_tf64 & VLAAI-exact & pooled\_exact\_port & 100.0 & 17.0 & 6.0 & 1 \\
 etard\_tf64 & ADT-exact & pooled\_exact\_port & 100.0 & 16.0 & 5.0 & 1 \\
 etard\_tf64 & VLAAI-exact & pooled\_exact\_port & 100.0 & 16.0 & 5.0 & 1 \\
+weissbart\_tf64 & HappyQuokka \texttt{g\_con=True} & conditioned\_reference & 100.0 & 100.0 & 90.0 & 1 \\
+weissbart\_tf64 & HappyQuokka \texttt{g\_con=False} & nonconditioned\_reference & 100.0 & 100.0 & 99.0 & 1 \\
+etard\_tf64 & HappyQuokka \texttt{g\_con=True} & conditioned\_reference & 100.0 & 100.0 & 94.0 & 1 \\
+etard\_tf64 & HappyQuokka \texttt{g\_con=False} & nonconditioned\_reference & 100.0 & 100.0 & 86.0 & 1 \\
 \bottomrule
 \end{longtable}
 
@@ -125,6 +147,7 @@ The following files were generated to support review:
 \begin{itemize}
 \item \texttt{experiments/summary\_figures/reproduction\_audit\_model\_protocols.csv}
 \item \texttt{experiments/summary\_figures/reproduction\_audit\_run\_metadata.csv}
+\item \texttt{experiments/summary\_figures/happyquokka\_conditioning\_summary.csv}
 \end{itemize}
 The first CSV describes the intended implementation and training mode for each model family. The second CSV describes how many epochs were requested, how many epochs were actually completed, and whether the history comes from a subject-specific average or a single pooled run.
 
@@ -262,6 +285,7 @@ At the current stage, the results support the following:
 \item \texttt{VLAAI-exact} is currently stronger than \texttt{ADT-exact} on both Weissbart and Etard
 \item \texttt{EEGNet} is a strong baseline on the current reconstruction setup
 \item \texttt{Ridge} remains competitive and should not be treated as a trivial baseline
+\item \texttt{HappyQuokka} becomes materially stronger when subject conditioning is enabled
 \end{itemize}
 
 \paragraph{What should not be over-claimed.}
@@ -277,6 +301,7 @@ This benchmark is sensitive to details that are easy to overlook:
 \begin{itemize}
 \item whether the prediction target is a single center/last-sample scalar or a full output sequence
 \item whether training is subject-specific or pooled across participants
+\item whether subject identity is available to one model family but not to the others
 \item whether validation selects alpha, checkpoint epoch, or both
 \item whether the metric is reconstruction correlation, canonical correlation, or match/mismatch accuracy
 \item whether window length and hop length match the original implementation
@@ -315,12 +340,16 @@ The most important questions are likely to be:
 \item \texttt{docs/CURRENT\_EVALUATION\_STATUS.md}
 \item \texttt{experiments/summary\_figures/reproduction\_audit\_model\_protocols.csv}
 \item \texttt{experiments/summary\_figures/reproduction\_audit\_run\_metadata.csv}
+\item \texttt{experiments/summary\_figures/happyquokka\_conditioning\_summary.csv}
+\item \texttt{experiments/summary\_figures/happyquokka\_conditioning\_overview.png}
+\item \texttt{experiments/summary\_figures/happyquokka\_training\_curves.png}
 \item \texttt{experiments/summary\_figures/unified\_reference\_main\_summary.csv}
 \item \texttt{experiments/summary\_figures/unified\_reference\_main\_overview.png}
 \item \texttt{experiments/summary\_figures/reproduction\_audit\_training\_curves.csv}
 \item \texttt{experiments/summary\_figures/reproduction\_audit\_training\_curves.png}
 \item \texttt{experiments/summary\_figures/sample\_all\_methods\_summary.csv}
 \item \texttt{experiments/summary\_figures/sample\_all\_methods\_overview.png}
+\item \texttt{src/repro/happyquokka\_reference.py}
 \end{itemize}
 
 \end{document}

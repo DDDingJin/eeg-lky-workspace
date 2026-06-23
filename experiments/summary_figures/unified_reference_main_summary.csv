@@ -1,9 +1,14 @@
 dataset,model_id,display_name,group,mean_metric,std_metric,n_subjects,metric_name,source
+weissbart_tf64,avgdec_ridge,AvgDec-Ridge,Unified baseline,0.1245000918324177,0.02890932514523458,13,test_pearson,E:\decode\experiments\reference_baselines\weissbart_tf64\avgdec_ridge\metrics.csv
+weissbart_tf64,avgcorr_ridge,AvgCorr-Ridge,Unified baseline,0.13564607214469174,0.026371039353889503,13,test_pearson,E:\decode\experiments\reference_baselines\weissbart_tf64\avgcorr_ridge\metrics.csv
+weissbart_tf64,avgcorr_lasso,AvgCorr-LASSO,Unified baseline,0.1341277561508692,0.02915759101657462,13,test_pearson,E:\decode\experiments\reference_baselines\weissbart_tf64\avgcorr_lasso\metrics.csv
 weissbart_tf64,ridge,Ridge,Unified baseline,0.133159485573952,0.02896221832845037,13,test_pearson,E:\decode\experiments\reference_baselines\weissbart_tf64\ridge\metrics.csv
 weissbart_tf64,cca,CCA,Unified baseline,0.09308377949612393,0.024551007407095992,13,test_recon_corr,E:\decode\experiments\reference_baselines\weissbart_tf64\cca\metrics.csv
 weissbart_tf64,fcnn,FCNN,Unified baseline,0.09047852829098699,0.04188848703767007,13,test_pearson,E:\decode\experiments\reference_baselines\weissbart_tf64\fcnn\metrics.csv
 weissbart_tf64,cnn,CNN,Unified baseline,0.12276506252013718,0.037281978966669224,13,test_pearson,E:\decode\experiments\reference_baselines\weissbart_tf64\cnn\metrics.csv
 weissbart_tf64,eegnet,EEGNet,Unified baseline,0.14650075710736785,0.03269041180664531,13,test_pearson,E:\decode\experiments\reference_baselines\weissbart_tf64\eegnet\metrics.csv
+etard_tf64,avgcorr_ridge,AvgCorr-Ridge,Unified baseline,0.09699710521381347,0.044777958219329735,20,test_pearson,E:\decode\experiments\reference_baselines\etard_tf64\avgcorr_ridge\metrics.csv
+etard_tf64,avgcorr_lasso,AvgCorr-LASSO,Unified baseline,0.09477005070075388,0.04078645616514179,20,test_pearson,E:\decode\experiments\reference_baselines\etard_tf64\avgcorr_lasso\metrics.csv
 etard_tf64,ridge,Ridge,Unified baseline,0.09815598158165809,0.04082307186669369,20,test_pearson,E:\decode\experiments\reference_baselines\etard_tf64\ridge\metrics.csv
 etard_tf64,cca,CCA,Unified baseline,0.0679813801665579,0.02319389466467407,20,test_recon_corr,E:\decode\experiments\reference_baselines\etard_tf64\cca\metrics.csv
 etard_tf64,fcnn,FCNN,Unified baseline,0.06210834784433241,0.0197808255467008,20,test_pearson,E:\decode\experiments\reference_baselines\etard_tf64\fcnn\metrics.csv
@@ -11,5 +16,7 @@ etard_tf64,cnn,CNN,Unified baseline,0.09558634748682378,0.04217291428706748,20,t
 etard_tf64,eegnet,EEGNet,Unified baseline,0.10030104136094446,0.04107546499380005,20,test_pearson,E:\decode\experiments\reference_baselines\etard_tf64\eegnet\metrics.csv
 weissbart_tf64,adt_exact,ADT-exact,Exact structural port,0.1146710381025781,0.03926196174429077,13,pearson_metric,E:\decode\experiments\adt_exact_reference\weissbart_tf64_all_e100\summary.json
 weissbart_tf64,vlaai_exact,VLAAI-exact,Exact structural port,0.13891691943438697,0.03346938705063725,13,pearson_metric,E:\decode\experiments\vlaai_exact_reference\weissbart_tf64_all_e100\summary.json
+weissbart_tf64,happyquokka_gcon,HappyQuokka (g-con),Subject-conditioned deep model,0.15765976905822754,0.05383545532822609,13,pearson_metric,E:\decode\experiments\happyquokka_reference\weissbart_tf64_e100_gcon\summary.json
 etard_tf64,adt_exact,ADT-exact,Exact structural port,0.08597070755065966,0.044532857832957816,20,pearson_metric,E:\decode\experiments\adt_exact_reference\etard_tf64_all_e100\summary.json
 etard_tf64,vlaai_exact,VLAAI-exact,Exact structural port,0.11283406731633687,0.04158826354333961,20,pearson_metric,E:\decode\experiments\vlaai_exact_reference\etard_tf64_all_e100\summary.json
+etard_tf64,happyquokka_gcon,HappyQuokka (g-con),Subject-conditioned deep model,0.12868241965770721,0.05073249340057373,20,pearson_metric,E:\decode\experiments\happyquokka_reference\etard_tf64_e100_gcon\summary.json

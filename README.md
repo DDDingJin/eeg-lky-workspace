@@ -15,6 +15,7 @@ Current focus:
 - auditory EEG
 - speech envelope reconstruction / related decoding
 - baseline reproduction and benchmark unification
+- explicit audit of subject-conditioned versus non-conditioned deep models
 
 Current non-goals of this branch:
 
@@ -46,6 +47,9 @@ These explain:
 - `experiments/summary_figures/unified_reference_main_overview.png`
 - `experiments/summary_figures/sample_all_methods_summary.csv`
 - `experiments/summary_figures/sample_all_methods_overview.png`
+- `experiments/summary_figures/happyquokka_conditioning_summary.csv`
+- `experiments/summary_figures/happyquokka_conditioning_overview.png`
+- `experiments/summary_figures/happyquokka_training_curves.png`
 - `experiments/summary_figures/reproduction_audit_training_curves.csv`
 - `experiments/summary_figures/reproduction_audit_training_curves.png`
 - `experiments/summary_figures/reproduction_audit_model_protocols.csv`
@@ -55,6 +59,7 @@ These cover:
 
 - unified benchmark means on current datasets
 - development-sample method panorama
+- conditioned versus non-conditioned `HappyQuokka` runs
 - validation curves for audit
 - protocol metadata for each model family
 - run metadata such as requested epochs, completed epochs, and best-validation epoch
@@ -64,6 +69,7 @@ These cover:
 - `src/repro/reference_baselines.py`
 - `src/repro/adt_exact.py`
 - `src/repro/vlaai_exact.py`
+- `src/repro/happyquokka_reference.py`
 
 These are the most important code files for judging whether the current benchmark logic is plausible.
 
@@ -86,10 +92,41 @@ At the moment, the most important distinction is:
 - pooled exact structural ports:
   - ADT-exact
   - VLAAI-exact
+- subject-conditioned deep model:
+  - HappyQuokka (`g_con=True`)
+- matched non-conditioned reference:
+  - HappyQuokka (`g_con=False`)
 
 This means the current main comparison is informative, but not yet a perfectly apples-to-apples final leaderboard.
 
 That caveat is explicit and intentional in the audit materials.
+
+## HappyQuokka And `g_con`
+
+`HappyQuokka` includes an optional `global conditioner`, exposed as `g_con`.
+
+- `g_con=True` means the model receives an explicit subject identity input
+- `g_con=False` means the model only receives EEG input and must behave like a pooled non-conditioned model
+
+Interpretation:
+
+- `g_con=True` is a stronger within-subject configuration because the network can adapt to stable subject-specific EEG differences
+- `g_con=False` is the fairer comparison row when placing `HappyQuokka` next to baselines that do not receive subject identity
+
+Current 100-epoch benchmark results:
+
+- `weissbart_tf64`
+  - `g_con=True`: `0.1577`
+  - `g_con=False`: `0.1434`
+- `etard_tf64`
+  - `g_con=True`: `0.1287`
+  - `g_con=False`: `0.1118`
+
+These paired runs are summarized in:
+
+- `experiments/summary_figures/happyquokka_conditioning_summary.csv`
+- `experiments/summary_figures/happyquokka_conditioning_overview.png`
+- `experiments/summary_figures/happyquokka_training_curves.png`
 
 ## Datasets Currently Reflected In This Branch
 
@@ -117,9 +154,12 @@ If you are reviewing this branch, read in this order:
 5. `experiments/summary_figures/reproduction_audit_training_curves.png`
 6. `experiments/summary_figures/reproduction_audit_model_protocols.csv`
 7. `experiments/summary_figures/reproduction_audit_run_metadata.csv`
-8. `src/repro/reference_baselines.py`
-9. `src/repro/adt_exact.py`
-10. `src/repro/vlaai_exact.py`
+8. `experiments/summary_figures/happyquokka_conditioning_summary.csv`
+9. `experiments/summary_figures/happyquokka_conditioning_overview.png`
+10. `src/repro/reference_baselines.py`
+11. `src/repro/adt_exact.py`
+12. `src/repro/vlaai_exact.py`
+13. `src/repro/happyquokka_reference.py`
 
 ## What A Reviewer Should Judge
 
@@ -140,6 +180,7 @@ The current branch is intentionally transparent about the main limitations:
 - scalar-sample reconstruction baselines and sequence-to-sequence deep models do not optimize exactly the same target
 - some sample-dataset runs are development-grade rather than final article-grade runs
 - more datasets still need to be integrated into the same adapter and evaluation layer
+- subject-conditioned and non-conditioned comparisons are currently explicit only for `HappyQuokka`, not for every deep model family
 
 ## What Is Not Included
 
@@ -172,12 +213,16 @@ Please prioritize the following files:
 - docs/reproduction_audit_note.tex
 - experiments/summary_figures/unified_reference_main_summary.csv
 - experiments/summary_figures/unified_reference_main_overview.png
+- experiments/summary_figures/happyquokka_conditioning_summary.csv
+- experiments/summary_figures/happyquokka_conditioning_overview.png
+- experiments/summary_figures/happyquokka_training_curves.png
 - experiments/summary_figures/reproduction_audit_training_curves.png
 - experiments/summary_figures/reproduction_audit_model_protocols.csv
 - experiments/summary_figures/reproduction_audit_run_metadata.csv
 - src/repro/reference_baselines.py
 - src/repro/adt_exact.py
 - src/repro/vlaai_exact.py
+- src/repro/happyquokka_reference.py
 
 Please distinguish clearly between:
 - possible implementation bugs

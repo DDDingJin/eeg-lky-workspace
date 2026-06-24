@@ -169,10 +169,30 @@ The unified pipeline currently covers:
 - `weissbart_tf64`
 - `etard_tf64`
 
+Important separation note:
+
+- these are the datasets currently used in the local benchmark tables
+- they are not the same thing as the controlled `ICASSP 2023 challenge split` tracked separately under `data/raw/challenge_2023`
+- `weissbart_tf64` and `etard_tf64` are public HDF5-aligned dataset releases used as independent benchmark datasets in this branch
+
 Interpretation:
 
 - `hugo_sample_tf64` is mainly a development / smoke-test style dataset
 - `weissbart_tf64` and `etard_tf64` are the current more serious reconstruction benchmarks
+
+Dataset lineage shorthand:
+
+- `hugo_sample_tf64`
+  - tutorial/development data from the `Thornton / mldecoders` line
+  - not `SparrKULee`
+  - not the `ICASSP 2023 challenge split`
+- `weissbart_tf64`
+  - public HDF5-aligned release from the Weissbart line
+- `etard_tf64`
+  - public HDF5-aligned release from the Etard/Reichenbach line
+- `SparrKULee` and the `ICASSP 2023/2024 challenge` splits
+  - separate KU Leuven / challenge ecosystem benchmark line
+  - not yet integrated into the current branch tables
 
 Datasets downloaded or planned but not yet fully unified into the same benchmark adapter are outside the scope of this branch.
 

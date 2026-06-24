@@ -8,6 +8,14 @@ This document defines the intended review-and-iteration loop for this project.
 
 The project should evolve as a public benchmark and paper-oriented open-source repository.
 
+The loop is not only for debugging code.
+It is also the mechanism for tightening:
+
+- benchmark question design
+- fairness of model comparison
+- reporting discipline
+- paper-grade narrative consistency
+
 The working loop is:
 
 1. run or update local benchmark code
@@ -90,11 +98,20 @@ When new feedback appears in `docs/reviewer_feedback/`, the local assistant shou
 6. update audit documents
 7. commit and push the revised review branch
 
+In addition, the assistant should explicitly check whether the requested change affects:
+
+- benchmark scope
+- dataset role definitions
+- task definitions
+- fairness of baseline grouping
+- train/test protocol comparability
+
 ## What Should Be Pushed For Review
 
 At each review round, prefer pushing:
 
 - core method documents
+- benchmark-question documents
 - result CSVs
 - publication-style figures
 - exact code files that produced the results
@@ -126,7 +143,29 @@ At this stage, reviewer comments should be interpreted in the following order of
 2. unfair comparison
 3. protocol ambiguity
 4. missing strong baseline
-5. plotting / presentation refinement
+5. weak benchmark narrative or unsupported claim
+6. plotting / presentation refinement
+
+## Two-Terminal Closed Loop
+
+This project now assumes a practical two-terminal workflow:
+
+- execution terminal
+  - runs code
+  - updates documents
+  - regenerates tables and figures
+  - commits and pushes benchmark revisions
+- review terminal
+  - inspects GitHub branch state
+  - leaves structured methodological comments
+  - requests protocol clarification or new benchmark rows
+
+The key rule is:
+
+- the review terminal should criticize the current branch state
+- the execution terminal should translate that criticism into concrete code, protocol, rerun, or documentation actions
+
+This should remain a tight loop rather than an informal chat stream.
 
 This keeps the project aligned with the final goal:
 

@@ -15,8 +15,9 @@ This note records:
 The current unified `reference_splits` pipeline covers:
 
 - `hugo_sample_tf64`
-  - small development dataset
-  - used for smoke tests, parity checks, and fast method comparisons
+  - 13 participants
+  - secondary public evaluation dataset
+  - usable for in-dataset reconstruction and match/mismatch
 - `weissbart_tf64`
   - 13 participants
   - first serious article-oriented reconstruction benchmark
@@ -29,6 +30,50 @@ The following datasets are present or being downloaded, but are not yet behind t
 - `DTU / Fuglsang`
 - `KUL AAD 4004271`
 - `SparrKULee`
+
+## 1.1 Intended benchmark questions
+
+The benchmark is not intended to be a flat leaderboard.
+
+The current intended question structure is:
+
+1. which methods are strongest in-dataset
+2. which methods generalize across datasets within the same language regime
+3. which methods are robust to language shift
+4. which methods transfer to external or future cross-modality settings
+
+Therefore future train/test comparisons should be added because they answer one of these questions, not because every pairwise dataset traversal must be exhausted.
+
+## 1.2 Task layers
+
+The benchmark should eventually report three connected task layers:
+
+- `reconstruction`
+- `match_mismatch`
+- `aad`
+
+Interpretation:
+
+- reconstruction is the main continuous speech-tracking layer
+- match/mismatch is the first decision layer derived from candidate-envelope comparison
+- true AAD requires real attended and unattended candidate streams
+
+## 1.3 Language-aware evaluation
+
+The current datasets should not be treated as if language is irrelevant by construction.
+
+Near-term language-aware logic should be:
+
+- same-language cross-dataset transfer
+  - isolates dataset/protocol effects more cleanly
+- cross-language transfer
+  - estimates whether language shift is a dominant degradation source
+- the Etard family is especially valuable here because it already contains both English and Dutch conditions
+
+Desired scientific use:
+
+- not to assume language has no effect
+- but to test whether language shift is small enough that model conclusions remain stable
 
 ## 2. Methods Currently Available
 
@@ -52,6 +97,21 @@ Important:
 
 - these methods are not yet all wired into `weissbart_tf64` and `etard_tf64`
 - therefore the current full cross-method figure is valid only on the sample dataset
+
+## 2.3 Classical baseline family that still needs to be completed
+
+The benchmark is still missing some classical rows that are important for interpretation:
+
+- explicit lagged backward TRF / eTRF-style reconstruction baseline
+- explicit lagged forward TRF baseline
+- direct sparse `lasso` decoder
+- `elastic_net` decoder
+- stronger CCA variants
+  - multi-lag CCA
+  - forward/backward CCA-style variants when supported by the task protocol
+
+These are not cosmetic additions.
+They are necessary if later claims about deep-model advantage are going to be defensible.
 
 ### 2.2 Exact structural ports on unified datasets
 

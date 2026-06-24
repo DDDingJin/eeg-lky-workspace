@@ -61,6 +61,12 @@ The following methods are currently integrated into the unified `reference_split
 - `vlaai_exact`
 - `happyquokka_gcon`
 
+The following remote method has been audited but is not yet locally integrated into the unified benchmark runner:
+
+- `NeuroConformer`
+  - audited from `origin/master:happy/NeuroConformer/`
+  - documented in [NEUROCONFORMER_AUDIT.md](/E:/decode/docs/NEUROCONFORMER_AUDIT.md)
+
 These can now run on:
 
 - `hugo_sample_tf64`

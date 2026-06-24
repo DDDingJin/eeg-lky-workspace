@@ -32,6 +32,8 @@ This branch currently exposes four kinds of material.
 
 - `docs/CURRENT_EVALUATION_STATUS.md`
 - `docs/reproduction_audit_note.tex`
+- `docs/GITHUB_REVIEW_LOOP.md`
+- `docs/NEUROCONFORMER_AUDIT.md`
 
 These explain:
 
@@ -40,6 +42,8 @@ These explain:
 - how train/val/test is being done
 - what is already methodologically correct
 - what is still not fully standardized
+- how the GitHub review loop should be handled
+- how the remote `NeuroConformer` code differs from the current local benchmark
 
 ### 2. Result tables and figures
 
@@ -149,17 +153,19 @@ If you are reviewing this branch, read in this order:
 
 1. `docs/CURRENT_EVALUATION_STATUS.md`
 2. `docs/reproduction_audit_note.tex`
-3. `experiments/summary_figures/unified_reference_main_summary.csv`
-4. `experiments/summary_figures/unified_reference_main_overview.png`
-5. `experiments/summary_figures/reproduction_audit_training_curves.png`
-6. `experiments/summary_figures/reproduction_audit_model_protocols.csv`
-7. `experiments/summary_figures/reproduction_audit_run_metadata.csv`
-8. `experiments/summary_figures/happyquokka_conditioning_summary.csv`
-9. `experiments/summary_figures/happyquokka_conditioning_overview.png`
-10. `src/repro/reference_baselines.py`
-11. `src/repro/adt_exact.py`
-12. `src/repro/vlaai_exact.py`
-13. `src/repro/happyquokka_reference.py`
+3. `docs/GITHUB_REVIEW_LOOP.md`
+4. `docs/NEUROCONFORMER_AUDIT.md`
+5. `experiments/summary_figures/unified_reference_main_summary.csv`
+6. `experiments/summary_figures/unified_reference_main_overview.png`
+7. `experiments/summary_figures/reproduction_audit_training_curves.png`
+8. `experiments/summary_figures/reproduction_audit_model_protocols.csv`
+9. `experiments/summary_figures/reproduction_audit_run_metadata.csv`
+10. `experiments/summary_figures/happyquokka_conditioning_summary.csv`
+11. `experiments/summary_figures/happyquokka_conditioning_overview.png`
+12. `src/repro/reference_baselines.py`
+13. `src/repro/adt_exact.py`
+14. `src/repro/vlaai_exact.py`
+15. `src/repro/happyquokka_reference.py`
 
 ## What A Reviewer Should Judge
 
@@ -211,6 +217,8 @@ I want feedback on:
 Please prioritize the following files:
 - docs/CURRENT_EVALUATION_STATUS.md
 - docs/reproduction_audit_note.tex
+- docs/GITHUB_REVIEW_LOOP.md
+- docs/NEUROCONFORMER_AUDIT.md
 - experiments/summary_figures/unified_reference_main_summary.csv
 - experiments/summary_figures/unified_reference_main_overview.png
 - experiments/summary_figures/happyquokka_conditioning_summary.csv

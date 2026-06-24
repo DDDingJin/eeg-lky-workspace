@@ -1,6 +1,6 @@
 # Research Audit Loop Rule Proposal
 
-Status: proposed for reviewer/implementer negotiation
+Status: reviewer revision after informal implementer feedback; implementer acceptance still required
 
 Proposal branch: `rule/research-audit-loop-v1`
 
@@ -9,6 +9,12 @@ Based on branch: `audit/reproduction-note`
 Based on commit: `9bf2f200885346914fe6de33b3b3e6ffcf82b834`
 
 Created: 2026-06-24
+
+Latest reviewer revision considered:
+
+- implementer-side branch: `audit/reproduction-note`
+- implementer-side commit: `a43831b83598c82520be320c21b56e92b73b7dcd`
+- relevant file: `docs/GITHUB_REVIEW_LOOP.md`
 
 ## Purpose
 
@@ -54,3 +60,5 @@ On that branch:
 5. open a PR back to `rule/research-audit-loop-v1`
 
 The production loop must not start until both endpoints accept the rule diff and the agreed rule is merged into the repository's integration branch.
+
+See `docs/IMPLEMENTER_FEEDBACK_ASSESSMENT.md` for the reviewer's point-by-point decision.

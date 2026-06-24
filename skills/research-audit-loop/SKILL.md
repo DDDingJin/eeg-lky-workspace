@@ -29,9 +29,10 @@ Use `scripts/create_review_round.py` to initialize a reviewer round. Use `script
 4. Create `review/<round-id>` from that exact commit.
 5. Run `scripts/create_review_round.py`.
 6. Inspect code, tests, results, protocols, and documentation.
-7. Write findings in `review.md` and structured actions in `issues.json`.
-8. Do not edit implementation code on the review branch.
-9. Validate with `--phase review --base <target_commit>` and open a PR into the target branch.
+7. Explicitly assess benchmark question design, dataset roles, task definitions, baseline grouping fairness, train/test comparability, claim support, and paper narrative consistency.
+8. Write findings in `review.md` and structured actions in `issues.json`.
+9. Do not edit implementation code on the review branch.
+10. Validate with `--phase review --base <target_commit>` and open a PR into the target branch.
 
 After the fix PR is merged:
 
@@ -69,6 +70,7 @@ Only the implementer may set `accepted`, `in_progress`, `blocked`, `disputed`, o
 - Preserve original findings. Add responses and verification instead of rewriting history.
 - Do not claim an issue is resolved because code changed. Resolution requires reviewer verification.
 - Do not merge the target branch into `master` until required issues are verified or explicitly withdrawn.
+- Treat benchmark design and unsupported scientific claims as auditable findings, not as optional editorial comments.
 
 ## Rule Negotiation
 

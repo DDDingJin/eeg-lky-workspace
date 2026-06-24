@@ -7,7 +7,21 @@
 
 Do not create permanent date-stamped copies of either branch. Preserve important states with full commit SHAs and annotated tags.
 
-## 2. Temporary Branches
+## 2. Review Scope
+
+Review is not limited to implementation debugging. A reviewer must also inspect:
+
+- whether the benchmark question is scientifically coherent
+- whether each dataset has an explicit role
+- whether task definitions and metrics match the claims
+- whether baseline groups are compared fairly
+- whether train/validation/test protocols are comparable
+- whether reported conclusions are supported by the actual evidence
+- whether the paper narrative distinguishes development evidence from article-grade evidence
+
+Record these concerns as structured issues with acceptance checks when they can affect scientific validity or publication claims.
+
+## 3. Temporary Branches
 
 For round `AR-20260624-103000-9bf2f20`, use:
 
@@ -17,14 +31,14 @@ For round `AR-20260624-103000-9bf2f20`, use:
 
 Delete temporary branches only after their PRs are merged and the relevant tags exist.
 
-## 3. Tags
+## 4. Tags
 
 - `audit-input/AR-...`: exact implementation commit reviewed.
 - `audit-verified/AR-...`: exact commit after verification artifacts are merged.
 
 Use annotated tags. Never move or reuse a published tag.
 
-## 4. Round Directory
+## 5. Round Directory
 
 Use:
 
@@ -48,7 +62,7 @@ Every Markdown artifact must repeat:
 
 The timestamp helps people find the latest round. The commit SHA proves which version the artifact describes.
 
-## 5. Pull Request Sequence
+## 6. Pull Request Sequence
 
 ### PR 1: Review
 
@@ -76,7 +90,7 @@ Starts after PR 2 is merged. Contains reviewer verification, final reviewer-owne
 
 If verification finds a failure, mark the issue `reopened`. Start another fix branch for the same round or a successor round; do not silently repair it on the verification branch.
 
-## 6. Target Branch Movement
+## 7. Target Branch Movement
 
 Prefer freezing implementation changes on the target branch from input tagging until the fix PR is merged.
 
@@ -92,7 +106,7 @@ If the target branch advances:
 
 Never apply findings to "the latest version" without this reconciliation.
 
-## 7. File Ownership
+## 8. File Ownership
 
 Reviewer-owned:
 
@@ -117,7 +131,7 @@ Shared but field-owned:
 
 Neither role may rewrite the other role's historical content. Correct mistakes by appending an amendment with author, time, and reason.
 
-## 8. Issue State Machine
+## 9. Issue State Machine
 
 ```text
 open
@@ -154,7 +168,7 @@ Implementer transitions:
 - `blocked -> accepted`
 - `accepted|in_progress -> fixed_pending_verification`
 
-## 9. Branch Protection
+## 10. Branch Protection
 
 Configure the integration branch to:
 
@@ -166,7 +180,7 @@ Configure the integration branch to:
 
 The Skill cannot substitute for repository branch protection.
 
-## 10. Validation Commands
+## 11. Validation Commands
 
 Run from the repository root:
 
@@ -178,7 +192,16 @@ python skills/research-audit-loop/scripts/validate_round.py <round-dir> --check-
 
 The role diff check is a guardrail, not a substitute for PR review.
 
-## 11. Promotion To Stable
+## 12. Rule Adoption And Legacy Documents
+
+When this Skill is adopted:
+
+- make it the normative workflow
+- replace older informal review-loop instructions with a short pointer to this Skill
+- do not maintain two competing branch or status protocols
+- preserve old documents only as historical context if clearly marked non-normative
+
+## 13. Promotion To Stable
 
 Promote from `audit/reproduction-note` to `master` only through a separate PR that identifies:
 

@@ -98,10 +98,15 @@ Allowed severities:
 
 Allowed categories:
 
+- `benchmark_design`
+- `dataset_scope`
+- `task_definition`
 - `implementation_bug`
 - `data_leakage`
 - `protocol_mismatch`
 - `metric_mismatch`
+- `comparison_fairness`
+- `claim_support`
 - `reproducibility`
 - `statistical_analysis`
 - `reporting`

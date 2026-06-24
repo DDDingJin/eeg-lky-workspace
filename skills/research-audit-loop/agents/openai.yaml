@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Audit Loop"
+  short_description: "Coordinate reviewer and implementer Git audit rounds"
+  default_prompt: "Use $research-audit-loop to run a version-locked reviewer or implementer round."

@@ -1,0 +1,21 @@
+{
+  "protocol_version": 1,
+  "round_id": "__ROUND_ID__",
+  "created_at": "__CREATED_AT__",
+  "target_repository": "__TARGET_REPOSITORY__",
+  "target_branch": "__TARGET_BRANCH__",
+  "target_commit": "__TARGET_COMMIT__",
+  "input_tag": "audit-input/__ROUND_ID__",
+  "review_branch": "review/__ROUND_ID_LOWER__",
+  "review_commit": null,
+  "review_pr": null,
+  "fix_branch": "fix/__ROUND_ID_LOWER__",
+  "fix_base_commit": null,
+  "fix_commit": null,
+  "fix_pr": null,
+  "verification_branch": "verify/__ROUND_ID_LOWER__",
+  "verification_commit": null,
+  "verification_pr": null,
+  "verified_tag": "audit-verified/__ROUND_ID__",
+  "status": "review_open"
+}

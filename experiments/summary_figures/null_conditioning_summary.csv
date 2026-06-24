@@ -1,0 +1,7 @@
+dataset,label,g_con,epochs_requested,epochs_completed,best_epoch,best_val_metric,mean_test_metric,std_test_metric,n_subjects,source
+hugo_sample_tf64,NULL g_con=True,True,10,10,8,0.24409629713075284,0.2103075236082077,0.04210355132818222,13,E:\decode\experiments\neuroconformer_reference\hugo_sample_tf64_e10_gcon\summary.json
+hugo_sample_tf64,NULL g_con=False,False,10,10,9,0.22326466339903,0.19567444920539856,0.043093241751194,13,E:\decode\experiments\neuroconformer_reference\hugo_sample_tf64_e10_nogcon\summary.json
+weissbart_tf64,NULL g_con=True,True,10,10,10,0.2084347455857847,0.19929049909114838,0.057500988245010376,13,E:\decode\experiments\neuroconformer_reference\weissbart_tf64_e10_gcon\summary.json
+weissbart_tf64,NULL g_con=False,False,10,10,9,0.18049192082566712,0.17509156465530396,0.06039297580718994,13,E:\decode\experiments\neuroconformer_reference\weissbart_tf64_e10_nogcon\summary.json
+etard_tf64,NULL g_con=True,True,10,10,9,0.1657393996826418,0.14799360930919647,0.06130240112543106,20,E:\decode\experiments\neuroconformer_reference\etard_tf64_e10_gcon\summary.json
+etard_tf64,NULL g_con=False,False,10,10,6,0.13753595823835071,0.12437578290700912,0.05771631374955177,20,E:\decode\experiments\neuroconformer_reference\etard_tf64_e10_nogcon\summary.json

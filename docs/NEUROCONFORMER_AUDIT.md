@@ -4,6 +4,10 @@ Last updated: 2026-06-24
 
 This note audits the `happy/NeuroConformer` code on `origin/master` and explains how it relates to the current local benchmark.
 
+Important naming note:
+
+- in the local benchmark tables and plots, this family is currently reported under the shorter name `NULL`
+
 ## Scope
 
 The audited code lives on the remote branch:
@@ -181,6 +185,28 @@ The correct local plan is:
    - architecture gain
    - conditioning gain
    - optimization / loss gain
+
+## Current Local Integration Snapshot
+
+The first local integration is now running and reported as `NULL`.
+
+Current 10-epoch local benchmark numbers:
+
+- `hugo_sample_tf64`
+  - `NULL g_con=True`: `0.2103`
+  - `NULL g_con=False`: `0.1957`
+- `weissbart_tf64`
+  - `NULL g_con=True`: `0.1993`
+  - `NULL g_con=False`: `0.1751`
+- `etard_tf64`
+  - `NULL g_con=True`: `0.1480`
+  - `NULL g_con=False`: `0.1244`
+
+So at this stage:
+
+- the family is already locally runnable under the unified input adapter
+- the current local reference result is already strong
+- the current numbers are still first-pass integration results, not yet final-budget tuned reproductions
 
 ## Recommended Quantification Plan
 

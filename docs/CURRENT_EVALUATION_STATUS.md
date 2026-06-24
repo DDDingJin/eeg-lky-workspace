@@ -60,12 +60,17 @@ The following methods are currently integrated into the unified `reference_split
 - `adt_exact`
 - `vlaai_exact`
 - `happyquokka_gcon`
+- `null_gcon`
 
 The following remote method has been audited but is not yet locally integrated into the unified benchmark runner:
 
 - `NeuroConformer`
   - audited from `origin/master:happy/NeuroConformer/`
   - documented in [NEUROCONFORMER_AUDIT.md](/E:/decode/docs/NEUROCONFORMER_AUDIT.md)
+
+Important naming note:
+
+- the local integrated benchmark row for the `NeuroConformer` family is reported as `NULL`
 
 These can now run on:
 
@@ -103,6 +108,7 @@ Current mean full-subject results:
 - `ADT-exact`: `0.1447`
 - `VLAAI-exact`: `0.1477`
 - `HappyQuokka (g-con)`: `0.1105`
+- `NULL`: `0.2103`
 
 Associated figure:
 
@@ -129,6 +135,10 @@ Current `100`-epoch-requested, early-stopped runs:
   - `hugo_sample_tf64`: `0.1105`
   - `weissbart_tf64`: `0.1577` using the new `100`-epoch run
   - `etard_tf64`: `0.1287` using the new `100`-epoch run
+- `NULL`
+  - `hugo_sample_tf64`: `0.2103` using the current `10`-epoch local integration run
+  - `weissbart_tf64`: `0.1993` using the current `10`-epoch local integration run
+  - `etard_tf64`: `0.1480` using the current `10`-epoch local integration run
 
 ### 3.3 HappyQuokka conditioning check on article-oriented datasets
 
@@ -154,6 +164,33 @@ Interpretation:
 - the gain is about `+0.0169` on `etard_tf64`
 - for a strict cross-method comparison, `g_con=False` is the fairer row to place next to non-conditioned baselines
 - for a within-subject system comparison, `g_con=True` is a valid and stronger configuration
+
+### 3.4 NULL conditioning check on unified datasets
+
+Source files:
+
+- [null_conditioning_summary.csv](/E:/decode/experiments/summary_figures/null_conditioning_summary.csv)
+- [null_conditioning_overview.png](/E:/decode/experiments/summary_figures/null_conditioning_overview.png)
+- [null_training_curves.png](/E:/decode/experiments/summary_figures/null_training_curves.png)
+
+Current `10`-epoch runs:
+
+- `hugo_sample_tf64`
+  - `g_con=True`: `0.2103`
+  - `g_con=False`: `0.1957`
+- `weissbart_tf64`
+  - `g_con=True`: `0.1993`
+  - `g_con=False`: `0.1751`
+- `etard_tf64`
+  - `g_con=True`: `0.1480`
+  - `g_con=False`: `0.1244`
+
+Interpretation:
+
+- `NULL` is already strong under the current unified input and split interface
+- `NULL` benefits from subject conditioning on all three currently integrated datasets
+- for fairer cross-method comparison, `g_con=False` is the more conservative row
+- for a strong within-subject reference result, `g_con=True` is the stronger row
 
 Associated figure:
 
@@ -221,6 +258,12 @@ For `happyquokka_gcon`, `epochs_completed` is already stored, and the current be
 - a `100`-epoch conditioned run
 - a matched `100`-epoch non-conditioned comparison run
 
+For `null_gcon`, the current benchmark now includes:
+
+- matched conditioned and non-conditioned runs on all three currently integrated datasets
+- but only at the first local `10`-epoch integration budget
+- so the current `NULL` row is already informative, but not yet final-budget tuned
+
 ## 6. Is This Evaluation Procedure Reasonable?
 
 ### 6.1 What is already correct
@@ -239,6 +282,7 @@ The following issues remain:
 - not all baseline models are yet evaluated on the same dataset family
 - sample-only methods and unified-dataset exact ports are still partially separated
 - subject-conditioned and non-conditioned deep models are now separated for `HappyQuokka`, but not yet for the whole model family
+- `NULL` is now also separated into conditioned and non-conditioned reporting rows
 - subject-independent evaluation is not yet standardized
 - external generalization datasets are not yet in the same pipeline
 - exact-port logs do not currently expose `epochs_completed`, which makes the stopping behavior harder to audit
@@ -274,6 +318,7 @@ The next more standardized evaluation layer should look like this:
    - `adt_exact`
    - `vlaai_exact`
    - `happyquokka_gcon`
+   - `null_gcon`
 3. keep one fixed split rule
 4. keep one fixed metric definition
 5. keep one fixed checkpoint-selection rule

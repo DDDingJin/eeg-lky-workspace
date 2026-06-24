@@ -10,3 +10,5 @@ hugo_sample_tf64,vlaai_lite,VLAAI-lite,Approximate deep port,0.1176625584509253,
 hugo_sample_tf64,adt_lite,ADT-lite,Approximate deep port,0.2119865136637385,13,test_pearson,full_subject,existing_local_run,E:\decode\experiments\summary_figures\model_mean_overview_full_subjects.csv
 hugo_sample_tf64,adt_exact,ADT-exact,Exact structural port,0.14465793564410045,13,pearson_metric,full_subject,"epochs=100,early_stop",E:\decode\experiments\adt_exact_reference\hugo_sample_tf64_all_e100\summary.json
 hugo_sample_tf64,vlaai_exact,VLAAI-exact,Exact structural port,0.1477499904970351,13,pearson_metric,full_subject,"epochs=100,early_stop",E:\decode\experiments\vlaai_exact_reference\hugo_sample_tf64_all_e100\summary.json
+hugo_sample_tf64,happyquokka_gcon,HappyQuokka (g-con),Subject-conditioned deep model,0.11045714467763901,13,pearson_metric,full_subject,"epochs=20,fixed",E:\decode\experiments\happyquokka_reference\hugo_sample_tf64_e20_gcon\summary.json
+hugo_sample_tf64,null_gcon,NULL,Subject-conditioned deep model,0.2103075236082077,13,pearson_metric,full_subject,"epochs=10,fixed",E:\decode\experiments\neuroconformer_reference\hugo_sample_tf64_e10_gcon\summary.json

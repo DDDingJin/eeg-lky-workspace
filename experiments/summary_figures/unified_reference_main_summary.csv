@@ -17,6 +17,8 @@ etard_tf64,eegnet,EEGNet,Unified baseline,0.10030104136094446,0.0410754649938000
 weissbart_tf64,adt_exact,ADT-exact,Exact structural port,0.1146710381025781,0.03926196174429077,13,pearson_metric,E:\decode\experiments\adt_exact_reference\weissbart_tf64_all_e100\summary.json
 weissbart_tf64,vlaai_exact,VLAAI-exact,Exact structural port,0.13891691943438697,0.03346938705063725,13,pearson_metric,E:\decode\experiments\vlaai_exact_reference\weissbart_tf64_all_e100\summary.json
 weissbart_tf64,happyquokka_gcon,HappyQuokka (g-con),Subject-conditioned deep model,0.15765976905822754,0.05383545532822609,13,pearson_metric,E:\decode\experiments\happyquokka_reference\weissbart_tf64_e100_gcon\summary.json
+weissbart_tf64,null_gcon,NULL,Subject-conditioned deep model,0.19929049909114838,0.057500988245010376,13,pearson_metric,E:\decode\experiments\neuroconformer_reference\weissbart_tf64_e10_gcon\summary.json
 etard_tf64,adt_exact,ADT-exact,Exact structural port,0.08597070755065966,0.044532857832957816,20,pearson_metric,E:\decode\experiments\adt_exact_reference\etard_tf64_all_e100\summary.json
 etard_tf64,vlaai_exact,VLAAI-exact,Exact structural port,0.11283406731633687,0.04158826354333961,20,pearson_metric,E:\decode\experiments\vlaai_exact_reference\etard_tf64_all_e100\summary.json
 etard_tf64,happyquokka_gcon,HappyQuokka (g-con),Subject-conditioned deep model,0.12868241965770721,0.05073249340057373,20,pearson_metric,E:\decode\experiments\happyquokka_reference\etard_tf64_e100_gcon\summary.json
+etard_tf64,null_gcon,NULL,Subject-conditioned deep model,0.14799360930919647,0.06130240112543106,20,pearson_metric,E:\decode\experiments\neuroconformer_reference\etard_tf64_e10_gcon\summary.json

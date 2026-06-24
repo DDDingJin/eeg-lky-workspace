@@ -101,6 +101,23 @@ def collect_sample_suite() -> pd.DataFrame:
                 "source": str(happyquokka_path),
             }
         )
+    null_path = ROOT / "experiments" / "neuroconformer_reference" / "hugo_sample_tf64_e10_gcon" / "summary.json"
+    if null_path.exists():
+        summary = load_json(null_path)
+        rows.append(
+            {
+                "dataset": "hugo_sample_tf64",
+                "model_id": "null_gcon",
+                "display_name": "NULL",
+                "group": "Subject-conditioned deep model",
+                "mean_metric": float(summary["mean_test_metric"]),
+                "n_subjects": int(len(summary["subjects"])),
+                "metric_name": summary["metric_name"],
+                "run_scope": "full_subject",
+                "training_budget": f"epochs={summary['epochs_requested']},fixed",
+                "source": str(null_path),
+            }
+        )
     return pd.DataFrame(rows)
 
 
@@ -109,12 +126,15 @@ def collect_exact_dataset_suite() -> pd.DataFrame:
         ("hugo_sample_tf64", "adt_exact", "ADT-exact", ROOT / "experiments" / "adt_exact_reference" / "hugo_sample_tf64_all_e100" / "summary.json"),
         ("hugo_sample_tf64", "vlaai_exact", "VLAAI-exact", ROOT / "experiments" / "vlaai_exact_reference" / "hugo_sample_tf64_all_e100" / "summary.json"),
         ("hugo_sample_tf64", "happyquokka_gcon", "HappyQuokka (g-con)", ROOT / "experiments" / "happyquokka_reference" / "hugo_sample_tf64_e20_gcon" / "summary.json"),
+        ("hugo_sample_tf64", "null_gcon", "NULL", ROOT / "experiments" / "neuroconformer_reference" / "hugo_sample_tf64_e10_gcon" / "summary.json"),
         ("weissbart_tf64", "adt_exact", "ADT-exact", ROOT / "experiments" / "adt_exact_reference" / "weissbart_tf64_all_e100" / "summary.json"),
         ("weissbart_tf64", "vlaai_exact", "VLAAI-exact", ROOT / "experiments" / "vlaai_exact_reference" / "weissbart_tf64_all_e100" / "summary.json"),
         ("weissbart_tf64", "happyquokka_gcon", "HappyQuokka (g-con)", ROOT / "experiments" / "happyquokka_reference" / "weissbart_tf64_e100_gcon" / "summary.json"),
+        ("weissbart_tf64", "null_gcon", "NULL", ROOT / "experiments" / "neuroconformer_reference" / "weissbart_tf64_e10_gcon" / "summary.json"),
         ("etard_tf64", "adt_exact", "ADT-exact", ROOT / "experiments" / "adt_exact_reference" / "etard_tf64_all_e100" / "summary.json"),
         ("etard_tf64", "vlaai_exact", "VLAAI-exact", ROOT / "experiments" / "vlaai_exact_reference" / "etard_tf64_all_e100" / "summary.json"),
         ("etard_tf64", "happyquokka_gcon", "HappyQuokka (g-con)", ROOT / "experiments" / "happyquokka_reference" / "etard_tf64_e100_gcon" / "summary.json"),
+        ("etard_tf64", "null_gcon", "NULL", ROOT / "experiments" / "neuroconformer_reference" / "etard_tf64_e10_gcon" / "summary.json"),
     ]
     rows: list[dict] = []
     for dataset, model_id, display_name, path in runs:
@@ -183,9 +203,11 @@ def collect_unified_reference_main_suite() -> pd.DataFrame:
         ("weissbart_tf64", "adt_exact", "ADT-exact", "Exact structural port", ROOT / "experiments" / "adt_exact_reference" / "weissbart_tf64_all_e100" / "summary.json"),
         ("weissbart_tf64", "vlaai_exact", "VLAAI-exact", "Exact structural port", ROOT / "experiments" / "vlaai_exact_reference" / "weissbart_tf64_all_e100" / "summary.json"),
         ("weissbart_tf64", "happyquokka_gcon", "HappyQuokka (g-con)", "Subject-conditioned deep model", ROOT / "experiments" / "happyquokka_reference" / "weissbart_tf64_e100_gcon" / "summary.json"),
+        ("weissbart_tf64", "null_gcon", "NULL", "Subject-conditioned deep model", ROOT / "experiments" / "neuroconformer_reference" / "weissbart_tf64_e10_gcon" / "summary.json"),
         ("etard_tf64", "adt_exact", "ADT-exact", "Exact structural port", ROOT / "experiments" / "adt_exact_reference" / "etard_tf64_all_e100" / "summary.json"),
         ("etard_tf64", "vlaai_exact", "VLAAI-exact", "Exact structural port", ROOT / "experiments" / "vlaai_exact_reference" / "etard_tf64_all_e100" / "summary.json"),
         ("etard_tf64", "happyquokka_gcon", "HappyQuokka (g-con)", "Subject-conditioned deep model", ROOT / "experiments" / "happyquokka_reference" / "etard_tf64_e100_gcon" / "summary.json"),
+        ("etard_tf64", "null_gcon", "NULL", "Subject-conditioned deep model", ROOT / "experiments" / "neuroconformer_reference" / "etard_tf64_e10_gcon" / "summary.json"),
     ]
     for dataset, model_id, display_name, group, path in exact_specs:
         summary = load_json(path)
@@ -258,6 +280,7 @@ def plot_sample_suite(df: pd.DataFrame) -> None:
         "ADT-exact",
         "VLAAI-exact",
         "HappyQuokka (g-con)",
+        "NULL",
     ]
     color_map = {
         "Linear / correlation baseline": "#537A8A",
@@ -308,8 +331,8 @@ def plot_sample_suite(df: pd.DataFrame) -> None:
 
 def plot_exact_dataset_suite(df: pd.DataFrame) -> None:
     dataset_order = ["hugo_sample_tf64", "weissbart_tf64", "etard_tf64"]
-    model_order = ["ADT-exact", "VLAAI-exact", "HappyQuokka (g-con)"]
-    color_map = {"ADT-exact": "#2E8B57", "VLAAI-exact": "#3F6C7A", "HappyQuokka (g-con)": "#C14C64"}
+    model_order = ["ADT-exact", "VLAAI-exact", "HappyQuokka (g-con)", "NULL"]
+    color_map = {"ADT-exact": "#2E8B57", "VLAAI-exact": "#3F6C7A", "HappyQuokka (g-con)": "#C14C64", "NULL": "#B5483A"}
 
     plot_df = df.copy()
     plot_df["dataset"] = pd.Categorical(plot_df["dataset"], categories=dataset_order, ordered=True)
@@ -317,11 +340,11 @@ def plot_exact_dataset_suite(df: pd.DataFrame) -> None:
     plot_df = plot_df.sort_values(["dataset", "display_name"]).reset_index(drop=True)
 
     fig, ax = plt.subplots(figsize=(9.6, 6.0))
-    width = 0.24
+    width = 0.18
     xs = list(range(len(dataset_order)))
     for model_idx, model_name in enumerate(model_order):
         sub = plot_df[plot_df["display_name"] == model_name].set_index("dataset").loc[dataset_order].reset_index()
-        offsets = [x + (model_idx - 1.0) * width for x in xs]
+        offsets = [x + (model_idx - 1.5) * width for x in xs]
         ax.bar(
             offsets,
             sub["mean_metric"],
@@ -349,7 +372,7 @@ def plot_exact_dataset_suite(df: pd.DataFrame) -> None:
 
 def plot_unified_reference_main_suite(df: pd.DataFrame) -> None:
     dataset_order = ["weissbart_tf64", "etard_tf64"]
-    model_order = ["Ridge", "CCA", "FCNN", "CNN", "EEGNet", "ADT-exact", "VLAAI-exact", "HappyQuokka (g-con)"]
+    model_order = ["Ridge", "CCA", "FCNN", "CNN", "EEGNet", "ADT-exact", "VLAAI-exact", "HappyQuokka (g-con)", "NULL"]
     color_map = {
         "Ridge": "#537A8A",
         "CCA": "#6D8A96",
@@ -359,6 +382,7 @@ def plot_unified_reference_main_suite(df: pd.DataFrame) -> None:
         "ADT-exact": "#2E8B57",
         "VLAAI-exact": "#3D6F8A",
         "HappyQuokka (g-con)": "#C14C64",
+        "NULL": "#B5483A",
     }
 
     plot_df = df.copy()

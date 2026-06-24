@@ -54,6 +54,9 @@ These explain:
 - `experiments/summary_figures/happyquokka_conditioning_summary.csv`
 - `experiments/summary_figures/happyquokka_conditioning_overview.png`
 - `experiments/summary_figures/happyquokka_training_curves.png`
+- `experiments/summary_figures/null_conditioning_summary.csv`
+- `experiments/summary_figures/null_conditioning_overview.png`
+- `experiments/summary_figures/null_training_curves.png`
 - `experiments/summary_figures/reproduction_audit_training_curves.csv`
 - `experiments/summary_figures/reproduction_audit_training_curves.png`
 - `experiments/summary_figures/reproduction_audit_model_protocols.csv`
@@ -64,6 +67,7 @@ These cover:
 - unified benchmark means on current datasets
 - development-sample method panorama
 - conditioned versus non-conditioned `HappyQuokka` runs
+- conditioned versus non-conditioned `NULL` runs
 - validation curves for audit
 - protocol metadata for each model family
 - run metadata such as requested epochs, completed epochs, and best-validation epoch
@@ -100,6 +104,9 @@ At the moment, the most important distinction is:
   - HappyQuokka (`g_con=True`)
 - matched non-conditioned reference:
   - HappyQuokka (`g_con=False`)
+- local integrated conformer-family reference:
+  - NULL (`g_con=True`)
+  - NULL (`g_con=False`)
 
 This means the current main comparison is informative, but not yet a perfectly apples-to-apples final leaderboard.
 
@@ -132,6 +139,28 @@ These paired runs are summarized in:
 - `experiments/summary_figures/happyquokka_conditioning_overview.png`
 - `experiments/summary_figures/happyquokka_training_curves.png`
 
+## NULL
+
+The local integrated benchmark name for the remote `NeuroConformer` family is `NULL`.
+
+Current 10-epoch benchmark results:
+
+- `hugo_sample_tf64`
+  - `g_con=True`: `0.2103`
+  - `g_con=False`: `0.1957`
+- `weissbart_tf64`
+  - `g_con=True`: `0.1993`
+  - `g_con=False`: `0.1751`
+- `etard_tf64`
+  - `g_con=True`: `0.1480`
+  - `g_con=False`: `0.1244`
+
+These paired runs are summarized in:
+
+- `experiments/summary_figures/null_conditioning_summary.csv`
+- `experiments/summary_figures/null_conditioning_overview.png`
+- `experiments/summary_figures/null_training_curves.png`
+
 ## Datasets Currently Reflected In This Branch
 
 The unified pipeline currently covers:
@@ -162,10 +191,13 @@ If you are reviewing this branch, read in this order:
 9. `experiments/summary_figures/reproduction_audit_run_metadata.csv`
 10. `experiments/summary_figures/happyquokka_conditioning_summary.csv`
 11. `experiments/summary_figures/happyquokka_conditioning_overview.png`
-12. `src/repro/reference_baselines.py`
-13. `src/repro/adt_exact.py`
-14. `src/repro/vlaai_exact.py`
-15. `src/repro/happyquokka_reference.py`
+12. `experiments/summary_figures/null_conditioning_summary.csv`
+13. `experiments/summary_figures/null_conditioning_overview.png`
+14. `src/repro/reference_baselines.py`
+15. `src/repro/adt_exact.py`
+16. `src/repro/vlaai_exact.py`
+17. `src/repro/happyquokka_reference.py`
+18. `src/repro/neuroconformer_reference.py`
 
 ## What A Reviewer Should Judge
 
@@ -224,6 +256,9 @@ Please prioritize the following files:
 - experiments/summary_figures/happyquokka_conditioning_summary.csv
 - experiments/summary_figures/happyquokka_conditioning_overview.png
 - experiments/summary_figures/happyquokka_training_curves.png
+- experiments/summary_figures/null_conditioning_summary.csv
+- experiments/summary_figures/null_conditioning_overview.png
+- experiments/summary_figures/null_training_curves.png
 - experiments/summary_figures/reproduction_audit_training_curves.png
 - experiments/summary_figures/reproduction_audit_model_protocols.csv
 - experiments/summary_figures/reproduction_audit_run_metadata.csv
@@ -231,6 +266,7 @@ Please prioritize the following files:
 - src/repro/adt_exact.py
 - src/repro/vlaai_exact.py
 - src/repro/happyquokka_reference.py
+- src/repro/neuroconformer_reference.py
 
 Please distinguish clearly between:
 - possible implementation bugs

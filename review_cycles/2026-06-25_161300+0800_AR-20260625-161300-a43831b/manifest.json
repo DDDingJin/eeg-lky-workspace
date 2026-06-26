@@ -1,0 +1,61 @@
+{
+  "protocol_version": "1.0",
+  "round_id": "AR-20260625-161300-a43831b",
+  "created_at": "2026-06-25T16:13:00+08:00",
+  "created_by": "review-endpoint",
+  "target_repository": "DDDingJin/eeg-lky-workspace",
+  "target_branch": "audit/reproduction-note",
+  "target_commit": "a43831b83598c82520be320c21b56e92b73b7dcd",
+  "review_branch": "review/ar-20260625-161300-a43831b-blueprint",
+  "artifact_type": "blueprint_plus_review_package",
+  "status": "review_open",
+  "intent": "Provide both the long-term execution blueprint and concrete review findings for the implementer endpoint.",
+  "read_order": [
+    "review.md",
+    "benchmark_execution_blueprint_zh_2026-06-25.pdf",
+    "benchmark_execution_blueprint_zh_2026-06-25.md",
+    "execution_report_a43831b_review_zh_2026-06-25.pdf",
+    "execution_report_a43831b_review_zh_2026-06-25.md",
+    "candidate_full_benchmark_review_a43831b_2026-06-25.md",
+    "issues.json"
+  ],
+  "artifacts": [
+    {
+      "path": "review.md",
+      "role": "package_index_and_instructions"
+    },
+    {
+      "path": "benchmark_execution_blueprint_zh_2026-06-25.md",
+      "role": "long_term_execution_blueprint"
+    },
+    {
+      "path": "benchmark_execution_blueprint_zh_2026-06-25.pdf",
+      "role": "rendered_long_term_execution_blueprint"
+    },
+    {
+      "path": "execution_report_a43831b_review_zh_2026-06-25.md",
+      "role": "concrete_review_for_target_commit"
+    },
+    {
+      "path": "execution_report_a43831b_review_zh_2026-06-25.pdf",
+      "role": "rendered_concrete_review_for_target_commit"
+    },
+    {
+      "path": "candidate_full_benchmark_review_a43831b_2026-06-25.md",
+      "role": "full_candidate_issue_register_and_workpackage_notes"
+    },
+    {
+      "path": "issues.json",
+      "role": "structured_workpackage_register"
+    }
+  ],
+  "expected_implementer_response": {
+    "branch_prefix": "fix/",
+    "required_response_files": [
+      "review_response.md",
+      "fix_manifest.json"
+    ],
+    "require_target_commit_lock": true,
+    "require_evidence_for_each_closed_item": true
+  }
+}

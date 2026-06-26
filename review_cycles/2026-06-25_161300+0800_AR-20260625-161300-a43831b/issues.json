@@ -1,0 +1,101 @@
+{
+  "round_id": "AR-20260625-161300-a43831b",
+  "target_commit": "a43831b83598c82520be320c21b56e92b73b7dcd",
+  "status": "open",
+  "workpackages": [
+    {
+      "id": "WORKPACKAGE-01",
+      "title": "审阅包完整性与模型身份",
+      "severity": "blocker",
+      "category": "reproducibility",
+      "status": "open",
+      "summary": "当前报告缺少若干关键代码与运行入口，导致外部审阅者无法确认 HappyQuokka、ADT、VLAAI、Ridge、CCA 等模型到底以什么实现参与比较。",
+      "required_actions": [
+        "补齐或明确引用所有关键模型文件、runner、配置和日志路径。",
+        "为每个模型写清楚 official、adapted、reimplemented 或 baseline 的身份。",
+        "为每个实验输出固定的 commit、config、seed、dataset、subject、recording 和 metric 字段。"
+      ],
+      "acceptance_checks": [
+        "审阅者可以从仓库文件直接定位每个模型实现。",
+        "任意一条结果记录都能追溯到具体代码版本、配置和数据切分。",
+        "报告不再只描述进展，而能支撑论文方法与结果复核。"
+      ]
+    },
+    {
+      "id": "WORKPACKAGE-02",
+      "title": "核心模型保真度核验",
+      "severity": "blocker",
+      "category": "implementation_fidelity",
+      "status": "open",
+      "summary": "关键模型需要和原论文或开源实现逐项对齐。ADT mask 方向目前可降级为待确认项，但 VLAAI、HappyQuokka、基础模型和后续新增模型仍需要明确复现边界。",
+      "required_actions": [
+        "为 VLAAI 建立 official 对照表，至少核查 LeakyReLU slope、LayerNorm eps、卷积结构、训练设置和 DTU fixed-test 结果。",
+        "为 HappyQuokka 写清楚 conditioning、输入输出、训练目标和与原实现的差异。",
+        "为 ADT 保留 mask 方向、任务设定和输出解释的证据链。",
+        "基础模型 Linear、DNN、FCNN、CNN、Ridge、CCA 也要进入统一模型卡，而不是只作为脚本里的默认 baseline。"
+      ],
+      "acceptance_checks": [
+        "每个核心模型都有 model card 或等价说明。",
+        "官方一致、合理改写和自建 baseline 三类不会混在同一结论里。",
+        "论文结果表可以清楚标注每个模型的实现来源和可比范围。"
+      ]
+    },
+    {
+      "id": "WORKPACKAGE-03",
+      "title": "统一数据、边界、输出与评分",
+      "severity": "blocker",
+      "category": "metric_and_data_boundary",
+      "status": "open",
+      "summary": "目前不同模型和脚本之间的数据切分、lag 边界、Pearson/scorer、per-recording 聚合方式不够统一，容易产生不可比较或潜在泄漏的结果。",
+      "required_actions": [
+        "定义统一的 recording、subject、dataset、train、validation、test 边界。",
+        "确认 Ridge/CCA 等带 lag 的模型不会跨 recording 或 trial 边界取样。",
+        "统一 envelope reconstruction、match-mismatch、AAD 派生分析的 scorer 与输出 schema。",
+        "所有模型输出 per-recording、per-subject、per-seed 的机器可读结果。"
+      ],
+      "acceptance_checks": [
+        "同一结果文件可被同一个 scorer 重算核心指标。",
+        "跨模型图表来自同一 schema，而不是手工拼接。",
+        "任意跨数据集或跨被试结论都能追溯到明确切分规则。"
+      ]
+    },
+    {
+      "id": "WORKPACKAGE-04",
+      "title": "训练制度、预算、随机性与统计",
+      "severity": "major",
+      "category": "statistical_analysis",
+      "status": "open",
+      "summary": "评估类论文不能只展示单次最优曲线，需要明确训练预算、公平性、随机种子、统计检验和效应量。",
+      "required_actions": [
+        "定义小数据与大数据条件下的训练预算和早停规则。",
+        "记录 seed、fold、subject、dataset 的层级结构。",
+        "建立主指标、次指标、置信区间、显著性检验和多重比较校正策略。",
+        "区分开发图、诊断图和论文正式图。"
+      ],
+      "acceptance_checks": [
+        "主要结论不依赖单次偶然 seed。",
+        "论文图表能报告均值、离散度和统计比较。",
+        "训练预算差异不会被误解释为模型结构优势。"
+      ]
+    },
+    {
+      "id": "WORKPACKAGE-05",
+      "title": "任务、数据集、模态与论文叙事",
+      "severity": "major",
+      "category": "benchmark_design",
+      "status": "open",
+      "summary": "后续实现需要服从评估类论文的主问题：哪些模型在什么任务、数据规模、被试设置、数据集和模态条件下可靠，而不是孤立复现若干模型。",
+      "required_actions": [
+        "以 envelope reconstruction 作为主任务，并明确 match-mismatch/AAD 是派生任务还是独立扩展。",
+        "为 Etard/Weissbart、SparrKULee/KULeuven、DTU、样例数据和潜在 MEG 数据定义角色。",
+        "明确哪些数据集支持哪些任务，哪些只能用于 sanity check 或迁移测试。",
+        "按照蓝图中的 figure/table plan 记录结果，避免后期重排成本过高。"
+      ],
+      "acceptance_checks": [
+        "每个实验都能对应到蓝图中的任务和图表位置。",
+        "数据集差异可以用于解释结果，而不是事后挑选好看的数据。",
+        "最终 manuscript 能形成评估论文的主线，而不是复现实验集合。"
+      ]
+    }
+  ]
+}

@@ -440,16 +440,24 @@ def main() -> int:
         }
 
         if not dataset_path.exists():
+            if dataset_id == "etard_tf64_p00":
+                required_preparation = [
+                    "prepare or restore the shared full reference split directory data/processed/reference_splits/etard_tf64",
+                    "the article pilot expects participant P00 to be read from the full etard_tf64 export, not from the test fixture etard_tf64_p00_test"
+                ]
+                suggested_command = None
+            else:
+                required_preparation = [
+                    "prepare the requested dataset locator and verify the participant-specific split files are present"
+                ]
+                suggested_command = None
             failure = {
                 "dataset_id": dataset_id,
                 "status": "missing_dataset_directory",
                 "expected_locator": dataset_cfg["dataset_locator"],
                 "runtime_checked_path": stable_locator(dataset_path),
-                "required_preparation": [
-                    "prepare the aligned reference-splits export for the requested P00 pilot directory",
-                    "for Etard, the existing local export is data/processed/reference_splits/etard_tf64_p00_test and should not be silently substituted for etard_tf64_p00"
-                ],
-                "suggested_command": "python scripts/export_etard_reference_splits.py --participants P00 --output-dir data/processed/reference_splits/etard_tf64_p00"
+                "required_preparation": required_preparation,
+                "suggested_command": suggested_command,
             }
             failures.append(failure)
             dataset_report["status"] = "failed_missing_dataset"
@@ -509,7 +517,7 @@ def main() -> int:
         "artifact_scope": config["artifact_scope"],
         "previous_fix_branch": config["previous_fix_branch"],
         "previous_fix_commit": config["previous_fix_commit"],
-        "current_branch": "fix/ar-20260625-161300-a43831b-article-pilot-weissbart-etard-p00",
+        "current_branch": config.get("current_branch", "fix/ar-20260625-161300-a43831b-etard-p00-pilot-closure"),
         "device": device,
         "datasets_requested": [item["dataset_id"] for item in config["datasets"]],
         "models_requested": list(config["models"]),
@@ -567,7 +575,11 @@ def main() -> int:
         ])
         for failure in failures:
             summary_lines.append(f"- `{failure['dataset_id']}` missing at expected locator `{failure['expected_locator']}`.")
-            summary_lines.append(f"  Suggested preparation: `{failure['suggested_command']}`")
+            if failure.get("suggested_command"):
+                summary_lines.append(f"  Suggested preparation: `{failure['suggested_command']}`")
+            else:
+                for note in failure.get("required_preparation", []):
+                    summary_lines.append(f"  Preparation note: `{note}`")
     summary_lines.extend([
         "",
         "## Interpretation guardrail",
@@ -581,10 +593,11 @@ def main() -> int:
         "",
         f"- previous fix branch: `{config['previous_fix_branch']}`",
         f"- previous fix commit: `{config['previous_fix_commit']}`",
-        "- current fix branch: `fix/ar-20260625-161300-a43831b-article-pilot-weissbart-etard-p00`",
+        f"- current fix branch: `{config.get('current_branch', 'fix/ar-20260625-161300-a43831b-etard-p00-pilot-closure')}`",
         "",
         "## Newly run in this round",
-        "- `weissbart_tf64_p00` pilot outputs under `experiments/gate0_gate2_article_pilot/`",
+        "- `etard_tf64_p00` pilot closure under `experiments/gate0_gate2_article_pilot/`",
+        "- the unified runner now reads Etard `P00` directly from the full `etard_tf64` export instead of requiring a separate `etard_tf64_p00` alias",
         "- `ridge`, `cca`, `fcnn`, `adt` under the unified pilot runner",
         "",
         "## Not rerun in this round",
@@ -594,10 +607,10 @@ def main() -> int:
         "- full-subject Etard runs",
         "- historical HappyQuokka and VLAAI result bundles",
         "",
-        "## Missing-dataset handling",
-        "- `etard_tf64_p00` was requested but not found locally.",
-        "- The existing local `etard_tf64_p00_test` export was not substituted silently.",
-        "- A failure report was emitted in `run_manifest.json` instead of fabricating Etard pilot metrics."
+        "## Etard pilot closure",
+        "- `etard_tf64_p00` now succeeds by reading participant `P00` from `data/processed/reference_splits/etard_tf64`.",
+        "- `etard_tf64_p00_test` remains only a test fixture and was not substituted silently as article pilot evidence.",
+        "- `failure_report.json` is no longer needed once the Etard pilot closure succeeds."
     ]
     (output_dir / "incremental_comparison.md").write_text("\n".join(incremental_lines) + "\n", encoding="utf-8")
 
@@ -610,6 +623,11 @@ def main() -> int:
     }
     with open(output_dir / "schema_validation_report.json", "w", encoding="utf-8") as handle:
         json.dump(schema_report, handle, indent=2)
+
+    if not failures:
+        failure_file = output_dir / "failure_report.json"
+        if failure_file.exists():
+            failure_file.unlink()
 
     shutil.rmtree(output_dir / "_tmp", ignore_errors=True)
 

@@ -1,9 +1,9 @@
 {
   "protocol": "gate0_gate2_article_pilot",
   "artifact_scope": "article_grade_dataset_pilot_validation",
-  "previous_fix_branch": "fix/ar-20260625-161300-a43831b-gate0-gate2-real-evidence-and-paper",
-  "previous_fix_commit": "39b78b6a9f2cab94f7665a80efe794d3c5b99671",
-  "current_branch": "fix/ar-20260625-161300-a43831b-article-pilot-weissbart-etard-p00",
+  "previous_fix_branch": "fix/ar-20260625-161300-a43831b-article-pilot-weissbart-etard-p00",
+  "previous_fix_commit": "827e66d9c703595ec65c2abda2e6e7c1a6da8807",
+  "current_branch": "fix/ar-20260625-161300-a43831b-etard-p00-pilot-closure",
   "device": "cuda",
   "datasets_requested": [
     "weissbart_tf64_p00",
@@ -52,44 +52,56 @@
           "status": "success",
           "checkpoint_id": "adt_epoch_2",
           "best_epoch": 2,
-          "best_val_metric": 0.1403538160464343,
-          "test_pearson_direct": 0.1629469468923328,
+          "best_val_metric": 0.14035136997699738,
+          "test_pearson_direct": 0.16295074601240866,
           "device": "cuda"
         }
       ]
     },
     {
       "dataset_id": "etard_tf64_p00",
-      "dataset_locator": "data/processed/reference_splits/etard_tf64_p00",
+      "dataset_locator": "data/processed/reference_splits/etard_tf64",
       "subject_id": "P00",
-      "status": "failed_missing_dataset",
-      "models": [],
-      "failure_report": {
-        "dataset_id": "etard_tf64_p00",
-        "status": "missing_dataset_directory",
-        "expected_locator": "data/processed/reference_splits/etard_tf64_p00",
-        "runtime_checked_path": "data/processed/reference_splits/etard_tf64_p00",
-        "required_preparation": [
-          "prepare the aligned reference-splits export for the requested P00 pilot directory",
-          "for Etard, the existing local export is data/processed/reference_splits/etard_tf64_p00_test and should not be silently substituted for etard_tf64_p00"
-        ],
-        "suggested_command": "python scripts/export_etard_reference_splits.py --participants P00 --output-dir data/processed/reference_splits/etard_tf64_p00"
-      }
+      "status": "success",
+      "models": [
+        {
+          "model": "ridge",
+          "status": "success",
+          "checkpoint_id": "ridge_alpha_10.0",
+          "best_alpha": 10.0,
+          "val_pearson": 0.16543914377689362,
+          "test_pearson_direct": 0.08856015451578379
+        },
+        {
+          "model": "cca",
+          "status": "success",
+          "checkpoint_id": "cca_nc_1",
+          "n_components": 1,
+          "val_recon_corr": 0.0631836979788111,
+          "test_recon_corr_direct": 0.06378096764993631
+        },
+        {
+          "model": "fcnn",
+          "status": "success",
+          "checkpoint_id": "fcnn_epoch_3",
+          "best_epoch": 3,
+          "best_val_score": 0.10566417165100575,
+          "test_pearson_direct": 0.03089972592054757,
+          "device": "cuda"
+        },
+        {
+          "model": "adt",
+          "status": "success",
+          "checkpoint_id": "adt_epoch_2",
+          "best_epoch": 2,
+          "best_val_metric": 0.09361538290707333,
+          "test_pearson_direct": 0.056455132402974756,
+          "device": "cuda"
+        }
+      ]
     }
   ],
-  "failures": [
-    {
-      "dataset_id": "etard_tf64_p00",
-      "status": "missing_dataset_directory",
-      "expected_locator": "data/processed/reference_splits/etard_tf64_p00",
-      "runtime_checked_path": "data/processed/reference_splits/etard_tf64_p00",
-      "required_preparation": [
-        "prepare the aligned reference-splits export for the requested P00 pilot directory",
-        "for Etard, the existing local export is data/processed/reference_splits/etard_tf64_p00_test and should not be silently substituted for etard_tf64_p00"
-      ],
-      "suggested_command": "python scripts/export_etard_reference_splits.py --participants P00 --output-dir data/processed/reference_splits/etard_tf64_p00"
-    }
-  ],
+  "failures": [],
   "artifacts": {
     "recording_metrics": "experiments/gate0_gate2_article_pilot/recording_metrics.csv",
     "subject_metrics": "experiments/gate0_gate2_article_pilot/subject_metrics.csv",
@@ -97,6 +109,6 @@
     "schema_validation_report": "experiments/gate0_gate2_article_pilot/schema_validation_report.json",
     "incremental_comparison": "experiments/gate0_gate2_article_pilot/incremental_comparison.md",
     "prediction_samples_head": "experiments/gate0_gate2_article_pilot/prediction_samples_head.csv",
-    "failure_report": "experiments/gate0_gate2_article_pilot/failure_report.json"
+    "failure_report": null
   }
 }

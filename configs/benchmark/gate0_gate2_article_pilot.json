@@ -18,15 +18,16 @@
     },
     {
       "dataset_id": "etard_tf64_p00",
-      "dataset_locator": "data/processed/reference_splits/etard_tf64_p00",
+      "dataset_locator": "data/processed/reference_splits/etard_tf64",
       "subject_id": "P00",
       "sampling_rate": 64,
       "required": true
     }
   ],
   "output_dir": "experiments/gate0_gate2_article_pilot",
-  "previous_fix_branch": "fix/ar-20260625-161300-a43831b-gate0-gate2-real-evidence-and-paper",
-  "previous_fix_commit": "39b78b6a9f2cab94f7665a80efe794d3c5b99671",
+  "previous_fix_branch": "fix/ar-20260625-161300-a43831b-article-pilot-weissbart-etard-p00",
+  "previous_fix_commit": "827e66d9c703595ec65c2abda2e6e7c1a6da8807",
+  "current_branch": "fix/ar-20260625-161300-a43831b-etard-p00-pilot-closure",
   "ridge": {
     "start_lag": 0,
     "end_lag": 50,

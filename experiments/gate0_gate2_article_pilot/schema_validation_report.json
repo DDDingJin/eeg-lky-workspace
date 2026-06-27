@@ -1,7 +1,7 @@
 {
   "metrics_dir": "experiments/gate0_gate2_article_pilot",
-  "recording_rows": 60,
-  "subject_rows": 4,
+  "recording_rows": 156,
+  "subject_rows": 8,
   "prediction_head_exists": true,
   "ok": true
 }

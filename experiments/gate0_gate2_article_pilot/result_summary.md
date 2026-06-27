@@ -17,12 +17,12 @@ This directory is a pilot validation layer for article-grade candidate datasets,
   - `ridge` subject-level Pearson: `0.132547`
   - `cca` subject-level Pearson: `0.064111`
   - `fcnn` subject-level Pearson: `0.050608`
-  - `adt` subject-level Pearson: `0.162947`
-- `etard_tf64_p00`: `failed_missing_dataset`
-
-## Missing or blocked datasets
-- `etard_tf64_p00` missing at expected locator `data/processed/reference_splits/etard_tf64_p00`.
-  Suggested preparation: `python scripts/export_etard_reference_splits.py --participants P00 --output-dir data/processed/reference_splits/etard_tf64_p00`
+  - `adt` subject-level Pearson: `0.162951`
+- `etard_tf64_p00`: `success`
+  - `ridge` subject-level Pearson: `0.088560`
+  - `cca` subject-level Pearson: `0.063781`
+  - `fcnn` subject-level Pearson: `0.030900`
+  - `adt` subject-level Pearson: `0.056455`
 
 ## Interpretation guardrail
 - These P00 pilot outputs only validate that the current unified runner/scorer stack can be extended to article-grade candidate datasets.

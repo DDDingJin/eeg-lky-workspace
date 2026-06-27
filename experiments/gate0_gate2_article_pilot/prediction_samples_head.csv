@@ -1,9 +1,9 @@
 dataset,model,task,protocol,seed,subject_id,recording_id,sampling_rate,time_index,prediction,target,valid_mask,checkpoint_id,artifact_scope
-weissbart_tf64_p00,adt,reconstruction,gate0_gate2_article_pilot,0,P00,test_-_P00_-_AUNP01,64,0,-1.3850632905960083,1.8829021453857422,1,adt_epoch_2,article_grade_dataset_pilot_validation
-weissbart_tf64_p00,adt,reconstruction,gate0_gate2_article_pilot,0,P00,test_-_P00_-_AUNP01,64,1,-1.0582339763641357,2.086232900619507,1,adt_epoch_2,article_grade_dataset_pilot_validation
-weissbart_tf64_p00,adt,reconstruction,gate0_gate2_article_pilot,0,P00,test_-_P00_-_AUNP01,64,2,-1.2822997570037842,2.1055757999420166,1,adt_epoch_2,article_grade_dataset_pilot_validation
-weissbart_tf64_p00,adt,reconstruction,gate0_gate2_article_pilot,0,P00,test_-_P00_-_AUNP01,64,3,-1.2150799036026,1.8385323286056519,1,adt_epoch_2,article_grade_dataset_pilot_validation
-weissbart_tf64_p00,adt,reconstruction,gate0_gate2_article_pilot,0,P00,test_-_P00_-_AUNP01,64,4,-1.166210651397705,1.267600655555725,1,adt_epoch_2,article_grade_dataset_pilot_validation
+weissbart_tf64_p00,adt,reconstruction,gate0_gate2_article_pilot,0,P00,test_-_P00_-_AUNP01,64,0,-1.3862688541412354,1.8829021453857422,1,adt_epoch_2,article_grade_dataset_pilot_validation
+weissbart_tf64_p00,adt,reconstruction,gate0_gate2_article_pilot,0,P00,test_-_P00_-_AUNP01,64,1,-1.0593942403793335,2.086232900619507,1,adt_epoch_2,article_grade_dataset_pilot_validation
+weissbart_tf64_p00,adt,reconstruction,gate0_gate2_article_pilot,0,P00,test_-_P00_-_AUNP01,64,2,-1.2834432125091553,2.1055757999420166,1,adt_epoch_2,article_grade_dataset_pilot_validation
+weissbart_tf64_p00,adt,reconstruction,gate0_gate2_article_pilot,0,P00,test_-_P00_-_AUNP01,64,3,-1.2161829471588135,1.8385323286056519,1,adt_epoch_2,article_grade_dataset_pilot_validation
+weissbart_tf64_p00,adt,reconstruction,gate0_gate2_article_pilot,0,P00,test_-_P00_-_AUNP01,64,4,-1.1673541069030762,1.267600655555725,1,adt_epoch_2,article_grade_dataset_pilot_validation
 weissbart_tf64_p00,cca,reconstruction,gate0_gate2_article_pilot,0,P00,test_-_P00_-_AUNP01,64,49,0.16510887444019318,0.22627323865890503,1,cca_nc_2,article_grade_dataset_pilot_validation
 weissbart_tf64_p00,cca,reconstruction,gate0_gate2_article_pilot,0,P00,test_-_P00_-_AUNP01,64,50,0.174651101231575,-0.23775681853294373,1,cca_nc_2,article_grade_dataset_pilot_validation
 weissbart_tf64_p00,cca,reconstruction,gate0_gate2_article_pilot,0,P00,test_-_P00_-_AUNP01,64,51,0.18410544097423553,-0.7166063189506531,1,cca_nc_2,article_grade_dataset_pilot_validation

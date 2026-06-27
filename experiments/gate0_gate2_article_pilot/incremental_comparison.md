@@ -1,11 +1,12 @@
 # Incremental Comparison
 
-- previous fix branch: `fix/ar-20260625-161300-a43831b-gate0-gate2-real-evidence-and-paper`
-- previous fix commit: `39b78b6a9f2cab94f7665a80efe794d3c5b99671`
-- current fix branch: `fix/ar-20260625-161300-a43831b-article-pilot-weissbart-etard-p00`
+- previous fix branch: `fix/ar-20260625-161300-a43831b-article-pilot-weissbart-etard-p00`
+- previous fix commit: `827e66d9c703595ec65c2abda2e6e7c1a6da8807`
+- current fix branch: `fix/ar-20260625-161300-a43831b-etard-p00-pilot-closure`
 
 ## Newly run in this round
-- `weissbart_tf64_p00` pilot outputs under `experiments/gate0_gate2_article_pilot/`
+- `etard_tf64_p00` pilot closure under `experiments/gate0_gate2_article_pilot/`
+- the unified runner now reads Etard `P00` directly from the full `etard_tf64` export instead of requiring a separate `etard_tf64_p00` alias
 - `ridge`, `cca`, `fcnn`, `adt` under the unified pilot runner
 
 ## Not rerun in this round
@@ -15,7 +16,7 @@
 - full-subject Etard runs
 - historical HappyQuokka and VLAAI result bundles
 
-## Missing-dataset handling
-- `etard_tf64_p00` was requested but not found locally.
-- The existing local `etard_tf64_p00_test` export was not substituted silently.
-- A failure report was emitted in `run_manifest.json` instead of fabricating Etard pilot metrics.
+## Etard pilot closure
+- `etard_tf64_p00` now succeeds by reading participant `P00` from `data/processed/reference_splits/etard_tf64`.
+- `etard_tf64_p00_test` remains only a test fixture and was not substituted silently as article pilot evidence.
+- `failure_report.json` is no longer needed once the Etard pilot closure succeeds.

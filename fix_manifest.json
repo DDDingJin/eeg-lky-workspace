@@ -6,7 +6,7 @@
   "fix_branch": "fix/ar-20260625-161300-a43831b-gate0-gate2-real-evidence-and-paper",
   "fix_base_commit": "3d335839e9c9631c163ff48fb670d2e03ba2d558",
   "previous_fix_commit": "3d335839e9c9631c163ff48fb670d2e03ba2d558",
-  "current_fix_commit": "a4b94640d42bc2bd5ddaec604254f6fc4d4e8b73",
+  "current_fix_commit": "db7368601fca0b3177e73ad20f61066f03101785",
   "rule_branch": "origin/rule/research-audit-loop-v1",
   "rule_commit": "032c81484f1ccf141e5991a0a9d70a3294d8d532",
   "skill_alignment_file": "workflow/skill_alignment.md",

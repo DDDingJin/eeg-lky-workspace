@@ -16,6 +16,12 @@ Current commit:
 
 - `0a5d70173c0621f89cef43b53db7c87c33ef3f46`
 
+Commit note:
+
+- `0a5d70173c0621f89cef43b53db7c87c33ef3f46` is the real-sample result commit.
+- `a4b94640d42bc2bd5ddaec604254f6fc4d4e8b73` is the incremental cleanup and artifact-tracking commit.
+- `db7368601fca0b3177e73ad20f61066f03101785` is the skill-sync metadata commit that aligns the repository with the now-installed local `research-audit-loop` skill.
+
 ## What Changed In This Round
 
 | Item | Previous fix branch | Current fix branch | Incremental status |

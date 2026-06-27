@@ -20,11 +20,14 @@ Files actually read and followed for this review/fix loop:
 
 Skill installation status:
 
-- 本轮未证明本地安装同名 skill，仅按 GitHub rule branch 的文件内容执行。
-- English audit equivalent: local installation of a same-named skill was not proven in this round; execution followed the GitHub rule-branch files directly.
+- 已安装本地 `research-audit-loop` skill。
+- 安装来源：GitHub 仓库 `DDDingJin/eeg-lky-workspace`
+- 安装分支：`rule/research-audit-loop-v1`
 
 Audit note:
 
-- The local Codex skill directory was checked.
-- No local installed `research-audit-loop` skill was found under the current Codex skills root.
-- The implementer workflow in this branch therefore followed the version-locked rule files directly from the GitHub rule branch above.
+- The local Codex skill directory was checked before installation.
+- The skill is now installed at `C:/Users/Administrator/.codex/skills/research-audit-loop`.
+- The workflow for subsequent rounds can therefore reference both:
+  - the installed local skill
+  - the locked GitHub rule branch and commit above

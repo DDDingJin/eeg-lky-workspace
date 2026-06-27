@@ -6,7 +6,7 @@
   "fix_branch": "fix/ar-20260625-161300-a43831b-gate0-gate2-real-evidence-and-paper",
   "fix_base_commit": "3d335839e9c9631c163ff48fb670d2e03ba2d558",
   "previous_fix_commit": "3d335839e9c9631c163ff48fb670d2e03ba2d558",
-  "current_fix_commit": "0a5d70173c0621f89cef43b53db7c87c33ef3f46",
+  "current_fix_commit": "a4b94640d42bc2bd5ddaec604254f6fc4d4e8b73",
   "rule_branch": "origin/rule/research-audit-loop-v1",
   "rule_commit": "032c81484f1ccf141e5991a0a9d70a3294d8d532",
   "skill_alignment_file": "workflow/skill_alignment.md",
@@ -29,6 +29,8 @@
     "experiments/gate0_gate2_real_sample/boundary_validation.md",
     "experiments/gate0_gate2_real_sample/result_summary.md",
     "experiments/gate0_gate2_real_sample/schema_validation_report.json",
+    "experiments/gate0_gate2_real_sample/incremental_comparison.md",
+    "experiments/gate0_gate2_real_sample/prediction_samples_head.csv",
     "paper/draft_zh/"
   ],
   "carried_forward_results": [
@@ -37,8 +39,7 @@
     "src/benchmark/scoring.py",
     "scripts/smoke_test_gate0_gate2.py",
     "experiments/gate0_gate2_smoke/",
-    "review_response.md",
-    "fix_manifest.json"
+    "review_response.md"
   ],
   "not_rerun_in_this_round": [
     "experiments/summary_figures/*",
@@ -52,6 +53,7 @@
     "workflow/skill_lock.json",
     "experiments/gate0_gate2_real_sample/incremental_comparison.md",
     "experiments/gate0_gate2_real_sample/prediction_samples_head.csv",
+    "experiments/gate0_gate2_real_sample/.gitignore",
     "fix_manifest.json"
   ],
   "validation_commands": [
@@ -69,7 +71,7 @@
   ],
   "notes": [
     "This manifest is an incremental update on top of the real-sample closure commit.",
-    "The local Codex skills directory did not prove a locally installed research-audit-loop skill; the workflow followed the GitHub rule branch files directly.",
-    "Large prediction dumps and the ADT checkpoint were removed from Git tracking in this incremental cleanup commit but remain available locally if needed."
+    "The local research-audit-loop skill is now installed under the Codex skills directory while the workflow remains locked to the GitHub rule branch and commit above.",
+    "Large prediction dumps and the ADT checkpoint were removed from Git tracking in the incremental cleanup commit but remain available locally if needed."
   ]
 }

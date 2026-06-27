@@ -1,0 +1,12 @@
+{
+  "repo_root": "E:\\decode\\_fix_gate0_gate2",
+  "checks": {
+    "metrics_dir": {
+      "metrics_dir": "experiments\\gate0_gate2_smoke",
+      "errors": [],
+      "recording_rows": 3,
+      "subject_rows": 2
+    }
+  },
+  "ok": true
+}

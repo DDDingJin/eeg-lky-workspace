@@ -1,0 +1,85 @@
+{
+  "protocol_name": "auditory_reconstruction_v1",
+  "last_updated": "2026-06-13",
+  "task": "speech_envelope_reconstruction",
+  "primary_dataset": {
+    "dataset_id": "hugo_sample_125hz",
+    "path": "E:\\decode\\data\\processed\\mldecoders\\hugo_sample_125hz.h5",
+    "sampling_rate_hz": 125,
+    "participants": [
+      "P00",
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12"
+    ]
+  },
+  "split_policy": {
+    "mode": "subject_dependent",
+    "train_parts": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    "val_parts": [9, 10, 11],
+    "test_parts": [12, 13, 14]
+  },
+  "window_policy": {
+    "dnn_input_length_samples": 50,
+    "reference_input_length_samples": 320,
+    "lag_start": 0,
+    "lag_end": 50
+  },
+  "metrics": {
+    "primary": "test_pearson",
+    "secondary": [
+      "subject_mean",
+      "subject_std"
+    ],
+    "separate_task_metrics": [
+      "test_recon_corr",
+      "test_match_mismatch_accuracy",
+      "test_canonical_corr",
+      "test_mean_channel_corr"
+    ]
+  },
+  "reporting_tiers": {
+    "stable_main_baselines": [
+      "ridge",
+      "avgcorr_lasso",
+      "cnn",
+      "eegnet"
+    ],
+    "stable_secondary_baselines": [
+      "avgcorr_ridge",
+      "avgdec_lasso",
+      "avgdec_ridge",
+      "fcnn"
+    ],
+    "advanced_candidate_models": [
+      "adt_lite",
+      "vlaai_lite",
+      "vlaai_official_exact",
+      "vlaai_adt_repo_exact",
+      "adt_reference_tf",
+      "vlaai_reference_tf",
+      "vlaai_adt_reference_tf"
+    ],
+    "diagnostic_only_methods": [
+      "cca_recon",
+      "cca_match_mismatch",
+      "cca_canonical",
+      "forward_ridge"
+    ]
+  },
+  "rules": [
+    "Main figure claims must only use stable_main_baselines unless all compared methods share the same task, split scope, training budget, and metric.",
+    "Advanced candidate models remain important, but they must be reported separately until exact reproduction conditions are aligned.",
+    "Reference TensorFlow runs are implementation checks, not final benchmark claims.",
+    "Do not mix reconstruction correlation and match-mismatch accuracy on the same ranking axis."
+  ]
+}

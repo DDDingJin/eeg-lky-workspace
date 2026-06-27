@@ -1,0 +1,75 @@
+{
+  "repo_root": "E:\\decode\\_fix_gate0_gate2",
+  "checks": {
+    "model_registry": {
+      "num_entries": 9,
+      "rows": [
+        {
+          "model_id": "ridge",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "architecture_baseline",
+          "status": "available"
+        },
+        {
+          "model_id": "cca",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "architecture_baseline",
+          "status": "available"
+        },
+        {
+          "model_id": "fcnn",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "architecture_baseline",
+          "status": "available"
+        },
+        {
+          "model_id": "cnn",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "architecture_baseline",
+          "status": "available"
+        },
+        {
+          "model_id": "eegnet",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "architecture_baseline",
+          "status": "available"
+        },
+        {
+          "model_id": "adt_exact",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "faithful_port",
+          "status": "partial"
+        },
+        {
+          "model_id": "vlaai_exact",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "faithful_port",
+          "status": "partial"
+        },
+        {
+          "model_id": "happyquokka_gcon",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "faithful_port",
+          "status": "partial"
+        },
+        {
+          "model_id": "null_gcon",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "local_exploratory",
+          "status": "available"
+        }
+      ],
+      "errors": []
+    }
+  },
+  "ok": true
+}

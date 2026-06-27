@@ -1,0 +1,3 @@
+dataset,model,task,protocol,seed,subject_id,metric_name,metric_value,num_recordings,checkpoint_id,artifact_scope
+synthetic_fixture,schema_smoke,reconstruction,gate0_gate2_smoke,0,S01,mean_recording_pearson_r,0.9999999999999996,2,smoke-checkpoint,smoke_test_only
+synthetic_fixture,schema_smoke,reconstruction,gate0_gate2_smoke,0,S02,mean_recording_pearson_r,0.9999999999999999,1,smoke-checkpoint,smoke_test_only

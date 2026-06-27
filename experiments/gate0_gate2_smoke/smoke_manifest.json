@@ -1,0 +1,95 @@
+{
+  "output_dir": "E:\\decode\\_fix_gate0_gate2\\experiments\\gate0_gate2_smoke",
+  "registry": {
+    "num_entries": 9,
+    "rows": [
+      {
+        "model_id": "ridge",
+        "runner_exists": true,
+        "config_exists": true,
+        "implementation_type": "architecture_baseline",
+        "status": "available"
+      },
+      {
+        "model_id": "cca",
+        "runner_exists": true,
+        "config_exists": true,
+        "implementation_type": "architecture_baseline",
+        "status": "available"
+      },
+      {
+        "model_id": "fcnn",
+        "runner_exists": true,
+        "config_exists": true,
+        "implementation_type": "architecture_baseline",
+        "status": "available"
+      },
+      {
+        "model_id": "cnn",
+        "runner_exists": true,
+        "config_exists": true,
+        "implementation_type": "architecture_baseline",
+        "status": "available"
+      },
+      {
+        "model_id": "eegnet",
+        "runner_exists": true,
+        "config_exists": true,
+        "implementation_type": "architecture_baseline",
+        "status": "available"
+      },
+      {
+        "model_id": "adt_exact",
+        "runner_exists": true,
+        "config_exists": true,
+        "implementation_type": "faithful_port",
+        "status": "partial"
+      },
+      {
+        "model_id": "vlaai_exact",
+        "runner_exists": true,
+        "config_exists": true,
+        "implementation_type": "faithful_port",
+        "status": "partial"
+      },
+      {
+        "model_id": "happyquokka_gcon",
+        "runner_exists": true,
+        "config_exists": true,
+        "implementation_type": "faithful_port",
+        "status": "partial"
+      },
+      {
+        "model_id": "null_gcon",
+        "runner_exists": true,
+        "config_exists": true,
+        "implementation_type": "local_exploratory",
+        "status": "available"
+      }
+    ],
+    "errors": []
+  },
+  "scorer": {
+    "artifact_scope": "smoke_test_only",
+    "dataset": "synthetic_fixture",
+    "num_prediction_rows": 124,
+    "num_recording_rows": 3,
+    "num_subject_rows": 2,
+    "recording_metric_mean": 0.9999999999999997,
+    "subject_metric_mean": 0.9999999999999998
+  },
+  "boundaries": {
+    "recording_lengths": [
+      12,
+      15,
+      11
+    ],
+    "start_lag": 0,
+    "end_lag": 4,
+    "unsafe_cross_boundary_rows": 6,
+    "safe_cross_boundary_rows": 0,
+    "boundary_fix_passed": true,
+    "artifact_scope": "smoke_test_only"
+  },
+  "ok": true
+}

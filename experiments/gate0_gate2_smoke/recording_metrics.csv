@@ -1,0 +1,4 @@
+dataset,model,task,protocol,seed,subject_id,recording_id,sampling_rate,metric_name,metric_value,num_valid_samples,checkpoint_id,artifact_scope
+synthetic_fixture,schema_smoke,reconstruction,gate0_gate2_smoke,0,S01,rec_A,64,pearson_r,0.9999999999999996,40,smoke-checkpoint,smoke_test_only
+synthetic_fixture,schema_smoke,reconstruction,gate0_gate2_smoke,0,S01,rec_B,64,pearson_r,0.9999999999999997,30,smoke-checkpoint,smoke_test_only
+synthetic_fixture,schema_smoke,reconstruction,gate0_gate2_smoke,0,S02,rec_C,64,pearson_r,0.9999999999999999,27,smoke-checkpoint,smoke_test_only

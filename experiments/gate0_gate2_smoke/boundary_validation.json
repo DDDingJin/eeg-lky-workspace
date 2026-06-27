@@ -1,0 +1,13 @@
+{
+  "recording_lengths": [
+    12,
+    15,
+    11
+  ],
+  "start_lag": 0,
+  "end_lag": 4,
+  "unsafe_cross_boundary_rows": 6,
+  "safe_cross_boundary_rows": 0,
+  "boundary_fix_passed": true,
+  "artifact_scope": "smoke_test_only"
+}

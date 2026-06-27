@@ -1,0 +1,9 @@
+{
+  "artifact_scope": "smoke_test_only",
+  "dataset": "synthetic_fixture",
+  "num_prediction_rows": 124,
+  "num_recording_rows": 3,
+  "num_subject_rows": 2,
+  "recording_metric_mean": 0.9999999999999997,
+  "subject_metric_mean": 0.9999999999999998
+}

@@ -1,30 +1,29 @@
-\section{当前最小结果: Pipeline Validation}
+\section{当前最小结果：Article-Grade Dataset Pilot Validation}
 
-本节故意不写成正式 benchmark finding，而仅报告本轮最小真实结果闭环是否成立。当前使用的数据是一个已存在的公开 sample-like split：\texttt{hugo\_sample\_tf64\_p00}。它包含 train/val/test 切分，适合用于检验 runner、schema、scorer 和 lag boundary 处理是否已经接通。
-
-本轮至少运行了三类模型：
+本节仍然不是完整 benchmark 结果，而是将统一的 runner、schema 与 scorer 扩展到主论文候选数据集后的最小 pilot 证据。当前轮次只覆盖两个目标数据集的 P00 级别验证：
 \begin{itemize}
-  \item 一个 classical baseline：Ridge；
-  \item 一个 simple neural baseline：FCNN；
-  \item 一个 target model：ADT。
+  \item \texttt{weissbart\_tf64\_p00}
+  \item \texttt{etard\_tf64\_p00}
 \end{itemize}
 
-所有最终结果都由统一 scorer 重算，并输出为：
+本轮固定模型集合为四个代表性方法：
 \begin{itemize}
-  \item \texttt{prediction\_samples.csv}
-  \item \texttt{recording\_metrics.csv}
-  \item \texttt{subject\_metrics.csv}
-  \item \texttt{run\_manifest.json}
+  \item classical baseline: Ridge
+  \item classical baseline: CCA
+  \item simple neural baseline: FCNN
+  \item target model: ADT
 \end{itemize}
 
-此外，本轮还在真实 recording 长度上对 lag boundary 风险进行了验证，目的是证明不能把跨 recording 拼接后的滞后矩阵直接当作合法训练输入。
+当前结果显示，\texttt{weissbart\_tf64\_p00} 已经可以通过统一 scorer 产生每条 recording 与每个 subject 的标准化输出；\texttt{etard\_tf64\_p00} 则由于本地缺少目标目录而被明确记录为 failure，而不是被其它近似目录静默替代。该设计的目的，是保证文章级 benchmark 在进入多被试、多 seed 之前，已经具备清晰的数据边界与失败可追溯性。
 
-这里的数值即使看起来合理，也暂时不能被解释为模型优劣结论。原因包括：
+对 \texttt{weissbart\_tf64\_p00} 而言，本轮得到的 subject-level Pearson 仅用于验证流程是否连通，而不能作为论文结论。当前数值为：Ridge 0.133、CCA 0.064、FCNN 0.051、ADT 0.163。它们只能说明在同一数据入口、同一输出 schema、同一 scorer 下，四类模型都已经能够产出可比较的单被试 pilot 指标。
+
+本轮不能支持的结论同样需要明确指出：
 \begin{itemize}
-  \item 当前只覆盖单被试最小样例；
-  \item 训练预算尚未在全部模型间统一；
-  \item faithful port 与 official reference 的 parity 证据尚不充分；
-  \item 尚未进行多 seed、多数据集和统计检验。
+  \item 不能据此判断模型在完整 Weissbart 或 Etard 数据集上的优劣；
+  \item 不能据此判断 faithful port 与 official reference 的 parity 是否已经成立；
+  \item 不能据此替代后续的多被试、多 seed 与跨数据集统计分析；
+  \item 不能把单被试 P00 排名写成正式 benchmark finding。
 \end{itemize}
 
-因此，本节当前只承担一个功能：证明 benchmark 的最小真实结果闭环已经形成。
+因此，本节当前承担的唯一功能是：证明主论文候选数据集已经从 sample-level pipeline validation，推进到了 article-grade dataset pilot validation。

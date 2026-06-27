@@ -1,0 +1,61 @@
+{
+  "protocol": "gate0_gate2_article_pilot",
+  "artifact_scope": "article_grade_dataset_pilot_validation",
+  "seed": 0,
+  "models": [
+    "ridge",
+    "cca",
+    "fcnn",
+    "adt"
+  ],
+  "datasets": [
+    {
+      "dataset_id": "weissbart_tf64_p00",
+      "dataset_locator": "data/processed/reference_splits/weissbart_tf64_p00",
+      "subject_id": "P00",
+      "sampling_rate": 64,
+      "required": true
+    },
+    {
+      "dataset_id": "etard_tf64_p00",
+      "dataset_locator": "data/processed/reference_splits/etard_tf64_p00",
+      "subject_id": "P00",
+      "sampling_rate": 64,
+      "required": true
+    }
+  ],
+  "output_dir": "experiments/gate0_gate2_article_pilot",
+  "previous_fix_branch": "fix/ar-20260625-161300-a43831b-gate0-gate2-real-evidence-and-paper",
+  "previous_fix_commit": "39b78b6a9f2cab94f7665a80efe794d3c5b99671",
+  "ridge": {
+    "start_lag": 0,
+    "end_lag": 50,
+    "alphas": [
+      0.001,
+      0.01,
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ]
+  },
+  "fcnn": {
+    "window_size": 50,
+    "hidden_layers": 3,
+    "dropout_rate": 0.45,
+    "batch_size": 256,
+    "epochs": 5,
+    "patience": 3,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001
+  },
+  "adt": {
+    "window_length": 320,
+    "hop_length": 64,
+    "batch_size": 32,
+    "epochs": 3,
+    "patience": 2,
+    "learning_rate": 0.001,
+    "min_lr": 0.0001
+  }
+}

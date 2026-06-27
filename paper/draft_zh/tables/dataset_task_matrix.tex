@@ -1,16 +1,18 @@
 \begin{table}[ht]
 \centering
-\caption{当前数据与任务矩阵}
+\caption{当前数据集与任务矩阵（以评估角色而非论文结论为准）}
 \begin{tabular}{llll}
 \toprule
 数据集 & 当前状态 & 支持任务 & 当前角色 \\
 \midrule
-hugo\_sample\_tf64\_p00 & 已接入 & reconstruction & pipeline validation \\
-hugo\_sample\_tf64 & 已存在但未在本轮重跑 & reconstruction & tutorial/development set \\
-weissbart\_tf64 & 已处理，待统一重跑 & reconstruction & 主 benchmark 候选 \\
-etard\_tf64 & 已处理，待统一重跑 & reconstruction & 主 benchmark 候选 \\
-SparrKULee & 计划接入 & reconstruction / AAD & 扩展 benchmark \\
-Fuglsang / DTU & 部分可得 & generalization / AAD & 外部泛化与派生任务 \\
+hugo\_sample\_tf64\_p00 & 已接入并验证 & reconstruction & pipeline validation \\
+hugo\_sample\_tf64 & 已存在但本轮未重跑 & reconstruction & development / smoke set \\
+weissbart\_tf64\_p00 & 本轮已运行 & reconstruction & article-grade dataset pilot \\
+etard\_tf64\_p00 & 本轮请求但缺失目录 & reconstruction & article-grade dataset pilot failure check \\
+weissbart\_tf64 & 已处理，待全被试统一重跑 & reconstruction & main benchmark candidate \\
+etard\_tf64 & 需整理为统一入口后重跑 & reconstruction & main benchmark candidate \\
+SparrKULee / KULeuven AAD & 计划接入 & reconstruction / AAD & benchmark expansion \\
+Fuglsang / DTU / 其它外部集 & 部分可得 & generalization / AAD & external validation \\
 \bottomrule
 \end{tabular}
 \end{table}

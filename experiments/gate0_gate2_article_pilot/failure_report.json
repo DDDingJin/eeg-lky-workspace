@@ -1,0 +1,15 @@
+{
+  "failures": [
+    {
+      "dataset_id": "etard_tf64_p00",
+      "status": "missing_dataset_directory",
+      "expected_locator": "data/processed/reference_splits/etard_tf64_p00",
+      "runtime_checked_path": "data/processed/reference_splits/etard_tf64_p00",
+      "required_preparation": [
+        "prepare the aligned reference-splits export for the requested P00 pilot directory",
+        "for Etard, the existing local export is data/processed/reference_splits/etard_tf64_p00_test and should not be silently substituted for etard_tf64_p00"
+      ],
+      "suggested_command": "python scripts/export_etard_reference_splits.py --participants P00 --output-dir data/processed/reference_splits/etard_tf64_p00"
+    }
+  ]
+}

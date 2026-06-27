@@ -3,62 +3,66 @@
   "review_branch": "origin/review/ar-20260625-161300-a43831b-blueprint",
   "target_branch": "audit/reproduction-note",
   "target_commit": "a43831b83598c82520be320c21b56e92b73b7dcd",
-  "fix_branch": "fix/ar-20260625-161300-a43831b-gate0-gate2",
-  "fix_base_commit": "a43831b83598c82520be320c21b56e92b73b7dcd",
+  "fix_branch": "fix/ar-20260625-161300-a43831b-gate0-gate2-real-evidence-and-paper",
+  "fix_base_commit": "3d335839e9c9631c163ff48fb670d2e03ba2d558",
   "scope": [
     "WORKPACKAGE-01",
     "WORKPACKAGE-02",
-    "WORKPACKAGE-03"
-  ],
-  "deferred_workpackages": [
-    "WORKPACKAGE-04",
+    "WORKPACKAGE-03",
     "WORKPACKAGE-05"
   ],
-  "artifact_scope_rule": "Smoke-test artifacts in this branch validate traceability, schema, scorer, and recording-boundary behavior only. They are not benchmark or paper results.",
+  "deferred_workpackages": [
+    "WORKPACKAGE-04"
+  ],
+  "artifact_scope_rule": "Artifacts in experiments/gate0_gate2_real_sample validate engineering closure, scorer/schema closure, and minimal real-sample execution only. They are not final benchmark or paper claims.",
   "modified_or_added_files": [
-    "configs/baseline_protocol.json",
+    "configs/benchmark/gate0_gate2_real_sample.json",
     "registry/model_registry.csv",
-    "docs/MODEL_IDENTITY_AND_VALIDATION.md",
     "review_response.md",
     "fix_manifest.json",
-    "src/benchmark/__init__.py",
-    "src/benchmark/registry.py",
-    "src/benchmark/result_schema.py",
-    "src/benchmark/scoring.py",
-    "src/benchmark/boundaries.py",
     "scripts/validate_result_schema.py",
     "scripts/smoke_test_gate0_gate2.py",
-    "src/repro/happyquokka_reference.py",
-    "src/repro/mldecoders/__init__.py",
-    "src/repro/mldecoders/cca.py",
-    "src/repro/mldecoders/datasets.py",
-    "src/repro/mldecoders/linear_baselines.py",
-    "src/repro/mldecoders/models.py",
-    "scripts/run_reference_baselines.py",
-    "scripts/run_reference_exact_suite.py",
-    "scripts/run_happyquokka_reference.py",
-    "scripts/run_adt_exact_reference.py",
-    "scripts/run_vlaai_exact_reference.py"
+    "scripts/run_gate0_gate2_real_sample.py",
+    "scripts/check_paper_draft.py",
+    "src/benchmark/registry.py",
+    "src/repro/simple_models.py",
+    "docs/MODEL_IDENTITY_AND_VALIDATION.md",
+    "experiments/gate0_gate2_real_sample/run_manifest.json",
+    "experiments/gate0_gate2_real_sample/recording_metrics.csv",
+    "experiments/gate0_gate2_real_sample/subject_metrics.csv",
+    "experiments/gate0_gate2_real_sample/scorer_validation.md",
+    "experiments/gate0_gate2_real_sample/boundary_validation.md",
+    "experiments/gate0_gate2_real_sample/result_summary.md",
+    "paper/draft_zh/main.tex",
+    "paper/draft_zh/sections/introduction_zh.tex",
+    "paper/draft_zh/sections/methods_zh.tex",
+    "paper/draft_zh/sections/benchmark_design_zh.tex",
+    "paper/draft_zh/sections/results_placeholder_zh.tex",
+    "paper/draft_zh/sections/discussion_zh.tex",
+    "paper/draft_zh/tables/model_inventory_table.tex",
+    "paper/draft_zh/tables/dataset_task_matrix.tex",
+    "paper/draft_zh/tables/metric_schema_table.tex",
+    "paper/draft_zh/figures/README.md"
   ],
   "validation_commands": [
-    "python scripts/smoke_test_gate0_gate2.py --phase all",
     "python scripts/validate_result_schema.py --check-model-registry --output experiments/gate0_gate2_smoke/registry_validation_report.json",
-    "python scripts/validate_result_schema.py --check-metrics-dir experiments/gate0_gate2_smoke --output experiments/gate0_gate2_smoke/schema_validation_report.json"
+    "python scripts/smoke_test_gate0_gate2.py --phase all",
+    "python scripts/run_gate0_gate2_real_sample.py --config configs/benchmark/gate0_gate2_real_sample.json",
+    "python scripts/check_paper_draft.py"
   ],
   "expected_validation_artifacts": [
-    "experiments/gate0_gate2_smoke/registry_validation.json",
     "experiments/gate0_gate2_smoke/registry_validation_report.json",
-    "experiments/gate0_gate2_smoke/prediction_samples.csv",
-    "experiments/gate0_gate2_smoke/recording_metrics.csv",
-    "experiments/gate0_gate2_smoke/subject_metrics.csv",
-    "experiments/gate0_gate2_smoke/scorer_smoke_summary.json",
-    "experiments/gate0_gate2_smoke/boundary_validation.json",
-    "experiments/gate0_gate2_smoke/schema_validation_report.json",
-    "experiments/gate0_gate2_smoke/smoke_manifest.json"
+    "experiments/gate0_gate2_smoke/smoke_manifest.json",
+    "experiments/gate0_gate2_real_sample/run_manifest.json",
+    "experiments/gate0_gate2_real_sample/recording_metrics.csv",
+    "experiments/gate0_gate2_real_sample/subject_metrics.csv",
+    "experiments/gate0_gate2_real_sample/scorer_validation.md",
+    "experiments/gate0_gate2_real_sample/boundary_validation.md",
+    "experiments/gate0_gate2_real_sample/result_summary.md"
   ],
   "notes": [
-    "The current local audit branch had advanced to 0e47630 locally, but this fix branch is intentionally locked to the reviewed commit a43831b.",
-    "A backup branch was created for the local advanced audit state before opening this fix branch.",
-    "This branch restores missing code paths required for audit traceability and adds a runnable Gate 0 to Gate 2 validation layer."
+    "The previous fix branch established the Gate 0 through Gate 2 framework baseline; this branch upgrades it into a minimal real-sample closure and manuscript scaffold.",
+    "The local runtime data source for the real-sample run is resolved through a shared workspace locator and is not committed as an absolute path inside review-facing documents.",
+    "This round intentionally keeps benchmark claims conservative and labels the new outputs as pipeline validation rather than final results."
   ]
 }

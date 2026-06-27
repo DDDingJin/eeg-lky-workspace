@@ -25,7 +25,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    report: dict[str, object] = {"repo_root": str(ROOT), "checks": {}}
+    report: dict[str, object] = {"repo_root": ".", "checks": {}}
     errors: list[str] = []
 
     if args.check_model_registry:
@@ -36,7 +36,11 @@ def main() -> int:
 
     if args.check_metrics_dir:
         metrics_dir = Path(args.check_metrics_dir)
-        metrics_report: dict[str, object] = {"metrics_dir": str(metrics_dir), "errors": []}
+        try:
+            metrics_dir_value = metrics_dir.relative_to(ROOT).as_posix()
+        except ValueError:
+            metrics_dir_value = metrics_dir.as_posix()
+        metrics_report: dict[str, object] = {"metrics_dir": metrics_dir_value, "errors": []}
         recording_path = metrics_dir / "recording_metrics.csv"
         subject_path = metrics_dir / "subject_metrics.csv"
         if not recording_path.exists():

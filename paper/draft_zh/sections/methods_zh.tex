@@ -1,0 +1,9 @@
+\section{方法与实现边界}
+
+当前仓库中的模型并不都处于同一成熟度，因此必须先明确模型身份。本文将模型划分为三类。第一类是 \textbf{classical baselines}，例如 Ridge 与 CCA，它们用于建立线性和经典统计基线。第二类是 \textbf{simple neural baselines}，例如 FCNN、CNN、DNN 和 Linear，这类模型用于提供统一输入接口下的浅层神经网络参照。第三类是 \textbf{target auditory models}，例如 VLAAI、ADT 和 HappyQuokka，这些模型更接近当前听觉解码文献中的代表性结构。
+
+更关键的是实现来源并不相同。我们进一步用 \texttt{implementation\_type} 标记为 \texttt{official\_reference}、\texttt{faithful\_port}、\texttt{architecture\_baseline} 或 \texttt{local\_exploratory}。这一区分不是形式要求，而是为了防止“官方结果、忠实移植、结构参考实现和本地探索模型”被混在同一张表中却不加说明。
+
+本轮实现中，所有最终比较输出都必须经过统一 scorer 重算，而不能直接采用各模型自带的内部指标。对于 reconstruction 主任务，统一指标为 Pearson correlation，并在 recording 和 subject 两个层级输出。对 CCA 这类同时会产生 canonical correlation、reconstruction correlation 和 match-mismatch accuracy 的模型，本轮只将 reconstruction Pearson 纳入统一主表，其余指标保留为附加证据，避免任务定义混淆。
+
+\input{tables/model_inventory_table.tex}

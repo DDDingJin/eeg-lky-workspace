@@ -163,7 +163,11 @@ def main() -> int:
     output_dir = Path(args.output_dir)
     ensure_dir(output_dir)
 
-    report: dict[str, object] = {"output_dir": str(output_dir)}
+    try:
+        output_dir_value = output_dir.relative_to(ROOT).as_posix()
+    except ValueError:
+        output_dir_value = output_dir.as_posix()
+    report: dict[str, object] = {"output_dir": output_dir_value}
     ok = True
 
     if args.phase in {"all", "registry"}:

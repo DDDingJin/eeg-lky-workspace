@@ -1,70 +1,70 @@
 {
-  "output_dir": "E:\\decode\\_fix_gate0_gate2\\experiments\\gate0_gate2_smoke",
+  "output_dir": "experiments/gate0_gate2_smoke",
   "registry": {
     "num_entries": 9,
     "rows": [
       {
-        "model_id": "ridge",
+        "model_name": "linear",
         "runner_exists": true,
         "config_exists": true,
         "implementation_type": "architecture_baseline",
-        "status": "available"
+        "current_validation_status": "registry_only"
       },
       {
-        "model_id": "cca",
+        "model_name": "dnn",
         "runner_exists": true,
         "config_exists": true,
         "implementation_type": "architecture_baseline",
-        "status": "available"
+        "current_validation_status": "registry_only"
       },
       {
-        "model_id": "fcnn",
+        "model_name": "fcnn",
         "runner_exists": true,
         "config_exists": true,
         "implementation_type": "architecture_baseline",
-        "status": "available"
+        "current_validation_status": "real_sample_minimal_complete"
       },
       {
-        "model_id": "cnn",
+        "model_name": "cnn",
         "runner_exists": true,
         "config_exists": true,
         "implementation_type": "architecture_baseline",
-        "status": "available"
+        "current_validation_status": "registry_only"
       },
       {
-        "model_id": "eegnet",
+        "model_name": "ridge",
         "runner_exists": true,
         "config_exists": true,
         "implementation_type": "architecture_baseline",
-        "status": "available"
+        "current_validation_status": "real_sample_minimal_complete"
       },
       {
-        "model_id": "adt_exact",
+        "model_name": "cca",
+        "runner_exists": true,
+        "config_exists": true,
+        "implementation_type": "architecture_baseline",
+        "current_validation_status": "real_sample_boundary_complete"
+      },
+      {
+        "model_name": "vlaai",
         "runner_exists": true,
         "config_exists": true,
         "implementation_type": "faithful_port",
-        "status": "partial"
+        "current_validation_status": "partial"
       },
       {
-        "model_id": "vlaai_exact",
+        "model_name": "adt",
         "runner_exists": true,
         "config_exists": true,
         "implementation_type": "faithful_port",
-        "status": "partial"
+        "current_validation_status": "real_sample_minimal_complete"
       },
       {
-        "model_id": "happyquokka_gcon",
+        "model_name": "happyquokka",
         "runner_exists": true,
         "config_exists": true,
         "implementation_type": "faithful_port",
-        "status": "partial"
-      },
-      {
-        "model_id": "null_gcon",
-        "runner_exists": true,
-        "config_exists": true,
-        "implementation_type": "local_exploratory",
-        "status": "available"
+        "current_validation_status": "partial"
       }
     ],
     "errors": []

@@ -1,0 +1,15 @@
+\begin{table}[ht]
+\centering
+\caption{当前统一指标与结果 schema}
+\begin{tabular}{lll}
+\toprule
+层级 & 文件 / 指标 & 说明 \\
+\midrule
+sample 级 & prediction\_samples.csv & 连续预测与 target 的统一导出 \\
+recording 级 & recording\_metrics.csv & 主指标为 Pearson correlation \\
+subject 级 & subject\_metrics.csv & recording 指标的 subject 聚合 \\
+run 级 & run\_manifest.json & 记录模型、配置、artifact scope 与命令来源 \\
+附加指标 & canonical / mm accuracy & 仅用于特定模型的附加说明，不并入主比较列 \\
+\bottomrule
+\end{tabular}
+\end{table}

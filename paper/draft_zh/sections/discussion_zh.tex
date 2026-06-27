@@ -1,0 +1,7 @@
+\section{讨论与下一步}
+
+从审稿和长期执行蓝图的角度看，本轮最重要的成果并不是新增了多少模型，而是把“代码结构存在”推进到了“最小真实结果可复核”。这意味着 reviewer 现在已经可以围绕三个层级提出更具体的意见：第一，模型身份是否标注清楚；第二，数据切分与打分边界是否统一；第三，哪些模型值得优先升级到 official parity 或大规模 benchmark 阶段。
+
+下一阶段应优先完成以下事项。其一，把当前 registry 中仍处于 \texttt{registry\_only} 或 \texttt{partial} 的模型继续推进，特别是 CNN、DNN、VLAAI 与 HappyQuokka。其二，把当前的最小 sample 闭环推广到更多公开被试与公开数据集，并开始收集 per-recording、per-subject、per-seed 三个层级的统一结果。其三，把 reconstruction 主任务扩展到 match-mismatch 与 AAD 派生任务，从而让 benchmark 的任务谱系真正完整。
+
+如果后续要形成期刊论文，还需要补充统计设计，包括聚合方式、显著性检验和跨数据集泛化策略。同时，必须继续保持 official reference、faithful port 和 local exploratory 三类实现的边界，避免在论文图表中误把不同复现层级混为一谈。

@@ -1,0 +1,7 @@
+\section{引言}
+
+本项目当前的目标不是撰写单一新模型论文，而是构建一个面向听觉脑解码任务的统一评估基准。核心问题不是“某一个模型是否优于其他模型”，而是“在统一的数据边界、统一的输出格式、统一的评分逻辑下，不同模型家族在听觉相关任务上究竟可以被如何公平比较”。这一定义直接决定了工程结构和审稿流程都必须服务于可追溯、可复算和可扩展，而不仅仅是跑出若干数字。
+
+当前阶段将 \textbf{speech envelope reconstruction} 作为主任务，原因有三点。第一，它是目前多个公开 EEG 听觉数据集都较容易对齐的共同任务。第二，它可以为后续的 match-mismatch 与 auditory attention decoding 提供统一的连续输出基础。第三，它最容易暴露实现细节导致的比较偏差，例如时延窗口、跨 recording 边界拼接、窗口聚合方式和 subject conditioning 的影响。
+
+在任务谱系上，envelope reconstruction、match-mismatch 和 AAD 之间并不是互斥关系。envelope reconstruction 提供连续重建轨迹；match-mismatch 可以视为基于重建或相关结构的派生判别任务；AAD 则是更高层的注意选择任务，常见于 competing-speaker 或 cocktail-party 设定。因此，当前 benchmark 的主线是先把 reconstruction 的实现和评分边界收紧，再在后续阶段扩展到判别式任务与跨数据集泛化。

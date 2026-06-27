@@ -126,7 +126,7 @@ The following remote method has been audited but is not yet locally integrated i
 
 - `NeuroConformer`
   - audited from `origin/master:happy/NeuroConformer/`
-  - documented in [NEUROCONFORMER_AUDIT.md](/E:/decode/docs/NEUROCONFORMER_AUDIT.md)
+  - documented in `docs/NEUROCONFORMER_AUDIT.md`
 
 Important naming note:
 
@@ -152,7 +152,7 @@ Important:
 
 Source file:
 
-- [sample_all_methods_summary.csv](/E:/decode/experiments/summary_figures/sample_all_methods_summary.csv)
+- `experiments/summary_figures/sample_all_methods_summary.csv`
 
 Current mean full-subject results:
 
@@ -172,13 +172,13 @@ Current mean full-subject results:
 
 Associated figure:
 
-- [sample_all_methods_overview.png](/E:/decode/experiments/summary_figures/sample_all_methods_overview.png)
+- `experiments/summary_figures/sample_all_methods_overview.png`
 
 ### 3.2 Exact structural ports across unified datasets
 
 Source file:
 
-- [exact_reference_dataset_summary.csv](/E:/decode/experiments/summary_figures/exact_reference_dataset_summary.csv)
+- `experiments/summary_figures/exact_reference_dataset_summary.csv`
 
 Current `100`-epoch-requested, early-stopped runs:
 
@@ -204,9 +204,9 @@ Current `100`-epoch-requested, early-stopped runs:
 
 Source files:
 
-- [happyquokka_conditioning_summary.csv](/E:/decode/experiments/summary_figures/happyquokka_conditioning_summary.csv)
-- [happyquokka_conditioning_overview.png](/E:/decode/experiments/summary_figures/happyquokka_conditioning_overview.png)
-- [happyquokka_training_curves.png](/E:/decode/experiments/summary_figures/happyquokka_training_curves.png)
+- `experiments/summary_figures/happyquokka_conditioning_summary.csv`
+- `experiments/summary_figures/happyquokka_conditioning_overview.png`
+- `experiments/summary_figures/happyquokka_training_curves.png`
 
 Current `100`-epoch runs:
 
@@ -229,9 +229,9 @@ Interpretation:
 
 Source files:
 
-- [null_conditioning_summary.csv](/E:/decode/experiments/summary_figures/null_conditioning_summary.csv)
-- [null_conditioning_overview.png](/E:/decode/experiments/summary_figures/null_conditioning_overview.png)
-- [null_training_curves.png](/E:/decode/experiments/summary_figures/null_training_curves.png)
+- `experiments/summary_figures/null_conditioning_summary.csv`
+- `experiments/summary_figures/null_conditioning_overview.png`
+- `experiments/summary_figures/null_training_curves.png`
 
 Current `10`-epoch runs:
 
@@ -254,7 +254,7 @@ Interpretation:
 
 Associated figure:
 
-- [exact_reference_dataset_overview.png](/E:/decode/experiments/summary_figures/exact_reference_dataset_overview.png)
+- `experiments/summary_figures/exact_reference_dataset_overview.png`
 
 ## 4. How The Current Training Procedure Works
 

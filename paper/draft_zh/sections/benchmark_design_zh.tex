@@ -1,0 +1,11 @@
+\section{Benchmark 设计}
+
+当前 benchmark 的第一原则是统一数据边界。即使同属 envelope reconstruction，不同项目对 train/val/test 的定义、窗口长度、滑窗步长、recording 聚合方式以及 subject conditioning 的处理都可能不同。本项目在本轮仅要求完成最小真实闭环，因此使用一个小型公开 sample 作为 pipeline validation 的载体，但输出格式、打分脚本和边界检查方式已经按后续多数据集扩展的标准设计。
+
+第二原则是统一输出 schema。每个模型都必须最终对接相同的输出层，包括 prediction 样本、recording 级指标、subject 级指标与 run manifest。这样后续无论是 classical baseline、simple neural baseline 还是 faithful port，都可以被同一套归档、可视化与统计工具消费。
+
+第三原则是明确任务矩阵。当前主任务是 envelope reconstruction；match-mismatch 和 AAD 暂作为派生或扩展任务。对于后续数据集接入，必须先标记每个数据是否适合 reconstruction、是否存在 competing-speaker 条件、是否支持 AAD 或 match-mismatch 扩展。
+
+\input{tables/dataset_task_matrix.tex}
+
+\input{tables/metric_schema_table.tex}

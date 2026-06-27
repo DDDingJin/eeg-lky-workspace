@@ -4,172 +4,203 @@ Review round: `AR-20260625-161300-a43831b`
 Role: `implementer`  
 Target branch: `audit/reproduction-note`  
 Target commit: `a43831b83598c82520be320c21b56e92b73b7dcd`  
-Fix branch: `fix/ar-20260625-161300-a43831b-gate0-gate2`  
+Fix branch: `fix/ar-20260625-161300-a43831b-gate0-gate2-real-evidence-and-paper`  
 Updated at: `2026-06-27T00:00:00+08:00`
 
-This response is scoped to Gate 0 through Gate 2 only.
+This response is still scoped around Gate 0 through Gate 2, but it advances the previous framework-only round into a minimal real-sample closure and a manuscript scaffold.
 
 - Gate 0: review package completeness and traceability
 - Gate 1: model identity and reproduction boundary clarity
-- Gate 2: unified schema, scorer, and lag-boundary validation
+- Gate 2: unified schema, scorer, and lag-boundary validation on a real sample
 
-It does not claim article-grade benchmark completion.
-It does not claim multi-seed or multi-dataset benchmark closure.
-Smoke-test outputs below are validation artifacts, not paper results.
+It does not claim article-grade benchmark completion.  
+It does not claim multi-seed or multi-dataset benchmark closure.  
+Artifacts under `experiments/gate0_gate2_real_sample/` are pipeline-validation evidence, not final benchmark claims.
 
 ## WORKPACKAGE-01
 
-Status: `partially completed`
+Status: `mostly complete`
 
 What is completed:
 
-- Restored key code paths explicitly flagged as missing in the review:
-  - [happyquokka_reference.py](/E:/decode/_fix_gate0_gate2/src/repro/happyquokka_reference.py)
-  - [run_reference_baselines.py](/E:/decode/_fix_gate0_gate2/scripts/run_reference_baselines.py)
-  - [run_reference_exact_suite.py](/E:/decode/_fix_gate0_gate2/scripts/run_reference_exact_suite.py)
-  - [cca.py](/E:/decode/_fix_gate0_gate2/src/repro/mldecoders/cca.py)
-  - [linear_baselines.py](/E:/decode/_fix_gate0_gate2/src/repro/mldecoders/linear_baselines.py)
-- Added a registry that records model identity, source, runner path, config path, comparable scope, and current validation status:
-  - [model_registry.csv](/E:/decode/_fix_gate0_gate2/registry/model_registry.csv)
-- Added a validator that checks whether the registry rows point to real runner/config files:
-  - [validate_result_schema.py](/E:/decode/_fix_gate0_gate2/scripts/validate_result_schema.py)
-- Added a minimal identity and validation note:
-  - [MODEL_IDENTITY_AND_VALIDATION.md](/E:/decode/_fix_gate0_gate2/docs/MODEL_IDENTITY_AND_VALIDATION.md)
+- Registry fields were rewritten to match the requested minimum audit schema:
+  - `model_name`
+  - `implementation_type`
+  - `source_paper`
+  - `source_repo_or_local_path`
+  - `runner_path`
+  - `config_path`
+  - `supported_tasks`
+  - `current_validation_status`
+  - `known_deviations`
+- The required core rows are now present in:
+  - `registry/model_registry.csv`
+  - `linear`
+  - `dnn`
+  - `fcnn`
+  - `cnn`
+  - `ridge`
+  - `cca`
+  - `vlaai`
+  - `adt`
+  - `happyquokka`
+- The registry validator was updated to validate the new field names and runner/config existence:
+  - `src/benchmark/registry.py`
+  - `scripts/validate_result_schema.py`
+- The previous path pollution in `review_response.md` was removed. This branch no longer uses committed absolute Windows paths in the review response or fix manifest.
+- A dedicated real-sample config and runner were added:
+  - `configs/benchmark/gate0_gate2_real_sample.json`
+  - `scripts/run_gate0_gate2_real_sample.py`
 
 Evidence:
 
-- Registry smoke output will be written to:
-  - `experiments/gate0_gate2_smoke/registry_validation.json`
+- Registry file:
+  - `registry/model_registry.csv`
 - Validation command:
-  - `python scripts/validate_result_schema.py --check-model-registry --output experiments/gate0_gate2_smoke/registry_validation_report.json`
+  - `python scripts/validate_result_schema.py --check-model-registry`
 
 What is not yet completed:
 
-- Full environment lockfiles, full config matrix coverage, and per-run log manifests for all historical results are not closed in this branch.
-- This branch restores traceability for core rows and adds a registry/validator baseline, but it is not yet a complete publication release package.
+- Not every legacy benchmark script has been fully normalized into the new registry contract.
+- Some older documentation files elsewhere in the repository still contain historical local path notes and dataset-location notes. Those are legacy operational documents, not the current audit response layer.
 
 ## WORKPACKAGE-02
 
-Status: `partially completed`
+Status: `partial`
 
 What is completed:
 
-- Introduced explicit model identity categories required by the review:
-  - `official_reference`
-  - `faithful_port`
+- The model families now have explicit audit-facing identities in the registry and manuscript scaffold:
   - `architecture_baseline`
+  - `faithful_port`
   - `local_exploratory`
-- Recorded current known deviations and current validation scope for:
+- The current comparison scope is now explicitly separated for:
+  - classical baseline rows
+  - simple neural baseline rows
+  - target faithful-port rows
+- The current real-sample minimal closure includes:
   - `ridge`
-  - `cca`
   - `fcnn`
-  - `cnn`
-  - `eegnet`
-  - `adt_exact`
-  - `vlaai_exact`
-  - `happyquokka_gcon`
-  - `null_gcon`
-- Restored the HappyQuokka implementation path so the row is no longer only a reported result without code:
-  - [happyquokka_reference.py](/E:/decode/_fix_gate0_gate2/src/repro/happyquokka_reference.py)
+  - `adt`
+- `cca` was retained as a boundary and metric-separation row:
+  - reconstruction correlation is kept separate from canonical correlation
+  - match-mismatch is treated as a distinct derived task output
 
 Evidence:
 
-- Model identity source:
-  - [model_registry.csv](/E:/decode/_fix_gate0_gate2/registry/model_registry.csv)
-- Human-readable model cards:
-  - [MODEL_IDENTITY_AND_VALIDATION.md](/E:/decode/_fix_gate0_gate2/docs/MODEL_IDENTITY_AND_VALIDATION.md)
+- Registry:
+  - `registry/model_registry.csv`
+- Real-sample runner:
+  - `scripts/run_gate0_gate2_real_sample.py`
+- Manuscript tables:
+  - `paper/draft_zh/tables/model_inventory_table.tex`
 
 What is not yet completed:
 
-- Full parity artifact packs for ADT, VLAAI, and HappyQuokka are still pending.
-- This branch does not claim that `adt_exact` or `vlaai_exact` has passed full official-framework parity.
-- Those rows are deliberately labeled `faithful_port` and `partial`, not article-grade exact reproductions.
+- No official parity artifact pack was produced for `vlaai`, `adt`, or `happyquokka`.
+- This branch still does not claim official-framework parity, TensorFlow-to-PyTorch parity, or official benchmark-number parity.
+- `dnn` and `cnn` remain listed for coverage, but the branch-level minimal runnable closure currently prioritizes `fcnn` as the simple neural baseline because the original upstream baseline runner is not self-contained in this worktree.
 
-Reason for partial completion:
+Reason for remaining partial:
 
-- The review asked for model identity and reproducibility boundaries first.
-- Full parity work is a Gate 1 continuation, but not required to close Gate 0 package completeness or Gate 2 schema/scorer closure.
+- The review required identity clarity before full parity closure.
+- This round advances traceability and minimal real evidence, but not full official reproduction parity.
 
 ## WORKPACKAGE-03
 
-Status: `completed for smoke-test scope`
+Status: `real-sample minimal complete`
 
 What is completed:
 
-- Added a unified prediction schema:
-  - [result_schema.py](/E:/decode/_fix_gate0_gate2/src/benchmark/result_schema.py)
-- Added a unified reconstruction scorer that:
-  - reconstructs continuous recording-level predictions from overlapping windows
-  - computes recording-level Pearson only on valid samples
-  - aggregates recording rows into subject rows
-  - writes `prediction_samples.csv`, `recording_metrics.csv`, and `subject_metrics.csv`
-  - [scoring.py](/E:/decode/_fix_gate0_gate2/src/benchmark/scoring.py)
-- Added a boundary utility that demonstrates the exact cross-recording lag problem and the safe alternative:
-  - [boundaries.py](/E:/decode/_fix_gate0_gate2/src/benchmark/boundaries.py)
-- Added a smoke script that generates schema-valid synthetic prediction artifacts and a lag-boundary report:
-  - [smoke_test_gate0_gate2.py](/E:/decode/_fix_gate0_gate2/scripts/smoke_test_gate0_gate2.py)
+- The synthetic scorer/schema smoke path remains available:
+  - `scripts/smoke_test_gate0_gate2.py`
+- A real-sample pipeline-validation run was added on:
+  - `hugo_sample_tf64_p00`
+- The real-sample run uses a shared result schema and shared scorer for multiple models:
+  - `ridge`
+  - `fcnn`
+  - `adt`
+- All reported metrics in the real-sample output directory come from the shared scorer:
+  - `experiments/gate0_gate2_real_sample/recording_metrics.csv`
+  - `experiments/gate0_gate2_real_sample/subject_metrics.csv`
+- Real-length lag-boundary validation was added:
+  - `experiments/gate0_gate2_real_sample/boundary_validation.md`
+- Scorer re-computation provenance was documented:
+  - `experiments/gate0_gate2_real_sample/scorer_validation.md`
 
 Evidence:
 
-- Smoke output directory:
-  - `experiments/gate0_gate2_smoke/`
-- Generated files after running the smoke script:
-  - `prediction_samples.csv`
-  - `recording_metrics.csv`
-  - `subject_metrics.csv`
-  - `boundary_validation.json`
-  - `scorer_smoke_summary.json`
-  - `smoke_manifest.json`
-- Validation command:
-  - `python scripts/smoke_test_gate0_gate2.py --phase all`
-- Schema check command:
-  - `python scripts/validate_result_schema.py --check-metrics-dir experiments/gate0_gate2_smoke --output experiments/gate0_gate2_smoke/schema_validation_report.json`
+- Config:
+  - `configs/benchmark/gate0_gate2_real_sample.json`
+- Runner:
+  - `scripts/run_gate0_gate2_real_sample.py`
+- Output directory:
+  - `experiments/gate0_gate2_real_sample/`
 
 Important limitation:
 
-- The current completion is intentionally a smoke-test closure, not a full historical re-scoring of all benchmark runs.
-- It proves that the branch now has a runnable common schema, common scorer, and boundary validation path.
+- This is still only a minimal real-sample closure on a small public sample-like split.
+- These outputs cannot be promoted to article-grade benchmark conclusions.
 
 ## WORKPACKAGE-04
 
-Status: `not executed in this round`
+Status: `planning`
 
-Reason:
+Current state:
 
-- This round is intentionally restricted to Gate 0 through Gate 2.
-- Multi-seed fairness, budget harmonization, and formal statistics require the unified scorer outputs to exist first.
+- The current engineering closure now supports the next phase:
+  - multi-subject reruns
+  - multi-dataset reruns
+  - seed-aware scoring
+  - protocol-level fairness checks
 
-Planned next step:
+What remains:
 
-- Freeze protocol families after the Gate 2 schema is accepted.
-- Then add per-seed, per-protocol result manifests and formal statistical scripts.
+- Multi-seed harmonization
+- Budget harmonization across architectures
+- Statistical testing layer
+- Cross-dataset benchmark schedule
 
 ## WORKPACKAGE-05
 
-Status: `not executed in this round`
+Status: `manuscript scaffold complete`
 
-Reason:
+What is completed:
 
-- This round is intentionally restricted to Gate 0 through Gate 2.
-- The long-term benchmark blueprint was read and used as a scoping constraint, but task hierarchy, dataset roles, EEG/MEG layering, and manuscript figure/table completion are not closed here.
+- A paper scaffold was added under:
+  - `paper/draft_zh/`
+- The manuscript now includes:
+  - benchmark motivation
+  - task framing
+  - dataset-task matrix
+  - model inventory table
+  - metric schema table
+  - minimal result wording as pipeline validation only
 
-Planned next step:
+Evidence:
 
-- Keep the current branch as the technical traceability foundation.
-- Use the accepted schema and model identities as the base for the blueprint-driven benchmark expansion.
+- Main TeX file:
+  - `paper/draft_zh/main.tex`
+- Section files:
+  - `paper/draft_zh/sections/introduction_zh.tex`
+  - `paper/draft_zh/sections/methods_zh.tex`
+  - `paper/draft_zh/sections/benchmark_design_zh.tex`
+  - `paper/draft_zh/sections/results_placeholder_zh.tex`
+  - `paper/draft_zh/sections/discussion_zh.tex`
 
 ## Commands Run
 
-- `python scripts/smoke_test_gate0_gate2.py --phase all`
 - `python scripts/validate_result_schema.py --check-model-registry --output experiments/gate0_gate2_smoke/registry_validation_report.json`
-- `python scripts/validate_result_schema.py --check-metrics-dir experiments/gate0_gate2_smoke --output experiments/gate0_gate2_smoke/schema_validation_report.json`
+- `python scripts/smoke_test_gate0_gate2.py --phase all`
+- `python scripts/run_gate0_gate2_real_sample.py --config configs/benchmark/gate0_gate2_real_sample.json`
+- `python scripts/check_paper_draft.py`
 
 ## Summary
 
-- WORKPACKAGE-01: partially completed
-- WORKPACKAGE-02: partially completed
-- WORKPACKAGE-03: completed for smoke-test scope
-- WORKPACKAGE-04: deferred by scope
-- WORKPACKAGE-05: deferred by scope
+- WORKPACKAGE-01: mostly complete
+- WORKPACKAGE-02: partial
+- WORKPACKAGE-03: real-sample minimal complete
+- WORKPACKAGE-04: planning
+- WORKPACKAGE-05: manuscript scaffold complete
 
-This branch should be reviewed as a Gate 0 to Gate 2 repair branch, not as a completed benchmark branch.
+This branch should be reviewed as a Gate 0 through Gate 2 real-evidence branch. It upgrades the previous framework layer into a minimal real-sample benchmark closure plus a paper-ready scaffold, but it is not yet the final benchmark branch.

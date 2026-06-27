@@ -1,0 +1,75 @@
+{
+  "dataset_id": "hugo_sample_tf64_p00",
+  "dataset_locator": "data/processed/reference_splits/hugo_sample_tf64_p00",
+  "dataset_runtime_source": "shared_workspace_locator",
+  "subject_id": "P00",
+  "protocol": "gate0_gate2_real_sample",
+  "artifact_scope": "pipeline_validation_real_sample",
+  "seed": 0,
+  "device": "cuda",
+  "models_requested": [
+    "ridge",
+    "fcnn",
+    "adt"
+  ],
+  "models_executed": [
+    "ridge",
+    "cca",
+    "fcnn",
+    "adt"
+  ],
+  "model_run_details": [
+    {
+      "model": "ridge",
+      "checkpoint_id": "ridge_alpha_100.0",
+      "train_mode": "fit_and_predict",
+      "best_alpha": 100.0,
+      "val_pearson": 0.20772187411785126,
+      "test_pearson_direct": 0.18610536146685608,
+      "start_lag": 0,
+      "end_lag": 50
+    },
+    {
+      "model": "cca",
+      "checkpoint_id": "cca_nc_4",
+      "train_mode": "fit_and_predict",
+      "n_components": 4,
+      "x_pca_components": 128,
+      "y_pca_components": 16,
+      "recon_alpha": 100.0,
+      "val_recon_corr": 0.14698668761105912,
+      "test_recon_corr_direct": 0.15367274466876804
+    },
+    {
+      "model": "fcnn",
+      "checkpoint_id": "fcnn_epoch_1",
+      "train_mode": "trained_and_predicted",
+      "best_epoch": 1,
+      "epochs_completed": 5,
+      "best_val_score": 0.20808133110404015,
+      "test_pearson_direct": 0.19704612232300345,
+      "window_size": 50,
+      "device": "cuda"
+    },
+    {
+      "model": "adt",
+      "checkpoint_id": "adt_epoch_1",
+      "train_mode": "trained_and_predicted",
+      "best_epoch": 1,
+      "best_val_loss": -0.24441969705436697,
+      "best_val_metric": 0.24441969705436697,
+      "test_subject_metric_direct": 0.24102561198230973,
+      "window_length": 320,
+      "hop_length": 64,
+      "device": "cuda"
+    }
+  ],
+  "artifacts": {
+    "prediction_samples": "experiments/gate0_gate2_real_sample/prediction_samples.csv",
+    "recording_metrics": "experiments/gate0_gate2_real_sample/recording_metrics.csv",
+    "subject_metrics": "experiments/gate0_gate2_real_sample/subject_metrics.csv",
+    "scorer_validation": "experiments/gate0_gate2_real_sample/scorer_validation.md",
+    "boundary_validation": "experiments/gate0_gate2_real_sample/boundary_validation.md",
+    "result_summary": "experiments/gate0_gate2_real_sample/result_summary.md"
+  }
+}

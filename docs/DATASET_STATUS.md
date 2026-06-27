@@ -69,7 +69,7 @@ They should be interpreted as follows.
 
 ### `weissbart_7775260_hdf5`
 
-Path: `E:\decode\data\raw\weissbart_7775260_hdf5`
+Path: `data/raw/weissbart_7775260_hdf5`
 
 Status: complete
 
@@ -94,7 +94,7 @@ Notes:
 
 ### `weissbart_7086168`
 
-Path: `E:\decode\external\data_download\WeissbartSurprisal.zip`
+Path: `external/data_download/WeissbartSurprisal.zip`
 
 Status: present as archive, not unpacked into `data/raw/`
 
@@ -112,7 +112,7 @@ Notes:
 
 ### `DTU / Fuglsang`
 
-Path: `E:\decode\external\upstream\vlaai\evaluation_datasets\DTU`
+Path: `external/upstream/vlaai/evaluation_datasets/DTU`
 
 Status: already present inside upstream VLAAI repository
 
@@ -126,7 +126,7 @@ Notes:
 
 ### `etard_reichenbach_7778289`
 
-Recommended path: `E:\decode\data\raw\etard_7778289_hdf5`
+Recommended path: `data/raw/etard_7778289_hdf5`
 
 Status: downloaded locally and adapted into unified split exports
 
@@ -158,7 +158,7 @@ Current local state:
 
 ### `etard_reichenbach_7086209`
 
-Recommended path: `E:\decode\data\raw\etard_7086209_raw`
+Recommended path: `data/raw/etard_7086209_raw`
 
 Status: missing locally
 
@@ -199,7 +199,7 @@ If a larger raw or official research-grade `hugo` release exists, it is not clea
 
 ### `SparrKULee`
 
-Recommended path: `E:\decode\data\raw\sparrkulee`
+Recommended path: `data/raw/sparrkulee`
 
 Status: missing locally
 
@@ -215,7 +215,7 @@ Why it matters:
 
 ### `ICASSP 2023 challenge split`
 
-Recommended path: `E:\decode\data\raw\challenge_2023`
+Recommended path: `data/raw/challenge_2023`
 
 Status: missing locally
 
@@ -226,7 +226,7 @@ Notes:
 
 ### `ICASSP 2024 challenge split`
 
-Recommended path: `E:\decode\data\raw\challenge_2024`
+Recommended path: `data/raw/challenge_2024`
 
 Status: missing locally
 
@@ -237,7 +237,7 @@ Notes:
 
 ### `Fuglsang hearing dataset`
 
-Recommended path: `E:\decode\data\raw\fuglsang_hearing_3618205`
+Recommended path: `data/raw/fuglsang_hearing_3618205`
 
 Status: downloaded locally as archive, not yet adapted
 

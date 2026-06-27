@@ -1,0 +1,30 @@
+\section{当前最小结果: Pipeline Validation}
+
+本节故意不写成正式 benchmark finding，而仅报告本轮最小真实结果闭环是否成立。当前使用的数据是一个已存在的公开 sample-like split：\texttt{hugo\_sample\_tf64\_p00}。它包含 train/val/test 切分，适合用于检验 runner、schema、scorer 和 lag boundary 处理是否已经接通。
+
+本轮至少运行了三类模型：
+\begin{itemize}
+  \item 一个 classical baseline：Ridge；
+  \item 一个 simple neural baseline：FCNN；
+  \item 一个 target model：ADT。
+\end{itemize}
+
+所有最终结果都由统一 scorer 重算，并输出为：
+\begin{itemize}
+  \item \texttt{prediction\_samples.csv}
+  \item \texttt{recording\_metrics.csv}
+  \item \texttt{subject\_metrics.csv}
+  \item \texttt{run\_manifest.json}
+\end{itemize}
+
+此外，本轮还在真实 recording 长度上对 lag boundary 风险进行了验证，目的是证明不能把跨 recording 拼接后的滞后矩阵直接当作合法训练输入。
+
+这里的数值即使看起来合理，也暂时不能被解释为模型优劣结论。原因包括：
+\begin{itemize}
+  \item 当前只覆盖单被试最小样例；
+  \item 训练预算尚未在全部模型间统一；
+  \item faithful port 与 official reference 的 parity 证据尚不充分；
+  \item 尚未进行多 seed、多数据集和统计检验。
+\end{itemize}
+
+因此，本节当前只承担一个功能：证明 benchmark 的最小真实结果闭环已经形成。

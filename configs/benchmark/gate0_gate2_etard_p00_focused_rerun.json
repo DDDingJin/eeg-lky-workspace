@@ -1,0 +1,35 @@
+{
+  "protocol": "gate0_gate2_etard_p00_focused_rerun",
+  "artifact_scope": "focused_protocol_diagnostic",
+  "seed": 0,
+  "dataset_id": "etard_tf64_p00",
+  "dataset_locator": "data/processed/reference_splits/etard_tf64",
+  "subject_id": "P00",
+  "sampling_rate": 64,
+  "models": [
+    "fcnn",
+    "adt"
+  ],
+  "output_dir": "experiments/gate0_gate2_etard_p00_focused_rerun",
+  "previous_pilot_commit": "58db691d2c08c2b22ce3cfa50119c1a240c41a18",
+  "current_branch": "fix/ar-20260625-161300-a43831b-etard-p00-focused-rerun",
+  "fcnn": {
+    "window_size": 50,
+    "hidden_layers": 3,
+    "dropout_rate": 0.45,
+    "batch_size": 256,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001
+  },
+  "adt": {
+    "window_length": 320,
+    "hop_length": 64,
+    "batch_size": 32,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.001,
+    "min_lr": 0.0001
+  }
+}

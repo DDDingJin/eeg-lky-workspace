@@ -1,0 +1,12 @@
+{
+  "repo_root": ".",
+  "checks": {
+    "metrics_dir": {
+      "metrics_dir": "experiments/gate0_gate2_etard_p00_focused_rerun",
+      "errors": [],
+      "recording_rows": 48,
+      "subject_rows": 2
+    }
+  },
+  "ok": true
+}

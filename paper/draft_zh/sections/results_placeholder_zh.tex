@@ -32,3 +32,5 @@
 \end{itemize}
 
 因此，本节当前承担的唯一功能是：证明主论文候选数据集已经从 sample-level pipeline validation，推进到了双数据集的 article-grade dataset pilot validation。
+
+进一步地，我们对 \texttt{etard\_tf64\_p00} 的 FCNN 与 ADT 做了 focused rerun，在不改变 split、scorer 与 result schema 的前提下，仅增加训练预算。结果显示，ADT 从 pilot 的 0.056 提升到 0.085，已经接近旧的全被试 ADT-exact 均值；而 FCNN 从 0.031 几乎没有提升。这说明 Etard 上的 ADT 低值主要受短训练预算影响，而 FCNN 的差距更可能还涉及模型协议或实现层面的差异。这一步仍然只是 training-budget diagnostic，不应写成正式 benchmark 结论。

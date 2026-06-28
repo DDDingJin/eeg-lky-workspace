@@ -1,0 +1,11 @@
+dataset,model,task,protocol,seed,subject_id,recording_id,sampling_rate,time_index,prediction,target,valid_mask,checkpoint_id,artifact_scope
+etard_tf64_p00,adt,reconstruction,gate0_gate2_etard_p00_focused_rerun,0,P00,test_-_P00_-_clean_part_1,64,0,0.014713183045387268,1.3811426162719727,1,adt_epoch_14,focused_protocol_diagnostic
+etard_tf64_p00,adt,reconstruction,gate0_gate2_etard_p00_focused_rerun,0,P00,test_-_P00_-_clean_part_1,64,1,0.15323027968406677,0.7991966009140015,1,adt_epoch_14,focused_protocol_diagnostic
+etard_tf64_p00,adt,reconstruction,gate0_gate2_etard_p00_focused_rerun,0,P00,test_-_P00_-_clean_part_1,64,2,0.13680462539196014,0.10365850478410721,1,adt_epoch_14,focused_protocol_diagnostic
+etard_tf64_p00,adt,reconstruction,gate0_gate2_etard_p00_focused_rerun,0,P00,test_-_P00_-_clean_part_1,64,3,0.10683442652225494,-0.3471522033214569,1,adt_epoch_14,focused_protocol_diagnostic
+etard_tf64_p00,adt,reconstruction,gate0_gate2_etard_p00_focused_rerun,0,P00,test_-_P00_-_clean_part_1,64,4,0.15671421587467194,-0.3264126479625702,1,adt_epoch_14,focused_protocol_diagnostic
+etard_tf64_p00,fcnn,reconstruction,gate0_gate2_etard_p00_focused_rerun,0,P00,test_-_P00_-_clean_part_1,64,49,-0.3378629684448242,0.5660387277603149,1,fcnn_epoch_3,focused_protocol_diagnostic
+etard_tf64_p00,fcnn,reconstruction,gate0_gate2_etard_p00_focused_rerun,0,P00,test_-_P00_-_clean_part_1,64,50,-0.26265987753868103,0.05764833092689514,1,fcnn_epoch_3,focused_protocol_diagnostic
+etard_tf64_p00,fcnn,reconstruction,gate0_gate2_etard_p00_focused_rerun,0,P00,test_-_P00_-_clean_part_1,64,51,-0.11058584600687027,-0.2758346498012543,1,fcnn_epoch_3,focused_protocol_diagnostic
+etard_tf64_p00,fcnn,reconstruction,gate0_gate2_etard_p00_focused_rerun,0,P00,test_-_P00_-_clean_part_1,64,52,-0.06854497641324997,-0.36312544345855713,1,fcnn_epoch_3,focused_protocol_diagnostic
+etard_tf64_p00,fcnn,reconstruction,gate0_gate2_etard_p00_focused_rerun,0,P00,test_-_P00_-_clean_part_1,64,53,-0.191682830452919,-0.2710714042186737,1,fcnn_epoch_3,focused_protocol_diagnostic

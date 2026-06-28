@@ -1,0 +1,3 @@
+dataset,model,task,protocol,seed,subject_id,metric_name,metric_value,num_recordings,checkpoint_id,artifact_scope
+etard_tf64_p00,fcnn,reconstruction,gate0_gate2_etard_p00_focused_rerun,0,P00,mean_recording_pearson_r,0.03089972592054757,24,fcnn_epoch_3,focused_protocol_diagnostic
+etard_tf64_p00,adt,reconstruction,gate0_gate2_etard_p00_focused_rerun,0,P00,mean_recording_pearson_r,0.08534289740716612,24,adt_epoch_14,focused_protocol_diagnostic

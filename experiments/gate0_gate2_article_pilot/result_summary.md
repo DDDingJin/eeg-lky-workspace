@@ -26,3 +26,9 @@ This directory now contains the original P00 pilot outputs plus a diagnostic-onl
 
 ## Recommended next step
 - Recommendation `C`: pause full-subject for now and do a focused rerun that matches FCNN/ADT protocol or budget more closely on Etard P00.
+
+## Focused rerun note
+- This round also added a focused rerun on `etard_tf64_p00` for `fcnn` and `adt`; it is still diagnostic-only and not a full-subject benchmark rerun.
+- `adt` improved from `0.056455` to `0.085343`, which reduces concern that the earlier ADT pilot was purely a pipeline failure.
+- `fcnn` remained at `0.030900`, so FCNN still requires protocol-focused investigation before broad rollout.
+

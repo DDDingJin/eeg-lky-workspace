@@ -14,3 +14,8 @@ It is diagnostic-only and should not be interpreted as a new benchmark result.
 
 ## Preliminary recommendation
 - This evidence supports `C`: do not jump to full-subject immediately. First do a focused rerun that makes FCNN/ADT closer to the old protocol or epoch budget on Etard P00 (and optionally Weissbart P00 for symmetry).
+
+## Focused rerun addendum
+- ADT focused rerun reached `0.085343` from pilot `0.056455`, which strongly supports training budget as a major cause for the pilot underestimation.
+- FCNN focused rerun stayed at `0.030900` from pilot `0.030900`, which weakens the short-budget explanation for FCNN and points more toward protocol mismatch or implementation differences.
+- Therefore the Etard low-value explanation is now model-specific rather than uniform across all deep models.

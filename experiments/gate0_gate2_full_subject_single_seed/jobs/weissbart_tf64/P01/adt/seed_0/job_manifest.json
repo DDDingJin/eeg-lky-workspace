@@ -1,0 +1,54 @@
+{
+  "dataset": "weissbart_tf64",
+  "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+  "subject_id": "P01",
+  "model": "adt",
+  "seed": 0,
+  "protocol": "gate0_gate2_full_subject_single_seed_v1",
+  "artifact_scope": "full_subject_single_seed_validation",
+  "fingerprint": "8d404560ac3c55ee9cdad503a0708c312357d61b",
+  "fingerprint_payload": {
+    "protocol": "gate0_gate2_full_subject_single_seed_v1",
+    "artifact_scope": "full_subject_single_seed_validation",
+    "config_fingerprint_version": 1,
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "sampling_rate": 64,
+    "subject_id": "P01",
+    "model": "adt",
+    "seed": 0,
+    "scorer_id": "benchmark.scoring.pearson_on_valid",
+    "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric",
+    "model_config": {
+      "architecture_id": "adt_exact_regressor",
+      "implementation_file": "src/repro/adt_exact.py::ADTExactRegressor",
+      "window_length": 320,
+      "hop_length": 64,
+      "batch_size": 32,
+      "max_epochs": 100,
+      "early_stopping_patience": 10,
+      "learning_rate": 0.001,
+      "min_lr": 0.0001
+    }
+  },
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric",
+  "checkpoint_id": "adt_epoch_5",
+  "subject_metric": 0.0942752946739429,
+  "num_recordings": 15,
+  "status": "success",
+  "meta": {
+    "model": "adt",
+    "status": "success",
+    "checkpoint_id": "adt_epoch_5",
+    "best_epoch": 5,
+    "best_val_metric": 0.1507329392082551,
+    "epochs_completed": 16,
+    "test_pearson_direct": 0.0942752946739429,
+    "device": "cuda"
+  },
+  "artifacts": {
+    "recording_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/weissbart_tf64/P01/adt/seed_0/recording_metrics.csv",
+    "subject_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/weissbart_tf64/P01/adt/seed_0/subject_metrics.csv"
+  }
+}

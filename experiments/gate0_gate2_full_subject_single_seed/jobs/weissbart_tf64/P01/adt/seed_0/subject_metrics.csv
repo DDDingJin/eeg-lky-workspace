@@ -1,0 +1,2 @@
+dataset,model,task,protocol,seed,subject_id,metric_name,metric_value,num_recordings,checkpoint_id,artifact_scope
+weissbart_tf64,adt,reconstruction,gate0_gate2_full_subject_single_seed_v1,0,P01,mean_recording_pearson_r,0.0942752946739429,15,adt_epoch_5,full_subject_single_seed_validation

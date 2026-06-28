@@ -312,6 +312,7 @@ def train_adt_exact_reference(
     input_dir: str | Path,
     *,
     participants: Iterable[str] | None = None,
+    train_participant: str | None = None,
     output_dir: str | Path | None = None,
     seq_len: int = 320,
     hop_length: int = 64,
@@ -327,8 +328,20 @@ def train_adt_exact_reference(
     np.random.seed(seed)
 
     input_dir = Path(input_dir)
-    train_dataset = RecordingWindowDataset(input_dir, "train", window_length=seq_len, hop_length=hop_length)
-    val_dataset = RecordingWindowDataset(input_dir, "val", window_length=seq_len, hop_length=hop_length)
+    train_dataset = RecordingWindowDataset(
+        input_dir,
+        "train",
+        participant=train_participant,
+        window_length=seq_len,
+        hop_length=hop_length,
+    )
+    val_dataset = RecordingWindowDataset(
+        input_dir,
+        "val",
+        participant=train_participant,
+        window_length=seq_len,
+        hop_length=hop_length,
+    )
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0, pin_memory=(device == "cuda"))
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=0, pin_memory=(device == "cuda"))

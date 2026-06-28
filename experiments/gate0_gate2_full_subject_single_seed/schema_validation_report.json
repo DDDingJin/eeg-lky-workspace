@@ -1,0 +1,12 @@
+{
+  "repo_root": ".",
+  "checks": {
+    "metrics_dir": {
+      "metrics_dir": "experiments/gate0_gate2_full_subject_single_seed",
+      "errors": [],
+      "recording_rows": 2188,
+      "subject_rows": 92
+    }
+  },
+  "ok": true
+}

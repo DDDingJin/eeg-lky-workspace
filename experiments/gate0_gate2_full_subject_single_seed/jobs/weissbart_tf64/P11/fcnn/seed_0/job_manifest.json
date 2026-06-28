@@ -1,0 +1,56 @@
+{
+  "dataset": "weissbart_tf64",
+  "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+  "subject_id": "P11",
+  "model": "fcnn",
+  "seed": 0,
+  "protocol": "gate0_gate2_full_subject_single_seed_v1",
+  "artifact_scope": "full_subject_single_seed_validation",
+  "fingerprint": "d105e05f7170faf416417398070f441f8ca87dbb",
+  "fingerprint_payload": {
+    "protocol": "gate0_gate2_full_subject_single_seed_v1",
+    "artifact_scope": "full_subject_single_seed_validation",
+    "config_fingerprint_version": 1,
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "sampling_rate": 64,
+    "subject_id": "P11",
+    "model": "fcnn",
+    "seed": 0,
+    "scorer_id": "benchmark.scoring.pearson_on_valid",
+    "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric",
+    "model_config": {
+      "architecture_id": "fcnn_baseline",
+      "implementation_file": "src/repro/simple_models.py::FCNNBaseline",
+      "window_size": 50,
+      "target_index": "last",
+      "hidden_layers": 3,
+      "dropout_rate": 0.45,
+      "batch_size": 256,
+      "max_epochs": 100,
+      "early_stopping_patience": 10,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.0001
+    }
+  },
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric",
+  "checkpoint_id": "fcnn_epoch_1",
+  "subject_metric": 0.09074733462673669,
+  "num_recordings": 15,
+  "status": "success",
+  "meta": {
+    "model": "fcnn",
+    "status": "success",
+    "checkpoint_id": "fcnn_epoch_1",
+    "best_epoch": 1,
+    "best_val_score": 0.11213695167874296,
+    "epochs_completed": 12,
+    "test_pearson_direct": 0.09074733462673669,
+    "device": "cuda"
+  },
+  "artifacts": {
+    "recording_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/weissbart_tf64/P11/fcnn/seed_0/recording_metrics.csv",
+    "subject_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/weissbart_tf64/P11/fcnn/seed_0/subject_metrics.csv"
+  }
+}

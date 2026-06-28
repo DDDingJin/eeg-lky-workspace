@@ -1,0 +1,56 @@
+{
+  "dataset": "etard_tf64",
+  "dataset_locator": "data/processed/reference_splits/etard_tf64",
+  "subject_id": "P01",
+  "model": "ridge",
+  "seed": 0,
+  "protocol": "gate0_gate2_full_subject_single_seed_v1",
+  "artifact_scope": "full_subject_single_seed_validation",
+  "fingerprint": "7d08cb1e1d8eafc7ca2c60ca1af0cd24b1c7e8f5",
+  "fingerprint_payload": {
+    "protocol": "gate0_gate2_full_subject_single_seed_v1",
+    "artifact_scope": "full_subject_single_seed_validation",
+    "config_fingerprint_version": 1,
+    "dataset_id": "etard_tf64",
+    "dataset_locator": "data/processed/reference_splits/etard_tf64",
+    "sampling_rate": 64,
+    "subject_id": "P01",
+    "model": "ridge",
+    "seed": 0,
+    "scorer_id": "benchmark.scoring.pearson_on_valid",
+    "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric",
+    "model_config": {
+      "architecture_id": "backward_trf_ridge",
+      "implementation_file": "src/repro/reference_baselines.py::fit_reference_ridge",
+      "selection_rule": "choose alpha by validation Pearson after lag trimming",
+      "start_lag": 0,
+      "end_lag": 50,
+      "alphas": [
+        0.001,
+        0.01,
+        0.1,
+        1.0,
+        10.0,
+        100.0
+      ]
+    }
+  },
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric",
+  "checkpoint_id": "ridge_alpha_1.0",
+  "subject_metric": 0.09348833170812972,
+  "num_recordings": 24,
+  "status": "success",
+  "meta": {
+    "model": "ridge",
+    "status": "success",
+    "checkpoint_id": "ridge_alpha_1.0",
+    "best_alpha": 1.0,
+    "val_pearson": 0.06379728019237518,
+    "test_pearson_direct": 0.09348833170812972
+  },
+  "artifacts": {
+    "recording_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/etard_tf64/P01/ridge/seed_0/recording_metrics.csv",
+    "subject_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/etard_tf64/P01/ridge/seed_0/subject_metrics.csv"
+  }
+}

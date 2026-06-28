@@ -1,0 +1,56 @@
+{
+  "dataset": "weissbart_tf64",
+  "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+  "subject_id": "P08",
+  "model": "ridge",
+  "seed": 0,
+  "protocol": "gate0_gate2_full_subject_single_seed_v1",
+  "artifact_scope": "full_subject_single_seed_validation",
+  "fingerprint": "aa9f5c1cde338b52aca58d29f9d9da660fe21e64",
+  "fingerprint_payload": {
+    "protocol": "gate0_gate2_full_subject_single_seed_v1",
+    "artifact_scope": "full_subject_single_seed_validation",
+    "config_fingerprint_version": 1,
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "sampling_rate": 64,
+    "subject_id": "P08",
+    "model": "ridge",
+    "seed": 0,
+    "scorer_id": "benchmark.scoring.pearson_on_valid",
+    "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric",
+    "model_config": {
+      "architecture_id": "backward_trf_ridge",
+      "implementation_file": "src/repro/reference_baselines.py::fit_reference_ridge",
+      "selection_rule": "choose alpha by validation Pearson after lag trimming",
+      "start_lag": 0,
+      "end_lag": 50,
+      "alphas": [
+        0.001,
+        0.01,
+        0.1,
+        1.0,
+        10.0,
+        100.0
+      ]
+    }
+  },
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric",
+  "checkpoint_id": "ridge_alpha_100.0",
+  "subject_metric": 0.10332106633028906,
+  "num_recordings": 15,
+  "status": "success",
+  "meta": {
+    "model": "ridge",
+    "status": "success",
+    "checkpoint_id": "ridge_alpha_100.0",
+    "best_alpha": 100.0,
+    "val_pearson": 0.07314714789390564,
+    "test_pearson_direct": 0.10332106633028906
+  },
+  "artifacts": {
+    "recording_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/weissbart_tf64/P08/ridge/seed_0/recording_metrics.csv",
+    "subject_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/weissbart_tf64/P08/ridge/seed_0/subject_metrics.csv"
+  }
+}

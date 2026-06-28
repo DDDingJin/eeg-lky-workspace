@@ -1,0 +1,75 @@
+{
+  "repo_root": ".",
+  "checks": {
+    "model_registry": {
+      "num_entries": 9,
+      "rows": [
+        {
+          "model_name": "linear",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "architecture_baseline",
+          "current_validation_status": "registry_only"
+        },
+        {
+          "model_name": "dnn",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "architecture_baseline",
+          "current_validation_status": "registry_only"
+        },
+        {
+          "model_name": "fcnn",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "architecture_baseline",
+          "current_validation_status": "real_sample_minimal_complete"
+        },
+        {
+          "model_name": "cnn",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "architecture_baseline",
+          "current_validation_status": "registry_only"
+        },
+        {
+          "model_name": "ridge",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "architecture_baseline",
+          "current_validation_status": "real_sample_minimal_complete"
+        },
+        {
+          "model_name": "cca",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "architecture_baseline",
+          "current_validation_status": "real_sample_boundary_complete"
+        },
+        {
+          "model_name": "vlaai",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "faithful_port",
+          "current_validation_status": "partial"
+        },
+        {
+          "model_name": "adt",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "faithful_port",
+          "current_validation_status": "real_sample_minimal_complete"
+        },
+        {
+          "model_name": "happyquokka",
+          "runner_exists": true,
+          "config_exists": true,
+          "implementation_type": "faithful_port",
+          "current_validation_status": "partial"
+        }
+      ],
+      "errors": []
+    }
+  },
+  "ok": true
+}

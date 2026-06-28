@@ -1,0 +1,48 @@
+{
+  "dataset": "etard_tf64",
+  "dataset_locator": "data/processed/reference_splits/etard_tf64",
+  "subject_id": "P04",
+  "model": "cca",
+  "seed": 0,
+  "protocol": "gate0_gate2_full_subject_single_seed_v1",
+  "artifact_scope": "full_subject_single_seed_validation",
+  "fingerprint": "ec2286bce6561f2abfd40e0f9c3f821703f8f602",
+  "fingerprint_payload": {
+    "protocol": "gate0_gate2_full_subject_single_seed_v1",
+    "artifact_scope": "full_subject_single_seed_validation",
+    "config_fingerprint_version": 1,
+    "dataset_id": "etard_tf64",
+    "dataset_locator": "data/processed/reference_splits/etard_tf64",
+    "sampling_rate": 64,
+    "subject_id": "P04",
+    "model": "cca",
+    "seed": 0,
+    "scorer_id": "benchmark.scoring.pearson_on_valid",
+    "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric",
+    "model_config": {
+      "architecture_id": "cca_reconstruction",
+      "implementation_file": "src/repro/reference_baselines.py::fit_reference_cca",
+      "selection_rule": "choose PCA/component/reconstruction alpha by validation reconstruction correlation",
+      "start_lag": 0,
+      "end_lag": 50
+    }
+  },
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric",
+  "checkpoint_id": "cca_nc_1",
+  "subject_metric": 0.10368267137331921,
+  "num_recordings": 24,
+  "status": "success",
+  "meta": {
+    "model": "cca",
+    "status": "success",
+    "checkpoint_id": "cca_nc_1",
+    "n_components": 1,
+    "val_recon_corr": 0.1393684428327128,
+    "test_recon_corr_direct": 0.10368267156414972
+  },
+  "artifacts": {
+    "recording_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/etard_tf64/P04/cca/seed_0/recording_metrics.csv",
+    "subject_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/etard_tf64/P04/cca/seed_0/subject_metrics.csv"
+  }
+}

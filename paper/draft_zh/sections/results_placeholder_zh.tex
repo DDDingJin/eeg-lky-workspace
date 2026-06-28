@@ -34,3 +34,16 @@
 因此，本节当前承担的唯一功能是：证明主论文候选数据集已经从 sample-level pipeline validation，推进到了双数据集的 article-grade dataset pilot validation。
 
 进一步地，我们对 \texttt{etard\_tf64\_p00} 的 FCNN 与 ADT 做了 focused rerun，在不改变 split、scorer 与 result schema 的前提下，仅增加训练预算。结果显示，ADT 从 pilot 的 0.056 提升到 0.085，已经接近旧的全被试 ADT-exact 均值；而 FCNN 从 0.031 几乎没有提升。这说明 Etard 上的 ADT 低值主要受短训练预算影响，而 FCNN 的差距更可能还涉及模型协议或实现层面的差异。这一步仍然只是 training-budget diagnostic，不应写成正式 benchmark 结论。
+
+
+\subsection{当前最小全被试结果：Full-Subject Single-Seed v1}
+
+在完成 P00 pilot、Etard 条件诊断与 focused rerun 之后，本轮进一步进入全被试 single-seed v1。这里仍然不是最终 benchmark 结论，而是统一 runner、schema 与 scorer 下的第一版 article-grade 全被试结果。当前仅覆盖两个主数据集与四个固定模型：Ridge、CCA、FCNN、ADT；不包含 multi-seed、cross-dataset transfer，也不包含 VLAAI、HappyQuokka、NULL、CNN、EEGNet 等扩展模型。
+
+在该设置下，Weissbart 共 13 名被试，Etard 共 20 名被试。按 subject-level `mean_recording_pearson_r` 聚合后，当前数据集级均值为：
+\begin{itemize}
+  \item \texttt{weissbart\_tf64}: Ridge 0.133, CCA 0.089, FCNN 0.092, ADT 0.135
+  \item \texttt{etard\_tf64}: Ridge 0.100, CCA 0.067, FCNN 0.061, ADT 0.099
+\end{itemize}
+
+对于 Etard，本轮还额外保留了按条件的聚合统计，以避免单一总体均值掩盖 clean、fM、fW、hb、lb、mb 之间的难度差异。这些结果用于说明 article-grade benchmark 已经进入 full-subject single-seed 阶段，但仍不足以支持最终论文中的模型优劣结论。下一步若继续推进，应优先考虑 multi-seed 复核或扩展模型，而不是将当前单次运行直接写成最终 finding。

@@ -16,7 +16,12 @@
 
 当前结果显示，\texttt{weissbart\_tf64\_p00} 与 \texttt{etard\_tf64\_p00} 都已经可以通过统一 scorer 产生每条 recording 与每个 subject 的标准化输出。其中，Etard 的 P00 pilot 并不是依赖一个单独的人为 alias 目录，而是直接从完整的 \texttt{etard\_tf64} export 中读取 \texttt{P00}。这一步的意义，是证明文章级 benchmark 在进入多被试、多 seed 之前，已经具备清晰的数据边界与可追溯的 participant-level 入口。
 
-对 \texttt{weissbart\_tf64\_p00} 而言，本轮得到的 subject-level Pearson 仅用于验证流程是否连通，而不能作为论文结论。当前数值为：Ridge 0.133、CCA 0.064、FCNN 0.051、ADT 0.163。对 \texttt{etard\_tf64\_p00} 而言，当前数值为：Ridge 0.089、CCA 0.064、FCNN 0.031、ADT 0.070。它们只能说明在同一数据入口、同一输出 schema、同一 scorer 下，四类模型都已经能够产出可比较的单被试 pilot 指标。
+对 \texttt{weissbart\_tf64\_p00} 与 \texttt{etard\_tf64\_p00} 而言，本轮得到的 subject-level Pearson 仅用于验证流程是否连通，而不能作为论文结论。当前 pilot 数值如下：
+\begin{itemize}
+  \item \texttt{weissbart\_tf64\_p00}: Ridge 0.133, CCA 0.064, FCNN 0.051, ADT 0.163
+  \item \texttt{etard\_tf64\_p00}: Ridge 0.089, CCA 0.064, FCNN 0.031, ADT 0.056
+\end{itemize}
+它们只能说明在同一数据入口、同一输出 schema、同一 scorer 下，四类模型都已经能够产出可比较的单被试 pilot 指标。
 
 本轮不能支持的结论同样需要明确指出：
 \begin{itemize}

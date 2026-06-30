@@ -1,0 +1,27 @@
+{
+  "dataset": "etard_tf64",
+  "dataset_locator": "data/processed/reference_splits/etard_tf64",
+  "subject_id": "P09",
+  "model": "ridge",
+  "seed": 42,
+  "protocol": "gate0_gate2_full_subject_single_seed_v1",
+  "artifact_scope": "full_subject_single_seed_validation",
+  "checkpoint_id": "ridge_alpha_100.0",
+  "subject_metric": 0.10027054598356153,
+  "num_recordings": 40,
+  "status": "success",
+  "meta": {
+    "model": "ridge",
+    "status": "success",
+    "checkpoint_id": "ridge_alpha_100.0",
+    "best_alpha": 100.0,
+    "val_pearson": 0.12036024779081345,
+    "test_pearson_direct": 0.10027054598356153
+  },
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric",
+  "artifacts": {
+    "recording_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/etard_tf64/P09/ridge/seed_42/recording_metrics.csv",
+    "subject_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/etard_tf64/P09/ridge/seed_42/subject_metrics.csv"
+  }
+}

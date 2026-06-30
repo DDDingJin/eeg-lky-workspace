@@ -1,0 +1,83 @@
+{
+  "protocol": "gate0_gate2_full_subject_multi_seed_v1",
+  "artifact_scope": "full_subject_multi_seed_validation",
+  "base_single_seed_protocol": "gate0_gate2_full_subject_single_seed_v1",
+  "seeds": [
+    42
+  ],
+  "output_dir": "experiments/gate0_gate2_full_subject_multi_seed_v1",
+  "single_seed_job_root": "experiments/gate0_gate2_full_subject_single_seed/jobs",
+  "previous_fix_branch": "fix/ar-20260625-161300-a43831b-full-subject-single-seed-v1",
+  "previous_fix_commit": "e459f2ca4807c9f72334c20fa93b2d3dfc67c253",
+  "current_branch": "fix/ar-20260625-161300-a43831b-multi-seed-v1",
+  "config_fingerprint_version": 1,
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric; seed_average=mean_over_seed_dataset_metrics",
+  "models": [
+    "ridge",
+    "cca",
+    "fcnn",
+    "adt"
+  ],
+  "datasets": [
+    {
+      "dataset_id": "etard_tf64",
+      "dataset_locator": "data/processed/reference_splits/etard_tf64",
+      "sampling_rate": 64,
+      "subject_selection": "explicit_subset",
+      "subject_ids": [
+        "P15",
+        "P16",
+        "P17",
+        "P18",
+        "P19"
+      ]
+    }
+  ],
+  "ridge": {
+    "architecture_id": "backward_trf_ridge",
+    "implementation_file": "src/repro/reference_baselines.py::fit_reference_ridge",
+    "selection_rule": "choose alpha by validation Pearson after lag trimming",
+    "start_lag": 0,
+    "end_lag": 50,
+    "alphas": [
+      0.001,
+      0.01,
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ]
+  },
+  "cca": {
+    "architecture_id": "cca_reconstruction",
+    "implementation_file": "src/repro/reference_baselines.py::fit_reference_cca",
+    "selection_rule": "choose PCA/component/reconstruction alpha by validation reconstruction correlation",
+    "start_lag": 0,
+    "end_lag": 50
+  },
+  "fcnn": {
+    "architecture_id": "fcnn_baseline",
+    "implementation_file": "src/repro/simple_models.py::FCNNBaseline",
+    "window_size": 50,
+    "target_index": "last",
+    "hidden_layers": 3,
+    "dropout_rate": 0.45,
+    "batch_size": 256,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001
+  },
+  "adt": {
+    "architecture_id": "adt_exact_regressor",
+    "implementation_file": "src/repro/adt_exact.py::ADTExactRegressor",
+    "window_length": 320,
+    "hop_length": 64,
+    "batch_size": 32,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.001,
+    "min_lr": 0.0001
+  }
+}

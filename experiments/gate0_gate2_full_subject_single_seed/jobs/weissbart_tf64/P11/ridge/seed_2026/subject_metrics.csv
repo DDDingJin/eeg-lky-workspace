@@ -1,0 +1,2 @@
+dataset,model,task,protocol,seed,subject_id,metric_name,metric_value,num_recordings,checkpoint_id,artifact_scope
+weissbart_tf64,ridge,reconstruction,gate0_gate2_full_subject_single_seed_v1,2026,P11,mean_recording_pearson_r,0.1506067789566798,15,ridge_alpha_10.0,full_subject_single_seed_validation

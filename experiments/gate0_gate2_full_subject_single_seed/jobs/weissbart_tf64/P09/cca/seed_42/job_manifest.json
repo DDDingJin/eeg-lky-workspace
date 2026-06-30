@@ -1,0 +1,27 @@
+{
+  "dataset": "weissbart_tf64",
+  "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+  "subject_id": "P09",
+  "model": "cca",
+  "seed": 42,
+  "protocol": "gate0_gate2_full_subject_single_seed_v1",
+  "artifact_scope": "full_subject_single_seed_validation",
+  "checkpoint_id": "cca_nc_4",
+  "subject_metric": 0.1166026776245573,
+  "num_recordings": 15,
+  "status": "success",
+  "meta": {
+    "model": "cca",
+    "status": "success",
+    "checkpoint_id": "cca_nc_4",
+    "n_components": 4,
+    "val_recon_corr": 0.18138056170096856,
+    "test_recon_corr_direct": 0.1166026774944404
+  },
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric",
+  "artifacts": {
+    "recording_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/weissbart_tf64/P09/cca/seed_42/recording_metrics.csv",
+    "subject_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/weissbart_tf64/P09/cca/seed_42/subject_metrics.csv"
+  }
+}

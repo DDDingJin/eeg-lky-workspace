@@ -1,0 +1,29 @@
+{
+  "dataset": "etard_tf64",
+  "dataset_locator": "data/processed/reference_splits/etard_tf64",
+  "subject_id": "P15",
+  "model": "adt",
+  "seed": 2026,
+  "protocol": "gate0_gate2_full_subject_single_seed_v1",
+  "artifact_scope": "full_subject_single_seed_validation",
+  "checkpoint_id": "adt_epoch_8",
+  "subject_metric": 0.05447478102642043,
+  "num_recordings": 40,
+  "status": "success",
+  "meta": {
+    "model": "adt",
+    "status": "success",
+    "checkpoint_id": "adt_epoch_8",
+    "best_epoch": 8,
+    "best_val_metric": 0.06802140936528592,
+    "epochs_completed": 19,
+    "test_pearson_direct": 0.05447478102642043,
+    "device": "cuda"
+  },
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric",
+  "artifacts": {
+    "recording_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/etard_tf64/P15/adt/seed_2026/recording_metrics.csv",
+    "subject_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/etard_tf64/P15/adt/seed_2026/subject_metrics.csv"
+  }
+}

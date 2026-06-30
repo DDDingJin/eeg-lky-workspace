@@ -1,0 +1,2 @@
+dataset,model,task,protocol,seed,subject_id,metric_name,metric_value,num_recordings,checkpoint_id,artifact_scope
+etard_tf64,fcnn,reconstruction,gate0_gate2_full_subject_single_seed_v1,42,P15,mean_recording_pearson_r,0.02921024482691379,40,fcnn_epoch_3,full_subject_single_seed_validation

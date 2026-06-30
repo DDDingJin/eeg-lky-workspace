@@ -1,0 +1,29 @@
+{
+  "dataset": "weissbart_tf64",
+  "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+  "subject_id": "P12",
+  "model": "fcnn",
+  "seed": 2026,
+  "protocol": "gate0_gate2_full_subject_single_seed_v1",
+  "artifact_scope": "full_subject_single_seed_validation",
+  "checkpoint_id": "fcnn_epoch_4",
+  "subject_metric": 0.1553552080151553,
+  "num_recordings": 15,
+  "status": "success",
+  "meta": {
+    "model": "fcnn",
+    "status": "success",
+    "checkpoint_id": "fcnn_epoch_4",
+    "best_epoch": 4,
+    "best_val_score": 0.1818608249227206,
+    "epochs_completed": 15,
+    "test_pearson_direct": 0.1553552080151553,
+    "device": "cuda"
+  },
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric",
+  "artifacts": {
+    "recording_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/weissbart_tf64/P12/fcnn/seed_2026/recording_metrics.csv",
+    "subject_metrics": "experiments/gate0_gate2_full_subject_single_seed/jobs/weissbart_tf64/P12/fcnn/seed_2026/subject_metrics.csv"
+  }
+}

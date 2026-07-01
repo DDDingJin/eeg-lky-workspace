@@ -33,6 +33,14 @@ The short rule is:
 
 Never ask the reviewer to accept, verify, or build the next round from uncommitted or unpushed local-only results.
 
+## Branch Register
+
+The reviewer endpoint maintains the branch/version register on the review register branch. The implementer must not edit that register during experiment execution.
+
+For every completed or blocked round, the implementer must report enough information for the reviewer to update the register: branch, full commit SHA, base branch, base commit, round role, changed-file summary, result directory, validation status, and remaining caveats.
+
+If the register is stale or missing a round, the implementer should report the mismatch instead of editing the register directly.
+
 ## Reviewer Workflow
 
 1. Fetch the target branch and record its full 40-character commit SHA.

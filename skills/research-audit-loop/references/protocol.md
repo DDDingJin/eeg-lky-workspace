@@ -307,6 +307,44 @@ round.
 
 Formal review requires a GitHub-accessible branch and commit.
 
+## 15. Branch Register Ownership
+
+The branch/version register is reviewer-owned.
+
+Purpose:
+
+- preserve what each branch or commit was for;
+- identify the latest accepted baseline for the next execution round;
+- prevent stale branches from being mistaken for current results;
+- record caveats such as metadata cleanup, partial acceptance, or superseded status.
+
+Rules:
+
+1. The reviewer endpoint maintains the register on the designated review
+   register branch.
+2. The implementer endpoint must not edit the register while executing an
+   experiment or fix round.
+3. At the end of every `published_for_review` or
+   `local_committed_push_blocked` round, the implementer must report enough
+   information for the reviewer to update the register.
+4. The minimum report fields for register maintenance are:
+   - branch name;
+   - full commit SHA;
+   - base branch;
+   - base commit;
+   - round role or purpose;
+   - result directory or main artifact directory;
+   - changed-file summary;
+   - validation status;
+   - large-file / prediction-dump / checkpoint status;
+   - remaining caveats, skipped items, or blockers.
+5. If the implementer notices that the register is stale, contradictory, or
+   missing a recent round, it must report the mismatch and wait for reviewer
+   reconciliation instead of editing the register directly.
+6. A branch not present in the register can still be inspected, but it should
+   not become the baseline for a new round until the reviewer records its
+   status.
+
 ### Completion Report Template
 
 Every experiment-style round must end with this report:
@@ -349,6 +387,9 @@ Skipped or failed items:
 
 Reviewer entry:
 GitHub branch/commit/PR link if available
+
+Register update info:
+round purpose / caveats / whether reviewer register update is needed
 ```
 
 ### 中文说明

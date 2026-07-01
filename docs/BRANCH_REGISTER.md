@@ -9,7 +9,7 @@ This file is maintained by the review endpoint. The implementer endpoint should 
 - Rule branch: `rule/research-audit-loop-v1`
 - Rule commit: `032c81484f1ccf141e5991a0a9d70a3294d8d532`
 - Publish-gate rule branch: `rule/research-audit-loop-v1.1-publish-gate`
-- Publish-gate rule commit: `bc8ccfd550e9ad94c04d89c3a5c73ddca84c3cf8`
+- Publish-gate rule commit: `365c7c2b034af2abd1e6283adde980de6de7eeed`
 - Review package branch: `review/ar-20260625-161300-a43831b-blueprint`
 - Original reviewed implementation baseline: `audit/reproduction-note @ a43831b83598c82520be320c21b56e92b73b7dcd`
 - Current accepted execution base for the next code round: `fix/ar-20260625-161300-a43831b-model-expansion-v1-metadata-closure @ d0ea16fe57c7a92bcbc459ed5f5e67fd529c86ae`

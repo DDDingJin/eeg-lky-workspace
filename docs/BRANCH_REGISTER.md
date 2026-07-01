@@ -1,6 +1,6 @@
 # Branch Register
 
-Last updated: 2026-06-30
+Last updated: 2026-07-01
 
 This file is maintained by the review endpoint. The implementer endpoint should not edit it during experiment execution. Each execution round should report its branch and commit; the review endpoint will update this register after review.
 
@@ -8,10 +8,12 @@ This file is maintained by the review endpoint. The implementer endpoint should 
 
 - Rule branch: `rule/research-audit-loop-v1`
 - Rule commit: `032c81484f1ccf141e5991a0a9d70a3294d8d532`
+- Publish-gate rule branch: `rule/research-audit-loop-v1.1-publish-gate`
+- Publish-gate rule commit: `bc8ccfd550e9ad94c04d89c3a5c73ddca84c3cf8`
 - Review package branch: `review/ar-20260625-161300-a43831b-blueprint`
 - Original reviewed implementation baseline: `audit/reproduction-note @ a43831b83598c82520be320c21b56e92b73b7dcd`
-- Current accepted execution base for the next code round: `fix/ar-20260625-161300-a43831b-multi-seed-v1 @ dee590b26aca180637b920b9579a59daa9ba176c`
-- Latest full-subject result branch: `fix/ar-20260625-161300-a43831b-multi-seed-v1 @ dee590b26aca180637b920b9579a59daa9ba176c`
+- Current accepted execution base for the next code round: `fix/ar-20260625-161300-a43831b-model-expansion-v1 @ 68f87a4c0005e4556a51b83cd42e73908edc44ad`
+- Latest full-subject result branch: `fix/ar-20260625-161300-a43831b-model-expansion-v1 @ 68f87a4c0005e4556a51b83cd42e73908edc44ad`
 
 ## Branches
 
@@ -19,6 +21,7 @@ This file is maintained by the review endpoint. The implementer endpoint should 
 |---|---|---|---|---|---|
 | `audit/reproduction-note` | `a43831b83598c82520be320c21b56e92b73b7dcd` | Original reviewed implementation branch | Earlier reproduction-note work | Locked baseline | Target commit for review round `AR-20260625-161300-a43831b`. |
 | `rule/research-audit-loop-v1` | `032c81484f1ccf141e5991a0a9d70a3294d8d532` | Shared reviewer/implementer rule and skill branch | Rule proposal iterations | Accepted rule lock | Contains `AGENTS.md` and `skills/research-audit-loop/`. |
+| `rule/research-audit-loop-v1.1-publish-gate` | `bc8ccfd550e9ad94c04d89c3a5c73ddca84c3cf8` | Shared rule update for experiment completion status | `rule/research-audit-loop-v1` | Accepted rule update | Adds the publish gate: local runs are not review-complete until committed, pushed, and remotely inspectable. |
 | `review/ar-20260625-161300-a43831b-blueprint` | `45a19ebe8f336ad074fdda1dfc18b09f0327d1cc` | Review package with long-term blueprint and concrete review | `a43831b` | Accepted review package | Contains `review_cycles/2026-06-25_161300+0800_AR-20260625-161300-a43831b/`. |
 | `fix/ar-20260625-161300-a43831b-gate0-gate2` | `3d335839e9c9631c163ff48fb670d2e03ba2d558` | Gate 0-2 framework closure | `a43831b` | Partially accepted | Established registry, schema, scorer, and smoke-test framework. |
 | `fix/ar-20260625-161300-a43831b-gate0-gate2-real-evidence-and-paper` | `39b78b6a9f2cab94f7665a80efe794d3c5b99671` | Real-sample closure and paper scaffold | `3d335839` | Accepted as real-sample minimal closure | Added Hugo real-sample evidence, compact artifacts, skill alignment, and incremental comparison. |
@@ -29,6 +32,7 @@ This file is maintained by the review endpoint. The implementer endpoint should 
 | `fix/ar-20260625-161300-a43831b-fcnn-protocol-audit` | `c32114a1d919604341458ca3da5d9288814f0107` | FCNN protocol identity audit | `2840e5a` | Accepted; current execution base | FCNN should be labeled `local_fcnn_baseline` / `architecture_baseline`, not a historical parity baseline. |
 | `fix/ar-20260625-161300-a43831b-full-subject-single-seed-v1` | `e459f2ca4807c9f72334c20fa93b2d3dfc67c253` | Full-subject single-seed v1 | `c32114a` | Accepted as seed-0 baseline | Covers Weissbart 13 subjects and Etard 20 subjects with `ridge`, `cca`, `fcnn`, and `adt` at seed 0. Execution reported 132/132 successful jobs, no failures, compact result artifacts only. |
 | `fix/ar-20260625-161300-a43831b-multi-seed-v1` | `dee590b26aca180637b920b9579a59daa9ba176c` | Full-subject multi-seed v1 | `e459f2c` | Accepted with minor reporting caveats | Covers Weissbart 13 subjects and Etard 20 subjects with `ridge`, `cca`, `fcnn`, and `adt` at seeds `0`, `42`, and `2026`. Execution reported 396/396 successful jobs and no failures. No full prediction dumps or checkpoints were detected. Caveats: manuscript scaffold was not fully updated for multi-seed results, and many per-job metric files were tracked; future rounds should keep artifacts more compact. |
+| `fix/ar-20260625-161300-a43831b-model-expansion-v1` | `68f87a4c0005e4556a51b83cd42e73908edc44ad` | Full-subject model expansion v1 | `dee590b2` | Accepted for result use; metadata cleanup required | Covers Weissbart and Etard with seeds `0`, `42`, and `2026`; carries forward `ridge`, `cca`, `fcnn`, `adt` and adds `dnn`, `cnn`, `eegnet`. Schema report passed with 693/693 subject-level jobs and 0 failures. Caveats: `run_manifest.json` references unpushed local-only files (`subject_metrics.csv`, `recording_metrics.csv`, `job_ledger.*`, `skipped_models.md`), and `workflow/START_HERE.md` still describes pre-push state. These must be cleaned before using this branch as a polished audit package. |
 
 ## Manuscript Notes
 
@@ -40,19 +44,15 @@ This file is maintained by the review endpoint. The implementer endpoint should 
 
 Proposed branch:
 
-- `fix/ar-20260625-161300-a43831b-model-expansion-v1`
+- `fix/ar-20260625-161300-a43831b-model-expansion-v1-metadata-closure`
 
 Base:
 
-- `fix/ar-20260625-161300-a43831b-multi-seed-v1 @ dee590b26aca180637b920b9579a59daa9ba176c`
+- `fix/ar-20260625-161300-a43831b-model-expansion-v1 @ 68f87a4c0005e4556a51b83cd42e73908edc44ad`
 
 Scope:
 
-- Expand the already validated full-subject multi-seed setting to a small, interpretable next model family before attempting large specialized models.
-- Datasets: `weissbart_tf64` and `etard_tf64`.
-- Baseline models carried forward: `ridge`, `cca`, `fcnn`, `adt`.
-- New model candidates for this round: `cnn` and `eegnet` if both are already implemented and registered; otherwise start with `cnn` only.
-- Seeds: use `0`, `42`, and `2026` for new stochastic models. Reuse existing results for `ridge`, `cca`, `fcnn`, and `adt`; do not rerun completed jobs unless a schema-breaking bug is found.
-- Required outputs: compact per-subject/per-dataset metrics with `seed`, model-expansion summary tables, updated Etard condition summary for new models, incremental comparison against multi-seed v1, and manuscript-ready notes.
-- Artifact policy: keep aggregate metrics, ledgers, manifests, and concise reports; do not upload prediction dumps, checkpoints, or per-job directories unless needed for a specific audit.
-- No VLAAI, HappyQuokka, NULL, KUL/SparrKULee, or cross-dataset transfer in this immediate round unless explicitly approved after the first expansion check.
+- First close the model-expansion metadata mismatch without rerunning models.
+- Update `workflow/START_HERE.md` so it points to commit `68f87a4c0005e4556a51b83cd42e73908edc44ad` and says the compact reviewable push is complete.
+- Either upload the compact metric files referenced by `run_manifest.json`, or mark them as local-only and remove them from the reviewable artifact list. Prediction dumps, checkpoints, per-job directories, `.pt/.pth/.npy/.npz/.h5/.mat`, and raw datasets must remain untracked.
+- After metadata closure, proceed to a reconstruction-analysis pilot branch based on the model-expansion commit. The next scientific priority is not more model expansion; it is to build the main analysis spine: Etard condition robustness, per-subject variability, and the first subject-independent / leave-one-subject-out feasibility check using a small fast model subset before scaling.

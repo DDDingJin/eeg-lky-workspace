@@ -1,0 +1,33 @@
+{
+  "protocol": "gate0_gate2_model_expansion_v1",
+  "artifact_scope": "full_subject_model_expansion_validation",
+  "base_single_seed_protocol": "gate0_gate2_full_subject_single_seed_v1",
+  "seeds": [2026],
+  "output_dir": "experiments/gate0_gate2_model_expansion_v1",
+  "single_seed_job_root": "experiments/gate0_gate2_full_subject_single_seed/jobs",
+  "previous_fix_branch": "fix/ar-20260625-161300-a43831b-multi-seed-v1",
+  "previous_fix_commit": "dee590b26aca180637b920b9579a59daa9ba176c",
+  "current_branch": "fix/ar-20260625-161300-a43831b-model-expansion-v1",
+  "config_fingerprint_version": 1,
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; dataset_metric=mean_subject_metric; seed_average=mean_over_seed_dataset_metrics",
+  "base_models_reused": ["ridge", "cca", "fcnn", "adt"],
+  "expansion_models_requested": ["dnn", "cnn", "eegnet"],
+  "models": ["ridge", "cca", "fcnn", "adt", "dnn", "cnn", "eegnet"],
+  "datasets": [
+    {
+      "dataset_id": "etard_tf64",
+      "dataset_locator": "data/processed/reference_splits/etard_tf64",
+      "sampling_rate": 64,
+      "subject_selection": "all_available_test_subjects",
+      "subject_ids": []
+    }
+  ],
+  "ridge": {"architecture_id": "backward_trf_ridge", "implementation_file": "src/repro/reference_baselines.py::fit_reference_ridge", "selection_rule": "choose alpha by validation Pearson after lag trimming", "start_lag": 0, "end_lag": 50, "alphas": [0.001, 0.01, 0.1, 1.0, 10.0, 100.0]},
+  "cca": {"architecture_id": "cca_reconstruction", "implementation_file": "src/repro/reference_baselines.py::fit_reference_cca", "selection_rule": "choose PCA/component/reconstruction alpha by validation reconstruction correlation", "start_lag": 0, "end_lag": 50},
+  "fcnn": {"architecture_id": "fcnn_baseline", "implementation_file": "src/repro/simple_models.py::FCNNBaseline", "window_size": 50, "target_index": "last", "hidden_layers": 3, "dropout_rate": 0.45, "batch_size": 256, "max_epochs": 100, "early_stopping_patience": 10, "learning_rate": 0.0001, "weight_decay": 0.0001},
+  "adt": {"architecture_id": "adt_exact_regressor", "implementation_file": "src/repro/adt_exact.py::ADTExactRegressor", "window_length": 320, "hop_length": 64, "batch_size": 32, "max_epochs": 100, "early_stopping_patience": 10, "learning_rate": 0.001, "min_lr": 0.0001},
+  "dnn": {"architecture_id": "upstream_fcnn_subject_specific", "implementation_file": "external/upstream/mldecoders/pipeline/dnn.py::FCNN", "window_size": 50, "target_index": "last", "hidden_layers": 3, "dropout_rate": 0.45, "batch_size": 256, "max_epochs": 100, "early_stopping_patience": 10, "learning_rate": 0.0001, "weight_decay": 0.0001},
+  "cnn": {"architecture_id": "upstream_cnn_subject_specific", "implementation_file": "external/upstream/mldecoders/pipeline/dnn.py::CNN", "window_size": 50, "target_index": "last", "F1": 8, "D": 8, "F2": 64, "dropout_rate": 0.2, "batch_size": 256, "max_epochs": 100, "early_stopping_patience": 10, "learning_rate": 0.01, "weight_decay": 1e-08},
+  "eegnet": {"architecture_id": "eegnet_subject_specific", "implementation_file": "src/repro/mldecoders/models.py::EEGNetRegressor", "window_size": 50, "target_index": "last", "temporal_filters": 8, "depth_multiplier": 2, "separable_filters": 16, "dropout_rate": 0.25, "batch_size": 256, "max_epochs": 100, "early_stopping_patience": 10, "learning_rate": 0.001, "weight_decay": 0.0001}
+}

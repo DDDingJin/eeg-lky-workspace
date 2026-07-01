@@ -1,0 +1,98 @@
+{
+  "protocol": "gate0_gate2_model_expansion_v1",
+  "artifact_scope": "full_subject_model_expansion_validation",
+  "previous_fix_branch": "fix/ar-20260625-161300-a43831b-multi-seed-v1",
+  "previous_fix_commit": "dee590b26aca180637b920b9579a59daa9ba176c",
+  "current_branch": "fix/ar-20260625-161300-a43831b-model-expansion-v1",
+  "device": "cuda",
+  "seeds": [
+    0,
+    42,
+    2026
+  ],
+  "datasets_requested": [
+    "weissbart_tf64",
+    "etard_tf64"
+  ],
+  "base_models_reused": [
+    "ridge",
+    "cca",
+    "fcnn",
+    "adt"
+  ],
+  "expansion_models_requested": [
+    "dnn",
+    "cnn",
+    "eegnet"
+  ],
+  "effective_models": [
+    "ridge",
+    "cca",
+    "fcnn",
+    "adt",
+    "dnn",
+    "cnn",
+    "eegnet"
+  ],
+  "skipped_models": [],
+  "dataset_subjects": {
+    "weissbart_tf64": [
+      "P00",
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12"
+    ],
+    "etard_tf64": [
+      "P00",
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12",
+      "P13",
+      "P14",
+      "P15",
+      "P16",
+      "P17",
+      "P18",
+      "P19"
+    ]
+  },
+  "total_jobs": 693,
+  "successful_jobs": 693,
+  "failed_jobs": 0,
+  "skipped_jobs": 693,
+  "failures": [],
+  "artifacts": {
+    "job_ledger_csv": "experiments/gate0_gate2_model_expansion_v1/job_ledger.csv",
+    "job_ledger_json": "experiments/gate0_gate2_model_expansion_v1/job_ledger.json",
+    "recording_metrics": "experiments/gate0_gate2_model_expansion_v1/recording_metrics.csv",
+    "subject_metrics": "experiments/gate0_gate2_model_expansion_v1/subject_metrics.csv",
+    "dataset_metrics_by_seed": "experiments/gate0_gate2_model_expansion_v1/dataset_metrics_by_seed.csv",
+    "dataset_metrics_across_seeds": "experiments/gate0_gate2_model_expansion_v1/dataset_metrics_across_seeds.csv",
+    "etard_condition_metrics_by_seed": "experiments/gate0_gate2_model_expansion_v1/etard_condition_metrics_by_seed.csv",
+    "etard_condition_metrics_across_seeds": "experiments/gate0_gate2_model_expansion_v1/etard_condition_metrics_across_seeds.csv",
+    "schema_validation_report": "experiments/gate0_gate2_model_expansion_v1/schema_validation_report.json",
+    "failure_report": "experiments/gate0_gate2_model_expansion_v1/failure_report.json",
+    "result_summary": "experiments/gate0_gate2_model_expansion_v1/result_summary.md",
+    "incremental_comparison": "experiments/gate0_gate2_model_expansion_v1/incremental_comparison.md",
+    "skipped_models": "experiments/gate0_gate2_model_expansion_v1/skipped_models.md",
+    "figure_ready_tables": "experiments/gate0_gate2_model_expansion_v1/figure_ready_tables"
+  }
+}

@@ -16,15 +16,27 @@ import torch
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
+SHARED_WORKSPACE = Path(ROOT.drive + "\\decode")
+SHARED_UPSTREAM = SHARED_WORKSPACE / "external" / "upstream" / "mldecoders"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
+if SHARED_UPSTREAM.exists() and str(SHARED_UPSTREAM) not in sys.path:
+    sys.path.insert(0, str(SHARED_UPSTREAM))
 
 from benchmark.result_schema import RECORDING_METRIC_FIELDS, SUBJECT_METRIC_FIELDS, write_rows
 from benchmark.scoring import WindowPrediction, aggregate_overlapping_windows, recording_metric_row, subject_metric_rows
 from repro.adt_exact import train_adt_exact_reference
+from repro.mldecoders.models import EEGNetRegressor
 from repro.reference_baselines import DNNReferenceTrainResult, fit_reference_cca, fit_reference_ridge, list_reference_subjects, load_reference_recordings, train_dnn_reference_logged
 from repro.mldecoders.cca import score_reconstruction, trim_valid_range
 from repro.simple_models import FCNNBaseline
+
+try:
+    from pipeline.dnn import CNN as UpstreamCNN
+    from pipeline.dnn import FCNN as UpstreamFCNN
+except Exception:
+    UpstreamCNN = None
+    UpstreamFCNN = None
 
 
 def parse_args() -> argparse.Namespace:
@@ -329,6 +341,179 @@ def fit_and_predict_fcnn(config: dict, dataset_id: str, dataset_dir: Path, subje
         "test_pearson_direct": float(np.mean(scores)),
         "device": device,
     }
+
+
+def fit_and_predict_window_dnn(
+    *,
+    config: dict,
+    dataset_id: str,
+    dataset_dir: Path,
+    subject_id: str,
+    sampling_rate: int,
+    device: str,
+    model_name: str,
+    model_handle,
+    model_kwargs: dict[str, object],
+    train_kwargs: dict[str, object],
+) -> tuple[list[WindowPrediction], dict[str, object]]:
+    if model_handle is None:
+        raise RuntimeError(f"{model_name} implementation is unavailable in this worktree and shared workspace")
+
+    train_result: DNNReferenceTrainResult = train_dnn_reference_logged(
+        dataset_dir,
+        subject_id,
+        model_handle,
+        model_kwargs,
+        epochs=int(train_kwargs["max_epochs"]),
+        lr=float(train_kwargs["learning_rate"]),
+        weight_decay=float(train_kwargs["weight_decay"]),
+        batch_size=int(train_kwargs["batch_size"]),
+        early_stopping_patience=int(train_kwargs["early_stopping_patience"]),
+        device=device,
+        seed=int(config["seed"]),
+        channels=range(int(model_kwargs["num_input_channels"])),
+    )
+    model = model_handle(**model_kwargs).to(device)
+    model.load_state_dict(train_result.state_dict)
+    model.eval()
+
+    input_length = int(model_kwargs["input_length"])
+    offset = input_length - 1
+    windows: list[WindowPrediction] = []
+    scores = []
+
+    for recording_id, eeg, env in load_reference_recordings(
+        dataset_dir,
+        "test",
+        subject_id,
+        channels=range(int(model_kwargs["num_input_channels"])),
+    ):
+        preds = []
+        targets = []
+        with torch.no_grad():
+            eeg_tensor = torch.from_numpy(eeg.astype(np.float32))
+            for start in range(0, eeg.shape[0] - input_length + 1):
+                batch = eeg_tensor[start : start + input_length].T.unsqueeze(0).to(device)
+                preds.append(float(model(batch).item()))
+                targets.append(float(env[start + input_length - 1]))
+        pred_arr = np.asarray(preds, dtype=np.float32)
+        target_arr = np.asarray(targets, dtype=np.float32)
+        windows.append(
+            build_series_window(
+                dataset=dataset_id,
+                model=model_name,
+                protocol=config["protocol"],
+                seed=int(config["seed"]),
+                subject_id=subject_id,
+                recording_id=recording_id,
+                sampling_rate=sampling_rate,
+                checkpoint_id=f"{model_name}_epoch_{train_result.best_epoch}",
+                full_length=len(env),
+                offset=offset,
+                prediction=pred_arr,
+                target=target_arr,
+            )
+        )
+        scores.append(correlation(pred_arr, target_arr))
+
+    return windows, {
+        "model": model_name,
+        "status": "success",
+        "checkpoint_id": f"{model_name}_epoch_{train_result.best_epoch}",
+        "best_epoch": int(train_result.best_epoch),
+        "best_val_score": float(train_result.best_val_score),
+        "epochs_completed": int(train_result.epochs_completed),
+        "test_pearson_direct": float(np.mean(scores)),
+        "device": device,
+    }
+
+
+def fit_and_predict_dnn(
+    config: dict,
+    dataset_id: str,
+    dataset_dir: Path,
+    subject_id: str,
+    sampling_rate: int,
+    device: str,
+) -> tuple[list[WindowPrediction], dict[str, object]]:
+    dnn_cfg = config["dnn"]
+    return fit_and_predict_window_dnn(
+        config=config,
+        dataset_id=dataset_id,
+        dataset_dir=dataset_dir,
+        subject_id=subject_id,
+        sampling_rate=sampling_rate,
+        device=device,
+        model_name="dnn",
+        model_handle=UpstreamFCNN,
+        model_kwargs={
+            "num_hidden": int(dnn_cfg["hidden_layers"]),
+            "dropout_rate": float(dnn_cfg["dropout_rate"]),
+            "input_length": int(dnn_cfg["window_size"]),
+            "num_input_channels": 64,
+        },
+        train_kwargs=dnn_cfg,
+    )
+
+
+def fit_and_predict_cnn(
+    config: dict,
+    dataset_id: str,
+    dataset_dir: Path,
+    subject_id: str,
+    sampling_rate: int,
+    device: str,
+) -> tuple[list[WindowPrediction], dict[str, object]]:
+    cnn_cfg = config["cnn"]
+    return fit_and_predict_window_dnn(
+        config=config,
+        dataset_id=dataset_id,
+        dataset_dir=dataset_dir,
+        subject_id=subject_id,
+        sampling_rate=sampling_rate,
+        device=device,
+        model_name="cnn",
+        model_handle=UpstreamCNN,
+        model_kwargs={
+            "F1": int(cnn_cfg["F1"]),
+            "D": int(cnn_cfg["D"]),
+            "F2": int(cnn_cfg["F2"]),
+            "dropout_rate": float(cnn_cfg["dropout_rate"]),
+            "input_length": int(cnn_cfg["window_size"]),
+            "num_input_channels": 64,
+        },
+        train_kwargs=cnn_cfg,
+    )
+
+
+def fit_and_predict_eegnet(
+    config: dict,
+    dataset_id: str,
+    dataset_dir: Path,
+    subject_id: str,
+    sampling_rate: int,
+    device: str,
+) -> tuple[list[WindowPrediction], dict[str, object]]:
+    eegnet_cfg = config["eegnet"]
+    return fit_and_predict_window_dnn(
+        config=config,
+        dataset_id=dataset_id,
+        dataset_dir=dataset_dir,
+        subject_id=subject_id,
+        sampling_rate=sampling_rate,
+        device=device,
+        model_name="eegnet",
+        model_handle=EEGNetRegressor,
+        model_kwargs={
+            "num_input_channels": 64,
+            "input_length": int(eegnet_cfg["window_size"]),
+            "temporal_filters": int(eegnet_cfg["temporal_filters"]),
+            "depth_multiplier": int(eegnet_cfg["depth_multiplier"]),
+            "separable_filters": int(eegnet_cfg["separable_filters"]),
+            "dropout_rate": float(eegnet_cfg["dropout_rate"]),
+        },
+        train_kwargs=eegnet_cfg,
+    )
 
 
 def fit_and_predict_adt(
@@ -691,6 +876,12 @@ def run_job(
             windows, meta = fit_and_predict_cca(config, dataset_id, dataset_dir, subject_id, sampling_rate)
         elif model_name == "fcnn":
             windows, meta = fit_and_predict_fcnn(config, dataset_id, dataset_dir, subject_id, sampling_rate, device)
+        elif model_name == "dnn":
+            windows, meta = fit_and_predict_dnn(config, dataset_id, dataset_dir, subject_id, sampling_rate, device)
+        elif model_name == "cnn":
+            windows, meta = fit_and_predict_cnn(config, dataset_id, dataset_dir, subject_id, sampling_rate, device)
+        elif model_name == "eegnet":
+            windows, meta = fit_and_predict_eegnet(config, dataset_id, dataset_dir, subject_id, sampling_rate, device)
         elif model_name == "adt":
             windows, meta = fit_and_predict_adt(config, dataset_id, dataset_dir, subject_id, sampling_rate, device, temp_dir)
         else:

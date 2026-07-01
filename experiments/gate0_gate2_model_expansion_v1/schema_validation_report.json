@@ -1,0 +1,41 @@
+{
+  "protocol": "gate0_gate2_model_expansion_v1",
+  "passed": true,
+  "checks": {
+    "seeds_exact": true,
+    "datasets_exact": true,
+    "subject_model_seed_complete": true,
+    "dataset_model_seed_complete": true,
+    "pearson_ranges_subject_metrics": true,
+    "pearson_ranges_recording_metrics": true,
+    "pearson_ranges_dataset_metrics_by_seed": true,
+    "pearson_ranges_dataset_metrics_across_seeds": true,
+    "pearson_ranges_condition_metrics_by_seed": true,
+    "pearson_ranges_condition_metrics_across_seeds": true,
+    "subject_metric_fields_consistent": true,
+    "recording_metric_fields_consistent": true,
+    "dataset_metrics_by_seed_fields_consistent": true,
+    "dataset_metrics_across_seeds_fields_consistent": true,
+    "condition_metrics_by_seed_fields_consistent": true,
+    "condition_metrics_across_seeds_fields_consistent": true,
+    "failure_report_empty_or_reasoned": true
+  },
+  "details": {
+    "expected_subject_jobs": 693,
+    "actual_subject_jobs": 693,
+    "missing_subject_jobs": [],
+    "expected_dataset_model_seed_rows": 42,
+    "actual_dataset_model_seed_rows": 42,
+    "missing_dataset_model_seed_rows": [],
+    "failure_count": 0,
+    "effective_models": [
+      "ridge",
+      "cca",
+      "fcnn",
+      "adt",
+      "dnn",
+      "cnn",
+      "eegnet"
+    ]
+  }
+}

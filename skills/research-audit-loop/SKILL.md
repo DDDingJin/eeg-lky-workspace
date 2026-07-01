@@ -21,6 +21,18 @@ Read:
 
 Use `scripts/create_review_round.py` to initialize a reviewer round. Use `scripts/validate_round.py` before every review, fix, or verification commit.
 
+## Experiment Round Completion Gate
+
+For any experiment, benchmark, model expansion, analysis pilot, paper-material update, or result-summary update, read `references/protocol.md#14-experiment-round-completion-gate` before reporting completion.
+
+The short rule is:
+
+- `published_for_review`: committed, pushed, remote commit verified, and reviewable.
+- `local_committed_push_blocked`: locally committed, push failed, user help required; not reviewable yet.
+- `local_only_incomplete`: local files exist but are not committed; not complete and not reviewable.
+
+Never ask the reviewer to accept, verify, or build the next round from uncommitted or unpushed local-only results.
+
 ## Reviewer Workflow
 
 1. Fetch the target branch and record its full 40-character commit SHA.

@@ -6,68 +6,75 @@ This is the single entry file for resuming work in this worktree.
 
 ## Current Active Task
 
-- active round: `model-expansion-v1-metadata-closure`
-- requested base branch: `fix/ar-20260625-161300-a43831b-multi-seed-v1`
-- requested base commit: `dee590b26aca180637b920b9579a59daa9ba176c`
-- published result branch: `fix/ar-20260625-161300-a43831b-model-expansion-v1`
-- published result commit: `68f87a4c0005e4556a51b83cd42e73908edc44ad`
-- requested new branch: `fix/ar-20260625-161300-a43831b-model-expansion-v1-metadata-closure`
+- active round: `loso-pilot-v1`
+- requested base branch: `fix/ar-20260625-161300-a43831b-model-expansion-v1-metadata-closure`
+- requested base commit: `d0ea16fe57c7a92bcbc459ed5f5e67fd529c86ae`
+- published result branch: `fix/ar-20260625-161300-a43831b-model-expansion-v1-metadata-closure`
+- published result commit: `d0ea16fe57c7a92bcbc459ed5f5e67fd529c86ae`
+- requested new branch: `fix/ar-20260625-161300-a43831b-loso-pilot-v1`
 - current status:
-  - published branch `fix/ar-20260625-161300-a43831b-model-expansion-v1` exists on `origin` at `68f87a4c0005e4556a51b83cd42e73908edc44ad`
-  - `model-expansion-v1` experiment results are already pushed and can be used as the next analysis baseline
-  - current round is a metadata-only closure for reviewable artifact consistency
-  - no model rerun is allowed in this round
-  - target aggregate output directory remains `experiments/gate0_gate2_model_expansion_v1`
-  - current task is to align manifest-referenced compact artifacts with what is actually published for review
+  - published branch `fix/ar-20260625-161300-a43831b-model-expansion-v1-metadata-closure` exists on `origin` at `d0ea16fe57c7a92bcbc459ed5f5e67fd529c86ae`
+  - `model-expansion-v1` remains the accepted result baseline; this round only adds a minimal LOSO interface pilot
+  - scope is restricted to `weissbart_tf64`, `ridge`, held-out `P00`, `P01`, `P02`
+  - no new models and no paper prose updates are allowed in this round
+  - target output directory is `experiments/gate0_gate2_loso_pilot_v1`
+  - LOSO pilot run is complete locally with compact artifacts generated
+  - next step is commit + push for reviewer inspection
 
 ## Current Worktree
 
-- worktree: `E:\decode\_fix_gate0_gate2_real`
-- branch: `fix/ar-20260625-161300-a43831b-model-expansion-v1-metadata-closure`
-- published baseline branch: `fix/ar-20260625-161300-a43831b-model-expansion-v1`
-- published baseline commit: `68f87a4c0005e4556a51b83cd42e73908edc44ad`
-- remote branch target: `origin/fix/ar-20260625-161300-a43831b-model-expansion-v1-metadata-closure`
+- worktree: `E:\decode\_fix_loso_pilot_v1_clean`
+- branch: `fix/ar-20260625-161300-a43831b-loso-pilot-v1`
+- published baseline branch: `fix/ar-20260625-161300-a43831b-model-expansion-v1-metadata-closure`
+- published baseline commit: `d0ea16fe57c7a92bcbc459ed5f5e67fd529c86ae`
+- remote branch target: `origin/fix/ar-20260625-161300-a43831b-loso-pilot-v1`
 
 ## Current State
 
-- The full-subject multi-seed benchmark v1 is complete and serves as the reused base.
-- The completed seed set is `0, 42, 2026`.
-- The covered datasets are `weissbart_tf64` and `etard_tf64`.
-- The current model-expansion coverage is `ridge`, `cca`, `fcnn`, `adt`, `dnn`, `cnn`, and `eegnet`.
-- Final job accounting for `model-expansion-v1` is `693/693` successful and `0` failed.
-- The current closure task is about metadata publication consistency, not result regeneration.
+- The accepted baseline is the published model-expansion metadata-closure branch.
+- The current round is the first subject-independent LOSO pilot under the existing scorer/schema style.
+- The pilot is intentionally minimal:
+  - dataset `weissbart_tf64`
+  - model `ridge`
+  - held-out subjects `P00`, `P01`, `P02`
+- The current round must publish only compact artifacts.
+- Current local LOSO output status:
+  - planned jobs `3`
+  - successful jobs `3`
+  - failed jobs `0`
+  - schema validation `passed`
 
 ## What Just Happened
 
-- The previous interrupted session did not lose the benchmark logic.
-- The main metadata mismatch after publication was that `run_manifest.json` referenced compact ledger and metric files that were still local-only.
-- This closure round only reconciles reviewable artifact publication and handoff metadata against the already-pushed experiment commit.
+- This round starts from the already-published metadata-closure baseline.
+- The main new task is to prove that a pure LOSO subject-independent interface can run without target-subject leakage.
+- The current deliverable is an execution-ready and reviewable compact LOSO pilot package, not a large experiment campaign.
+- The current local results show the LOSO interface is working end-to-end for the three requested held-out subjects.
 
 ## Read In This Order
 
 1. `workflow/START_HERE.md`
 2. `workflow/skill_alignment.md`
-3. `experiments/gate0_gate2_model_expansion_v1/run_manifest.json`
-4. `experiments/gate0_gate2_model_expansion_v1/result_summary.md`
-5. `experiments/gate0_gate2_model_expansion_v1/model_identity_check.md`
+3. `configs/benchmark/gate0_gate2_loso_pilot_v1.json`
+4. `scripts/run_gate0_gate2_loso_pilot_v1.py`
+5. `experiments/gate0_gate2_loso_pilot_v1/run_manifest.json`
 6. `README.md`
 
 ## Key Files
 
+- config:
+  - `configs/benchmark/gate0_gate2_loso_pilot_v1.json`
+- runner:
+  - `scripts/run_gate0_gate2_loso_pilot_v1.py`
 - machine-readable run state:
-  - `experiments/gate0_gate2_model_expansion_v1/run_manifest.json`
-- human-readable summary:
-  - `experiments/gate0_gate2_model_expansion_v1/result_summary.md`
-- model identity audit note:
-  - `experiments/gate0_gate2_model_expansion_v1/model_identity_check.md`
-- aggregate metrics:
-  - `experiments/gate0_gate2_model_expansion_v1/dataset_metrics_across_seeds.csv`
-- compact ledgers and dense metrics:
-  - `experiments/gate0_gate2_model_expansion_v1/job_ledger.csv`
-  - `experiments/gate0_gate2_model_expansion_v1/job_ledger.json`
-  - `experiments/gate0_gate2_model_expansion_v1/recording_metrics.csv`
-  - `experiments/gate0_gate2_model_expansion_v1/subject_metrics.csv`
-  - `experiments/gate0_gate2_model_expansion_v1/skipped_models.md`
+  - `experiments/gate0_gate2_loso_pilot_v1/run_manifest.json`
+- compact outputs:
+  - `experiments/gate0_gate2_loso_pilot_v1/recording_metrics.csv`
+  - `experiments/gate0_gate2_loso_pilot_v1/subject_metrics.csv`
+  - `experiments/gate0_gate2_loso_pilot_v1/leakage_check.md`
+  - `experiments/gate0_gate2_loso_pilot_v1/result_summary.md`
+  - `experiments/gate0_gate2_loso_pilot_v1/schema_validation_report.json`
+  - `experiments/gate0_gate2_loso_pilot_v1/run_manifest.json`
 - review-loop lock:
   - `workflow/skill_lock.json`
 - local skill alignment note:
@@ -75,24 +82,25 @@ This is the single entry file for resuming work in this worktree.
 
 ## Commands To Re-Establish Context
 
-Run these from `E:\decode\_fix_gate0_gate2_real`:
+Run these from `E:\decode\_fix_loso_pilot_v1_clean`:
 
 ```powershell
 git status --short --branch
 git rev-parse HEAD
 Get-Content workflow\START_HERE.md
-git show 68f87a4c0005e4556a51b83cd42e73908edc44ad --stat --no-patch
-Get-Content experiments\gate0_gate2_model_expansion_v1\run_manifest.json
-Get-Content experiments\gate0_gate2_model_expansion_v1\result_summary.md
-Get-Content experiments\gate0_gate2_model_expansion_v1\model_identity_check.md
+git show d0ea16fe57c7a92bcbc459ed5f5e67fd529c86ae --stat --no-patch
+Get-Content configs\benchmark\gate0_gate2_loso_pilot_v1.json
+Get-Content experiments\gate0_gate2_loso_pilot_v1\run_manifest.json
+Get-Content experiments\gate0_gate2_loso_pilot_v1\leakage_check.md
+Get-Content experiments\gate0_gate2_loso_pilot_v1\result_summary.md
 ```
 
 ## Benchmark Rebuild Command
 
-If the model-expansion aggregate summary ever needs to be rebuilt from existing per-job artifacts, use:
+If the LOSO pilot package needs to be rebuilt, use:
 
 ```powershell
-F:\miniconda\envs\decode-torch\python.exe scripts/run_gate0_gate2_model_expansion_v1.py --config configs/benchmark/gate0_gate2_model_expansion_v1.json --device cuda --resume --skip-existing
+F:\miniconda\envs\decode-torch\python.exe scripts/run_gate0_gate2_loso_pilot_v1.py --config configs/benchmark/gate0_gate2_loso_pilot_v1.json
 ```
 
 ## Resume Rule
@@ -103,8 +111,7 @@ F:\miniconda\envs\decode-torch\python.exe scripts/run_gate0_gate2_model_expansio
 
 ## Expected Next Step
 
-- Current next step is to publish the missing compact manifest-referenced artifacts and the metadata closure branch for reviewer inspection.
-- Reuse of `ridge`, `cca`, `fcnn`, and `adt` has already been completed; no rerun is needed for any model in this round.
-- Do not upload prediction dumps, checkpoints, `.pt/.pth/.npy/.npz/.h5/.mat`, or large per-job directories.
+- Current next step is to commit and push the completed minimal LOSO pilot for reviewer inspection.
+- Do not upload prediction dumps, checkpoints, `.pt/.pth/.npy/.npz/.h5/.mat`, or per-job directories.
 - The reviewer owns the branch register; do not edit it locally from the execution side.
-- Keep the review/execution trace version-locked to the existing local skill lock and GitHub rule commit.
+- Keep the review/execution trace version-locked to the current shared rule requirements.

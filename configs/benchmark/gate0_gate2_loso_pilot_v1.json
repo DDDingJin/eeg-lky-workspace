@@ -1,0 +1,38 @@
+{
+  "protocol": "gate0_gate2_loso_pilot_v1",
+  "artifact_scope": "subject_independent_loso_pilot",
+  "previous_fix_branch": "fix/ar-20260625-161300-a43831b-model-expansion-v1-metadata-closure",
+  "previous_fix_commit": "d0ea16fe57c7a92bcbc459ed5f5e67fd529c86ae",
+  "current_branch": "fix/ar-20260625-161300-a43831b-loso-pilot-v1",
+  "config_fingerprint_version": 1,
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; heldout_subject_only; no_target_subject_train_val_test_in_fit_or_selection",
+  "output_dir": "experiments/gate0_gate2_loso_pilot_v1",
+  "dataset": {
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "sampling_rate": 64
+  },
+  "model": "ridge",
+  "seed": 0,
+  "heldout_subjects": [
+    "P00",
+    "P01",
+    "P02"
+  ],
+  "ridge": {
+    "architecture_id": "backward_trf_ridge_loso_pilot",
+    "implementation_file": "scripts/run_gate0_gate2_loso_pilot_v1.py::fit_loso_ridge_for_subject",
+    "selection_rule": "choose alpha by pooled validation Pearson over non-heldout subjects after lag trimming",
+    "start_lag": 0,
+    "end_lag": 50,
+    "alphas": [
+      0.001,
+      0.01,
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ]
+  }
+}

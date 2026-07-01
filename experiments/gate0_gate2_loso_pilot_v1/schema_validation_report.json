@@ -1,0 +1,26 @@
+{
+  "protocol": "gate0_gate2_loso_pilot_v1",
+  "passed": true,
+  "checks": {
+    "heldout_subjects_exact": true,
+    "subject_metric_fields_consistent": true,
+    "recording_metric_fields_consistent": true,
+    "pearson_ranges_subject_metrics": true,
+    "pearson_ranges_recording_metrics": true,
+    "target_subject_excluded_from_train_val": true
+  },
+  "details": {
+    "expected_heldout_subjects": [
+      "P00",
+      "P01",
+      "P02"
+    ],
+    "observed_subjects": [
+      "P00",
+      "P01",
+      "P02"
+    ],
+    "recording_rows": 45,
+    "subject_rows": 3
+  }
+}

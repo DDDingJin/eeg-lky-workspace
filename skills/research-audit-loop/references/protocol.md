@@ -209,3 +209,152 @@ Promote from `audit/reproduction-note` to `master` only through a separate PR th
 - verified tags
 - unresolved non-blocking issues
 - exact benchmark artifacts being promoted
+
+## 14. Experiment Round Completion Gate
+
+This section applies to every lightweight experiment, benchmark, model expansion,
+analysis pilot, paper-material update, and result-summary update, even when the
+work is not part of a formal review/fix/verification round.
+
+The implementer must not report such a round as completed unless one of the
+states below is reached.
+
+### State A: `published_for_review`
+
+This is the only state in which the implementer may ask the reviewer endpoint
+to review the round.
+
+All conditions must be true:
+
+1. The round has a clearly named branch.
+2. All intended code, configs, compact result artifacts, reports, and
+   paper-material notes are committed locally.
+3. The branch is pushed to `origin`.
+4. The implementer verifies that the remote branch exists and that the remote
+   commit matches the local commit.
+5. The local worktree is clean except ignored cache files.
+6. The completion report includes:
+   - branch name;
+   - full commit SHA;
+   - base branch and base commit;
+   - changed-file summary;
+   - result directory;
+   - commands actually run;
+   - validation commands and validation status;
+   - large-file, prediction-dump, checkpoint, and model-weight check;
+   - skipped or failed items with reasons.
+
+### State B: `local_committed_push_blocked`
+
+Use this state if local work is complete and committed, but pushing to GitHub
+fails.
+
+The implementer must:
+
+1. Commit all intended files locally.
+2. Record the local commit SHA.
+3. Record the exact push command attempted.
+4. Record the complete push error.
+5. Check and report local worktree status.
+6. Stop the next experiment round and request manual user help to publish the
+   branch.
+
+The completion report must explicitly say:
+
+```text
+Status: local_committed_push_blocked
+This round has been committed locally but has not been pushed to GitHub.
+Because the reviewer endpoint cannot read an unpushed local branch, this round
+is not yet reviewable.
+Manual user help is required to publish the branch.
+```
+
+In this state, the implementer may report a local result summary, but must not
+claim that the round is reviewable. The implementer must not continue to the next
+experiment round unless the user explicitly approves local-only continuation and
+the risk is recorded.
+
+### State C: `local_only_incomplete`
+
+Use this state if result files exist only in the local filesystem and have not
+been committed.
+
+In this state, the implementer may report preliminary local observations, but
+must not:
+
+1. claim that the round is completed;
+2. ask the reviewer for formal review;
+3. ask the reviewer to accept, verify, or register the result;
+4. ask the reviewer to build the next round from the result;
+5. continue to the next experiment round.
+
+The completion report must explicitly say:
+
+```text
+Status: local_only_incomplete
+This round still exists only as uncommitted local files.
+This round is not complete and is not reviewable.
+The next action is to commit the intended files. If push then fails, request
+manual user help under local_committed_push_blocked.
+```
+
+### Reviewer Rule
+
+The reviewer must treat uncommitted or unpushed results as not formally
+reviewable. The reviewer may give preliminary comments on a local summary, but
+must not mark such a round as accepted, verified, or the baseline for the next
+round.
+
+Formal review requires a GitHub-accessible branch and commit.
+
+### Completion Report Template
+
+Every experiment-style round must end with this report:
+
+```text
+Status:
+published_for_review / local_committed_push_blocked / local_only_incomplete
+
+Branch:
+...
+
+Commit:
+...
+
+Base branch:
+...
+
+Base commit:
+...
+
+Result directory:
+...
+
+Changed files summary:
+...
+
+Commands run:
+...
+
+Validation:
+...
+
+Large-file check:
+prediction dump: yes/no
+checkpoint: yes/no
+.pt/.pth/.npy/.npz/.h5/.mat: yes/no
+
+Skipped or failed items:
+...
+
+Reviewer entry:
+GitHub branch/commit/PR link if available
+```
+
+### 中文说明
+
+“本地跑完”不等于“本轮完成”。
+
+“本地有结果”不等于“审阅端可审阅”。
+
+“push 失败”不是错误，但必须进入 `local_committed_push_blocked` 状态，并请求用户手动帮助，而不是直接继续下一轮。

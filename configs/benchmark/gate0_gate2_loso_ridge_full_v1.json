@@ -1,0 +1,48 @@
+{
+  "protocol": "gate0_gate2_loso_ridge_full_v1",
+  "artifact_scope": "subject_independent_loso_ridge_full",
+  "previous_fix_branch": "fix/ar-20260625-161300-a43831b-loso-pilot-v1",
+  "previous_fix_commit": "fb3494d6edb3b54d793288e739d6c37c4fb34e5f",
+  "current_branch": "fix/ar-20260625-161300-a43831b-loso-ridge-full-v1",
+  "config_fingerprint_version": 1,
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; pure_loso; target_subject_test_only; ridge_seed0_deterministic",
+  "output_dir": "experiments/gate0_gate2_loso_ridge_full_v1",
+  "seed": 0,
+  "model": "ridge",
+  "datasets": [
+    {
+      "dataset_id": "weissbart_tf64",
+      "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+      "sampling_rate": 64,
+      "subject_selection": "all_available_test_subjects"
+    },
+    {
+      "dataset_id": "etard_tf64",
+      "dataset_locator": "data/processed/reference_splits/etard_tf64",
+      "sampling_rate": 64,
+      "subject_selection": "all_available_test_subjects"
+    }
+  ],
+  "subject_specific_reference": {
+    "subject_metrics": "experiments/gate0_gate2_full_subject_single_seed/subject_metrics.csv",
+    "protocol": "gate0_gate2_full_subject_single_seed_v1",
+    "model": "ridge",
+    "seed": 0
+  },
+  "ridge": {
+    "architecture_id": "backward_trf_ridge_loso_full",
+    "implementation_file": "scripts/run_gate0_gate2_loso_ridge_full_v1.py::fit_loso_ridge_for_dataset_subject",
+    "selection_rule": "choose alpha by pooled validation Pearson over non-heldout subjects after lag trimming",
+    "start_lag": 0,
+    "end_lag": 50,
+    "alphas": [
+      0.001,
+      0.01,
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ]
+  }
+}

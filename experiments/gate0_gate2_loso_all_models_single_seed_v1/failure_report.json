@@ -1,0 +1,1390 @@
+{
+  "failures": [
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cca",
+      "subject_id": "P00",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cca",
+      "subject_id": "P01",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cca",
+      "subject_id": "P02",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cca",
+      "subject_id": "P03",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cca",
+      "subject_id": "P04",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cca",
+      "subject_id": "P05",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cca",
+      "subject_id": "P06",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cca",
+      "subject_id": "P07",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cca",
+      "subject_id": "P08",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cca",
+      "subject_id": "P09",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cca",
+      "subject_id": "P10",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cca",
+      "subject_id": "P11",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cca",
+      "subject_id": "P12",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P00",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P01",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P02",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P03",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P04",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P05",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P06",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P07",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P08",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P09",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P10",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P11",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P12",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P13",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P14",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P15",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P16",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P17",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P18",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cca",
+      "subject_id": "P19",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO CCA path materializes dataset-scale multi-subject lagged train/val arrays and did not complete a single Weissbart held-out smoke within the allotted runtime after aggregate bug fix; this branch records the implementation identity and runtime blockage without fabricating results."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "subject_id": "P00",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "subject_id": "P01",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "subject_id": "P02",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "subject_id": "P03",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "subject_id": "P04",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "subject_id": "P05",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "subject_id": "P06",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "subject_id": "P07",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "subject_id": "P08",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "subject_id": "P09",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "subject_id": "P10",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "subject_id": "P11",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "subject_id": "P12",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P00",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P01",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P02",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P03",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P04",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P05",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P06",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P07",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P08",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P09",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P10",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P11",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P12",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P13",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P14",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P15",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P16",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P17",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P18",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "subject_id": "P19",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO FCNN path would train over millions of pooled sliding windows per held-out subject under the existing exact window-expansion dataset implementation; not completed in this round without first introducing a separate scalable LOSO data pipeline."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "dnn",
+      "subject_id": "P00",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "dnn",
+      "subject_id": "P01",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "dnn",
+      "subject_id": "P02",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "dnn",
+      "subject_id": "P03",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "dnn",
+      "subject_id": "P04",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "dnn",
+      "subject_id": "P05",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "dnn",
+      "subject_id": "P06",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "dnn",
+      "subject_id": "P07",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "dnn",
+      "subject_id": "P08",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "dnn",
+      "subject_id": "P09",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "dnn",
+      "subject_id": "P10",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "dnn",
+      "subject_id": "P11",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "dnn",
+      "subject_id": "P12",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P00",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P01",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P02",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P03",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P04",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P05",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P06",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P07",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P08",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P09",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P10",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P11",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P12",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P13",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P14",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P15",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P16",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P17",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P18",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "dnn",
+      "subject_id": "P19",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream FCNN path shares the same exact pooled sliding-window expansion bottleneck as FCNN; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cnn",
+      "subject_id": "P00",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cnn",
+      "subject_id": "P01",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cnn",
+      "subject_id": "P02",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cnn",
+      "subject_id": "P03",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cnn",
+      "subject_id": "P04",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cnn",
+      "subject_id": "P05",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cnn",
+      "subject_id": "P06",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cnn",
+      "subject_id": "P07",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cnn",
+      "subject_id": "P08",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cnn",
+      "subject_id": "P09",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cnn",
+      "subject_id": "P10",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cnn",
+      "subject_id": "P11",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cnn",
+      "subject_id": "P12",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P00",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P01",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P02",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P03",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P04",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P05",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P06",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P07",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P08",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P09",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P10",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P11",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P12",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P13",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P14",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P15",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P16",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P17",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P18",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "cnn",
+      "subject_id": "P19",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO upstream CNN path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "subject_id": "P00",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "subject_id": "P01",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "subject_id": "P02",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "subject_id": "P03",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "subject_id": "P04",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "subject_id": "P05",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "subject_id": "P06",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "subject_id": "P07",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "subject_id": "P08",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "subject_id": "P09",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "subject_id": "P10",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "subject_id": "P11",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "subject_id": "P12",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P00",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P01",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P02",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P03",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P04",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P05",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P06",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P07",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P08",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P09",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P10",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P11",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P12",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P13",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P14",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P15",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P16",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P17",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P18",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "subject_id": "P19",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO EEGNet path shares the same exact pooled sliding-window expansion bottleneck as the other windowed deep models; this round records the implementation identity but does not claim a successful scalable LOSO result."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "subject_id": "P00",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "subject_id": "P01",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "subject_id": "P02",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "subject_id": "P03",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "subject_id": "P04",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "subject_id": "P05",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "subject_id": "P06",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "subject_id": "P07",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "subject_id": "P08",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "subject_id": "P09",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "subject_id": "P10",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "subject_id": "P11",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "subject_id": "P12",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P00",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P01",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P02",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P03",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P04",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P05",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P06",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P07",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P08",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P09",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P10",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P11",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P12",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P13",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P14",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P15",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P16",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P17",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P18",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "subject_id": "P19",
+      "status": "skipped_with_reason",
+      "error": "Current pooled LOSO ADT path would require subject-wise repeated pooled sequence training on the largest dataset under the existing exact sequence-window pipeline; this round does not fabricate results without a dedicated scalable LOSO training path."
+    }
+  ]
+}

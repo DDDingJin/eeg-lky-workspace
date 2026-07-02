@@ -6,84 +6,74 @@ This is the single entry file for resuming work in this worktree.
 
 ## Current Active Task
 
-- active round: `loso-ridge-full-v1`
-- requested base branch: `fix/ar-20260625-161300-a43831b-loso-pilot-v1`
-- requested base commit: `fb3494d6edb3b54d793288e739d6c37c4fb34e5f`
-- published result branch: `fix/ar-20260625-161300-a43831b-loso-pilot-v1`
-- published result commit: `fb3494d6edb3b54d793288e739d6c37c4fb34e5f`
-- requested new branch: `fix/ar-20260625-161300-a43831b-loso-ridge-full-v1`
+- active round: `loso-all-models-single-seed-v1`
+- requested base branch: `fix/ar-20260625-161300-a43831b-loso-ridge-full-v1`
+- requested base commit: `f546c08ab6e7a3e073e0b35ac9324d7b9bd3a57a`
+- published baseline branch: `fix/ar-20260625-161300-a43831b-loso-ridge-full-v1`
+- published baseline commit: `f546c08ab6e7a3e073e0b35ac9324d7b9bd3a57a`
+- requested new branch: `fix/ar-20260625-161300-a43831b-loso-all-models-single-seed-v1`
 - current status:
-  - published branch `fix/ar-20260625-161300-a43831b-loso-pilot-v1` exists on `origin` at `fb3494d6edb3b54d793288e739d6c37c4fb34e5f`
-  - the LOSO pilot was accepted as subject-independent interface validation
-  - this round expands only the validated LOSO ridge path to all subjects on Weissbart and Etard
-  - no deep models, no multi-seed, and no paper prose updates are allowed in this round
-  - target output directory is `experiments/gate0_gate2_loso_ridge_full_v1`
-  - full LOSO ridge run is complete locally with compact artifacts generated
-  - next step is commit + push for reviewer inspection
+  - this round extends validated pure LOSO from ridge-only to the current unified subject-specific benchmark model set
+  - target output directory is `experiments/gate0_gate2_loso_all_models_single_seed_v1`
+  - `ridge` must be reused from `loso-ridge-full-v1`, not rerun
+  - `cca`, `fcnn`, `dnn`, `cnn`, `eegnet`, and `adt` are tracked in this round with implementation identity and explicit runtime blockage status
+  - target subject must be excluded from train, val, scaler/normalization, and model/checkpoint selection
+  - only compact artifacts may be committed and pushed
 
 ## Current Worktree
 
 - worktree: `E:\decode\_fix_loso_pilot_v1_clean`
-- branch: `fix/ar-20260625-161300-a43831b-loso-ridge-full-v1`
-- published baseline branch: `fix/ar-20260625-161300-a43831b-loso-pilot-v1`
-- published baseline commit: `fb3494d6edb3b54d793288e739d6c37c4fb34e5f`
-- remote branch target: `origin/fix/ar-20260625-161300-a43831b-loso-ridge-full-v1`
+- branch: `fix/ar-20260625-161300-a43831b-loso-all-models-single-seed-v1`
+- published baseline branch: `fix/ar-20260625-161300-a43831b-loso-ridge-full-v1`
+- published baseline commit: `f546c08ab6e7a3e073e0b35ac9324d7b9bd3a57a`
+- remote branch target: `origin/fix/ar-20260625-161300-a43831b-loso-all-models-single-seed-v1`
 
 ## Current State
 
-- The accepted baseline is the published LOSO pilot branch.
-- The current round is the first full all-subject LOSO ridge expansion under the validated subject-independent interface.
+- The accepted baseline is the published LOSO ridge full branch.
 - Scope:
-  - `weissbart_tf64`: all subjects
-  - `etard_tf64`: all subjects
-  - `ridge` only
-  - seed `0` only
-- The current round must publish only compact artifacts.
-- Current local LOSO full output status:
-  - planned jobs `33`
-  - successful jobs `33`
-  - failed jobs `0`
-  - schema validation `passed`
+  - datasets: `weissbart_tf64`, `etard_tf64`
+  - held-out subjects: all available test subjects in each dataset
+  - models: `ridge`, `cca`, `fcnn`, `dnn`, `cnn`, `eegnet`, `adt`
+  - seed: `0`
+- Comparison target:
+  - subject-specific reference protocol: `gate0_gate2_full_subject_single_seed_v1`
+  - ridge LOSO reference protocol: `gate0_gate2_loso_ridge_full_v1`
+- Current local code status:
+  - config created
+  - runner created
+  - compact result package generated locally
+  - ridge reused successfully for all subjects
+  - non-ridge models recorded as `skipped_with_reason` pending a scalable LOSO data/training path
 
 ## What Just Happened
 
-- This round starts from the accepted LOSO pilot baseline.
-- The main new task is to scale the already-validated pure LOSO ridge procedure across all Weissbart and Etard subjects.
-- The current deliverable is a reviewable compact LOSO ridge full package with dataset-level, Etard condition-level, and subject-specific comparison outputs.
-- The current local results are ready for review once committed and pushed.
+- The LOSO pilot and LOSO ridge full rounds were accepted as the subject-independent baseline path.
+- This round aligns LOSO with the existing subject-specific benchmark model set so the two protocols can be compared model-by-model.
+- The current deliverable is a compact all-model LOSO package with dataset-level, subject-level, and Etard condition-level comparison artifacts.
 
 ## Read In This Order
 
 1. `workflow/START_HERE.md`
 2. `workflow/skill_alignment.md`
-3. `configs/benchmark/gate0_gate2_loso_ridge_full_v1.json`
-4. `scripts/run_gate0_gate2_loso_ridge_full_v1.py`
+3. `configs/benchmark/gate0_gate2_loso_all_models_single_seed_v1.json`
+4. `scripts/run_gate0_gate2_loso_all_models_single_seed_v1.py`
 5. `experiments/gate0_gate2_loso_ridge_full_v1/run_manifest.json`
-6. `README.md`
+6. `experiments/gate0_gate2_model_expansion_v1/run_manifest.json`
 
 ## Key Files
 
 - config:
-  - `configs/benchmark/gate0_gate2_loso_ridge_full_v1.json`
+  - `configs/benchmark/gate0_gate2_loso_all_models_single_seed_v1.json`
 - runner:
-  - `scripts/run_gate0_gate2_loso_ridge_full_v1.py`
-- machine-readable run state:
-  - `experiments/gate0_gate2_loso_ridge_full_v1/run_manifest.json`
-- compact outputs:
+  - `scripts/run_gate0_gate2_loso_all_models_single_seed_v1.py`
+- reused LOSO ridge reference:
   - `experiments/gate0_gate2_loso_ridge_full_v1/recording_metrics.csv`
   - `experiments/gate0_gate2_loso_ridge_full_v1/subject_metrics.csv`
-  - `experiments/gate0_gate2_loso_ridge_full_v1/dataset_metrics.csv`
-  - `experiments/gate0_gate2_loso_ridge_full_v1/etard_condition_metrics.csv`
-  - `experiments/gate0_gate2_loso_ridge_full_v1/leakage_summary.md`
-  - `experiments/gate0_gate2_loso_ridge_full_v1/loso_vs_subject_specific_comparison.csv`
-  - `experiments/gate0_gate2_loso_ridge_full_v1/loso_vs_subject_specific_comparison.md`
-  - `experiments/gate0_gate2_loso_ridge_full_v1/result_summary.md`
-  - `experiments/gate0_gate2_loso_ridge_full_v1/schema_validation_report.json`
-  - `experiments/gate0_gate2_loso_ridge_full_v1/run_manifest.json`
-- review-loop lock:
-  - `workflow/skill_lock.json`
-- local skill alignment note:
-  - `workflow/skill_alignment.md`
+- subject-specific reference:
+  - `experiments/gate0_gate2_model_expansion_v1/subject_metrics.csv`
+- target output directory:
+  - `experiments/gate0_gate2_loso_all_models_single_seed_v1/`
 
 ## Commands To Re-Establish Context
 
@@ -93,20 +83,19 @@ Run these from `E:\decode\_fix_loso_pilot_v1_clean`:
 git status --short --branch
 git rev-parse HEAD
 Get-Content workflow\START_HERE.md
-git show fb3494d6edb3b54d793288e739d6c37c4fb34e5f --stat --no-patch
-Get-Content configs\benchmark\gate0_gate2_loso_ridge_full_v1.json
+git show f546c08ab6e7a3e073e0b35ac9324d7b9bd3a57a --stat --no-patch
+Get-Content configs\benchmark\gate0_gate2_loso_all_models_single_seed_v1.json
+Get-Content scripts\run_gate0_gate2_loso_all_models_single_seed_v1.py
 Get-Content experiments\gate0_gate2_loso_ridge_full_v1\run_manifest.json
-Get-Content experiments\gate0_gate2_loso_ridge_full_v1\leakage_summary.md
-Get-Content experiments\gate0_gate2_loso_ridge_full_v1\result_summary.md
-Get-Content experiments\gate0_gate2_loso_ridge_full_v1\loso_vs_subject_specific_comparison.md
+Get-Content experiments\gate0_gate2_model_expansion_v1\run_manifest.json
 ```
 
 ## Benchmark Rebuild Command
 
-If the LOSO ridge full package needs to be rebuilt, use:
+If the LOSO all-model package needs to be built or resumed, use:
 
 ```powershell
-F:\miniconda\envs\decode-torch\python.exe scripts/run_gate0_gate2_loso_ridge_full_v1.py --config configs/benchmark/gate0_gate2_loso_ridge_full_v1.json
+F:\miniconda\envs\decode-torch\python.exe scripts/run_gate0_gate2_loso_all_models_single_seed_v1.py --config configs/benchmark/gate0_gate2_loso_all_models_single_seed_v1.json --resume
 ```
 
 ## Resume Rule
@@ -117,7 +106,7 @@ F:\miniconda\envs\decode-torch\python.exe scripts/run_gate0_gate2_loso_ridge_ful
 
 ## Expected Next Step
 
-- Current next step is to commit and push the completed full all-subject LOSO ridge package for reviewer inspection.
-- Do not upload prediction dumps, checkpoints, `.pt/.pth/.npy/.npz/.h5/.mat`, or per-job directories.
+- Current next step is to commit and push the compact LOSO all-model single-seed package.
+- Do not upload raw data, prediction dumps, checkpoints, model weights, `.pt/.pth/.npy/.npz/.h5/.mat`, or per-job directories.
 - The reviewer owns the branch register; do not edit it locally from the execution side.
-- Keep the review/execution trace version-locked to the current shared rule requirements.
+- Under the current shared rule, this round is reviewable only after commit plus successful push with remote commit verification.

@@ -1,6 +1,6 @@
 # Branch Register
 
-Last updated: 2026-07-01
+Last updated: 2026-07-02
 
 This file is maintained by the review endpoint. The implementer endpoint should not edit it during experiment execution. Each execution round should report its branch and commit; the review endpoint will update this register after review.
 
@@ -12,11 +12,12 @@ This file is maintained by the review endpoint. The implementer endpoint should 
 - Publish-gate rule commit: `365c7c2b034af2abd1e6283adde980de6de7eeed`
 - Review package branch: `review/ar-20260625-161300-a43831b-blueprint`
 - Original reviewed implementation baseline: `audit/reproduction-note @ a43831b83598c82520be320c21b56e92b73b7dcd`
-- Current accepted execution base for the next code round: `fix/ar-20260625-161300-a43831b-loso-ridge-full-v1 @ f546c08ab6e7a3e073e0b35ac9324d7b9bd3a57a`
+- Current accepted execution base for the next code round: `fix/ar-20260625-161300-a43831b-loso-nonridge-data-interface-smoke-v1 @ ce804cf328981bf43f9ebb35b7ca2a3e75cd6c63` after the branch is cleaned of unintentionally included `loso_all_models_single_seed_v1` blocked artifacts; use `f546c08ab6e7a3e073e0b35ac9324d7b9bd3a57a` as the clean fallback base if hygiene is uncertain.
 - Latest full-subject result branch: `fix/ar-20260625-161300-a43831b-model-expansion-v1 @ 68f87a4c0005e4556a51b83cd42e73908edc44ad`
 - Latest reviewable full-subject artifact branch: `fix/ar-20260625-161300-a43831b-model-expansion-v1-metadata-closure @ d0ea16fe57c7a92bcbc459ed5f5e67fd529c86ae`
 - Latest subject-independent LOSO pilot branch: `fix/ar-20260625-161300-a43831b-loso-pilot-v1 @ fb3494d6edb3b54d793288e739d6c37c4fb34e5f`
 - Latest subject-independent Ridge LOSO branch: `fix/ar-20260625-161300-a43831b-loso-ridge-full-v1 @ f546c08ab6e7a3e073e0b35ac9324d7b9bd3a57a`
+- Latest non-Ridge LOSO adapter smoke branch: `fix/ar-20260625-161300-a43831b-loso-nonridge-data-interface-smoke-v1 @ ce804cf328981bf43f9ebb35b7ca2a3e75cd6c63`
 
 ## Branches
 
@@ -39,6 +40,7 @@ This file is maintained by the review endpoint. The implementer endpoint should 
 | `fix/ar-20260625-161300-a43831b-model-expansion-v1-metadata-closure` | `d0ea16fe57c7a92bcbc459ed5f5e67fd529c86ae` | Metadata closure for model expansion v1 | `68f87a4` | Accepted as reviewable artifact closure; local hygiene caveat | No model rerun. Publishes the missing compact manifest-referenced artifacts: `subject_metrics.csv`, `recording_metrics.csv`, `job_ledger.csv`, `job_ledger.json`, and `skipped_models.md`; updates `workflow/START_HERE.md`. Remote checks found no prediction dumps, checkpoints, model weights, raw data, or per-job directories in this commit. Caveat: implementer reported unrelated local residue remains in the worktree, so the next execution round must first clean, ignore, or isolate those files before claiming `published_for_review`. Scientific result baseline remains `68f87a4`; practical next-branch base should be this closure commit. |
 | `fix/ar-20260625-161300-a43831b-loso-pilot-v1` | `fb3494d6edb3b54d793288e739d6c37c4fb34e5f` | Minimal subject-independent LOSO pilot | `d0ea16f` | Accepted as interface pilot; not article-grade full LOSO | Covers `weissbart_tf64`, `ridge`, seed `0`, held-out subjects `P00`, `P01`, and `P02`. Schema validation passed with 3/3 jobs and 0 failures. Leakage check documents pure LOSO: non-heldout train split for fitting, nonheldout val split for alpha selection, heldout test split for final evaluation. Results are lower than subject-specific Ridge as expected. Caveat: `workflow/START_HERE.md` still says the next step is commit and push; next branch should refresh handoff metadata after publication. |
 | `fix/ar-20260625-161300-a43831b-loso-ridge-full-v1` | `f546c08ab6e7a3e073e0b35ac9324d7b9bd3a57a` | Full all-subject subject-independent Ridge LOSO | `fb3494d` | Accepted as Ridge LOSO baseline; alpha-grid caveat | Covers `weissbart_tf64` 13 subjects and `etard_tf64` 20 subjects with pure LOSO Ridge at seed `0`. Schema validation passed with 33/33 jobs, 867 recording rows, 33 subject rows, 2 dataset summaries, 6 Etard condition summaries, and 33 subject-specific comparison rows. Mean LOSO performance is lower than subject-specific Ridge by `-0.051570`, supporting the expected subject-independent difficulty gap. Caveats: all jobs selected the smallest alpha in the tested grid (`0.001`), so run a Ridge alpha-grid boundary diagnostic before treating the LOSO Ridge row as final; `workflow/START_HERE.md` still contains pre-push wording. |
+| `fix/ar-20260625-161300-a43831b-loso-nonridge-data-interface-smoke-v1` | `ce804cf328981bf43f9ebb35b7ca2a3e75cd6c63` | Non-Ridge pure LOSO adapter smoke matrix | `f546c08a` | Accepted as adapter-readiness evidence; cleanup required before next base | Covers `weissbart_tf64`, heldout `P00`, seed `0`, and requested models `eegnet`, `fcnn`, `cnn`, `adt`, `dnn`, `cca`. Schema validation passed; `eegnet`, `fcnn`, `cnn`, `adt`, and `dnn` succeeded under lazy pure-LOSO adapters, while `cca` was skipped with a documented lag-matrix memory scaling reason. Leakage check excludes heldout `P00` from train, val, normalization/scaler fitting, hyperparameter selection, and checkpoint selection. Caveat: this branch also includes the previously blocked `gate0_gate2_loso_all_models_single_seed_v1` config, runner, and result directory; those are not part of the accepted smoke evidence and must be removed or isolated before using this branch as the base for a full non-Ridge LOSO run. |
 
 ## Manuscript Notes
 
@@ -50,16 +52,18 @@ This file is maintained by the review endpoint. The implementer endpoint should 
 
 Proposed branch:
 
-- `fix/ar-20260625-161300-a43831b-loso-ridge-alpha-sensitivity-v1`
+- `fix/ar-20260625-161300-a43831b-loso-nonridge-full-single-seed-v1`
 
 Base:
 
-- `fix/ar-20260625-161300-a43831b-loso-ridge-full-v1 @ f546c08ab6e7a3e073e0b35ac9324d7b9bd3a57a`
+- Preferred clean base: `fix/ar-20260625-161300-a43831b-loso-nonridge-data-interface-smoke-v1 @ ce804cf328981bf43f9ebb35b7ca2a3e75cd6c63` after removing or isolating the unintended `gate0_gate2_loso_all_models_single_seed_v1` artifacts.
+- If cleanup is cumbersome, start from `fix/ar-20260625-161300-a43831b-loso-ridge-full-v1 @ f546c08ab6e7a3e073e0b35ac9324d7b9bd3a57a` and port only the validated lazy non-Ridge adapter smoke code.
 
 Scope:
 
-- Do not add deep models yet. First diagnose Ridge alpha selection because all full-LOSO jobs selected the lower grid boundary `0.001`.
-- Reuse the validated pure LOSO Ridge interface and both datasets/all subjects.
-- Expand or test the alpha grid below `0.001`, for example `1e-8`, `1e-7`, `1e-6`, `1e-5`, `1e-4`, `1e-3`, `1e-2`, `1e-1`, `1`, `10`, `100`; keep seed `0`.
-- Output compact artifacts comparing old and expanded-grid alpha selections, validation scores, subject metrics, dataset metrics, and LOSO-vs-subject-specific deltas.
-- Preserve pure LOSO leakage constraints and compact artifact policy.
+- First do a small hygiene closure if needed: remove the unintentionally included blocked `gate0_gate2_loso_all_models_single_seed_v1` config, runner, and result directory from the next execution base, or clearly isolate them as `blocked_context` outside the active benchmark artifact path.
+- Run full subject-independent pure LOSO at seed `0` for both `weissbart_tf64` and `etard_tf64`, all held-out subjects, using the lazy non-Ridge data interfaces validated by the smoke matrix.
+- Main models for this round: `eegnet`, `fcnn`, `cnn`, `adt`, and `dnn`. Reuse the already accepted Ridge LOSO result for comparison; do not rerun Ridge unless the runner needs a consistency check.
+- Do not force `cca` through the current pooled lag-matrix path. Keep `cca` as a separate scalability/path-design issue unless a memory-safe CCA implementation is introduced and separately smoke-tested.
+- Output compact artifacts only: `run_manifest.json`, `failure_report.json`, `schema_validation_report.json`, `subject_metrics.csv`, `recording_metrics.csv`, `dataset_metrics.csv`, `model_dataset_summary.csv`, `etard_condition_metrics.csv`, `loso_vs_subject_specific_comparison.*`, `loso_vs_ridge_loso_comparison.csv`, `leakage_summary.md`, `result_summary.md`, and `incremental_comparison.md`.
+- The report must state total planned/success/failed/skipped jobs, exact branch/base commits, whether any results are reused, and which artifacts are newly generated. No raw data, prediction dumps, checkpoints, model weights, per-job directories, cache files, or `.pt/.pth/.npy/.npz/.h5/.mat` files should be pushed.

@@ -1,0 +1,122 @@
+{
+  "protocol": "gate0_gate2_loso_nonridge_adapter_smoke_matrix_v1",
+  "artifact_scope": "subject_independent_loso_nonridge_adapter_smoke_matrix",
+  "base_branch": "fix/ar-20260625-161300-a43831b-loso-ridge-full-v1",
+  "base_commit": "f546c08ab6e7a3e073e0b35ac9324d7b9bd3a57a",
+  "blocked_branch_context": "fix/ar-20260625-161300-a43831b-loso-all-models-single-seed-v1",
+  "blocked_branch_commit": "7b79e0b4b8b86926b1dd5e275ee014dda596eea0",
+  "current_branch": "fix/ar-20260625-161300-a43831b-loso-nonridge-data-interface-smoke-v1",
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "output_dir": "experiments/gate0_gate2_loso_nonridge_data_interface_smoke_v1",
+  "dataset": {
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "sampling_rate": 64,
+    "heldout_subject": "P00"
+  },
+  "seed": 0,
+  "models": [
+    "eegnet",
+    "fcnn",
+    "cnn",
+    "adt",
+    "dnn",
+    "cca"
+  ],
+  "dataloader": {
+    "batch_size": 256,
+    "eval_batch_size": 1024,
+    "shuffle_train": true,
+    "num_workers": 0,
+    "recording_cache_size": 4
+  },
+  "smoke_limits": {
+    "window_epochs": 1,
+    "window_train_batches_per_epoch": 16,
+    "window_val_batches_per_epoch": 8,
+    "sequence_epochs": 1,
+    "sequence_train_batches_per_epoch": 8,
+    "sequence_val_batches_per_epoch": 4
+  },
+  "cca_scalability_guard": {
+    "dtype_bytes": 8,
+    "max_estimated_train_lag_bytes": 16000000000
+  },
+  "fcnn": {
+    "family": "mlp_fcnn_family",
+    "architecture_id": "fcnn_baseline_loso_lazy_smoke",
+    "implementation_file": "src/repro/simple_models.py::FCNNBaseline",
+    "selection_rule": "best pooled non-heldout validation Pearson checkpoint within smoke-limited epochs and batch budget",
+    "training_protocol": "lazy multi-subject train/val window generation from non-heldout recordings only; heldout subject test only",
+    "window_size": 50,
+    "target_index": "last",
+    "hidden_layers": 3,
+    "dropout_rate": 0.45,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001
+  },
+  "dnn": {
+    "family": "mlp_fcnn_family",
+    "architecture_id": "upstream_fcnn_loso_lazy_smoke",
+    "implementation_file": "external/upstream/mldecoders/pipeline/dnn.py::FCNN",
+    "selection_rule": "best pooled non-heldout validation Pearson checkpoint within smoke-limited epochs and batch budget",
+    "training_protocol": "lazy multi-subject train/val window generation from non-heldout recordings only; heldout subject test only",
+    "window_size": 50,
+    "target_index": "last",
+    "hidden_layers": 3,
+    "dropout_rate": 0.45,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001
+  },
+  "cnn": {
+    "family": "cnn_family",
+    "architecture_id": "upstream_cnn_loso_lazy_smoke",
+    "implementation_file": "external/upstream/mldecoders/pipeline/dnn.py::CNN",
+    "selection_rule": "best pooled non-heldout validation Pearson checkpoint within smoke-limited epochs and batch budget",
+    "training_protocol": "lazy multi-subject train/val window generation from non-heldout recordings only; heldout subject test only",
+    "window_size": 50,
+    "target_index": "last",
+    "F1": 8,
+    "D": 8,
+    "F2": 64,
+    "dropout_rate": 0.2,
+    "learning_rate": 0.01,
+    "weight_decay": 1e-08
+  },
+  "eegnet": {
+    "family": "eegnet_family",
+    "architecture_id": "eegnet_loso_lazy_smoke",
+    "implementation_file": "src/repro/mldecoders/models.py::EEGNetRegressor",
+    "selection_rule": "best pooled non-heldout validation Pearson checkpoint within smoke-limited epochs and batch budget",
+    "training_protocol": "lazy multi-subject train/val window generation from non-heldout recordings only; heldout subject test only",
+    "window_size": 50,
+    "target_index": "last",
+    "temporal_filters": 8,
+    "depth_multiplier": 2,
+    "separable_filters": 16,
+    "dropout_rate": 0.25,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001
+  },
+  "adt": {
+    "family": "transformer_adt_family",
+    "architecture_id": "adt_exact_loso_lazy_smoke",
+    "implementation_file": "src/repro/adt_exact.py::ADTExactRegressor",
+    "selection_rule": "best pooled non-heldout validation loss checkpoint within smoke-limited epochs and batch budget",
+    "training_protocol": "lazy multi-subject train/val sequence generation from non-heldout recordings only; heldout subject test only",
+    "window_length": 320,
+    "hop_length": 64,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "min_lr": 0.0001
+  },
+  "cca": {
+    "family": "cca_reconstruction",
+    "architecture_id": "cca_reconstruction_loso_pooled_scalability_smoke",
+    "implementation_file": "src/repro/mldecoders/cca.py::fit_cca_reconstruction",
+    "selection_rule": "pooled non-heldout validation reconstruction correlation over PCA/component/alpha grid",
+    "training_protocol": "pooled non-heldout train/val lag matrix fit; blocked here by LOSO pooled lag-memory scaling audit",
+    "start_lag": 0,
+    "end_lag": 50
+  }
+}

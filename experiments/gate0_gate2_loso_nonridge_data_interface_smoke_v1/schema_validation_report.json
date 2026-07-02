@@ -1,0 +1,23 @@
+{
+  "protocol": "gate0_gate2_loso_nonridge_adapter_smoke_matrix_v1",
+  "passed": true,
+  "checks": {
+    "subject_metric_fields_consistent": true,
+    "recording_metric_fields_consistent": true,
+    "pearson_ranges_subject_metrics": true,
+    "pearson_ranges_recording_metrics": true,
+    "matrix_models_complete": true,
+    "heldout_excluded_from_train_and_val_for_all_models": true,
+    "lazy_generation_true_for_non_cca_models": true,
+    "prediction_target_alignment_recorded_for_successes": true,
+    "required_success_eegnet_fcnn_cnn": true,
+    "cca_specific_scalability_issue_recorded": true
+  },
+  "details": {
+    "heldout_subject": "P00",
+    "subject_rows": 5,
+    "recording_rows": 75,
+    "matrix_rows": 6,
+    "failure_rows": 1
+  }
+}

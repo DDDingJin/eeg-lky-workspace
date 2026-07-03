@@ -1,0 +1,22 @@
+{
+  "protocol": "gate0_gate2_loso_loader_engineering_closure_v1",
+  "passed": true,
+  "checks": {
+    "dataset_model_subject_coverage_complete": true,
+    "completed_jobs_match_subject_metrics": true,
+    "subject_metric_fields_consistent": true,
+    "recording_metric_fields_consistent": true,
+    "subject_metric_values_valid": true,
+    "recording_metric_values_valid": true,
+    "pure_loso_leakage_check_passed": true,
+    "failure_report_empty": true
+  },
+  "details": {
+    "expected_jobs": 4,
+    "subject_metric_rows": 4,
+    "recording_metric_rows": 60,
+    "completed_jobs": 4,
+    "failures": 0,
+    "missing_pairs": []
+  }
+}

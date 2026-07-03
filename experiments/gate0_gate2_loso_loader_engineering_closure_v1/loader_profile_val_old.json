@@ -1,0 +1,111 @@
+{
+  "getitem_calls": 12800,
+  "load_requests": 14,
+  "recording_access_counts_top10": [
+    [
+      "val_-_P01_-_AUNP05",
+      1191
+    ],
+    [
+      "val_-_P01_-_AUNP07",
+      1132
+    ],
+    [
+      "val_-_P01_-_BROP02",
+      1119
+    ],
+    [
+      "val_-_P01_-_AUNP08",
+      1103
+    ],
+    [
+      "val_-_P01_-_BROP01",
+      1015
+    ],
+    [
+      "val_-_P01_-_BROP03",
+      999
+    ],
+    [
+      "val_-_P01_-_AUNP01",
+      988
+    ],
+    [
+      "val_-_P01_-_AUNP02",
+      969
+    ],
+    [
+      "val_-_P01_-_AUNP06",
+      892
+    ],
+    [
+      "val_-_P01_-_AUNP03",
+      889
+    ]
+  ],
+  "recording_load_counts_top10": [
+    [
+      "val_-_P01_-_AUNP01",
+      1
+    ],
+    [
+      "val_-_P01_-_AUNP02",
+      1
+    ],
+    [
+      "val_-_P01_-_AUNP03",
+      1
+    ],
+    [
+      "val_-_P01_-_AUNP04",
+      1
+    ],
+    [
+      "val_-_P01_-_AUNP05",
+      1
+    ],
+    [
+      "val_-_P01_-_AUNP06",
+      1
+    ],
+    [
+      "val_-_P01_-_AUNP07",
+      1
+    ],
+    [
+      "val_-_P01_-_AUNP08",
+      1
+    ],
+    [
+      "val_-_P01_-_BROP01",
+      1
+    ],
+    [
+      "val_-_P01_-_BROP02",
+      1
+    ]
+  ],
+  "recordings_loaded_more_than_once_count": 0,
+  "recordings_loaded_more_than_once_examples": [],
+  "distinct_recordings_accessed": 14,
+  "distinct_recordings_loaded": 14,
+  "dataset_type": "cached_lazy",
+  "cache_hits": 12786,
+  "cache_misses": 14,
+  "cache_hit_rate": 0.99890625,
+  "recording_cache_size": 4,
+  "peak_cache_bytes": 1459380,
+  "elapsed_seconds": 0.269382500089705,
+  "batch_count_completed": 50,
+  "batch_shape": [
+    256,
+    64,
+    50
+  ],
+  "target_batch_shape": [
+    256
+  ],
+  "shuffle": false,
+  "num_workers": 0,
+  "batches_per_second": 185.60968133917342
+}

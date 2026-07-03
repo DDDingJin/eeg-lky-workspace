@@ -1,0 +1,112 @@
+{
+  "getitem_calls": 51200,
+  "load_requests": 180,
+  "recording_access_counts_top10": [
+    [
+      "train_-_P05_-_AUNP05",
+      388
+    ],
+    [
+      "train_-_P06_-_AUNP05",
+      383
+    ],
+    [
+      "train_-_P12_-_AUNP05",
+      375
+    ],
+    [
+      "train_-_P11_-_AUNP05",
+      372
+    ],
+    [
+      "train_-_P09_-_AUNP05",
+      369
+    ],
+    [
+      "train_-_P04_-_FLOP04",
+      365
+    ],
+    [
+      "train_-_P01_-_BROP02",
+      364
+    ],
+    [
+      "train_-_P07_-_FLOP04",
+      362
+    ],
+    [
+      "train_-_P10_-_AUNP05",
+      362
+    ],
+    [
+      "train_-_P03_-_FLOP04",
+      361
+    ]
+  ],
+  "recording_load_counts_top10": [
+    [
+      "train_-_P01_-_AUNP01",
+      1
+    ],
+    [
+      "train_-_P01_-_AUNP02",
+      1
+    ],
+    [
+      "train_-_P01_-_AUNP03",
+      1
+    ],
+    [
+      "train_-_P01_-_AUNP04",
+      1
+    ],
+    [
+      "train_-_P01_-_AUNP05",
+      1
+    ],
+    [
+      "train_-_P01_-_AUNP06",
+      1
+    ],
+    [
+      "train_-_P01_-_AUNP07",
+      1
+    ],
+    [
+      "train_-_P01_-_AUNP08",
+      1
+    ],
+    [
+      "train_-_P01_-_BROP01",
+      1
+    ],
+    [
+      "train_-_P01_-_BROP02",
+      1
+    ]
+  ],
+  "recordings_loaded_more_than_once_count": 0,
+  "recordings_loaded_more_than_once_examples": [],
+  "distinct_recordings_accessed": 180,
+  "distinct_recordings_loaded": 180,
+  "dataset_type": "preloaded_raw_recordings",
+  "cache_hits": null,
+  "cache_misses": null,
+  "cache_hit_rate": null,
+  "recording_cache_size": null,
+  "peak_cache_bytes": 380524560,
+  "preloaded_recording_bytes": 380524560,
+  "elapsed_seconds": 1.2056481000036001,
+  "batch_count_completed": 200,
+  "batch_shape": [
+    256,
+    64,
+    50
+  ],
+  "target_batch_shape": [
+    256
+  ],
+  "shuffle": true,
+  "num_workers": 0,
+  "batches_per_second": 165.88588328501723
+}

@@ -1,0 +1,67 @@
+{
+  "protocol": "gate0_gate2_loso_loader_engineering_closure_v1",
+  "base_branch": "fix/ar-20260625-161300-a43831b-loso-ridge-full-v1",
+  "base_commit": "f546c08ab6e7a3e073e0b35ac9324d7b9bd3a57a",
+  "current_branch": "fix/ar-20260625-161300-a43831b-loso-loader-engineering-closure-v1",
+  "device": "cuda",
+  "dataset": {
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "sampling_rate": 64
+  },
+  "seed": 0,
+  "profile": {
+    "heldout_subject": "P00",
+    "max_train_batches": 200,
+    "max_val_batches": 50
+  },
+  "mini_closure": {
+    "heldout_subjects": [
+      "P00",
+      "P01"
+    ],
+    "models": [
+      "ridge",
+      "eegnet"
+    ],
+    "eegnet_max_epochs": 1,
+    "eegnet_max_train_batches": 16,
+    "eegnet_max_val_batches": 8
+  },
+  "dataloader": {
+    "batch_size": 256,
+    "eval_batch_size": 1024,
+    "shuffle_train": true,
+    "num_workers": 0,
+    "recording_cache_size": 4,
+    "persistent_workers": false
+  },
+  "profiling_summary": {
+    "train_old_seconds": 102.76462600007653,
+    "train_optimized_seconds": 1.2056481000036001,
+    "val_old_seconds": 0.269382500089705,
+    "val_optimized_seconds": 0.21747880009934306,
+    "train_shape_unchanged": true,
+    "val_shape_unchanged": true
+  },
+  "job_accounting": {
+    "planned_jobs": 4,
+    "successful_jobs": 4,
+    "failed_jobs": 0
+  },
+  "artifacts": {
+    "loader_profile_report": "experiments/gate0_gate2_loso_loader_engineering_closure_v1/loader_profile_report.md",
+    "loader_profile_train_old": "experiments/gate0_gate2_loso_loader_engineering_closure_v1/loader_profile_train_old.json",
+    "loader_profile_train_optimized": "experiments/gate0_gate2_loso_loader_engineering_closure_v1/loader_profile_train_optimized.json",
+    "loader_profile_val_old": "experiments/gate0_gate2_loso_loader_engineering_closure_v1/loader_profile_val_old.json",
+    "loader_profile_val_optimized": "experiments/gate0_gate2_loso_loader_engineering_closure_v1/loader_profile_val_optimized.json",
+    "recording_metrics": "experiments/gate0_gate2_loso_loader_engineering_closure_v1/recording_metrics.csv",
+    "subject_metrics": "experiments/gate0_gate2_loso_loader_engineering_closure_v1/subject_metrics.csv",
+    "completed_jobs": "experiments/gate0_gate2_loso_loader_engineering_closure_v1/completed_jobs.json",
+    "failure_report": "experiments/gate0_gate2_loso_loader_engineering_closure_v1/failure_report.json",
+    "schema_validation_report": "experiments/gate0_gate2_loso_loader_engineering_closure_v1/schema_validation_report.json",
+    "leakage_summary": "experiments/gate0_gate2_loso_loader_engineering_closure_v1/leakage_summary.md",
+    "result_summary": "experiments/gate0_gate2_loso_loader_engineering_closure_v1/result_summary.md",
+    "engineering_report": "experiments/gate0_gate2_loso_loader_engineering_closure_v1/engineering_report.md"
+  }
+}

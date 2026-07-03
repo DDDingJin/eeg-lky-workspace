@@ -1,0 +1,63 @@
+{
+  "protocol": "gate0_gate2_loso_loader_engineering_closure_v1",
+  "artifact_scope": "subject_independent_loso_loader_engineering_closure_v1",
+  "base_branch": "fix/ar-20260625-161300-a43831b-loso-ridge-full-v1",
+  "base_commit": "f546c08ab6e7a3e073e0b35ac9324d7b9bd3a57a",
+  "current_branch": "fix/ar-20260625-161300-a43831b-loso-loader-engineering-closure-v1",
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; pure_loso; target_subject_test_only; engineering_closure",
+  "output_dir": "experiments/gate0_gate2_loso_loader_engineering_closure_v1",
+  "seed": 0,
+  "dataset": {
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "sampling_rate": 64
+  },
+  "profile": {
+    "heldout_subject": "P00",
+    "max_train_batches": 200,
+    "max_val_batches": 50
+  },
+  "mini_closure": {
+    "heldout_subjects": [
+      "P00",
+      "P01"
+    ],
+    "models": [
+      "ridge",
+      "eegnet"
+    ],
+    "eegnet_max_epochs": 1,
+    "eegnet_max_train_batches": 16,
+    "eegnet_max_val_batches": 8
+  },
+  "dataloader": {
+    "batch_size": 256,
+    "eval_batch_size": 1024,
+    "shuffle_train": true,
+    "num_workers": 0,
+    "recording_cache_size": 4,
+    "persistent_workers": false
+  },
+  "ridge_loso_reference": {
+    "subject_metrics": "experiments/gate0_gate2_loso_ridge_full_v1/subject_metrics.csv",
+    "recording_metrics": "experiments/gate0_gate2_loso_ridge_full_v1/recording_metrics.csv",
+    "protocol": "gate0_gate2_loso_ridge_full_v1",
+    "seed": 0
+  },
+  "eegnet": {
+    "family": "eegnet_family",
+    "architecture_id": "eegnet_loso_loader_engineering_closure_v1",
+    "implementation_file": "src/repro/mldecoders/models.py::EEGNetRegressor",
+    "selection_rule": "checkpoint chosen by pooled non-heldout validation Pearson under fixed engineering mini-train budget",
+    "training_protocol": "pure LOSO; target subject excluded from train, val, normalization fitting, and checkpoint selection; lazy/preloaded raw recordings only; no full window materialization",
+    "window_size": 50,
+    "target_index": "last",
+    "temporal_filters": 8,
+    "depth_multiplier": 2,
+    "separable_filters": 16,
+    "dropout_rate": 0.25,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001
+  }
+}

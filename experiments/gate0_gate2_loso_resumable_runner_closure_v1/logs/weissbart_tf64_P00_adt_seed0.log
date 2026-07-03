@@ -17,3 +17,23 @@
 [2026-07-03 16:55:49] epoch=14 val_loss=-0.109899 val_metric=0.109899
 [2026-07-03 16:55:54] epoch=15 val_loss=-0.104187 val_metric=0.104187
 [2026-07-03 16:55:54] job_failed phase=test_prediction error=ValueError("non-broadcastable output operand with shape (320,) doesn't match the broadcast shape (320,320)")
+[2026-07-04 01:44:06] job_started
+[2026-07-04 01:44:06] preload_done train_bytes=31710380 val_bytes=3962140 train_recordings=15 val_recordings=15
+[2026-07-04 01:44:13] epoch=0 val_loss=-0.051745 val_metric=0.051745
+[2026-07-04 01:44:18] epoch=1 val_loss=-0.107881 val_metric=0.107881
+[2026-07-04 01:44:23] epoch=2 val_loss=-0.129557 val_metric=0.129557
+[2026-07-04 01:44:28] epoch=3 val_loss=-0.134321 val_metric=0.134321
+[2026-07-04 01:44:33] epoch=4 val_loss=-0.134615 val_metric=0.134615
+[2026-07-04 01:44:38] epoch=5 val_loss=-0.150777 val_metric=0.150777
+[2026-07-04 01:44:42] epoch=6 val_loss=-0.146467 val_metric=0.146467
+[2026-07-04 01:44:47] epoch=7 val_loss=-0.138927 val_metric=0.138927
+[2026-07-04 01:44:52] epoch=8 val_loss=-0.122348 val_metric=0.122348
+[2026-07-04 01:44:57] epoch=9 val_loss=-0.121922 val_metric=0.121922
+[2026-07-04 01:45:02] epoch=10 val_loss=-0.124931 val_metric=0.124931
+[2026-07-04 01:45:07] epoch=11 val_loss=-0.123860 val_metric=0.123860
+[2026-07-04 01:45:12] epoch=12 val_loss=-0.116701 val_metric=0.116701
+[2026-07-04 01:45:17] epoch=13 val_loss=-0.112899 val_metric=0.112899
+[2026-07-04 01:45:21] epoch=14 val_loss=-0.109927 val_metric=0.109927
+[2026-07-04 01:45:26] epoch=15 val_loss=-0.104231 val_metric=0.104231
+[2026-07-04 01:45:26] adt_test_prediction_done input_shape=[12, 320, 64] raw_prediction_shape=[12, 320, 1] postprocessed_batch_prediction_shape=[12, 320] individual_window_prediction_shape=[320] target_shape=[12, 320] scorer_input_shape=[320]
+[2026-07-04 01:45:27] job_completed total_seconds=80.513005

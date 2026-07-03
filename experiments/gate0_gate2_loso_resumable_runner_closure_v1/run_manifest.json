@@ -12,8 +12,7 @@
   ],
   "datasets": {
     "weissbart_tf64": [
-      "P00",
-      "P01"
+      "P00"
     ]
   },
   "dataloader": {

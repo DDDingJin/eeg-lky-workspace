@@ -2,9 +2,9 @@
 
 This package validates resumable per-job writing for pure LOSO runs. It is not a full benchmark package.
 
-- planned jobs: `6`
-- completed jobs: `2`
-- failed jobs: `1`
+- planned jobs: `3`
+- completed jobs: `3`
+- failed jobs: `0`
 
 ## Scope
 - datasets: `weissbart_tf64`

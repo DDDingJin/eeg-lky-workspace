@@ -3,6 +3,15 @@
     {
       "dataset": "weissbart_tf64",
       "subject_id": "P00",
+      "model": "adt",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "adt_epoch_5",
+      "total_job_seconds": 80.51300549972802
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
       "model": "eegnet",
       "seed": 0,
       "status": "success",

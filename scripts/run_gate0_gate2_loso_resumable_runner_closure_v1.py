@@ -45,6 +45,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--models", nargs="*")
     parser.add_argument("--max-jobs", type=int)
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--retry-failed-job", action="store_true")
+    parser.add_argument("--dry-run-plan", action="store_true")
     return parser.parse_args()
 
 
@@ -197,6 +199,10 @@ def correlation(pred: np.ndarray, target: np.ndarray) -> float:
     if denom <= 0:
         return float("nan")
     return float(np.sum(pred0 * target0) / denom)
+
+
+def postprocess_adt_prediction_tensor(pred_tensor: torch.Tensor) -> np.ndarray:
+    return pred_tensor.squeeze(-1).detach().cpu().numpy().astype(np.float32)
 
 
 def batch_corr(y_true: torch.Tensor, y_pred: torch.Tensor, eps: float = 1e-8) -> torch.Tensor:
@@ -641,6 +647,43 @@ def update_run_state(path: Path, state: dict[str, object], *, planned_jobs: list
     atomic_write_json(path, state)
 
 
+def remove_target_failures(
+    failure_rows: list[dict[str, object]],
+    run_state: dict[str, object],
+    *,
+    planned_jobs: list[JobKey],
+    reason: str,
+) -> list[dict[str, object]]:
+    planned_set = {(job.dataset, job.subject_id, job.model, job.seed) for job in planned_jobs}
+    kept: list[dict[str, object]] = []
+    removed: list[dict[str, object]] = []
+    for row in failure_rows:
+        key = (row["dataset"], row["subject_id"], row["model"], int(row["seed"]))
+        if key in planned_set:
+            removed.append(row)
+        else:
+            kept.append(row)
+    if removed:
+        retry_log = list(run_state.get("retry_log", []))
+        retry_log.append(
+            {
+                "timestamp": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
+                "reason": reason,
+                "jobs": [
+                    {
+                        "dataset": row["dataset"],
+                        "subject_id": row["subject_id"],
+                        "model": row["model"],
+                        "seed": int(row["seed"]),
+                    }
+                    for row in removed
+                ],
+            }
+        )
+        run_state["retry_log"] = retry_log
+    return kept
+
+
 def completed_job_set_from_json(path: Path) -> set[tuple[str, str, str, int]]:
     if not path.exists():
         return set()
@@ -650,6 +693,10 @@ def completed_job_set_from_json(path: Path) -> set[tuple[str, str, str, int]]:
     for row in payload.get("completed_jobs", []):
         result.add((row["dataset"], row["subject_id"], row["model"], int(row["seed"])))
     return result
+
+
+def plan_rows(jobs: list[JobKey]) -> list[dict[str, object]]:
+    return [job.as_dict() for job in jobs]
 
 
 def validate_completed_jobs_against_metrics(
@@ -1030,8 +1077,11 @@ def predict_adt(
     windows = []
     recording_scores = []
     input_shape_example = None
-    pred_shape_example = None
+    raw_prediction_shape_example = None
+    postprocessed_batch_prediction_shape_example = None
+    individual_window_prediction_shape_example = None
     target_shape_example = None
+    scorer_input_shape_example = None
     test_start = time.perf_counter()
     for eeg_path in sorted(dataset_dir.glob(f"test_-_{heldout_subject}_-_*_-_eeg.npy")):
         recording_id = eeg_path.stem.replace("_-_eeg", "")
@@ -1046,12 +1096,16 @@ def predict_adt(
                 chunk = starts[chunk_start : chunk_start + int(config["dataloader"]["eval_batch_size"])]
                 batch = np.stack([eeg[start : start + window_length] for start in chunk], axis=0)
                 batch_tensor = torch.from_numpy(batch).to(device=device, dtype=torch.float32)
-                pred_chunk = model(batch_tensor).detach().cpu().numpy().astype(np.float32)
+                raw_pred_tensor = model(batch_tensor)
+                pred_chunk = postprocess_adt_prediction_tensor(raw_pred_tensor)
                 target_chunk = np.stack([env[start : start + window_length] for start in chunk], axis=0).astype(np.float32)
                 if input_shape_example is None:
                     input_shape_example = list(batch_tensor.shape)
-                    pred_shape_example = list(pred_chunk.shape)
+                    raw_prediction_shape_example = list(raw_pred_tensor.shape)
+                    postprocessed_batch_prediction_shape_example = list(pred_chunk.shape)
+                    individual_window_prediction_shape_example = list(pred_chunk[0].shape)
                     target_shape_example = list(target_chunk.shape)
+                    scorer_input_shape_example = list(pred_chunk[0].shape)
                 preds.append(pred_chunk)
                 targets.append(target_chunk)
         pred_windows = np.concatenate(preds, axis=0)
@@ -1080,14 +1134,30 @@ def predict_adt(
     timings = {
         "test_prediction_seconds": float(time.perf_counter() - test_start),
         "input_tensor_shape_example": input_shape_example,
-        "prediction_shape_example": pred_shape_example,
+        "raw_prediction_shape_example": raw_prediction_shape_example,
+        "prediction_shape_example": postprocessed_batch_prediction_shape_example,
+        "postprocessed_batch_prediction_shape_example": postprocessed_batch_prediction_shape_example,
+        "individual_window_prediction_shape_example": individual_window_prediction_shape_example,
         "target_shape_example": target_shape_example,
-        "prediction_target_alignment_ok": bool(pred_shape_example == target_shape_example),
+        "scorer_input_shape_example": scorer_input_shape_example,
+        "prediction_target_alignment_ok": bool(
+            individual_window_prediction_shape_example == [window_length]
+            and scorer_input_shape_example == [window_length]
+            and target_shape_example is not None
+            and len(target_shape_example) == 2
+            and target_shape_example[1] == window_length
+        ),
         "recording_level_aggregation_ok": len(recording_rows) > 0,
         "mean_recording_corr_direct": float(np.mean(recording_scores)) if recording_scores else float("nan"),
     }
     logger.log(
-        f"adt_test_prediction_done input_shape={input_shape_example} prediction_shape={pred_shape_example} target_shape={target_shape_example}"
+        "adt_test_prediction_done "
+        f"input_shape={input_shape_example} "
+        f"raw_prediction_shape={raw_prediction_shape_example} "
+        f"postprocessed_batch_prediction_shape={postprocessed_batch_prediction_shape_example} "
+        f"individual_window_prediction_shape={individual_window_prediction_shape_example} "
+        f"target_shape={target_shape_example} "
+        f"scorer_input_shape={scorer_input_shape_example}"
     )
     return recording_rows, subject_rows, timings
 
@@ -1539,10 +1609,51 @@ def main() -> int:
         subject_metrics_path=output_dir / "subject_metrics.csv",
         recording_metrics_path=output_dir / "recording_metrics.csv",
     )
+    if args.retry_failed_job:
+        failure_rows = remove_target_failures(
+            failure_rows,
+            run_state,
+            planned_jobs=planned_jobs,
+            reason="explicit_retry_failed_job",
+        )
+        run_state["failed_jobs"] = failure_rows
+        update_run_state(state_path, run_state, planned_jobs=planned_jobs)
+        write_outputs(
+            output_dir=output_dir,
+            config=config,
+            dataset_subjects=dataset_subjects,
+            subject_rows=subject_rows,
+            recording_rows=recording_rows,
+            completed_jobs=completed_jobs_payload,
+            leakage_entries=leakage_entries,
+            model_run_entries=model_run_entries,
+            failure_rows=failure_rows,
+            memory_runtime_entries=memory_runtime_entries,
+        )
     failed_pairs = {
         (row["dataset"], row["subject_id"], row["model"], int(row["seed"]))
         for row in failure_rows
     }
+    if args.dry_run_plan:
+        completed_jobs = [job for job in planned_jobs if (job.dataset, job.subject_id, job.model, job.seed) in completed_pairs]
+        failed_jobs = [job for job in planned_jobs if (job.dataset, job.subject_id, job.model, job.seed) in failed_pairs]
+        skipped_jobs = list(completed_jobs)
+        pending_jobs = [
+            job
+            for job in planned_jobs
+            if (job.dataset, job.subject_id, job.model, job.seed) not in completed_pairs
+            and (job.dataset, job.subject_id, job.model, job.seed) not in failed_pairs
+        ]
+        payload = {
+            "planned_jobs": plan_rows(planned_jobs),
+            "completed_jobs": plan_rows(completed_jobs),
+            "skipped_jobs": plan_rows(skipped_jobs),
+            "failed_jobs": plan_rows(failed_jobs),
+            "pending_jobs": plan_rows(pending_jobs),
+            "next_job_that_would_run": pending_jobs[0].as_dict() if pending_jobs else None,
+        }
+        print(json.dumps(payload, indent=2))
+        return 0
     heartbeat = HeartbeatWriter(
         heartbeat_path,
         batch_interval=int(config["heartbeat"]["batch_interval"]),

@@ -1,0 +1,17 @@
+[2026-07-03 16:53:34] job_started
+[2026-07-03 16:53:34] preload_done train_bytes=31710380 val_bytes=3962140 train_recordings=15 val_recordings=15
+[2026-07-03 16:53:40] epoch=0 val_score=0.034942
+[2026-07-03 16:53:45] epoch=1 val_score=0.054701
+[2026-07-03 16:53:49] epoch=2 val_score=0.068120
+[2026-07-03 16:53:54] epoch=3 val_score=0.037600
+[2026-07-03 16:53:58] epoch=4 val_score=0.056109
+[2026-07-03 16:54:03] epoch=5 val_score=0.036241
+[2026-07-03 16:54:08] epoch=6 val_score=0.058446
+[2026-07-03 16:54:12] epoch=7 val_score=0.060462
+[2026-07-03 16:54:17] epoch=8 val_score=0.035088
+[2026-07-03 16:54:21] epoch=9 val_score=0.057274
+[2026-07-03 16:54:26] epoch=10 val_score=0.048709
+[2026-07-03 16:54:30] epoch=11 val_score=0.052761
+[2026-07-03 16:54:35] epoch=12 val_score=0.049021
+[2026-07-03 16:54:35] test_prediction_done input_shape=[990, 64, 50] prediction_shape=[990] target_shape=[990]
+[2026-07-03 16:54:35] job_completed total_seconds=61.157166

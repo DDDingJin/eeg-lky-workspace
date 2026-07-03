@@ -1,0 +1,22 @@
+{
+  "completed_jobs": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_11",
+      "total_job_seconds": 109.34725729981437
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "fcnn",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "fcnn_epoch_2",
+      "total_job_seconds": 61.15716610010713
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "failures": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "adt",
+      "seed": 0,
+      "status": "failed",
+      "phase": "test_prediction",
+      "error": "ValueError(\"non-broadcastable output operand with shape (320,) doesn't match the broadcast shape (320,320)\")"
+    }
+  ]
+}

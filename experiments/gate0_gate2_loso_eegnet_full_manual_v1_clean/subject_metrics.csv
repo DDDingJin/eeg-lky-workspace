@@ -1,0 +1,2 @@
+dataset,model,task,protocol,seed,subject_id,metric_name,metric_value,num_recordings,checkpoint_id,artifact_scope
+weissbart_tf64,eegnet,reconstruction,gate0_gate2_loso_eegnet_full_manual_v1,0,P01,mean_recording_pearson_r,0.07958494676187386,15,eegnet_epoch_18,subject_independent_loso_eegnet_full_manual_v1

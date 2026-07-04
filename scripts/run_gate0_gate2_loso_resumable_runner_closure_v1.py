@@ -4,6 +4,7 @@ import argparse
 from collections import OrderedDict
 from dataclasses import dataclass
 import json
+import math
 import os
 from pathlib import Path
 import random
@@ -44,9 +45,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--subjects", nargs="*")
     parser.add_argument("--models", nargs="*")
     parser.add_argument("--max-jobs", type=int)
+    parser.add_argument("--max-runtime-start-new-job-seconds", type=float)
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--retry-failed-job", action="store_true")
     parser.add_argument("--dry-run-plan", action="store_true")
+    parser.add_argument("--startup-only", action="store_true")
     return parser.parse_args()
 
 
@@ -188,6 +191,67 @@ def resolve_device(requested: str) -> str:
     if requested == "auto":
         return "cuda" if torch.cuda.is_available() else "cpu"
     return requested
+
+
+def sync_device(device: str) -> None:
+    if device == "cuda" and torch.cuda.is_available():
+        torch.cuda.synchronize()
+
+
+def current_gpu_memory_mb(device: str) -> dict[str, float | None]:
+    if device != "cuda" or not torch.cuda.is_available():
+        return {
+            "gpu_memory_allocated_mb": None,
+            "gpu_memory_reserved_mb": None,
+            "gpu_memory_peak_allocated_mb": None,
+            "gpu_memory_peak_reserved_mb": None,
+            "gpu_memory_mb": None,
+        }
+    allocated_mb = float(torch.cuda.memory_allocated() / (1024**2))
+    reserved_mb = float(torch.cuda.memory_reserved() / (1024**2))
+    peak_allocated_mb = float(torch.cuda.max_memory_allocated() / (1024**2))
+    peak_reserved_mb = float(torch.cuda.max_memory_reserved() / (1024**2))
+    return {
+        "gpu_memory_allocated_mb": allocated_mb,
+        "gpu_memory_reserved_mb": reserved_mb,
+        "gpu_memory_peak_allocated_mb": peak_allocated_mb,
+        "gpu_memory_peak_reserved_mb": peak_reserved_mb,
+        "gpu_memory_mb": max(allocated_mb, reserved_mb),
+    }
+
+
+def describe_device(device: str) -> dict[str, object]:
+    profile: dict[str, object] = {
+        "torch_cuda_is_available": bool(torch.cuda.is_available()),
+        "device": device,
+        "gpu_name": None,
+    }
+    if device == "cuda" and torch.cuda.is_available():
+        profile["gpu_name"] = torch.cuda.get_device_name(torch.cuda.current_device())
+        profile.update(current_gpu_memory_mb(device))
+    else:
+        profile.update(current_gpu_memory_mb(device))
+    return profile
+
+
+def safe_metric_value(value: object) -> str:
+    if value is None:
+        return "na"
+    if isinstance(value, float) and math.isnan(value):
+        return "nan"
+    if isinstance(value, float):
+        return f"{value:.6f}"
+    return str(value)
+
+
+def stdout_message(message: str) -> None:
+    print(message, flush=True)
+
+
+def stdout_block(header: str, lines: list[str]) -> None:
+    stdout_message(header)
+    for line in lines:
+        stdout_message(line)
 
 
 def correlation(pred: np.ndarray, target: np.ndarray) -> float:
@@ -555,6 +619,13 @@ class JobLogger:
         with open(self.path, "a", encoding="utf-8") as handle:
             handle.write(f"[{timestamp}] {message}\n")
 
+    def event(self, event_name: str, **fields: object) -> None:
+        tokens = [event_name]
+        for key, value in fields.items():
+            tokens.append(f"{key}={safe_metric_value(value)}")
+        rendered = " ".join(tokens)
+        self.log(rendered)
+
 
 def load_reference_subject_lookup(config: dict, dataset_subjects: dict[str, list[str]]) -> dict[tuple[str, str, str], dict[str, object]]:
     allowed = {
@@ -606,6 +677,24 @@ def load_existing_state(output_dir: Path, planned_jobs: list[JobKey]) -> dict[st
         return {
             "planned_jobs": [job.as_dict() for job in planned_jobs],
             "running_job": None,
+            "current_dataset": None,
+            "current_subject": None,
+            "current_model": None,
+            "current_seed": None,
+            "phase": None,
+            "epoch": 0,
+            "max_epochs": None,
+            "batch": 0,
+            "total_batches": None,
+            "job_progress_percent": 0.0,
+            "elapsed_seconds": 0.0,
+            "estimated_remaining_seconds": None,
+            "device": None,
+            "gpu_memory_mb": None,
+            "gpu_memory_allocated_mb": None,
+            "gpu_memory_reserved_mb": None,
+            "gpu_memory_peak_allocated_mb": None,
+            "gpu_memory_peak_reserved_mb": None,
             "completed_jobs": [],
             "failed_jobs": [],
             "skipped_jobs": [],
@@ -617,7 +706,41 @@ def load_existing_state(output_dir: Path, planned_jobs: list[JobKey]) -> dict[st
             "memory_runtime_entries": [],
         }
     with open(state_path, "r", encoding="utf-8") as handle:
-        return json.load(handle)
+        payload = json.load(handle)
+    defaults = {
+        "planned_jobs": [job.as_dict() for job in planned_jobs],
+        "running_job": None,
+        "current_dataset": None,
+        "current_subject": None,
+        "current_model": None,
+        "current_seed": None,
+        "phase": None,
+        "epoch": 0,
+        "max_epochs": None,
+        "batch": 0,
+        "total_batches": None,
+        "job_progress_percent": 0.0,
+        "elapsed_seconds": 0.0,
+        "estimated_remaining_seconds": None,
+        "device": None,
+        "gpu_memory_mb": None,
+        "gpu_memory_allocated_mb": None,
+        "gpu_memory_reserved_mb": None,
+        "gpu_memory_peak_allocated_mb": None,
+        "gpu_memory_peak_reserved_mb": None,
+        "completed_jobs": [],
+        "failed_jobs": [],
+        "skipped_jobs": [],
+        "pending_jobs": [job.as_dict() for job in planned_jobs],
+        "last_update_time": None,
+        "resume_enabled": True,
+        "leakage_entries": [],
+        "model_run_entries": [],
+        "memory_runtime_entries": [],
+    }
+    for key, value in defaults.items():
+        payload.setdefault(key, value)
+    return payload
 
 
 def update_run_state(path: Path, state: dict[str, object], *, planned_jobs: list[JobKey]) -> None:
@@ -645,6 +768,80 @@ def update_run_state(path: Path, state: dict[str, object], *, planned_jobs: list
     state["last_update_time"] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     state["resume_enabled"] = True
     atomic_write_json(path, state)
+
+
+def estimate_remaining_seconds(*, elapsed_seconds: float, progress_percent: float) -> float | None:
+    if progress_percent <= 0.0:
+        return None
+    fraction = progress_percent / 100.0
+    if fraction <= 0.0:
+        return None
+    total_estimate = elapsed_seconds / fraction
+    return max(total_estimate - elapsed_seconds, 0.0)
+
+
+def update_job_progress_state(
+    *,
+    state: dict[str, object],
+    path: Path,
+    planned_jobs: list[JobKey],
+    job: JobKey,
+    phase: str,
+    epoch: int,
+    max_epochs: int | None,
+    batch: int,
+    total_batches: int | None,
+    elapsed_seconds: float,
+    progress_percent: float,
+    device: str,
+    logger: JobLogger | None = None,
+    train_loss: float | None = None,
+    current_loss: float | None = None,
+    best_val_score: float | None = None,
+) -> None:
+    state["running_job"] = job.as_dict()
+    state["current_dataset"] = job.dataset
+    state["current_subject"] = job.subject_id
+    state["current_model"] = job.model
+    state["current_seed"] = job.seed
+    state["phase"] = phase
+    state["epoch"] = int(epoch)
+    state["max_epochs"] = None if max_epochs is None else int(max_epochs)
+    state["batch"] = int(batch)
+    state["total_batches"] = None if total_batches is None else int(total_batches)
+    state["job_progress_percent"] = float(progress_percent)
+    state["elapsed_seconds"] = float(elapsed_seconds)
+    state["estimated_remaining_seconds"] = estimate_remaining_seconds(
+        elapsed_seconds=float(elapsed_seconds),
+        progress_percent=float(progress_percent),
+    )
+    state["device"] = device
+    state.update(current_gpu_memory_mb(device))
+    state["gpu_memory_mb"] = state.get("gpu_memory_mb")
+    if train_loss is not None:
+        state["train_loss"] = float(train_loss)
+    if current_loss is not None:
+        state["current_loss"] = float(current_loss)
+    if best_val_score is not None:
+        state["best_val_score"] = float(best_val_score)
+    update_run_state(path, state, planned_jobs=planned_jobs)
+    if logger is not None:
+        logger.event(
+            "progress_update",
+            subject=job.subject_id,
+            epoch=epoch,
+            max_epochs=max_epochs,
+            batch=batch,
+            total_batches=total_batches,
+            job_progress_percent=progress_percent,
+            elapsed_seconds=elapsed_seconds,
+            estimated_remaining_seconds=state["estimated_remaining_seconds"],
+            current_loss=current_loss if current_loss is not None else train_loss,
+            best_val_score=best_val_score,
+            gpu_memory_mb=state.get("gpu_memory_mb"),
+            device=device,
+            phase=phase,
+        )
 
 
 def remove_target_failures(
@@ -697,6 +894,62 @@ def completed_job_set_from_json(path: Path) -> set[tuple[str, str, str, int]]:
 
 def plan_rows(jobs: list[JobKey]) -> list[dict[str, object]]:
     return [job.as_dict() for job in jobs]
+
+
+def summarize_jobs(
+    *,
+    planned_jobs: list[JobKey],
+    completed_pairs: set[tuple[str, str, str, int]],
+    failed_pairs: set[tuple[str, str, str, int]],
+) -> dict[str, object]:
+    completed_jobs = [job for job in planned_jobs if (job.dataset, job.subject_id, job.model, job.seed) in completed_pairs]
+    failed_jobs = [job for job in planned_jobs if (job.dataset, job.subject_id, job.model, job.seed) in failed_pairs]
+    pending_jobs = [
+        job
+        for job in planned_jobs
+        if (job.dataset, job.subject_id, job.model, job.seed) not in completed_pairs
+        and (job.dataset, job.subject_id, job.model, job.seed) not in failed_pairs
+    ]
+    return {
+        "planned_jobs": planned_jobs,
+        "completed_jobs": completed_jobs,
+        "failed_jobs": failed_jobs,
+        "pending_jobs": pending_jobs,
+        "next_job": pending_jobs[0].as_dict() if pending_jobs else None,
+    }
+
+
+def print_startup_summary(
+    *,
+    config_path: Path,
+    config: dict,
+    device: str,
+    requested_subjects: list[str] | None,
+    requested_models: list[str] | None,
+    seed: int,
+    summary: dict[str, object],
+    resume_mode: bool,
+) -> None:
+    stdout_block(
+        "[STARTUP SUMMARY]",
+        [
+            f"config path: {config_path}",
+            f"protocol: {config['protocol']}",
+            f"output_dir: {ROOT / config['output_dir']}",
+            f"device: {device}",
+            f"requested subjects: {requested_subjects if requested_subjects else 'all_from_config'}",
+            f"requested models: {requested_models if requested_models else config['models']}",
+            f"requested seeds: [{seed}]",
+            f"planned_jobs count: {len(summary['planned_jobs'])}",
+            f"completed_jobs count: {len(summary['completed_jobs'])}",
+            f"failed_jobs count: {len(summary['failed_jobs'])}",
+            f"pending_jobs count: {len(summary['pending_jobs'])}",
+            f"next_job: {summary['next_job']}",
+            f"resume mode: {resume_mode}",
+        ],
+    )
+    if len(summary["pending_jobs"]) == 0:
+        stdout_message("[NO PENDING JOBS] exiting")
 
 
 def validate_completed_jobs_against_metrics(
@@ -1001,8 +1254,10 @@ def predict_window_model(
     windows = []
     recording_scores = []
     shape_example = None
+    raw_pred_shape_example = None
     pred_shape_example = None
     target_shape_example = None
+    scorer_input_shape_example = None
     test_start = time.perf_counter()
     for eeg_path in sorted(dataset_dir.glob(f"test_-_{heldout_subject}_-_*_-_eeg.npy")):
         recording_id = eeg_path.stem.replace("_-_eeg", "")
@@ -1016,15 +1271,19 @@ def predict_window_model(
                 chunk = starts[chunk_start : chunk_start + int(config["dataloader"]["eval_batch_size"])]
                 batch = np.stack([eeg[start : start + input_length].T for start in chunk], axis=0)
                 batch_tensor = torch.from_numpy(batch).to(device=device, dtype=torch.float32)
-                pred_chunk = model(batch_tensor).detach().cpu().numpy().astype(np.float32)
+                raw_pred_tensor = model(batch_tensor)
+                pred_chunk = raw_pred_tensor.detach().cpu().numpy().astype(np.float32)
                 if shape_example is None:
                     shape_example = list(batch_tensor.shape)
+                    raw_pred_shape_example = list(raw_pred_tensor.shape)
                     pred_shape_example = list(pred_chunk.shape)
                 preds.append(pred_chunk)
         pred_arr = np.concatenate(preds, axis=0)
         target_arr = np.asarray([env[start + input_length - 1] for start in starts], dtype=np.float32)
         if target_shape_example is None:
             target_shape_example = list(target_arr.shape)
+        if scorer_input_shape_example is None:
+            scorer_input_shape_example = list(pred_arr.shape)
         windows.append(
             build_series_window(
                 dataset=dataset_cfg["dataset_id"],
@@ -1046,14 +1305,17 @@ def predict_window_model(
     timings = {
         "test_prediction_seconds": float(time.perf_counter() - test_start),
         "input_tensor_shape_example": shape_example,
+        "raw_prediction_shape_example": raw_pred_shape_example,
         "prediction_shape_example": pred_shape_example,
         "target_shape_example": target_shape_example,
+        "scorer_input_shape_example": scorer_input_shape_example,
         "prediction_target_alignment_ok": bool(pred_shape_example and target_shape_example and pred_shape_example[0] == target_shape_example[0]),
         "recording_level_aggregation_ok": len(recording_rows) > 0,
         "mean_recording_corr_direct": float(np.mean(recording_scores)) if recording_scores else float("nan"),
     }
     logger.log(
-        f"test_prediction_done input_shape={shape_example} prediction_shape={pred_shape_example} target_shape={target_shape_example}"
+        f"test_prediction_done input_shape={shape_example} raw_prediction_shape={raw_pred_shape_example} "
+        f"prediction_shape={pred_shape_example} target_shape={target_shape_example} scorer_input_shape={scorer_input_shape_example}"
     )
     return recording_rows, subject_rows, timings
 
@@ -1171,11 +1433,25 @@ def fit_job(
     device: str,
     heartbeat: HeartbeatWriter,
     logger: JobLogger,
+    run_state: dict[str, object],
+    state_path: Path,
+    planned_jobs: list[JobKey],
 ) -> tuple[list[dict[str, object]], list[dict[str, object]], dict[str, object], dict[str, object], dict[str, object]]:
     heldout_subject = job.subject_id
     train_subjects = [subject for subject in all_subjects if subject != heldout_subject]
     val_subjects = list(train_subjects)
+    stdout_block(
+        f"[JOB START] dataset={job.dataset} subject={job.subject_id} model={job.model} seed={job.seed}",
+        [
+            f"train_subjects={train_subjects}",
+            f"val_subjects={val_subjects}",
+            f"test_subject={heldout_subject}",
+            f"device={device}",
+        ],
+    )
+    stdout_message("[PRELOAD START]")
     heartbeat.update(job=job, phase="preload", epoch=0, batch=0, logger=logger)
+    job_start_wall = time.perf_counter()
     preload_start = time.perf_counter()
     phase = "preload"
     data_preload_seconds = 0.0
@@ -1187,6 +1463,22 @@ def fit_job(
     try:
         if job.model in {"eegnet", "fcnn"}:
             model_handle, model_kwargs = select_window_model(config, job.model)
+            max_epochs = int(config[job.model]["max_epochs"])
+            update_job_progress_state(
+                state=run_state,
+                path=state_path,
+                planned_jobs=planned_jobs,
+                job=job,
+                phase="preload",
+                epoch=0,
+                max_epochs=max_epochs,
+                batch=0,
+                total_batches=None,
+                elapsed_seconds=0.0,
+                progress_percent=0.0,
+                device=device,
+                logger=None,
+            )
             train_dataset = PreloadedWindowDataset(
                 dataset_dir,
                 "train",
@@ -1204,15 +1496,50 @@ def fit_job(
                 target_index=str(config[job.model]["target_index"]),
             )
             data_preload_seconds = float(time.perf_counter() - preload_start)
-            logger.log(
-                f"preload_done train_bytes={train_dataset.preloaded_bytes} val_bytes={val_dataset.preloaded_bytes} "
-                f"train_recordings={train_dataset.total_recordings} val_recordings={val_dataset.total_recordings}"
+            device_profile = describe_device(device)
+            train_batches_per_epoch = int(math.ceil(len(train_dataset) / int(config["dataloader"]["batch_size"]))) if len(train_dataset) > 0 else 0
+            val_batches_per_epoch = int(math.ceil(len(val_dataset) / int(config["dataloader"]["batch_size"]))) if len(val_dataset) > 0 else 0
+            logger.event(
+                "data_preload_done",
+                dataset=job.dataset,
+                subject=job.subject_id,
+                model=job.model,
+                seed=job.seed,
+                train_bytes=train_dataset.preloaded_bytes,
+                val_bytes=val_dataset.preloaded_bytes,
+                train_recordings=train_dataset.total_recordings,
+                val_recordings=val_dataset.total_recordings,
+                train_window_count=len(train_dataset),
+                val_window_count=len(val_dataset),
+                batch_size=int(config["dataloader"]["batch_size"]),
+                eval_batch_size=int(config["dataloader"]["eval_batch_size"]),
+                train_batches_per_epoch=train_batches_per_epoch,
+                val_batches_per_epoch=val_batches_per_epoch,
+                data_preload_seconds=data_preload_seconds,
+                device=device_profile["device"],
+                gpu_name=device_profile["gpu_name"],
+            )
+            stdout_message("[PRELOAD DONE] " f"seconds={data_preload_seconds:.3f}")
+            update_job_progress_state(
+                state=run_state,
+                path=state_path,
+                planned_jobs=planned_jobs,
+                job=job,
+                phase="preload",
+                epoch=0,
+                max_epochs=max_epochs,
+                batch=0,
+                total_batches=train_batches_per_epoch,
+                elapsed_seconds=float(time.perf_counter() - job_start_wall),
+                progress_percent=5.0,
+                device=device,
             )
 
             torch.manual_seed(job.seed)
             np.random.seed(job.seed)
             if device == "cuda":
                 torch.cuda.manual_seed_all(job.seed)
+                torch.cuda.reset_peak_memory_stats()
             phase = "build_model"
             model = model_handle(**model_kwargs).to(device)
             optimizer = NAdam(
@@ -1242,23 +1569,144 @@ def fit_job(
             best_epoch = -1
             stale_epochs = 0
             val_history = []
+            epoch_train_seconds: list[float] = []
+            epoch_val_seconds: list[float] = []
+            batch_compute_seconds_total = 0.0
+            data_wait_seconds_total = 0.0
+            first_batch_seconds: float | None = None
+            next_progress_bucket = 10
             phase = "train"
-            for epoch in range(int(config[job.model]["max_epochs"])):
+            stdout_block(
+                "[JOB PLAN]",
+                [
+                    f"train_window_count={len(train_dataset)}",
+                    f"val_window_count={len(val_dataset)}",
+                    f"train_batches_per_epoch={train_batches_per_epoch}",
+                    f"val_batches_per_epoch={val_batches_per_epoch}",
+                    f"batch_size={int(config['dataloader']['batch_size'])}",
+                    f"eval_batch_size={int(config['dataloader']['eval_batch_size'])}",
+                    f"device={device}",
+                ],
+            )
+            for epoch in range(max_epochs):
                 heartbeat.update(job=job, phase="train", epoch=epoch, batch=0, logger=logger)
+                logger.event(
+                    "train_epoch_started",
+                    subject=job.subject_id,
+                    epoch=epoch + 1,
+                    max_epochs=max_epochs,
+                    total_batches=train_batches_per_epoch,
+                    device=device,
+                )
+                stdout_message("[TRAIN START]")
                 epoch_train_start = time.perf_counter()
                 model.train()
+                train_loss_sum = 0.0
+                train_loss_count = 0
+                fetch_marker = time.perf_counter()
                 for batch_idx, (x, y) in enumerate(train_loader, start=1):
+                    batch_fetch_done = time.perf_counter()
+                    data_wait_seconds_total += max(batch_fetch_done - fetch_marker, 0.0)
+                    batch_start = time.perf_counter()
                     x = x.to(device=device, dtype=torch.float32)
                     y = y.to(device=device, dtype=torch.float32)
+                    sync_device(device)
+                    gpu_compute_start = time.perf_counter()
                     y_hat = model(x)
                     loss = -batch_corr(y, y_hat)
                     optimizer.zero_grad()
                     loss.backward()
                     optimizer.step()
+                    sync_device(device)
+                    batch_compute_seconds = float(time.perf_counter() - gpu_compute_start)
+                    batch_compute_seconds_total += batch_compute_seconds
+                    current_loss = float(loss.item())
+                    train_loss_sum += current_loss
+                    train_loss_count += 1
+                    if first_batch_seconds is None:
+                        first_batch_seconds = float(time.perf_counter() - epoch_train_start)
+                        logger.event(
+                            "first_train_batch_loaded",
+                            subject=job.subject_id,
+                            epoch=epoch + 1,
+                            max_epochs=max_epochs,
+                            batch=batch_idx,
+                            total_batches=train_batches_per_epoch,
+                            first_batch_seconds=first_batch_seconds,
+                            gpu_memory_mb=current_gpu_memory_mb(device)["gpu_memory_mb"],
+                            device=device,
+                        )
+                        stdout_message("[FIRST BATCH LOADED] " f"seconds={first_batch_seconds:.3f}")
                     heartbeat.update(job=job, phase="train", epoch=epoch, batch=batch_idx, logger=logger)
+                    epoch_progress = 10.0 + 70.0 * ((epoch + (batch_idx / max(train_batches_per_epoch, 1))) / max(max_epochs, 1))
+                    if batch_idx == train_batches_per_epoch or batch_idx % int(config["heartbeat"]["batch_interval"]) == 0:
+                        update_job_progress_state(
+                            state=run_state,
+                            path=state_path,
+                            planned_jobs=planned_jobs,
+                            job=job,
+                            phase="train",
+                            epoch=epoch + 1,
+                            max_epochs=max_epochs,
+                            batch=batch_idx,
+                            total_batches=train_batches_per_epoch,
+                            elapsed_seconds=float(time.perf_counter() - job_start_wall),
+                            progress_percent=min(epoch_progress, 79.9),
+                            device=device,
+                            logger=None,
+                            train_loss=(train_loss_sum / max(train_loss_count, 1)),
+                            current_loss=current_loss,
+                            best_val_score=best_score if best_epoch >= 0 else None,
+                        )
+                    if epoch_progress >= next_progress_bucket or batch_idx == train_batches_per_epoch:
+                        logger.event(
+                            "job_progress",
+                            subject=job.subject_id,
+                            epoch=epoch + 1,
+                            max_epochs=max_epochs,
+                            batch=batch_idx,
+                            total_batches=train_batches_per_epoch,
+                            job_progress_percent=min(epoch_progress, 79.9),
+                            elapsed_seconds=float(time.perf_counter() - job_start_wall),
+                            estimated_remaining_seconds=estimate_remaining_seconds(
+                                elapsed_seconds=float(time.perf_counter() - job_start_wall),
+                                progress_percent=min(epoch_progress, 79.9),
+                            ),
+                            current_loss=current_loss,
+                            best_val_score=best_score if best_epoch >= 0 else None,
+                            gpu_memory_mb=current_gpu_memory_mb(device)["gpu_memory_mb"],
+                            device=device,
+                        )
+                        stdout_message(
+                            "[PROGRESS] "
+                            f"subject={job.subject_id} "
+                            f"epoch={epoch + 1}/{max_epochs} "
+                            f"batch={batch_idx}/{train_batches_per_epoch} "
+                            f"progress={min(epoch_progress, 79.9):.1f}% "
+                            f"elapsed={int(time.perf_counter() - job_start_wall)}s "
+                            f"eta={int(estimate_remaining_seconds(elapsed_seconds=float(time.perf_counter() - job_start_wall), progress_percent=min(epoch_progress, 79.9)) or 0)}s "
+                            f"best_val={safe_metric_value(best_score if best_epoch >= 0 else None)} "
+                            f"gpu_mem={safe_metric_value(current_gpu_memory_mb(device)['gpu_memory_mb'])}MB "
+                            f"device={device}"
+                        )
+                        while next_progress_bucket <= epoch_progress:
+                            next_progress_bucket += 20
+                    fetch_marker = time.perf_counter()
                 train_seconds += time.perf_counter() - epoch_train_start
+                epoch_train_seconds.append(float(time.perf_counter() - epoch_train_start))
+                logger.event(
+                    "train_epoch_completed",
+                    subject=job.subject_id,
+                    epoch=epoch + 1,
+                    max_epochs=max_epochs,
+                    train_epoch_seconds=epoch_train_seconds[-1],
+                    train_loss=(train_loss_sum / max(train_loss_count, 1)),
+                    gpu_memory_mb=current_gpu_memory_mb(device)["gpu_memory_mb"],
+                    device=device,
+                )
 
                 heartbeat.update(job=job, phase="val", epoch=epoch, batch=0, logger=logger)
+                stdout_message("[VAL START]")
                 val_epoch_start = time.perf_counter()
                 model.eval()
                 scores = []
@@ -1270,22 +1718,94 @@ def fit_job(
                         scores.append(float(batch_corr(y, y_hat).item()))
                         heartbeat.update(job=job, phase="val", epoch=epoch, batch=batch_idx, logger=logger)
                 val_seconds += time.perf_counter() - val_epoch_start
+                epoch_val_seconds.append(float(time.perf_counter() - val_epoch_start))
                 val_score = float(np.mean(scores)) if scores else float("nan")
                 val_history.append(val_score)
-                logger.log(f"epoch={epoch} val_score={val_score:.6f}")
+                logger.event(
+                    "val_epoch_completed",
+                    subject=job.subject_id,
+                    epoch=epoch + 1,
+                    max_epochs=max_epochs,
+                    val_epoch_seconds=epoch_val_seconds[-1],
+                    val_score=val_score,
+                    best_val_score=best_score if best_epoch >= 0 else None,
+                    gpu_memory_mb=current_gpu_memory_mb(device)["gpu_memory_mb"],
+                    device=device,
+                )
+                stdout_message("[VAL DONE]")
+                update_job_progress_state(
+                    state=run_state,
+                    path=state_path,
+                    planned_jobs=planned_jobs,
+                    job=job,
+                    phase="val",
+                    epoch=epoch + 1,
+                    max_epochs=max_epochs,
+                    batch=val_batches_per_epoch,
+                    total_batches=val_batches_per_epoch,
+                    elapsed_seconds=float(time.perf_counter() - job_start_wall),
+                    progress_percent=min(10.0 + 70.0 * ((epoch + 1) / max(max_epochs, 1)), 80.0),
+                    device=device,
+                    best_val_score=max(best_score, val_score) if best_epoch >= 0 else val_score,
+                )
                 if scores and val_score > best_score:
                     best_score = val_score
                     best_epoch = epoch
                     best_state = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
                     stale_epochs = 0
+                    logger.event(
+                        "best_checkpoint_updated",
+                        subject=job.subject_id,
+                        epoch=epoch + 1,
+                        max_epochs=max_epochs,
+                        best_val_score=best_score,
+                        checkpoint_id=f"{job.model}_epoch_{best_epoch}",
+                        device=device,
+                    )
+                    stdout_message("[BEST UPDATED]")
                 else:
                     stale_epochs += 1
                     if stale_epochs >= int(config[job.model]["early_stopping_patience"]):
+                        logger.event(
+                            "early_stopping_triggered",
+                            subject=job.subject_id,
+                            epoch=epoch + 1,
+                            max_epochs=max_epochs,
+                            stale_epochs=stale_epochs,
+                            best_epoch=best_epoch + 1,
+                            best_val_score=best_score,
+                            device=device,
+                        )
+                        stdout_message("[EARLY STOPPING]")
                         break
             if best_epoch < 0:
                 raise RuntimeError("no checkpoint selected from validation")
 
             phase = "test_prediction"
+            logger.event(
+                "test_prediction_started",
+                subject=job.subject_id,
+                epoch=best_epoch + 1,
+                max_epochs=max_epochs,
+                best_val_score=best_score,
+                device=device,
+            )
+            stdout_message("[TEST START]")
+            update_job_progress_state(
+                state=run_state,
+                path=state_path,
+                planned_jobs=planned_jobs,
+                job=job,
+                phase="test",
+                epoch=best_epoch + 1,
+                max_epochs=max_epochs,
+                batch=0,
+                total_batches=None,
+                elapsed_seconds=float(time.perf_counter() - job_start_wall),
+                progress_percent=85.0,
+                device=device,
+                best_val_score=best_score,
+            )
             recording_rows, subject_rows, predict_meta = predict_window_model(
                 dataset_cfg=dataset_cfg,
                 dataset_dir=dataset_dir,
@@ -1298,6 +1818,15 @@ def fit_job(
                 config=config,
                 logger=logger,
             )
+            logger.event(
+                "test_prediction_completed",
+                subject=job.subject_id,
+                test_prediction_seconds=predict_meta["test_prediction_seconds"],
+                prediction_shape=predict_meta["prediction_shape_example"],
+                target_shape=predict_meta["target_shape_example"],
+                device=device,
+            )
+            stdout_message("[TEST DONE]")
             checkpoint_id = f"{job.model}_epoch_{best_epoch}"
             for row in recording_rows:
                 row["checkpoint_id"] = checkpoint_id
@@ -1327,8 +1856,10 @@ def fit_job(
                 "best_epoch": int(best_epoch),
                 "best_val_score": float(best_score),
                 "input_tensor_shape_example": predict_meta["input_tensor_shape_example"],
+                "raw_model_output_shape": predict_meta["raw_prediction_shape_example"],
                 "prediction_shape_example": predict_meta["prediction_shape_example"],
                 "target_shape_example": predict_meta["target_shape_example"],
+                "scorer_input_shape_example": predict_meta["scorer_input_shape_example"],
                 "prediction_target_alignment_ok": predict_meta["prediction_target_alignment_ok"],
                 "train_window_count": int(len(train_dataset)),
                 "val_window_count": int(len(val_dataset)),
@@ -1345,16 +1876,29 @@ def fit_job(
                 "val_preload_bytes": int(val_dataset.preloaded_bytes),
                 "total_preload_bytes": int(train_dataset.preloaded_bytes + val_dataset.preloaded_bytes),
                 "data_preload_seconds": float(data_preload_seconds),
+                "first_batch_seconds": float(first_batch_seconds) if first_batch_seconds is not None else None,
                 "train_seconds": float(train_seconds),
                 "val_seconds": float(val_seconds),
+                "train_epoch_seconds": epoch_train_seconds,
+                "val_epoch_seconds": epoch_val_seconds,
                 "test_prediction_seconds": float(predict_meta["test_prediction_seconds"]),
                 "metric_write_seconds": float(metric_write_seconds),
+                "batch_compute_seconds": float(batch_compute_seconds_total),
+                "data_wait_seconds": float(data_wait_seconds_total),
                 "total_job_seconds": 0.0,
+                "torch_cuda_is_available": bool(torch.cuda.is_available()),
+                "device": device,
+                "gpu_name": describe_device(device)["gpu_name"],
+                **current_gpu_memory_mb(device),
                 "input_tensor_shape_example": predict_meta["input_tensor_shape_example"],
+                "raw_model_output_shape": predict_meta["raw_prediction_shape_example"],
                 "prediction_shape_example": predict_meta["prediction_shape_example"],
                 "target_shape_example": predict_meta["target_shape_example"],
+                "scorer_input_shape_example": predict_meta["scorer_input_shape_example"],
                 "train_window_count": int(len(train_dataset)),
                 "val_window_count": int(len(val_dataset)),
+                "train_batches_per_epoch": train_batches_per_epoch,
+                "val_batches_per_epoch": val_batches_per_epoch,
                 "test_recording_count": int(len(recording_rows)),
                 "batch_size": int(config["dataloader"]["batch_size"]),
                 "eval_batch_size": int(config["dataloader"]["eval_batch_size"]),
@@ -1545,11 +2089,13 @@ def fit_job(
 
 def main() -> int:
     args = parse_args()
-    config = load_config(Path(args.config))
+    config_path = Path(args.config)
+    config = load_config(config_path)
     output_dir = ROOT / config["output_dir"]
     ensure_dir(output_dir)
     ensure_dir(output_dir / "logs")
     device = resolve_device(args.device)
+    overall_start = time.perf_counter()
 
     models_filter = set(args.models) if args.models else None
     subjects_filter = set(args.subjects) if args.subjects else None
@@ -1563,11 +2109,33 @@ def main() -> int:
     run_state = load_existing_state(output_dir, planned_jobs) if args.resume else {
         "planned_jobs": [job.as_dict() for job in planned_jobs],
         "running_job": None,
+        "current_dataset": None,
+        "current_subject": None,
+        "current_model": None,
+        "current_seed": None,
+        "phase": None,
+        "epoch": 0,
+        "max_epochs": None,
+        "batch": 0,
+        "total_batches": None,
+        "job_progress_percent": 0.0,
+        "elapsed_seconds": 0.0,
+        "estimated_remaining_seconds": None,
+        "device": device,
+        "gpu_memory_mb": None,
+        "gpu_memory_allocated_mb": None,
+        "gpu_memory_reserved_mb": None,
+        "gpu_memory_peak_allocated_mb": None,
+        "gpu_memory_peak_reserved_mb": None,
         "completed_jobs": [],
         "failed_jobs": [],
         "skipped_jobs": [],
+        "pending_jobs": [job.as_dict() for job in planned_jobs],
         "last_update_time": None,
         "resume_enabled": True,
+        "leakage_entries": [],
+        "model_run_entries": [],
+        "memory_runtime_entries": [],
     }
     update_run_state(state_path, run_state, planned_jobs=planned_jobs)
 
@@ -1634,25 +2202,33 @@ def main() -> int:
         (row["dataset"], row["subject_id"], row["model"], int(row["seed"]))
         for row in failure_rows
     }
+    summary = summarize_jobs(
+        planned_jobs=planned_jobs,
+        completed_pairs=completed_pairs,
+        failed_pairs=failed_pairs,
+    )
+    print_startup_summary(
+        config_path=config_path,
+        config=config,
+        device=device,
+        requested_subjects=args.subjects,
+        requested_models=args.models,
+        seed=int(config["seed"]),
+        summary=summary,
+        resume_mode=bool(args.resume),
+    )
     if args.dry_run_plan:
-        completed_jobs = [job for job in planned_jobs if (job.dataset, job.subject_id, job.model, job.seed) in completed_pairs]
-        failed_jobs = [job for job in planned_jobs if (job.dataset, job.subject_id, job.model, job.seed) in failed_pairs]
-        skipped_jobs = list(completed_jobs)
-        pending_jobs = [
-            job
-            for job in planned_jobs
-            if (job.dataset, job.subject_id, job.model, job.seed) not in completed_pairs
-            and (job.dataset, job.subject_id, job.model, job.seed) not in failed_pairs
-        ]
         payload = {
             "planned_jobs": plan_rows(planned_jobs),
-            "completed_jobs": plan_rows(completed_jobs),
-            "skipped_jobs": plan_rows(skipped_jobs),
-            "failed_jobs": plan_rows(failed_jobs),
-            "pending_jobs": plan_rows(pending_jobs),
-            "next_job_that_would_run": pending_jobs[0].as_dict() if pending_jobs else None,
+            "completed_jobs": plan_rows(summary["completed_jobs"]),
+            "skipped_jobs": plan_rows(summary["completed_jobs"]),
+            "failed_jobs": plan_rows(summary["failed_jobs"]),
+            "pending_jobs": plan_rows(summary["pending_jobs"]),
+            "next_job_that_would_run": summary["next_job"],
         }
         print(json.dumps(payload, indent=2))
+        return 0
+    if args.startup_only:
         return 0
     heartbeat = HeartbeatWriter(
         heartbeat_path,
@@ -1669,13 +2245,31 @@ def main() -> int:
             continue
         if key in failed_pairs:
             return 1
+        if (
+            args.max_runtime_start_new_job_seconds is not None
+            and (time.perf_counter() - overall_start) >= float(args.max_runtime_start_new_job_seconds)
+        ):
+            run_state["running_job"] = None
+            run_state["stop_reason"] = "chunk_time_gate_reached"
+            run_state["stop_runtime_seconds"] = float(time.perf_counter() - overall_start)
+            update_run_state(state_path, run_state, planned_jobs=planned_jobs)
+            return 0
         run_state["running_job"] = job.as_dict()
         update_run_state(state_path, run_state, planned_jobs=planned_jobs)
         log_path = output_dir / "logs" / job.log_name()
         if not args.resume and log_path.exists():
             log_path.unlink()
         logger = JobLogger(log_path)
-        logger.log("job_started")
+        logger.event(
+            "job_started",
+            dataset=job.dataset,
+            subject=job.subject_id,
+            model=job.model,
+            seed=job.seed,
+            device=device,
+            torch_cuda_is_available=bool(torch.cuda.is_available()),
+            gpu_name=describe_device(device)["gpu_name"],
+        )
         dataset_dir = resolve_dataset_path(next(item for item in config["datasets"] if item["dataset_id"] == job.dataset)["dataset_locator"])
         all_subjects = full_dataset_subjects[job.dataset]
         job_start = time.perf_counter()
@@ -1688,8 +2282,26 @@ def main() -> int:
                 device=device,
                 heartbeat=heartbeat,
                 logger=logger,
+                run_state=run_state,
+                state_path=state_path,
+                planned_jobs=planned_jobs,
             )
             write_start = time.perf_counter()
+            update_job_progress_state(
+                state=run_state,
+                path=state_path,
+                planned_jobs=planned_jobs,
+                job=job,
+                phase="metric_write",
+                epoch=int(model_run_entry["best_epoch"]) + 1,
+                max_epochs=int(config[job.model]["max_epochs"]) if job.model in config else None,
+                batch=0,
+                total_batches=None,
+                elapsed_seconds=float(time.perf_counter() - job_start),
+                progress_percent=92.0,
+                device=device,
+                best_val_score=float(model_run_entry["best_val_score"]),
+            )
             subject_rows.extend(rows_subject)
             recording_rows.extend(rows_recording)
             leakage_entries.append(leakage_entry)
@@ -1697,6 +2309,15 @@ def main() -> int:
             atomic_write_csv(output_dir / "subject_metrics.csv", subject_rows, SUBJECT_METRIC_FIELDS)
             atomic_write_csv(output_dir / "recording_metrics.csv", recording_rows, RECORDING_METRIC_FIELDS)
             metric_write_seconds = float(time.perf_counter() - write_start)
+            logger.event(
+                "metrics_written",
+                subject=job.subject_id,
+                subject_metric_rows=len(subject_rows),
+                recording_metric_rows=len(recording_rows),
+                metric_write_seconds=metric_write_seconds,
+                device=device,
+            )
+            stdout_message("[METRICS WRITTEN]")
             memory_runtime_entry["metric_write_seconds"] = metric_write_seconds
             memory_runtime_entry["total_job_seconds"] = float(time.perf_counter() - job_start)
             memory_runtime_entries.append(memory_runtime_entry)
@@ -1717,6 +2338,14 @@ def main() -> int:
             run_state["memory_runtime_entries"] = memory_runtime_entries
             run_state["running_job"] = None
             update_run_state(state_path, run_state, planned_jobs=planned_jobs)
+            logger.event(
+                "completed_jobs_written",
+                subject=job.subject_id,
+                completed_jobs=len(completed_jobs_payload),
+                completed_job_key=f"{job.dataset}:{job.subject_id}:{job.model}:seed{job.seed}",
+                device=device,
+            )
+            stdout_message("[COMPLETED JOBS WRITTEN]")
             schema = write_outputs(
                 output_dir=output_dir,
                 config=config,
@@ -1734,7 +2363,58 @@ def main() -> int:
                 subject_metrics_path=output_dir / "subject_metrics.csv",
                 recording_metrics_path=output_dir / "recording_metrics.csv",
             )
-            logger.log(f"job_completed total_seconds={memory_runtime_entry['total_job_seconds']:.6f}")
+            update_job_progress_state(
+                state=run_state,
+                path=state_path,
+                planned_jobs=planned_jobs,
+                job=job,
+                phase="completed",
+                epoch=int(model_run_entry["best_epoch"]) + 1,
+                max_epochs=int(config[job.model]["max_epochs"]) if job.model in config else None,
+                batch=0,
+                total_batches=None,
+                elapsed_seconds=float(memory_runtime_entry["total_job_seconds"]),
+                progress_percent=100.0,
+                device=device,
+                best_val_score=float(model_run_entry["best_val_score"]),
+            )
+            run_state["running_job"] = None
+            update_run_state(state_path, run_state, planned_jobs=planned_jobs)
+            logger.event(
+                "job_completed",
+                subject=job.subject_id,
+                total_seconds=memory_runtime_entry["total_job_seconds"],
+                schema_validation_passed=schema["passed"],
+                completed_job_key=f"{job.dataset}:{job.subject_id}:{job.model}:seed{job.seed}",
+                device=device,
+            )
+            subject_metric_value = next(
+                (
+                    float(row["metric_value"])
+                    for row in rows_subject
+                    if row["dataset"] == job.dataset and row["subject_id"] == job.subject_id and row["model"] == job.model
+                ),
+                float("nan"),
+            )
+            next_pending_subject = None
+            for pending in run_state.get("pending_jobs", []):
+                if pending["subject_id"] != job.subject_id:
+                    next_pending_subject = pending["subject_id"]
+                    break
+            stdout_block(
+                "[JOB DONE]",
+                [
+                    f"subject={job.subject_id}",
+                    f"metric={subject_metric_value}",
+                    f"best_epoch={model_run_entry['best_epoch']}",
+                    f"epochs_completed={model_run_entry['epochs_completed']}",
+                    f"total_job_seconds={memory_runtime_entry['total_job_seconds']}",
+                    f"recording_rows={len(rows_recording)}",
+                    f"completed_jobs_count={len(completed_jobs_payload)}",
+                    f"schema_validation_passed={schema['passed']}",
+                    f"next_pending_subject={next_pending_subject}",
+                ],
+            )
             completed_count += 1
             if args.max_jobs is not None and completed_count >= int(args.max_jobs):
                 return 0
@@ -1767,7 +2447,18 @@ def main() -> int:
                 failure_rows=failure_rows,
                 memory_runtime_entries=memory_runtime_entries,
             )
+            error_type = exc.error.split("(", 1)[0] if "(" in exc.error else exc.error
             logger.log(f"job_failed phase={exc.phase} error={exc.error}")
+            stdout_block(
+                "[JOB FAILED]",
+                [
+                    f"subject={job.subject_id}",
+                    f"phase={exc.phase}",
+                    f"error_type={error_type}",
+                    f"error={exc.error}",
+                    f"failure_report={output_dir / 'failure_report.json'}",
+                ],
+            )
             return 1
 
     run_state["running_job"] = None
@@ -1775,6 +2466,8 @@ def main() -> int:
     run_state["model_run_entries"] = model_run_entries
     run_state["memory_runtime_entries"] = memory_runtime_entries
     update_run_state(state_path, run_state, planned_jobs=planned_jobs)
+    if completed_count == 0:
+        stdout_message("[NO PENDING JOBS] exiting")
     return 0
 
 

@@ -1,0 +1,77 @@
+{
+  "protocol": "gate0_gate2_loso_eegnet_full_manual_v1",
+  "artifact_scope": "subject_independent_loso_eegnet_full_manual_v1",
+  "base_branch": "fix/ar-20260625-161300-a43831b-loso-loader-engineering-closure-v1",
+  "base_commit": "f0dd2ae5db7eea19ee280c548c6b6645e638f0d3",
+  "current_branch": "fix/ar-20260625-161300-a43831b-loso-resumable-runner-closure-v1",
+  "config_fingerprint_version": 1,
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; pure_loso; eegnet_manual_runner; seed0_only; weissbart_only",
+  "output_dir": "experiments/gate0_gate2_loso_eegnet_full_manual_v1_clean",
+  "seed": 0,
+  "datasets": [
+    {
+      "dataset_id": "weissbart_tf64",
+      "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+      "sampling_rate": 64,
+      "subject_ids": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P11",
+        "P12"
+      ]
+    }
+  ],
+  "models": [
+    "eegnet"
+  ],
+  "ridge_loso_reference": {
+    "subject_metrics": "experiments/gate0_gate2_loso_ridge_full_v1/subject_metrics.csv",
+    "recording_metrics": "experiments/gate0_gate2_loso_ridge_full_v1/recording_metrics.csv",
+    "protocol": "gate0_gate2_loso_ridge_full_v1",
+    "seed": 0
+  },
+  "single_seed_reference": {
+    "subject_metrics": "experiments/gate0_gate2_model_expansion_v1/subject_metrics.csv",
+    "protocol": "gate0_gate2_model_expansion_v1",
+    "seed": 0
+  },
+  "dataloader": {
+    "batch_size": 256,
+    "eval_batch_size": 1024,
+    "shuffle_train": true,
+    "num_workers": 0,
+    "persistent_workers": false
+  },
+  "heartbeat": {
+    "batch_interval": 100,
+    "time_interval_seconds": 30
+  },
+  "eegnet": {
+    "family": "eegnet_family",
+    "architecture_id": "eegnet_loso_preloaded_resumable_manual_v1",
+    "implementation_file": "src/repro/mldecoders/models.py::EEGNetRegressor",
+    "selection_rule": "choose checkpoint by pooled non-heldout validation Pearson",
+    "training_protocol": "preloaded raw-recording train windows from non-heldout subjects only; preloaded raw-recording val windows from non-heldout subjects only; heldout subject test only; no full window matrix materialization",
+    "window_size": 50,
+    "target_index": "last",
+    "temporal_filters": 8,
+    "depth_multiplier": 2,
+    "separable_filters": 16,
+    "dropout_rate": 0.25,
+    "batch_size": 256,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001
+  }
+}

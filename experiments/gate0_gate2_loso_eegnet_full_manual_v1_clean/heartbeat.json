@@ -1,10 +1,10 @@
 {
   "dataset": "weissbart_tf64",
-  "subject": "P01",
+  "subject": "P03",
   "model": "eegnet",
   "seed": 0,
   "phase": "val",
-  "epoch": 28,
+  "epoch": 30,
   "batch": 600,
-  "timestamp": "2026-07-04 15:26:55"
+  "timestamp": "2026-07-05 00:37:29"
 }

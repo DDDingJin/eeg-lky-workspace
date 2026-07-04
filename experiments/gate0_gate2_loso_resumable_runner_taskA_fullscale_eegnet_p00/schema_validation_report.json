@@ -1,6 +1,6 @@
 {
   "protocol": "gate0_gate2_loso_resumable_runner_taskA_fullscale_eegnet_p00",
-  "passed": true,
+  "passed": false,
   "checks": {
     "completed_jobs_key_contains_dataset_subject_model_seed": true,
     "subject_metrics_align_with_completed_jobs": true,
@@ -9,10 +9,10 @@
     "failure_report_empty": true
   },
   "details": {
-    "expected_jobs": 1,
-    "completed_jobs": 1,
-    "subject_metric_rows": 1,
-    "recording_metric_rows": 15,
+    "expected_jobs": 3,
+    "completed_jobs": 2,
+    "subject_metric_rows": 2,
+    "recording_metric_rows": 30,
     "failure_rows": 0
   }
 }

@@ -53,6 +53,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dry-run-plan", action="store_true")
     parser.add_argument("--startup-only", action="store_true")
     parser.add_argument("--repair-state-only", action="store_true")
+    parser.add_argument("--job-plan-only", action="store_true")
     return parser.parse_args()
 
 
@@ -1519,6 +1520,21 @@ def summarize_jobs(
     }
 
 
+def chunk_schema_validation_passed(schema: dict[str, object]) -> bool:
+    checks = schema.get("checks", {})
+    if not isinstance(checks, dict):
+        return False
+    return all(bool(value) for value in checks.values())
+
+
+def global_schema_status_note(*, schema: dict[str, object], completed_jobs_count: int, planned_jobs_count: int) -> str:
+    if bool(schema.get("passed")):
+        return "all planned jobs satisfied global schema"
+    if completed_jobs_count < planned_jobs_count:
+        return "partial scope: global schema remains pending until all planned jobs complete"
+    return "global schema failed after all planned jobs were expected"
+
+
 def print_startup_summary(
     *,
     config_path: Path,
@@ -1814,6 +1830,151 @@ def select_job_plan(
                     continue
                 planned_jobs.append(JobKey(dataset_id, subject_id, model_name, int(config["seed"])))
     return active_dataset_subjects, full_dataset_subjects, planned_jobs
+
+
+def count_subject_recordings(dataset_dir: Path, *, split: str, subject_id: str) -> int:
+    return sum(1 for _ in dataset_dir.glob(f"{split}_-_{subject_id}_-_*_-_eeg.npy"))
+
+
+def inspect_job_plan(
+    *,
+    job: JobKey,
+    config: dict,
+    dataset_dir: Path,
+    all_subjects: list[str],
+    device: str,
+) -> dict[str, object]:
+    heldout_subject = job.subject_id
+    train_subjects = [subject for subject in all_subjects if subject != heldout_subject]
+    val_subjects = list(train_subjects)
+    batch_size = int(config["dataloader"]["batch_size"])
+    eval_batch_size = int(config["dataloader"]["eval_batch_size"])
+    dataset_cfg = next(item for item in config["datasets"] if item["dataset_id"] == job.dataset)
+
+    if job.model in {"eegnet", "fcnn", "dnn"}:
+        model_handle, model_kwargs = select_window_model(config, job.model)
+        train_dataset = PreloadedWindowDataset(
+            dataset_dir,
+            "train",
+            subjects=train_subjects,
+            window_size=int(model_kwargs["input_length"]),
+            channels=range(int(model_kwargs["num_input_channels"])),
+            target_index=str(config[job.model]["target_index"]),
+        )
+        val_dataset = PreloadedWindowDataset(
+            dataset_dir,
+            "val",
+            subjects=val_subjects,
+            window_size=int(model_kwargs["input_length"]),
+            channels=range(int(model_kwargs["num_input_channels"])),
+            target_index=str(config[job.model]["target_index"]),
+        )
+        sample_x, sample_y = train_dataset[0]
+        batch_tensor = torch.from_numpy(np.expand_dims(sample_x, axis=0)).to(device=device, dtype=torch.float32)
+        model = model_handle(**model_kwargs).to(device)
+        model.eval()
+        with torch.no_grad():
+            raw_pred_tensor = model(batch_tensor)
+        return {
+            "dataset": job.dataset,
+            "heldout_subject": heldout_subject,
+            "train_subjects": train_subjects,
+            "val_subjects": val_subjects,
+            "test_subject": heldout_subject,
+            "train_recording_count": int(train_dataset.total_recordings),
+            "val_recording_count": int(val_dataset.total_recordings),
+            "test_recording_count": int(count_subject_recordings(dataset_dir, split="test", subject_id=heldout_subject)),
+            "train_window_count": int(len(train_dataset)),
+            "val_window_count": int(len(val_dataset)),
+            "train_batches_per_epoch": int(math.ceil(len(train_dataset) / batch_size)) if len(train_dataset) > 0 else 0,
+            "val_batches_per_epoch": int(math.ceil(len(val_dataset) / batch_size)) if len(val_dataset) > 0 else 0,
+            "batch_size": batch_size,
+            "eval_batch_size": eval_batch_size,
+            "sampling_rate": int(dataset_cfg["sampling_rate"]),
+            "window_size": int(model_kwargs["input_length"]),
+            "target_index": str(config[job.model]["target_index"]),
+            "input_tensor_contract": ["batch", int(model_kwargs["num_input_channels"]), int(model_kwargs["input_length"])],
+            "raw_output_contract": ["batch"] if raw_pred_tensor.ndim == 1 else ["batch", *list(raw_pred_tensor.shape[1:])],
+            "sample_input_shape": list(sample_x.shape),
+            "sample_target_shape": list(np.asarray(sample_y).shape),
+            "target_scorer_alignment": (
+                f"target_index={config[job.model]['target_index']}; "
+                "train target is scalar per window; "
+                "eval scorer compares aligned per-window prediction and target arrays, then aggregates to recording/subject Pearson"
+            ),
+        }
+
+    if job.model == "adt":
+        model_cfg = config["adt"]
+        train_dataset = PreloadedSequenceDataset(
+            dataset_dir,
+            "train",
+            subjects=train_subjects,
+            window_length=int(model_cfg["window_length"]),
+            hop_length=int(model_cfg["hop_length"]),
+        )
+        val_dataset = PreloadedSequenceDataset(
+            dataset_dir,
+            "val",
+            subjects=val_subjects,
+            window_length=int(model_cfg["window_length"]),
+            hop_length=int(model_cfg["hop_length"]),
+        )
+        return {
+            "dataset": job.dataset,
+            "heldout_subject": heldout_subject,
+            "train_subjects": train_subjects,
+            "val_subjects": val_subjects,
+            "test_subject": heldout_subject,
+            "train_recording_count": int(train_dataset.total_recordings),
+            "val_recording_count": int(val_dataset.total_recordings),
+            "test_recording_count": int(count_subject_recordings(dataset_dir, split="test", subject_id=heldout_subject)),
+            "train_window_count": int(len(train_dataset)),
+            "val_window_count": int(len(val_dataset)),
+            "train_batches_per_epoch": int(math.ceil(len(train_dataset) / int(model_cfg["batch_size"]))) if len(train_dataset) > 0 else 0,
+            "val_batches_per_epoch": int(math.ceil(len(val_dataset) / int(model_cfg["batch_size"]))) if len(val_dataset) > 0 else 0,
+            "batch_size": int(model_cfg["batch_size"]),
+            "eval_batch_size": eval_batch_size,
+            "sampling_rate": int(dataset_cfg["sampling_rate"]),
+            "window_size": int(model_cfg["window_length"]),
+            "target_index": "full_window_sequence",
+            "input_tensor_contract": ["batch", int(model_cfg["window_length"]), 64],
+            "raw_output_contract": ["batch", int(model_cfg["window_length"])],
+            "sample_input_shape": list(train_dataset[0][0].shape),
+            "sample_target_shape": list(train_dataset[0][1].shape),
+            "target_scorer_alignment": "sequence prediction and target windows share the same length; scorer compares aligned flattened sequences per recording",
+        }
+
+    raise ValueError(f"unsupported model {job.model}")
+
+
+def print_job_plan_summary(plan: dict[str, object]) -> None:
+    stdout_block(
+        "[JOB PLAN ONLY]",
+        [
+            f"dataset: {plan['dataset']}",
+            f"heldout subject: {plan['heldout_subject']}",
+            f"train_subjects: {plan['train_subjects']}",
+            f"val_subjects: {plan['val_subjects']}",
+            f"test_subject: {plan['test_subject']}",
+            f"train_recording_count: {plan['train_recording_count']}",
+            f"val_recording_count: {plan['val_recording_count']}",
+            f"test_recording_count: {plan['test_recording_count']}",
+            f"train_window_count: {plan['train_window_count']}",
+            f"val_window_count: {plan['val_window_count']}",
+            f"train_batches_per_epoch: {plan['train_batches_per_epoch']}",
+            f"val_batches_per_epoch: {plan['val_batches_per_epoch']}",
+            f"batch_size: {plan['batch_size']}",
+            f"eval_batch_size: {plan['eval_batch_size']}",
+            f"sampling_rate: {plan['sampling_rate']}",
+            f"window_size: {plan['window_size']}",
+            f"target_index: {plan['target_index']}",
+            f"input tensor contract: {plan['input_tensor_contract']} -> {plan['raw_output_contract']}",
+            f"sample_input_shape: {plan['sample_input_shape']}",
+            f"sample_target_shape: {plan['sample_target_shape']}",
+            f"target/scorer alignment: {plan['target_scorer_alignment']}",
+        ],
+    )
 
 
 def load_rows_if_exists(path: Path) -> list[dict[str, object]]:
@@ -2733,7 +2894,7 @@ def main() -> int:
     requires_repair = bool(
         args.resume
         and (
-            run_state_info["status"] != "ok"
+            run_state_info["status"] not in {"ok", "missing"}
             or heartbeat_info["status"] not in {"ok", "missing"}
             or args.repair_state_only
         )
@@ -2891,6 +3052,31 @@ def main() -> int:
         summary=summary,
         resume_mode=bool(args.resume),
     )
+    if args.job_plan_only:
+        if not planned_jobs:
+            stdout_message("[JOB PLAN ONLY] no planned jobs")
+            return 0
+        target_job = summary["next_job"]
+        if target_job is None:
+            target_job = planned_jobs[0].as_dict()
+        job = JobKey(
+            dataset=str(target_job["dataset"]),
+            subject_id=str(target_job["subject_id"]),
+            model=str(target_job["model"]),
+            seed=int(target_job["seed"]),
+        )
+        dataset_dir = resolve_dataset_path(next(item for item in config["datasets"] if item["dataset_id"] == job.dataset)["dataset_locator"])
+        all_subjects = full_dataset_subjects[job.dataset]
+        print_job_plan_summary(
+            inspect_job_plan(
+                job=job,
+                config=config,
+                dataset_dir=dataset_dir,
+                all_subjects=all_subjects,
+                device=device,
+            )
+        )
+        return 0
     if args.dry_run_plan:
         payload = {
             "planned_jobs": plan_rows(planned_jobs),
@@ -3060,7 +3246,13 @@ def main() -> int:
                 "job_completed",
                 subject=job.subject_id,
                 total_seconds=memory_runtime_entry["total_job_seconds"],
-                schema_validation_passed=schema["passed"],
+                chunk_schema_validation_passed=chunk_schema_validation_passed(schema),
+                global_schema_validation_passed=schema["passed"],
+                global_schema_status_note=global_schema_status_note(
+                    schema=schema,
+                    completed_jobs_count=len(completed_jobs_payload),
+                    planned_jobs_count=len(planned_jobs),
+                ),
                 completed_job_key=f"{job.dataset}:{job.subject_id}:{job.model}:seed{job.seed}",
                 device=device,
             )
@@ -3087,7 +3279,9 @@ def main() -> int:
                     f"total_job_seconds={memory_runtime_entry['total_job_seconds']}",
                     f"recording_rows={len(rows_recording)}",
                     f"completed_jobs_count={len(completed_jobs_payload)}",
-                    f"schema_validation_passed={schema['passed']}",
+                    f"chunk_schema_validation_passed={chunk_schema_validation_passed(schema)}",
+                    f"global_schema_validation_passed={schema['passed']}",
+                    f"global_schema_status_note={global_schema_status_note(schema=schema, completed_jobs_count=len(completed_jobs_payload), planned_jobs_count=len(planned_jobs))}",
                     f"next_pending_subject={next_pending_subject}",
                 ],
             )

@@ -80,6 +80,42 @@
       "status": "success",
       "checkpoint_id": "eegnet_epoch_25",
       "total_job_seconds": 2650.0951873000013
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P09",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_13",
+      "total_job_seconds": 1734.5184971999988
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P10",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_11",
+      "total_job_seconds": 1576.5122808000015
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P11",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_32",
+      "total_job_seconds": 3127.5206267999965
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P12",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_30",
+      "total_job_seconds": 3006.4352045999985
     }
   ]
 }

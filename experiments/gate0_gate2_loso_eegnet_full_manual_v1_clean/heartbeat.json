@@ -1,11 +1,11 @@
 {
-  "dataset": null,
-  "subject": null,
-  "model": null,
+  "dataset": "weissbart_tf64",
+  "subject": "P12",
+  "model": "eegnet",
   "seed": 0,
-  "phase": "idle_recovered",
-  "epoch": 0,
+  "phase": "completed_all_jobs",
+  "epoch": 31,
   "batch": 0,
-  "timestamp": "2026-07-05 11:17:15",
-  "status": "recovered_after_corrupt_runtime_state"
+  "timestamp": "2026-07-05 19:42:26",
+  "status": "all_jobs_completed"
 }

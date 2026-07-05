@@ -1,6 +1,6 @@
 {
   "protocol": "gate0_gate2_loso_eegnet_full_manual_v1",
-  "passed": false,
+  "passed": true,
   "checks": {
     "completed_jobs_key_contains_dataset_subject_model_seed": true,
     "subject_metrics_align_with_completed_jobs": true,
@@ -9,10 +9,10 @@
     "failure_report_empty": true
   },
   "details": {
-    "expected_jobs": 9,
-    "completed_jobs": 9,
-    "subject_metric_rows": 9,
-    "recording_metric_rows": 135,
+    "expected_jobs": 13,
+    "completed_jobs": 13,
+    "subject_metric_rows": 13,
+    "recording_metric_rows": 195,
     "failure_rows": 0
   }
 }

@@ -2,6 +2,30 @@
   "planned_jobs": [
     {
       "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "eegnet",
+      "seed": 0
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P02",
+      "model": "eegnet",
+      "seed": 0
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P03",
+      "model": "eegnet",
+      "seed": 0
+    },
+    {
+      "dataset": "weissbart_tf64",
       "subject_id": "P04",
       "model": "eegnet",
       "seed": 0
@@ -155,37 +179,48 @@
       "status": "success",
       "checkpoint_id": "eegnet_epoch_25",
       "total_job_seconds": 2650.0951873000013
-    }
-  ],
-  "failed_jobs": [],
-  "skipped_jobs": [],
-  "pending_jobs": [
+    },
     {
       "dataset": "weissbart_tf64",
       "subject_id": "P09",
       "model": "eegnet",
-      "seed": 0
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_13",
+      "total_job_seconds": 1734.5184971999988
     },
     {
       "dataset": "weissbart_tf64",
       "subject_id": "P10",
       "model": "eegnet",
-      "seed": 0
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_11",
+      "total_job_seconds": 1576.5122808000015
     },
     {
       "dataset": "weissbart_tf64",
       "subject_id": "P11",
       "model": "eegnet",
-      "seed": 0
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_32",
+      "total_job_seconds": 3127.5206267999965
     },
     {
       "dataset": "weissbart_tf64",
       "subject_id": "P12",
       "model": "eegnet",
-      "seed": 0
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_30",
+      "total_job_seconds": 3006.4352045999985
     }
   ],
-  "last_update_time": "2026-07-05 11:17:15",
+  "failed_jobs": [],
+  "skipped_jobs": [],
+  "pending_jobs": [],
+  "last_update_time": "2026-07-05 20:21:42",
   "resume_enabled": true,
   "leakage_entries": [
     {
@@ -556,6 +591,170 @@
       "excluded_target_from_val": true,
       "excluded_target_from_selection": true,
       "normalization_fitted_on_target": false
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P09",
+      "model": "eegnet",
+      "seed": 0,
+      "train_subjects": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P10",
+        "P11",
+        "P12"
+      ],
+      "val_subjects": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P10",
+        "P11",
+        "P12"
+      ],
+      "test_subjects": [
+        "P09"
+      ],
+      "excluded_target_from_train": true,
+      "excluded_target_from_val": true,
+      "excluded_target_from_selection": true,
+      "normalization_fitted_on_target": false
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P10",
+      "model": "eegnet",
+      "seed": 0,
+      "train_subjects": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P11",
+        "P12"
+      ],
+      "val_subjects": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P11",
+        "P12"
+      ],
+      "test_subjects": [
+        "P10"
+      ],
+      "excluded_target_from_train": true,
+      "excluded_target_from_val": true,
+      "excluded_target_from_selection": true,
+      "normalization_fitted_on_target": false
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P11",
+      "model": "eegnet",
+      "seed": 0,
+      "train_subjects": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P12"
+      ],
+      "val_subjects": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P12"
+      ],
+      "test_subjects": [
+        "P11"
+      ],
+      "excluded_target_from_train": true,
+      "excluded_target_from_val": true,
+      "excluded_target_from_selection": true,
+      "normalization_fitted_on_target": false
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P12",
+      "model": "eegnet",
+      "seed": 0,
+      "train_subjects": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P11"
+      ],
+      "val_subjects": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P11"
+      ],
+      "test_subjects": [
+        "P12"
+      ],
+      "excluded_target_from_train": true,
+      "excluded_target_from_val": true,
+      "excluded_target_from_selection": true,
+      "normalization_fitted_on_target": false
     }
   ],
   "model_run_entries": [
@@ -841,6 +1040,142 @@
       "epochs_completed": 36,
       "best_epoch": 25,
       "best_val_score": 0.1314398705798393,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P09",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_13",
+      "epochs_completed": 24,
+      "best_epoch": 13,
+      "best_val_score": 0.12608074026519556,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P10",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_11",
+      "epochs_completed": 22,
+      "best_epoch": 11,
+      "best_val_score": 0.1302034670142936,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P11",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_32",
+      "epochs_completed": 43,
+      "best_epoch": 32,
+      "best_val_score": 0.13746095038154368,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P12",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_30",
+      "epochs_completed": 41,
+      "best_epoch": 30,
+      "best_val_score": 0.12410590509877212,
       "input_tensor_shape_example": [
         990,
         64,
@@ -1206,6 +1541,166 @@
       "batch_compute_seconds": 0.0,
       "data_wait_seconds": 0.0,
       "total_job_seconds": 2650.0951873000013,
+      "torch_cuda_is_available": null,
+      "device": null,
+      "gpu_name": null,
+      "gpu_memory_allocated_mb": null,
+      "gpu_memory_reserved_mb": null,
+      "gpu_memory_peak_allocated_mb": null,
+      "gpu_memory_peak_reserved_mb": null,
+      "gpu_memory_mb": null,
+      "input_tensor_shape_example": null,
+      "raw_model_output_shape": null,
+      "prediction_shape_example": null,
+      "target_shape_example": null,
+      "scorer_input_shape_example": null,
+      "train_window_count": null,
+      "val_window_count": null,
+      "train_batches_per_epoch": null,
+      "val_batches_per_epoch": null,
+      "test_recording_count": null,
+      "batch_size": null,
+      "eval_batch_size": null
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P09",
+      "model": "eegnet",
+      "seed": 0,
+      "train_preload_bytes": 380524560,
+      "val_preload_bytes": 47545680,
+      "total_preload_bytes": 428070240,
+      "data_preload_seconds": 0.0,
+      "first_batch_seconds": null,
+      "train_seconds": 0.0,
+      "val_seconds": 0.0,
+      "train_epoch_seconds": [],
+      "val_epoch_seconds": [],
+      "test_prediction_seconds": 0.0,
+      "metric_write_seconds": 0.0,
+      "batch_compute_seconds": 0.0,
+      "data_wait_seconds": 0.0,
+      "total_job_seconds": 1734.5184971999988,
+      "torch_cuda_is_available": null,
+      "device": null,
+      "gpu_name": null,
+      "gpu_memory_allocated_mb": null,
+      "gpu_memory_reserved_mb": null,
+      "gpu_memory_peak_allocated_mb": null,
+      "gpu_memory_peak_reserved_mb": null,
+      "gpu_memory_mb": null,
+      "input_tensor_shape_example": null,
+      "raw_model_output_shape": null,
+      "prediction_shape_example": null,
+      "target_shape_example": null,
+      "scorer_input_shape_example": null,
+      "train_window_count": null,
+      "val_window_count": null,
+      "train_batches_per_epoch": null,
+      "val_batches_per_epoch": null,
+      "test_recording_count": null,
+      "batch_size": null,
+      "eval_batch_size": null
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P10",
+      "model": "eegnet",
+      "seed": 0,
+      "train_preload_bytes": 380524560,
+      "val_preload_bytes": 47545680,
+      "total_preload_bytes": 428070240,
+      "data_preload_seconds": 0.0,
+      "first_batch_seconds": null,
+      "train_seconds": 0.0,
+      "val_seconds": 0.0,
+      "train_epoch_seconds": [],
+      "val_epoch_seconds": [],
+      "test_prediction_seconds": 0.0,
+      "metric_write_seconds": 0.0,
+      "batch_compute_seconds": 0.0,
+      "data_wait_seconds": 0.0,
+      "total_job_seconds": 1576.5122808000015,
+      "torch_cuda_is_available": null,
+      "device": null,
+      "gpu_name": null,
+      "gpu_memory_allocated_mb": null,
+      "gpu_memory_reserved_mb": null,
+      "gpu_memory_peak_allocated_mb": null,
+      "gpu_memory_peak_reserved_mb": null,
+      "gpu_memory_mb": null,
+      "input_tensor_shape_example": null,
+      "raw_model_output_shape": null,
+      "prediction_shape_example": null,
+      "target_shape_example": null,
+      "scorer_input_shape_example": null,
+      "train_window_count": null,
+      "val_window_count": null,
+      "train_batches_per_epoch": null,
+      "val_batches_per_epoch": null,
+      "test_recording_count": null,
+      "batch_size": null,
+      "eval_batch_size": null
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P11",
+      "model": "eegnet",
+      "seed": 0,
+      "train_preload_bytes": 380524560,
+      "val_preload_bytes": 47545680,
+      "total_preload_bytes": 428070240,
+      "data_preload_seconds": 0.0,
+      "first_batch_seconds": null,
+      "train_seconds": 0.0,
+      "val_seconds": 0.0,
+      "train_epoch_seconds": [],
+      "val_epoch_seconds": [],
+      "test_prediction_seconds": 0.0,
+      "metric_write_seconds": 0.0,
+      "batch_compute_seconds": 0.0,
+      "data_wait_seconds": 0.0,
+      "total_job_seconds": 3127.5206267999965,
+      "torch_cuda_is_available": null,
+      "device": null,
+      "gpu_name": null,
+      "gpu_memory_allocated_mb": null,
+      "gpu_memory_reserved_mb": null,
+      "gpu_memory_peak_allocated_mb": null,
+      "gpu_memory_peak_reserved_mb": null,
+      "gpu_memory_mb": null,
+      "input_tensor_shape_example": null,
+      "raw_model_output_shape": null,
+      "prediction_shape_example": null,
+      "target_shape_example": null,
+      "scorer_input_shape_example": null,
+      "train_window_count": null,
+      "val_window_count": null,
+      "train_batches_per_epoch": null,
+      "val_batches_per_epoch": null,
+      "test_recording_count": null,
+      "batch_size": null,
+      "eval_batch_size": null
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P12",
+      "model": "eegnet",
+      "seed": 0,
+      "train_preload_bytes": 380524560,
+      "val_preload_bytes": 47545680,
+      "total_preload_bytes": 428070240,
+      "data_preload_seconds": 0.0,
+      "first_batch_seconds": null,
+      "train_seconds": 0.0,
+      "val_seconds": 0.0,
+      "train_epoch_seconds": [],
+      "val_epoch_seconds": [],
+      "test_prediction_seconds": 0.0,
+      "metric_write_seconds": 0.0,
+      "batch_compute_seconds": 0.0,
+      "data_wait_seconds": 0.0,
+      "total_job_seconds": 3006.4352045999985,
       "torch_cuda_is_available": null,
       "device": null,
       "gpu_name": null,

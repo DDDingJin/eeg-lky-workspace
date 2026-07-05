@@ -9,10 +9,10 @@
     "failure_report_empty": true
   },
   "details": {
-    "expected_jobs": 3,
-    "completed_jobs": 4,
-    "subject_metric_rows": 4,
-    "recording_metric_rows": 60,
+    "expected_jobs": 9,
+    "completed_jobs": 9,
+    "subject_metric_rows": 9,
+    "recording_metric_rows": 135,
     "failure_rows": 0
   }
 }

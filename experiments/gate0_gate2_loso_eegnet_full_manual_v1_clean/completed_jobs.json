@@ -35,6 +35,51 @@
       "status": "success",
       "checkpoint_id": "eegnet_epoch_20",
       "total_job_seconds": 2350.8447627999994
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P04",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_18",
+      "total_job_seconds": 2134.967234099997
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P05",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_38",
+      "total_job_seconds": 3594.7977501999994
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P06",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_11",
+      "total_job_seconds": 1611.3593095999968
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P07",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_25",
+      "total_job_seconds": 2641.258985799999
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P08",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_25",
+      "total_job_seconds": 2650.0951873000013
     }
   ]
 }

@@ -2,8 +2,8 @@
 
 This package validates resumable per-job writing for pure LOSO runs. It is not a full benchmark package.
 
-- planned jobs: `3`
-- completed jobs: `4`
+- planned jobs: `9`
+- completed jobs: `9`
 - failed jobs: `0`
 
 ## Scope

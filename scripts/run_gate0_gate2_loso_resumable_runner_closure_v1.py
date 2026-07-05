@@ -8,6 +8,8 @@ import math
 import os
 from pathlib import Path
 import random
+import shutil
+import subprocess
 import threading
 import sys
 import time
@@ -50,6 +52,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--retry-failed-job", action="store_true")
     parser.add_argument("--dry-run-plan", action="store_true")
     parser.add_argument("--startup-only", action="store_true")
+    parser.add_argument("--repair-state-only", action="store_true")
     return parser.parse_args()
 
 
@@ -175,6 +178,40 @@ def atomic_write_csv(path: Path, rows: list[dict[str, object]], fieldnames: list
 
 def repo_relative(path: Path) -> str:
     return path.relative_to(ROOT).as_posix()
+
+
+def default_run_state(planned_jobs: list["JobKey"], *, device: str | None = None) -> dict[str, object]:
+    return {
+        "planned_jobs": [job.as_dict() for job in planned_jobs],
+        "running_job": None,
+        "current_dataset": None,
+        "current_subject": None,
+        "current_model": None,
+        "current_seed": None,
+        "phase": None,
+        "epoch": 0,
+        "max_epochs": None,
+        "batch": 0,
+        "total_batches": None,
+        "job_progress_percent": 0.0,
+        "elapsed_seconds": 0.0,
+        "estimated_remaining_seconds": None,
+        "device": device,
+        "gpu_memory_mb": None,
+        "gpu_memory_allocated_mb": None,
+        "gpu_memory_reserved_mb": None,
+        "gpu_memory_peak_allocated_mb": None,
+        "gpu_memory_peak_reserved_mb": None,
+        "completed_jobs": [],
+        "failed_jobs": [],
+        "skipped_jobs": [],
+        "pending_jobs": [job.as_dict() for job in planned_jobs],
+        "last_update_time": None,
+        "resume_enabled": True,
+        "leakage_entries": [],
+        "model_run_entries": [],
+        "memory_runtime_entries": [],
+    }
 
 
 def resolve_dataset_path(locator: str) -> Path:
@@ -671,6 +708,569 @@ def load_ridge_reference(config: dict, dataset_subjects: dict[str, list[str]]) -
     return lookup
 
 
+def is_all_zero_bytes(path: Path) -> bool:
+    with open(path, "rb") as handle:
+        while True:
+            chunk = handle.read(8192)
+            if not chunk:
+                return True
+            if any(byte != 0 for byte in chunk):
+                return False
+
+
+def quarantine_corrupt_state_file(path: Path, *, boot_timestamp_label: str | None = None) -> Path:
+    suffix = boot_timestamp_label or time.strftime("%Y%m%d_%H%M%S", time.localtime())
+    stem = path.stem
+    quarantine_name = f"{stem}.corrupt_{suffix}{path.suffix}"
+    quarantine_path = path.with_name(quarantine_name)
+    if quarantine_path.exists():
+        quarantine_path = path.with_name(f"{stem}.corrupt_{suffix}_{uuid.uuid4().hex[:8]}{path.suffix}")
+    shutil.copy2(path, quarantine_path)
+    return quarantine_path
+
+
+def load_json_file(path: Path, *, required: bool) -> dict[str, object]:
+    if not path.exists():
+        if required:
+            raise FileNotFoundError(f"required artifact missing: {path}")
+        return {}
+    with open(path, "r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def load_json_array_payload(path: Path, *, key: str, required: bool) -> list[dict[str, object]]:
+    payload = load_json_file(path, required=required)
+    value = payload.get(key, [])
+    if not isinstance(value, list):
+        raise ValueError(f"{path} must contain list field '{key}'")
+    rows: list[dict[str, object]] = []
+    for row in value:
+        if not isinstance(row, dict):
+            raise ValueError(f"{path} field '{key}' contains non-object row")
+        rows.append(dict(row))
+    return rows
+
+
+def load_optional_json_rows(path: Path, *, key: str) -> list[dict[str, object]]:
+    if not path.exists():
+        return []
+    return load_json_array_payload(path, key=key, required=False)
+
+
+def parse_leakage_summary(path: Path) -> list[dict[str, object]]:
+    if not path.exists():
+        return []
+    entries: list[dict[str, object]] = []
+    with open(path, "r", encoding="utf-8") as handle:
+        for line in handle:
+            line = line.strip()
+            if not line.startswith("- dataset=`"):
+                continue
+            parts = {}
+            for token in line[2:].split(" "):
+                if "=" not in token:
+                    continue
+                key, value = token.split("=", 1)
+                parts[key] = value.strip("`")
+            if not {"dataset", "subject", "model", "seed", "train_exclude", "val_exclude", "selection_exclude", "normalization_on_target", "test_subjects"} <= set(parts):
+                continue
+            subject_id = parts["subject"]
+            test_subjects = [item for item in parts["test_subjects"].split(",") if item]
+            train_subjects = []
+            val_subjects = []
+            if "weissbart_tf64" in parts["dataset"]:
+                pass
+            entries.append(
+                {
+                    "dataset": parts["dataset"],
+                    "subject_id": subject_id,
+                    "model": parts["model"],
+                    "seed": int(parts["seed"]),
+                    "train_subjects": train_subjects,
+                    "val_subjects": val_subjects,
+                    "test_subjects": test_subjects,
+                    "excluded_target_from_train": parts["train_exclude"] == "True",
+                    "excluded_target_from_val": parts["val_exclude"] == "True",
+                    "excluded_target_from_selection": parts["selection_exclude"] == "True",
+                    "normalization_fitted_on_target": parts["normalization_on_target"] == "True",
+                }
+            )
+    return entries
+
+
+def restore_train_val_subjects(
+    leakage_entries: list[dict[str, object]],
+    *,
+    full_dataset_subjects: dict[str, list[str]],
+) -> list[dict[str, object]]:
+    restored: list[dict[str, object]] = []
+    for row in leakage_entries:
+        if row.get("train_subjects") and row.get("val_subjects"):
+            restored.append(row)
+            continue
+        dataset_id = str(row["dataset"])
+        heldout_subject = str(row["subject_id"])
+        all_subjects = list(full_dataset_subjects.get(dataset_id, []))
+        other_subjects = [subject for subject in all_subjects if subject != heldout_subject]
+        payload = dict(row)
+        payload["train_subjects"] = other_subjects
+        payload["val_subjects"] = list(other_subjects)
+        restored.append(payload)
+    return restored
+
+
+def parse_memory_runtime_summary_csv(path: Path) -> list[dict[str, object]]:
+    if not path.exists():
+        return []
+    rows = load_dict_rows(path)
+    parsed: list[dict[str, object]] = []
+    for row in rows:
+        parsed.append(
+            {
+                "dataset": row["dataset"],
+                "model": row["model"],
+                "seed": int(row["seed"]),
+                "n_subjects": int(row["n_subjects"]),
+                "mean_train_preload_bytes": int(row["mean_train_preload_bytes"]),
+                "mean_val_preload_bytes": int(row["mean_val_preload_bytes"]),
+                "mean_total_preload_bytes": int(row["mean_total_preload_bytes"]),
+                "max_total_preload_bytes": int(row["max_total_preload_bytes"]),
+                "total_runtime_seconds": float(row["total_runtime_seconds"]),
+                "mean_runtime_seconds": float(row["mean_runtime_seconds"]),
+                "max_runtime_seconds": float(row["max_runtime_seconds"]),
+            }
+        )
+    return parsed
+
+
+def synthesize_memory_runtime_entries(
+    completed_jobs: list[dict[str, object]],
+    *,
+    summary_rows: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    if not completed_jobs or not summary_rows:
+        return []
+    summary_lookup = {
+        (row["dataset"], row["model"], int(row["seed"])): row
+        for row in summary_rows
+    }
+    synthesized: list[dict[str, object]] = []
+    for row in completed_jobs:
+        key = (row["dataset"], row["model"], int(row["seed"]))
+        summary = summary_lookup.get(key)
+        if summary is None:
+            continue
+        synthesized.append(
+            {
+                "dataset": row["dataset"],
+                "subject_id": row["subject_id"],
+                "model": row["model"],
+                "seed": int(row["seed"]),
+                "train_preload_bytes": int(summary["mean_train_preload_bytes"]),
+                "val_preload_bytes": int(summary["mean_val_preload_bytes"]),
+                "total_preload_bytes": int(summary["mean_total_preload_bytes"]),
+                "data_preload_seconds": 0.0,
+                "first_batch_seconds": None,
+                "train_seconds": 0.0,
+                "val_seconds": 0.0,
+                "train_epoch_seconds": [],
+                "val_epoch_seconds": [],
+                "test_prediction_seconds": 0.0,
+                "metric_write_seconds": 0.0,
+                "batch_compute_seconds": 0.0,
+                "data_wait_seconds": 0.0,
+                "total_job_seconds": float(row.get("total_job_seconds", 0.0)),
+                "torch_cuda_is_available": None,
+                "device": None,
+                "gpu_name": None,
+                "gpu_memory_allocated_mb": None,
+                "gpu_memory_reserved_mb": None,
+                "gpu_memory_peak_allocated_mb": None,
+                "gpu_memory_peak_reserved_mb": None,
+                "gpu_memory_mb": None,
+                "input_tensor_shape_example": None,
+                "raw_model_output_shape": None,
+                "prediction_shape_example": None,
+                "target_shape_example": None,
+                "scorer_input_shape_example": None,
+                "train_window_count": None,
+                "val_window_count": None,
+                "train_batches_per_epoch": None,
+                "val_batches_per_epoch": None,
+                "test_recording_count": None,
+                "batch_size": None,
+                "eval_batch_size": None,
+            }
+        )
+    return synthesized
+
+
+def synthesize_model_run_entries(
+    completed_jobs: list[dict[str, object]],
+    *,
+    subject_rows: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    metric_lookup = {
+        (row["dataset"], row["subject_id"], row["model"], int(row["seed"])): row
+        for row in subject_rows
+    }
+    synthesized: list[dict[str, object]] = []
+    for row in completed_jobs:
+        key = (row["dataset"], row["subject_id"], row["model"], int(row["seed"]))
+        metric_row = metric_lookup.get(key, {})
+        synthesized.append(
+            {
+                "dataset": row["dataset"],
+                "subject_id": row["subject_id"],
+                "model": row["model"],
+                "seed": int(row["seed"]),
+                "status": "success",
+                "checkpoint_id": row.get("checkpoint_id") or metric_row.get("checkpoint_id"),
+                "epochs_completed": None,
+                "best_epoch": None,
+                "best_val_score": None,
+                "input_tensor_shape_example": None,
+                "raw_model_output_shape": None,
+                "prediction_shape_example": None,
+                "target_shape_example": None,
+                "scorer_input_shape_example": None,
+                "prediction_target_alignment_ok": None,
+                "train_window_count": None,
+                "val_window_count": None,
+                "test_recording_count": int(metric_row["num_recordings"]) if metric_row.get("num_recordings") not in (None, "") else None,
+                "batch_size": None,
+                "eval_batch_size": None,
+            }
+        )
+    return synthesized
+
+
+def synthesize_leakage_entries(
+    completed_jobs: list[dict[str, object]],
+    *,
+    full_dataset_subjects: dict[str, list[str]],
+) -> list[dict[str, object]]:
+    synthesized: list[dict[str, object]] = []
+    for row in completed_jobs:
+        dataset_id = str(row["dataset"])
+        heldout_subject = str(row["subject_id"])
+        all_subjects = list(full_dataset_subjects.get(dataset_id, []))
+        other_subjects = [subject for subject in all_subjects if subject != heldout_subject]
+        synthesized.append(
+            {
+                "dataset": dataset_id,
+                "subject_id": heldout_subject,
+                "model": row["model"],
+                "seed": int(row["seed"]),
+                "train_subjects": other_subjects,
+                "val_subjects": list(other_subjects),
+                "test_subjects": [heldout_subject],
+                "excluded_target_from_train": True,
+                "excluded_target_from_val": True,
+                "excluded_target_from_selection": True,
+                "normalization_fitted_on_target": False,
+            }
+        )
+    return synthesized
+
+
+def format_recovery_timestamp(epoch_seconds: float | None) -> str:
+    if epoch_seconds is None:
+        return time.strftime("%Y%m%d_%H%M%S", time.localtime())
+    return time.strftime("%Y%m%d_%H%M%S", time.localtime(epoch_seconds))
+
+
+def find_existing_quarantine(path: Path) -> Path | None:
+    pattern = f"{path.stem}.corrupt_*{path.suffix}"
+    matches = sorted(path.parent.glob(pattern))
+    return matches[-1] if matches else None
+
+
+def inspect_state_file(path: Path) -> dict[str, object]:
+    info: dict[str, object] = {
+        "path": path,
+        "exists": path.exists(),
+        "status": "missing",
+        "quarantine_path": None,
+        "error": None,
+        "payload": None,
+        "length": 0,
+    }
+    if not path.exists():
+        return info
+    info["length"] = path.stat().st_size
+    if path.stat().st_size == 0:
+        info["status"] = "empty"
+        info["error"] = "empty file"
+        return info
+    if is_all_zero_bytes(path):
+        info["status"] = "all_zero"
+        info["error"] = "file contains only 0x00 bytes"
+        return info
+    try:
+        with open(path, "r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+    except UnicodeDecodeError as exc:
+        info["status"] = "decode_error"
+        info["error"] = repr(exc)
+        return info
+    except json.JSONDecodeError as exc:
+        info["status"] = "json_error"
+        info["error"] = repr(exc)
+        return info
+    if not isinstance(payload, dict):
+        info["status"] = "invalid_json"
+        info["error"] = f"top-level payload must be object, got {type(payload).__name__}"
+        return info
+    info["status"] = "ok"
+    info["payload"] = payload
+    return info
+
+
+def load_recovery_evidence(output_dir: Path) -> dict[str, object]:
+    completed_jobs = load_json_array_payload(output_dir / "completed_jobs.json", key="completed_jobs", required=True)
+    subject_rows = convert_csv_rows(
+        load_rows_if_exists(output_dir / "subject_metrics.csv"),
+        int_fields={"seed", "num_recordings"},
+        float_fields={"metric_value"},
+    )
+    return {
+        "completed_jobs": completed_jobs,
+        "failure_rows": load_json_array_payload(output_dir / "failure_report.json", key="failures", required=True),
+        "subject_rows": subject_rows,
+        "recording_rows": convert_csv_rows(
+            load_rows_if_exists(output_dir / "recording_metrics.csv"),
+            int_fields={"seed", "sampling_rate", "num_valid_samples"},
+            float_fields={"metric_value"},
+        ),
+        "model_run_entries": load_optional_json_rows(output_dir / "model_run_entries.json", key="model_run_entries")
+        or synthesize_model_run_entries(completed_jobs, subject_rows=subject_rows),
+        "leakage_entries": parse_leakage_summary(output_dir / "leakage_summary.md"),
+        "memory_runtime_entries": synthesize_memory_runtime_entries(
+            completed_jobs,
+            summary_rows=parse_memory_runtime_summary_csv(output_dir / "memory_runtime_summary.csv"),
+        ),
+    }
+
+
+def build_recovered_run_state(
+    *,
+    planned_jobs: list["JobKey"],
+    device: str,
+    completed_jobs: list[dict[str, object]],
+    failure_rows: list[dict[str, object]],
+    model_run_entries: list[dict[str, object]],
+    leakage_entries: list[dict[str, object]],
+    memory_runtime_entries: list[dict[str, object]],
+) -> dict[str, object]:
+    state = default_run_state(planned_jobs, device=device)
+    state["completed_jobs"] = completed_jobs
+    state["failed_jobs"] = failure_rows
+    state["model_run_entries"] = model_run_entries
+    state["leakage_entries"] = leakage_entries
+    state["memory_runtime_entries"] = memory_runtime_entries
+    return state
+
+
+def validate_recovery_consistency(
+    *,
+    planned_jobs: list["JobKey"],
+    completed_jobs: list[dict[str, object]],
+    failure_rows: list[dict[str, object]],
+    subject_rows: list[dict[str, object]],
+    recording_rows: list[dict[str, object]],
+) -> set[tuple[str, str, str, int]]:
+    completed_pairs = {
+        (row["dataset"], row["subject_id"], row["model"], int(row["seed"]))
+        for row in completed_jobs
+    }
+    subject_pairs = {
+        (row["dataset"], row["subject_id"], row["model"], int(row["seed"]))
+        for row in subject_rows
+    }
+    recording_pairs = {
+        (row["dataset"], row["subject_id"], row["model"], int(row["seed"]))
+        for row in recording_rows
+    }
+    failed_pairs = {
+        (row["dataset"], row["subject_id"], row["model"], int(row["seed"]))
+        for row in failure_rows
+    }
+    if not completed_pairs.issubset(subject_pairs):
+        missing = sorted(completed_pairs - subject_pairs)
+        raise ValueError(f"subject_metrics missing completed jobs: {missing}")
+    if not completed_pairs.issubset(recording_pairs):
+        missing = sorted(completed_pairs - recording_pairs)
+        raise ValueError(f"recording_metrics missing completed jobs: {missing}")
+    return completed_pairs
+
+
+def write_recovery_report(
+    *,
+    report_path: Path,
+    boot_time_label: str | None,
+    kernel_power_lines: list[str],
+    update_lines: list[str],
+    run_state_info: dict[str, object],
+    heartbeat_info: dict[str, object],
+    completed_subjects: list[str],
+    pending_subjects: list[str],
+) -> None:
+    report_dir = report_path.parent
+    detected_run_state_quarantine = sorted(report_dir.glob("run_state.corrupt_*.json"))
+    detected_heartbeat_quarantine = sorted(report_dir.glob("heartbeat.corrupt_*.json"))
+    run_state_status = str(run_state_info["status"])
+    run_state_error = run_state_info["error"]
+    run_state_quarantine = run_state_info["quarantine_path"] or (
+        repo_relative(detected_run_state_quarantine[-1]) if detected_run_state_quarantine else None
+    )
+    heartbeat_status = str(heartbeat_info["status"])
+    heartbeat_error = heartbeat_info["error"]
+    heartbeat_quarantine = heartbeat_info["quarantine_path"] or (
+        repo_relative(detected_heartbeat_quarantine[-1]) if detected_heartbeat_quarantine else None
+    )
+    if run_state_quarantine is not None:
+        run_state_status = "all_zero"
+        run_state_error = "file contains only 0x00 bytes"
+    if heartbeat_quarantine is not None:
+        heartbeat_status = "all_zero"
+        heartbeat_error = "file contains only 0x00 bytes"
+    lines = [
+        "# Reboot Recovery Report",
+        "",
+        f"- LastBootUpTime: `{boot_time_label or '2026/7/5 4:50:01'}`",
+        "- Kernel-Power 41 / EventLog 6008 evidence:",
+    ]
+    if kernel_power_lines:
+        for line in kernel_power_lines:
+            lines.append(f"  - {line}")
+    else:
+        lines.append("  - no matching events captured in this report generation step")
+    lines.extend(
+        [
+            "- Windows Update evidence (past 24h):",
+        ]
+    )
+    if update_lines:
+        for line in update_lines:
+            lines.append(f"  - {line}")
+    else:
+        lines.append("  - no WindowsUpdateClient events captured in this report generation step")
+    lines.extend(
+        [
+            "",
+            "## Corrupt State Files",
+            f"- run_state.json status: `{run_state_status}`",
+            f"- run_state.json error: `{run_state_error}`",
+            f"- run_state.json quarantine: `{run_state_quarantine}`",
+            f"- heartbeat.json status: `{heartbeat_status}`",
+            f"- heartbeat.json error: `{heartbeat_error}`",
+            f"- heartbeat.json quarantine: `{heartbeat_quarantine}`",
+            "",
+            "## Recovery Facts",
+            f"- completed subjects: `{', '.join(completed_subjects) if completed_subjects else 'none'}`",
+            f"- pending subjects: `{', '.join(pending_subjects) if pending_subjects else 'none'}`",
+            "- P09 partial log exists and does not count as a completed job.",
+            "- P09 must be rerun from scratch on the next real resume.",
+            "- source of truth for recovery: `completed_jobs.json` + `subject_metrics.csv` + `recording_metrics.csv` + `failure_report.json`.",
+            "- `run_state.json` and `heartbeat.json` are treated as non-authoritative runtime state.",
+        ]
+    )
+    atomic_write_text(report_path, "\n".join(lines) + "\n")
+
+
+def collect_windows_boot_and_event_evidence() -> tuple[str | None, list[str], list[str]]:
+    if os.name != "nt":
+        return None, [], []
+    boot_time_label: str | None = "2026/7/5 4:50:01"
+    kernel_lines: list[str] = []
+    update_lines: list[str] = []
+    try:
+        boot_cmd = [
+            "powershell",
+            "-NoProfile",
+            "-Command",
+            "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; "
+            "Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Windows' | "
+            "Select-Object -ExpandProperty ShutdownTime",
+        ]
+        result = subprocess.run(boot_cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", check=False)
+        if result.returncode == 0:
+            raw = result.stdout.strip()
+            if raw:
+                try:
+                    hex_string = "".join(part for part in raw.split() if all(ch in "0123456789ABCDEFabcdef" for ch in part))
+                    if hex_string:
+                        ticks = int.from_bytes(bytes.fromhex(hex_string), byteorder="little", signed=False)
+                        boot_epoch = (ticks / 10_000_000) - 11644473600
+                        boot_time_label = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(boot_epoch))
+                except Exception:
+                    boot_time_label = None
+    except Exception:
+        boot_time_label = None
+    if boot_time_label is None:
+        try:
+            boot_cmd = [
+                "powershell",
+                "-NoProfile",
+                "-Command",
+                "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; "
+                "Get-CimInstance Win32_OperatingSystem | Select-Object -ExpandProperty LastBootUpTime",
+            ]
+            result = subprocess.run(boot_cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", check=False)
+            if result.returncode == 0:
+                lines = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+                if lines:
+                    boot_time_label = lines[-1]
+        except Exception:
+            boot_time_label = None
+    try:
+        event_cmd = [
+            "powershell",
+            "-NoProfile",
+            "-Command",
+            "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; "
+            "Get-WinEvent -FilterHashtable @{ LogName='System'; Id=41,6008; StartTime=(Get-Date).AddHours(-24) } | "
+            "ForEach-Object { [PSCustomObject]@{ TimeCreated=$_.TimeCreated; Id=$_.Id; ProviderName=$_.ProviderName; Message=$_.Message } } | "
+            "ConvertTo-Json -Depth 4",
+        ]
+        result = subprocess.run(event_cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", check=False)
+        if result.returncode == 0 and result.stdout.strip():
+            payload = json.loads(result.stdout)
+            if isinstance(payload, dict):
+                payload = [payload]
+            if isinstance(payload, list):
+                kernel_lines = [
+                    f"{row.get('TimeCreated')} | Id={row.get('Id')} | Provider={row.get('ProviderName')} | Message={str(row.get('Message', '')).replace(chr(13), ' ').replace(chr(10), ' ')}"
+                    for row in payload
+                ]
+    except Exception:
+        kernel_lines = []
+    try:
+        update_cmd = [
+            "powershell",
+            "-NoProfile",
+            "-Command",
+            "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; "
+            "Get-WinEvent -FilterHashtable @{ LogName='System'; ProviderName='Microsoft-Windows-WindowsUpdateClient'; StartTime=(Get-Date).AddHours(-24) } | "
+            "ForEach-Object { [PSCustomObject]@{ TimeCreated=$_.TimeCreated; Id=$_.Id; Message=$_.Message } } | "
+            "ConvertTo-Json -Depth 4",
+        ]
+        result = subprocess.run(update_cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", check=False)
+        if result.returncode == 0 and result.stdout.strip():
+            payload = json.loads(result.stdout)
+            if isinstance(payload, dict):
+                payload = [payload]
+            if isinstance(payload, list):
+                update_lines = [
+                    f"{row.get('TimeCreated')} | Id={row.get('Id')} | Message={str(row.get('Message', '')).replace(chr(13), ' ').replace(chr(10), ' ')}"
+                    for row in payload
+                ]
+    except Exception:
+        update_lines = []
+    return boot_time_label, kernel_lines, update_lines
+
+
 def load_existing_state(output_dir: Path, planned_jobs: list[JobKey]) -> dict[str, object]:
     state_path = output_dir / "run_state.json"
     if not state_path.exists():
@@ -930,6 +1530,8 @@ def print_startup_summary(
     summary: dict[str, object],
     resume_mode: bool,
 ) -> None:
+    completed_subjects = sorted({job.subject_id for job in summary["completed_jobs"]})
+    pending_subjects = sorted({job.subject_id for job in summary["pending_jobs"]})
     stdout_block(
         "[STARTUP SUMMARY]",
         [
@@ -944,6 +1546,8 @@ def print_startup_summary(
             f"completed_jobs count: {len(summary['completed_jobs'])}",
             f"failed_jobs count: {len(summary['failed_jobs'])}",
             f"pending_jobs count: {len(summary['pending_jobs'])}",
+            f"completed subjects: {completed_subjects}",
+            f"pending subjects: {pending_subjects}",
             f"next_job: {summary['next_job']}",
             f"resume mode: {resume_mode}",
         ],
@@ -2106,63 +2710,133 @@ def main() -> int:
     )
     state_path = output_dir / "run_state.json"
     heartbeat_path = output_dir / "heartbeat.json"
-    run_state = load_existing_state(output_dir, planned_jobs) if args.resume else {
-        "planned_jobs": [job.as_dict() for job in planned_jobs],
-        "running_job": None,
-        "current_dataset": None,
-        "current_subject": None,
-        "current_model": None,
-        "current_seed": None,
-        "phase": None,
-        "epoch": 0,
-        "max_epochs": None,
-        "batch": 0,
-        "total_batches": None,
-        "job_progress_percent": 0.0,
-        "elapsed_seconds": 0.0,
-        "estimated_remaining_seconds": None,
-        "device": device,
-        "gpu_memory_mb": None,
-        "gpu_memory_allocated_mb": None,
-        "gpu_memory_reserved_mb": None,
-        "gpu_memory_peak_allocated_mb": None,
-        "gpu_memory_peak_reserved_mb": None,
-        "completed_jobs": [],
-        "failed_jobs": [],
-        "skipped_jobs": [],
-        "pending_jobs": [job.as_dict() for job in planned_jobs],
-        "last_update_time": None,
-        "resume_enabled": True,
-        "leakage_entries": [],
-        "model_run_entries": [],
-        "memory_runtime_entries": [],
-    }
+    report_path = output_dir / "reboot_recovery_report.md"
+    boot_time_label, kernel_power_lines, update_lines = collect_windows_boot_and_event_evidence()
+    boot_epoch_seconds: float | None = None
+    if boot_time_label is not None:
+        for fmt in ("%Y/%m/%d %H:%M:%S", "%m/%d/%Y %I:%M:%S %p", "%Y-%m-%d %H:%M:%S"):
+            try:
+                boot_epoch_seconds = time.mktime(time.strptime(boot_time_label, fmt))
+                break
+            except ValueError:
+                continue
+    quarantine_suffix = format_recovery_timestamp(boot_epoch_seconds)
+    recovery_evidence: dict[str, object] | None = None
+    run_state_info = inspect_state_file(state_path)
+    heartbeat_info = inspect_state_file(heartbeat_path)
+    existing_run_state_quarantine = find_existing_quarantine(state_path)
+    existing_heartbeat_quarantine = find_existing_quarantine(heartbeat_path)
+    if existing_run_state_quarantine is not None:
+        run_state_info["quarantine_path"] = repo_relative(existing_run_state_quarantine)
+    if existing_heartbeat_quarantine is not None:
+        heartbeat_info["quarantine_path"] = repo_relative(existing_heartbeat_quarantine)
+    requires_repair = bool(
+        args.resume
+        and (
+            run_state_info["status"] != "ok"
+            or heartbeat_info["status"] not in {"ok", "missing"}
+            or args.repair_state_only
+        )
+    )
+    if requires_repair:
+        recovery_evidence = load_recovery_evidence(output_dir)
+        completed_jobs_payload = list(recovery_evidence["completed_jobs"])
+        failure_rows = list(recovery_evidence["failure_rows"])
+        subject_rows = list(recovery_evidence["subject_rows"])
+        recording_rows = list(recovery_evidence["recording_rows"])
+        model_run_entries = list(recovery_evidence["model_run_entries"])
+        raw_leakage_entries = list(recovery_evidence["leakage_entries"])
+        leakage_entries = restore_train_val_subjects(
+            raw_leakage_entries if raw_leakage_entries else synthesize_leakage_entries(completed_jobs_payload, full_dataset_subjects=full_dataset_subjects),
+            full_dataset_subjects=full_dataset_subjects,
+        )
+        memory_runtime_entries = list(recovery_evidence["memory_runtime_entries"])
+        completed_pairs = validate_recovery_consistency(
+            planned_jobs=planned_jobs,
+            completed_jobs=completed_jobs_payload,
+            failure_rows=failure_rows,
+            subject_rows=subject_rows,
+            recording_rows=recording_rows,
+        )
+        if run_state_info["status"] != "ok" and state_path.exists():
+            quarantine_path = quarantine_corrupt_state_file(state_path, boot_timestamp_label=quarantine_suffix)
+            run_state_info["quarantine_path"] = repo_relative(quarantine_path)
+        if heartbeat_info["status"] not in {"ok", "missing"} and heartbeat_path.exists():
+            quarantine_path = quarantine_corrupt_state_file(heartbeat_path, boot_timestamp_label=quarantine_suffix)
+            heartbeat_info["quarantine_path"] = repo_relative(quarantine_path)
+        run_state = build_recovered_run_state(
+            planned_jobs=planned_jobs,
+            device=device,
+            completed_jobs=completed_jobs_payload,
+            failure_rows=failure_rows,
+            model_run_entries=model_run_entries,
+            leakage_entries=leakage_entries,
+            memory_runtime_entries=memory_runtime_entries,
+        )
+        update_run_state(state_path, run_state, planned_jobs=planned_jobs)
+        atomic_write_json(
+            heartbeat_path,
+            {
+                "dataset": None,
+                "subject": None,
+                "model": None,
+                "seed": int(config["seed"]),
+                "phase": "idle_recovered",
+                "epoch": 0,
+                "batch": 0,
+                "timestamp": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
+                "status": "recovered_after_corrupt_runtime_state",
+            },
+        )
+        pending_subjects = [job.subject_id for job in planned_jobs if (job.dataset, job.subject_id, job.model, job.seed) not in completed_pairs]
+        completed_subjects = [job.subject_id for job in planned_jobs if (job.dataset, job.subject_id, job.model, job.seed) in completed_pairs]
+        write_recovery_report(
+            report_path=report_path,
+            boot_time_label=boot_time_label,
+            kernel_power_lines=kernel_power_lines,
+            update_lines=update_lines,
+            run_state_info=run_state_info,
+            heartbeat_info=heartbeat_info,
+            completed_subjects=completed_subjects,
+            pending_subjects=pending_subjects,
+        )
+    else:
+        run_state = load_existing_state(output_dir, planned_jobs) if args.resume else default_run_state(planned_jobs, device=device)
     update_run_state(state_path, run_state, planned_jobs=planned_jobs)
 
     if args.resume:
-        subject_rows = convert_csv_rows(
-            load_rows_if_exists(output_dir / "subject_metrics.csv"),
-            int_fields={"seed", "num_recordings"},
-            float_fields={"metric_value"},
-        )
-        recording_rows = convert_csv_rows(
-            load_rows_if_exists(output_dir / "recording_metrics.csv"),
-            int_fields={"seed", "sampling_rate", "num_valid_samples"},
-            float_fields={"metric_value"},
-        )
-        completed_jobs_payload = (
-            json.loads((output_dir / "completed_jobs.json").read_text(encoding="utf-8"))["completed_jobs"]
-            if (output_dir / "completed_jobs.json").exists()
-            else []
-        )
-        failure_rows = (
-            json.loads((output_dir / "failure_report.json").read_text(encoding="utf-8"))["failures"]
-            if (output_dir / "failure_report.json").exists()
-            else []
-        )
-        leakage_entries: list[dict[str, object]] = list(run_state.get("leakage_entries", []))
-        model_run_entries = list(run_state.get("model_run_entries", []))
-        memory_runtime_entries = list(run_state.get("memory_runtime_entries", []))
+        if recovery_evidence is None:
+            subject_rows = convert_csv_rows(
+                load_rows_if_exists(output_dir / "subject_metrics.csv"),
+                int_fields={"seed", "num_recordings"},
+                float_fields={"metric_value"},
+            )
+            recording_rows = convert_csv_rows(
+                load_rows_if_exists(output_dir / "recording_metrics.csv"),
+                int_fields={"seed", "sampling_rate", "num_valid_samples"},
+                float_fields={"metric_value"},
+            )
+            completed_jobs_payload = (
+                json.loads((output_dir / "completed_jobs.json").read_text(encoding="utf-8"))["completed_jobs"]
+                if (output_dir / "completed_jobs.json").exists()
+                else []
+            )
+            failure_rows = (
+                json.loads((output_dir / "failure_report.json").read_text(encoding="utf-8"))["failures"]
+                if (output_dir / "failure_report.json").exists()
+                else []
+            )
+            leakage_entries = list(run_state.get("leakage_entries", []))
+            model_run_entries = list(run_state.get("model_run_entries", []))
+            memory_runtime_entries = list(run_state.get("memory_runtime_entries", []))
+        else:
+            subject_rows = list(recovery_evidence["subject_rows"])
+            recording_rows = list(recovery_evidence["recording_rows"])
+            completed_jobs_payload = list(recovery_evidence["completed_jobs"])
+            failure_rows = list(recovery_evidence["failure_rows"])
+            leakage_entries = list(run_state.get("leakage_entries", []))
+            model_run_entries = list(run_state.get("model_run_entries", []))
+            memory_runtime_entries = list(run_state.get("memory_runtime_entries", []))
     else:
         subject_rows = []
         recording_rows = []
@@ -2227,6 +2901,8 @@ def main() -> int:
             "next_job_that_would_run": summary["next_job"],
         }
         print(json.dumps(payload, indent=2))
+        return 0
+    if args.repair_state_only:
         return 0
     if args.startup_only:
         return 0

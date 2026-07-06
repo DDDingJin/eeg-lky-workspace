@@ -205,6 +205,26 @@ def current_git_commit_sha() -> str | None:
     return None
 
 
+def current_git_branch_name() -> str | None:
+    try:
+        result = subprocess.run(
+            ["git", "branch", "--show-current"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            check=False,
+        )
+        if result.returncode == 0:
+            value = result.stdout.strip()
+            if value:
+                return value
+    except Exception:
+        return None
+    return None
+
+
 def local_checkpoint_root() -> Path:
     return ROOT / "local_checkpoints" / "loso"
 
@@ -275,7 +295,7 @@ def save_local_checkpoint(
         "best_val_score": float(best_val_score),
         "protocol": config["protocol"],
         "config_path": repo_relative(config_path),
-        "branch": config.get("current_branch"),
+        "branch": current_git_branch_name() or config.get("current_branch"),
         "commit_sha": current_git_commit_sha(),
         "created_at": datetime.now().isoformat(timespec="seconds"),
     }
@@ -2145,7 +2165,7 @@ def run_mock_checkpoint_save_load_test(
         "best_val_score": 0.123456,
         "protocol": config["protocol"],
         "config_path": repo_relative(config_path),
-        "branch": config.get("current_branch"),
+        "branch": current_git_branch_name() or config.get("current_branch"),
         "commit_sha": current_git_commit_sha(),
     }
     write_checkpoint_manifest(output_dir / "checkpoint_manifest.json", entries=[manifest_entry])
@@ -2846,7 +2866,7 @@ def fit_job(
                 "best_val_score": float(best_score),
                 "protocol": config["protocol"],
                 "config_path": repo_relative(config_path),
-                "branch": config.get("current_branch"),
+                "branch": current_git_branch_name() or config.get("current_branch"),
                 "commit_sha": current_git_commit_sha(),
             }
             memory_runtime_entry = {
@@ -3060,7 +3080,7 @@ def fit_job(
                 "best_val_score": float(best_val_metric),
                 "protocol": config["protocol"],
                 "config_path": repo_relative(config_path),
-                "branch": config.get("current_branch"),
+                "branch": current_git_branch_name() or config.get("current_branch"),
                 "commit_sha": current_git_commit_sha(),
             }
             memory_runtime_entry = {
@@ -3100,6 +3120,8 @@ def main() -> int:
     config_path = Path(args.config)
     config = load_config(config_path)
     output_dir = ROOT / config["output_dir"]
+    if args.mock_checkpoint_save_load_test:
+        output_dir = ROOT / "experiments" / "gate0_gate2_loso_checkpoint_saving_closure_smoke"
     ensure_dir(output_dir)
     ensure_dir(output_dir / "logs")
     device = resolve_device(args.device)

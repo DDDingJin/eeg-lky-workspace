@@ -55,7 +55,7 @@ Each checkpoint contains at least:
 
 ## Compact Provenance
 
-Each output directory now writes `checkpoint_manifest.json` with per-job entries including:
+Each real result output directory writes `checkpoint_manifest.json` with per-job entries including:
 
 - `dataset`
 - `subject_id`
@@ -73,6 +73,23 @@ Each output directory now writes `checkpoint_manifest.json` with per-job entries
 - `commit_sha` when available
 
 `model_run_entries.json` and in-memory `run_state.json` also record `checkpoint_local_id`.
+
+## Engineering Smoke Artifacts
+
+Mock save/load validation must not write into a real scientific result directory.
+
+Engineering-only smoke artifacts are written under:
+
+```text
+experiments/gate0_gate2_loso_checkpoint_saving_closure_smoke/
+```
+
+These smoke artifacts are:
+
+- mock only
+- not a scientific result
+- not a real LOSO checkpoint record
+- expected to use `checkpoint_artifact_status=local_only_not_committed`
 
 ## Important Limitation
 

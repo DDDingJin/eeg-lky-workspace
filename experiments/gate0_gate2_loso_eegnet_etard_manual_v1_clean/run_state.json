@@ -181,7 +181,7 @@
   "failed_jobs": [],
   "skipped_jobs": [],
   "pending_jobs": [],
-  "last_update_time": "2026-07-06 18:55:00",
+  "last_update_time": "2026-07-06 18:33:49",
   "resume_enabled": true,
   "leakage_entries": [
     {
@@ -947,6 +947,5 @@
   ],
   "train_loss": -0.07470796416860934,
   "current_loss": 0.024198846891522408,
-  "best_val_score": 0.0916321649071975,
-  "checkpoint_manifest_entries": []
+  "best_val_score": 0.0916321649071975
 }

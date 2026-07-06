@@ -1,0 +1,13 @@
+{
+  "completed_jobs": [
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P00",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_22",
+      "total_job_seconds": 12610.2312274
+    }
+  ]
+}

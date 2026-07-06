@@ -1,0 +1,2 @@
+dataset,model,task,protocol,seed,subject_id,metric_name,metric_value,num_recordings,checkpoint_id,artifact_scope
+etard_tf64,eegnet,reconstruction,gate0_gate2_loso_eegnet_etard_manual_v1,0,P00,mean_recording_pearson_r,0.039849916028856534,24,eegnet_epoch_22,subject_independent_loso_eegnet_etard_manual_v1

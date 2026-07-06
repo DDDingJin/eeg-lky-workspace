@@ -1,0 +1,38 @@
+{
+  "model_run_entries": [
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P00",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_22",
+      "epochs_completed": 33,
+      "best_epoch": 22,
+      "best_val_score": 0.08803662887368781,
+      "input_tensor_shape_example": [
+        940,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        940
+      ],
+      "prediction_shape_example": [
+        940
+      ],
+      "target_shape_example": [
+        940
+      ],
+      "scorer_input_shape_example": [
+        940
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 5527937,
+      "val_window_count": 662920,
+      "test_recording_count": 24,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    }
+  ]
+}

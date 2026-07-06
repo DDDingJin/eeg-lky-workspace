@@ -49,3 +49,20 @@ F:\miniconda\envs\decode-torch\python.exe scripts\run_gate0_gate2_loso_resumable
 ```powershell
 F:\miniconda\envs\decode-torch\python.exe scripts\run_gate0_gate2_loso_resumable_runner_closure_v1.py --config configs\benchmark\gate0_gate2_loso_eegnet_etard_manual_v1.json --device auto --resume --models eegnet --subjects P00 P01 P02 --max-jobs 3 --max-runtime-start-new-job-seconds 10800
 ```
+
+## Real checkpoint closure test
+
+- branch: `fix/ar-20260625-161300-a43831b-loso-checkpoint-saving-closure-v1`
+- config: `configs\benchmark\gate0_gate2_loso_checkpoint_saving_real_closure_v1.json`
+- output_dir: `E:\decode\_fix_loso_resumable_runner_closure_v1\experiments\gate0_gate2_loso_checkpoint_saving_real_closure_v1`
+- dataset: `weissbart_tf64`
+- subject: `P01`
+- model: `eegnet`
+- seed: `0`
+- note: `single real LOSO checkpoint closure job; do not start fine-tuning`
+
+```powershell
+cd E:\decode\_fix_loso_resumable_runner_closure_v1
+
+F:\miniconda\envs\decode-torch\python.exe scripts\run_gate0_gate2_loso_resumable_runner_closure_v1.py --config configs\benchmark\gate0_gate2_loso_checkpoint_saving_real_closure_v1.json --device auto --resume --models eegnet --subjects P01 --max-jobs 1
+```

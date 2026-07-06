@@ -1,0 +1,18 @@
+{
+  "protocol": "gate0_gate2_loso_checkpoint_saving_real_closure_v1",
+  "passed": true,
+  "checks": {
+    "completed_jobs_key_contains_dataset_subject_model_seed": true,
+    "subject_metrics_align_with_completed_jobs": true,
+    "recording_metrics_cover_completed_jobs": true,
+    "pure_loso_leakage_check_passed": true,
+    "failure_report_empty": true
+  },
+  "details": {
+    "expected_jobs": 1,
+    "completed_jobs": 1,
+    "subject_metric_rows": 1,
+    "recording_metric_rows": 15,
+    "failure_rows": 0
+  }
+}

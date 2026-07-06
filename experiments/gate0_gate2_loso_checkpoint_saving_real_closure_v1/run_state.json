@@ -1,0 +1,261 @@
+{
+  "planned_jobs": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0
+    }
+  ],
+  "running_job": null,
+  "current_dataset": "weissbart_tf64",
+  "current_subject": "P01",
+  "current_model": "eegnet",
+  "current_seed": 0,
+  "phase": "completed",
+  "epoch": 19,
+  "max_epochs": 100,
+  "batch": 0,
+  "total_batches": null,
+  "job_progress_percent": 100.0,
+  "elapsed_seconds": 2174.0612603999907,
+  "estimated_remaining_seconds": 0.0,
+  "device": "cuda",
+  "gpu_memory_mb": 308.0,
+  "gpu_memory_allocated_mb": 16.875,
+  "gpu_memory_reserved_mb": 308.0,
+  "gpu_memory_peak_allocated_mb": 135.68359375,
+  "gpu_memory_peak_reserved_mb": 308.0,
+  "completed_jobs": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_18",
+      "checkpoint_local_id": "loso:eegnet:weissbart_tf64:P01:seed0:best_epoch_18",
+      "total_job_seconds": 2174.0612603999907
+    }
+  ],
+  "failed_jobs": [],
+  "skipped_jobs": [],
+  "pending_jobs": [],
+  "last_update_time": "2026-07-06 20:28:44",
+  "resume_enabled": true,
+  "leakage_entries": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0,
+      "train_subjects": [
+        "P00",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P11",
+        "P12"
+      ],
+      "val_subjects": [
+        "P00",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P11",
+        "P12"
+      ],
+      "test_subjects": [
+        "P01"
+      ],
+      "excluded_target_from_train": true,
+      "excluded_target_from_val": true,
+      "excluded_target_from_selection": true,
+      "normalization_fitted_on_target": false
+    }
+  ],
+  "model_run_entries": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_18",
+      "checkpoint_local_id": "loso:eegnet:weissbart_tf64:P01:seed0:best_epoch_18",
+      "epochs_completed": 29,
+      "best_epoch": 18,
+      "best_val_score": 0.12841451641847124,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    }
+  ],
+  "memory_runtime_entries": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0,
+      "train_preload_bytes": 380524560,
+      "val_preload_bytes": 47545680,
+      "total_preload_bytes": 428070240,
+      "data_preload_seconds": 4.186395099997753,
+      "first_batch_seconds": 0.3575655999884475,
+      "train_seconds": 2049.142533299979,
+      "val_seconds": 118.34466650002287,
+      "train_epoch_seconds": [
+        71.0774817999918,
+        70.86021350001101,
+        70.18517039998551,
+        70.62908819998847,
+        70.80854779999936,
+        70.73003310000058,
+        70.59078669999144,
+        70.4138474999927,
+        70.52033649999066,
+        70.56455320000532,
+        70.5791060999909,
+        70.4347297999775,
+        70.93324230000144,
+        70.60036919999402,
+        70.78128060000017,
+        70.74254550001933,
+        71.06607580001582,
+        70.80105020001065,
+        70.62505680002505,
+        70.58422610000707,
+        70.84203269999125,
+        70.71909890000825,
+        70.591957800003,
+        70.70925179999904,
+        70.76847779998207,
+        70.3135581999959,
+        70.56911929999478,
+        70.36111030000029,
+        70.7402230000007
+      ],
+      "val_epoch_seconds": [
+        4.2244597999961115,
+        4.1469091000035405,
+        4.170273499999894,
+        4.211379699991085,
+        3.946192200004589,
+        4.1103203000093345,
+        4.04006090000621,
+        4.128672300023027,
+        4.0268319999740925,
+        3.9483246999734547,
+        4.005023700010497,
+        4.148226900026202,
+        4.069131600001128,
+        4.0142275000107475,
+        4.123694100009743,
+        4.141549599997234,
+        4.0746208999771625,
+        4.020720300002722,
+        4.0720279999950435,
+        4.078290700010257,
+        4.08330970001407,
+        4.148282500013011,
+        4.120650299999397,
+        3.9947233000129927,
+        4.073695099999895,
+        4.12802040000679,
+        4.009960000024876,
+        4.075620199990226,
+        4.009500799991656
+      ],
+      "test_prediction_seconds": 0.556924300006358,
+      "metric_write_seconds": 0.0036813000042457134,
+      "batch_compute_seconds": 1047.0016775921395,
+      "data_wait_seconds": 930.6654180012993,
+      "total_job_seconds": 2174.0612603999907,
+      "torch_cuda_is_available": true,
+      "device": "cuda",
+      "gpu_name": "NVIDIA GeForce RTX 5060 Ti",
+      "gpu_memory_allocated_mb": 20.04248046875,
+      "gpu_memory_reserved_mb": 308.0,
+      "gpu_memory_peak_allocated_mb": 135.68359375,
+      "gpu_memory_peak_reserved_mb": 308.0,
+      "gpu_memory_mb": 308.0,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "train_batches_per_epoch": 5683,
+      "val_batches_per_epoch": 680,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    }
+  ],
+  "checkpoint_manifest_entries": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0,
+      "source_job_key": "weissbart_tf64:P01:eegnet:seed0",
+      "checkpoint_local_id": "loso:eegnet:weissbart_tf64:P01:seed0:best_epoch_18",
+      "checkpoint_relative_path": "local_checkpoints/loso/eegnet/weissbart_tf64/P01/seed0/best_epoch_18.pt",
+      "checkpoint_artifact_status": "local_only_not_committed",
+      "best_epoch": 18,
+      "best_val_score": 0.12841451641847124,
+      "protocol": "gate0_gate2_loso_checkpoint_saving_real_closure_v1",
+      "config_path": "configs/benchmark/gate0_gate2_loso_checkpoint_saving_real_closure_v1.json",
+      "branch": "fix/ar-20260625-161300-a43831b-loso-checkpoint-saving-closure-v1",
+      "commit_sha": "4b3d753518b8d70ae8e869578d8c4f806489d87f"
+    }
+  ],
+  "train_loss": -0.1289719518838897,
+  "current_loss": -0.14326593279838562,
+  "best_val_score": 0.12841451641847124
+}

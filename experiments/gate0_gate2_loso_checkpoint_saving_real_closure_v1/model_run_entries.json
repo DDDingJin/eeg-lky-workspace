@@ -1,0 +1,39 @@
+{
+  "model_run_entries": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_18",
+      "checkpoint_local_id": "loso:eegnet:weissbart_tf64:P01:seed0:best_epoch_18",
+      "epochs_completed": 29,
+      "best_epoch": 18,
+      "best_val_score": 0.12841451641847124,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    }
+  ]
+}

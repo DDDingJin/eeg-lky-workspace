@@ -66,3 +66,18 @@ cd E:\decode\_fix_loso_resumable_runner_closure_v1
 
 F:\miniconda\envs\decode-torch\python.exe scripts\run_gate0_gate2_loso_resumable_runner_closure_v1.py --config configs\benchmark\gate0_gate2_loso_checkpoint_saving_real_closure_v1.json --device auto --resume --models eegnet --subjects P01 --max-jobs 1
 ```
+
+## Fine-tune 5-minute closure
+
+- branch: `fix/ar-20260625-161300-a43831b-loso-finetune-closure-v1`
+- config: `configs\benchmark\gate0_gate2_loso_finetune_5min_closure_v1.json`
+- output_dir: `E:\decode\_fix_loso_resumable_runner_closure_v1\experiments\gate0_gate2_loso_finetune_5min_closure_v1`
+- source checkpoint: `local_checkpoints/loso/eegnet/weissbart_tf64/P01/seed0/best_epoch_18.pt`
+- subject: `P01`
+- note: `same-dataset LOSO checkpoint -> 5-minute calibration fine-tune closure`
+
+```powershell
+cd E:\decode\_fix_loso_resumable_runner_closure_v1
+
+F:\miniconda\envs\decode-torch\python.exe scripts\run_gate0_gate2_loso_finetune_5min_closure_v1.py --config configs\benchmark\gate0_gate2_loso_finetune_5min_closure_v1.json --device auto
+```

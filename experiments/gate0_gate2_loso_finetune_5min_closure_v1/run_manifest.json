@@ -1,0 +1,23 @@
+{
+  "protocol": "gate0_gate2_loso_finetune_5min_closure_v1",
+  "artifact_scope": "subject_adaptation_finetune_5min_closure_v1",
+  "base_branch": "fix/ar-20260625-161300-a43831b-loso-checkpoint-saving-closure-v1",
+  "base_commit": "2e8cd52",
+  "current_branch": "fix/ar-20260625-161300-a43831b-loso-finetune-closure-v1",
+  "config_path": "configs/benchmark/gate0_gate2_loso_finetune_5min_closure_v1.json",
+  "commit_sha": "2e8cd52cc911c9afc833ca2a315b924d21e78b83",
+  "seed": 0,
+  "device": "cuda",
+  "artifacts": {
+    "run_manifest": "experiments/gate0_gate2_loso_finetune_5min_closure_v1/run_manifest.json",
+    "fine_tune_manifest": "experiments/gate0_gate2_loso_finetune_5min_closure_v1/fine_tune_manifest.json",
+    "subject_metrics": "experiments/gate0_gate2_loso_finetune_5min_closure_v1/subject_metrics.csv",
+    "recording_metrics": "experiments/gate0_gate2_loso_finetune_5min_closure_v1/recording_metrics.csv",
+    "completed_jobs": "experiments/gate0_gate2_loso_finetune_5min_closure_v1/completed_jobs.json",
+    "model_run_entries": "experiments/gate0_gate2_loso_finetune_5min_closure_v1/model_run_entries.json",
+    "failure_report": "experiments/gate0_gate2_loso_finetune_5min_closure_v1/failure_report.json",
+    "schema_validation_report": "experiments/gate0_gate2_loso_finetune_5min_closure_v1/schema_validation_report.json",
+    "leakage_or_adaptation_summary": "experiments/gate0_gate2_loso_finetune_5min_closure_v1/leakage_or_adaptation_summary.md",
+    "logs": "experiments/gate0_gate2_loso_finetune_5min_closure_v1/logs"
+  }
+}

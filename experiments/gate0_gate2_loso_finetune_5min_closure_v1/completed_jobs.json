@@ -1,0 +1,18 @@
+{
+  "completed_jobs": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "source_checkpoint_local_id": "loso:eegnet:weissbart_tf64:P01:seed0:best_epoch_18",
+      "checkpoint_local_id": "finetune:eegnet:weissbart_tf64:P01:seed0:best_epoch_25",
+      "checkpoint_id": "finetune_epoch_25",
+      "loso_original_metric": 0.07957069452053424,
+      "loso_subset_metric": 0.07957373358593359,
+      "finetune_metric": 0.11290686684664797,
+      "main_delta": 0.03333313326071438
+    }
+  ]
+}

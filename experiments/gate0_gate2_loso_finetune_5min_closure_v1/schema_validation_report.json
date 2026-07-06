@@ -1,0 +1,11 @@
+{
+  "protocol": "gate0_gate2_loso_finetune_5min_closure_v1",
+  "passed": true,
+  "checks": {
+    "source_checkpoint_load_verified": true,
+    "no_overlap_among_train_val_test": true,
+    "subject_metrics_present": true,
+    "recording_metrics_present": true,
+    "failure_report_empty": true
+  }
+}

@@ -8,6 +8,33 @@
       "status": "success",
       "checkpoint_id": "eegnet_epoch_22",
       "total_job_seconds": 12610.2312274
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P05",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_7",
+      "total_job_seconds": 7082.790657100006
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P10",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_9",
+      "total_job_seconds": 7680.204630799999
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P15",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_10",
+      "total_job_seconds": 7922.3485257999855
     }
   ]
 }

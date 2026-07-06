@@ -1,18 +1,33 @@
 {
   "protocol": "gate0_gate2_loso_eegnet_etard_manual_v1",
+  "snapshot_type": "etard_eegnet_sampled_loso_seed0_v1",
+  "sampled_subjects": [
+    "P00",
+    "P05",
+    "P10",
+    "P15"
+  ],
   "passed": true,
+  "scope": "sampled_subject_snapshot",
   "checks": {
     "completed_jobs_key_contains_dataset_subject_model_seed": true,
     "subject_metrics_align_with_completed_jobs": true,
     "recording_metrics_cover_completed_jobs": true,
     "pure_loso_leakage_check_passed": true,
-    "failure_report_empty": true
+    "failure_report_empty": true,
+    "sampled_subject_set_matches_expected_fixed_subset": true
   },
   "details": {
-    "expected_jobs": 1,
-    "completed_jobs": 1,
-    "subject_metric_rows": 1,
-    "recording_metric_rows": 24,
-    "failure_rows": 0
-  }
+    "expected_jobs_sampled_scope": 4,
+    "completed_jobs_sampled_scope": 4,
+    "subject_metric_rows": 4,
+    "recording_metric_rows": 128,
+    "failure_rows": 0,
+    "full_20_subject_global_schema_claimed": false
+  },
+  "notes": [
+    "This report validates the fixed sampled-subject snapshot only.",
+    "It does not claim a full 20-subject Etard LOSO benchmark closure.",
+    "P05, P10, and P15 are part of a preset sampled subset, not post-hoc selections."
+  ]
 }

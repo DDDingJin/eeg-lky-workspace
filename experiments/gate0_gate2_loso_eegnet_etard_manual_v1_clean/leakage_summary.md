@@ -6,3 +6,6 @@
 
 ## Per-job leakage checks
 - dataset=`etard_tf64` subject=`P00` model=`eegnet` seed=`0` train_exclude=`True` val_exclude=`True` selection_exclude=`True` normalization_on_target=`False` test_subjects=`P00`
+- dataset=`etard_tf64` subject=`P05` model=`eegnet` seed=`0` train_exclude=`True` val_exclude=`True` selection_exclude=`True` normalization_on_target=`False` test_subjects=`P05`
+- dataset=`etard_tf64` subject=`P10` model=`eegnet` seed=`0` train_exclude=`True` val_exclude=`True` selection_exclude=`True` normalization_on_target=`False` test_subjects=`P10`
+- dataset=`etard_tf64` subject=`P15` model=`eegnet` seed=`0` train_exclude=`True` val_exclude=`True` selection_exclude=`True` normalization_on_target=`False` test_subjects=`P15`

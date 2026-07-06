@@ -123,22 +123,22 @@
   ],
   "running_job": null,
   "current_dataset": "etard_tf64",
-  "current_subject": "P00",
+  "current_subject": "P15",
   "current_model": "eegnet",
   "current_seed": 0,
   "phase": "completed",
-  "epoch": 23,
+  "epoch": 11,
   "max_epochs": 100,
   "batch": 0,
   "total_batches": null,
   "job_progress_percent": 100.0,
-  "elapsed_seconds": 12610.2312274,
+  "elapsed_seconds": 7922.3485257999855,
   "estimated_remaining_seconds": 0.0,
   "device": "cuda",
   "gpu_memory_mb": 398.0,
   "gpu_memory_allocated_mb": 16.875,
   "gpu_memory_reserved_mb": 398.0,
-  "gpu_memory_peak_allocated_mb": 135.21875,
+  "gpu_memory_peak_allocated_mb": 135.4873046875,
   "gpu_memory_peak_reserved_mb": 398.0,
   "completed_jobs": [
     {
@@ -149,12 +149,39 @@
       "status": "success",
       "checkpoint_id": "eegnet_epoch_22",
       "total_job_seconds": 12610.2312274
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P05",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_7",
+      "total_job_seconds": 7082.790657100006
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P10",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_9",
+      "total_job_seconds": 7680.204630799999
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P15",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_10",
+      "total_job_seconds": 7922.3485257999855
     }
   ],
   "failed_jobs": [],
   "skipped_jobs": [],
   "pending_jobs": [],
-  "last_update_time": "2026-07-06 02:59:58",
+  "last_update_time": "2026-07-06 18:33:49",
   "resume_enabled": true,
   "leakage_entries": [
     {
@@ -211,6 +238,171 @@
       "excluded_target_from_val": true,
       "excluded_target_from_selection": true,
       "normalization_fitted_on_target": false
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P05",
+      "model": "eegnet",
+      "seed": 0,
+      "train_subjects": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16",
+        "P17",
+        "P18",
+        "P19"
+      ],
+      "val_subjects": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16",
+        "P17",
+        "P18",
+        "P19"
+      ],
+      "test_subjects": [
+        "P05"
+      ],
+      "excluded_target_from_train": true,
+      "excluded_target_from_val": true,
+      "excluded_target_from_selection": true,
+      "normalization_fitted_on_target": false
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P10",
+      "model": "eegnet",
+      "seed": 0,
+      "train_subjects": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16",
+        "P17",
+        "P18",
+        "P19"
+      ],
+      "val_subjects": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16",
+        "P17",
+        "P18",
+        "P19"
+      ],
+      "test_subjects": [
+        "P10"
+      ],
+      "excluded_target_from_train": true,
+      "excluded_target_from_val": true,
+      "excluded_target_from_selection": true,
+      "normalization_fitted_on_target": false
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P15",
+      "model": "eegnet",
+      "seed": 0,
+      "train_subjects": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P16",
+        "P17",
+        "P18",
+        "P19"
+      ],
+      "val_subjects": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P16",
+        "P17",
+        "P18",
+        "P19"
+      ],
+      "test_subjects": [
+        "P15"
+      ],
+      "excluded_target_from_train": true,
+      "excluded_target_from_val": true,
+      "excluded_target_from_selection": true,
+      "normalization_fitted_on_target": false
     }
   ],
   "model_run_entries": [
@@ -245,6 +437,108 @@
       "train_window_count": 5527937,
       "val_window_count": 662920,
       "test_recording_count": 24,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P05",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_7",
+      "epochs_completed": 18,
+      "best_epoch": 7,
+      "best_val_score": 0.08864196114512242,
+      "input_tensor_shape_example": [
+        940,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        940
+      ],
+      "prediction_shape_example": [
+        940
+      ],
+      "target_shape_example": [
+        940
+      ],
+      "scorer_input_shape_example": [
+        940
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 5527937,
+      "val_window_count": 662920,
+      "test_recording_count": 24,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P10",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_9",
+      "epochs_completed": 20,
+      "best_epoch": 9,
+      "best_val_score": 0.08619034108096385,
+      "input_tensor_shape_example": [
+        940,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        940
+      ],
+      "prediction_shape_example": [
+        940
+      ],
+      "target_shape_example": [
+        940
+      ],
+      "scorer_input_shape_example": [
+        940
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 5395590,
+      "val_window_count": 647070,
+      "test_recording_count": 40,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P15",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_10",
+      "epochs_completed": 21,
+      "best_epoch": 10,
+      "best_val_score": 0.0916321649071975,
+      "input_tensor_shape_example": [
+        940,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        940
+      ],
+      "prediction_shape_example": [
+        940
+      ],
+      "target_shape_example": [
+        940
+      ],
+      "scorer_input_shape_example": [
+        940
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 5395590,
+      "val_window_count": 647070,
+      "test_recording_count": 40,
       "batch_size": 256,
       "eval_batch_size": 1024
     }
@@ -369,9 +663,289 @@
       "test_recording_count": 24,
       "batch_size": 256,
       "eval_batch_size": 1024
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P05",
+      "model": "eegnet",
+      "seed": 0,
+      "train_preload_bytes": 1445519140,
+      "val_preload_bytes": 180614720,
+      "total_preload_bytes": 1626133860,
+      "data_preload_seconds": 18.662083600007463,
+      "first_batch_seconds": 0.5731890000024578,
+      "train_seconds": 6577.188510300024,
+      "val_seconds": 484.1835296999925,
+      "train_epoch_seconds": [
+        362.1187266000052,
+        362.82397240000137,
+        363.43173739999474,
+        362.80875620000006,
+        363.86027540000214,
+        364.05389039999864,
+        364.51522939999995,
+        364.30722620000597,
+        363.5669868999976,
+        364.925568000006,
+        369.6769118000084,
+        367.7291236000019,
+        366.16105359999347,
+        367.066536600003,
+        367.634401599993,
+        367.8130197999999,
+        367.2105508000095,
+        367.4845634999947
+      ],
+      "val_epoch_seconds": [
+        26.578312099998584,
+        26.569960799999535,
+        26.758923800007324,
+        26.584184699997422,
+        26.835472999999183,
+        26.819143899992923,
+        26.629819100009627,
+        26.75198130001081,
+        26.692845500001567,
+        26.799007800000254,
+        27.033499000011943,
+        27.296604399991338,
+        27.03190220000397,
+        27.08917959999235,
+        27.095911999989767,
+        27.172713100007968,
+        27.279250799998408,
+        27.164833199989516
+      ],
+      "test_prediction_seconds": 0.8977785000024596,
+      "metric_write_seconds": 0.004872700010309927,
+      "batch_compute_seconds": 2499.376267898857,
+      "data_wait_seconds": 3903.7463990986726,
+      "total_job_seconds": 7082.790657100006,
+      "torch_cuda_is_available": true,
+      "device": "cuda",
+      "gpu_name": "NVIDIA GeForce RTX 5060 Ti",
+      "gpu_memory_allocated_mb": 18.57763671875,
+      "gpu_memory_reserved_mb": 398.0,
+      "gpu_memory_peak_allocated_mb": 135.21875,
+      "gpu_memory_peak_reserved_mb": 398.0,
+      "gpu_memory_mb": 398.0,
+      "input_tensor_shape_example": [
+        940,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        940
+      ],
+      "prediction_shape_example": [
+        940
+      ],
+      "target_shape_example": [
+        940
+      ],
+      "scorer_input_shape_example": [
+        940
+      ],
+      "train_window_count": 5527937,
+      "val_window_count": 662920,
+      "train_batches_per_epoch": 21594,
+      "val_batches_per_epoch": 2590,
+      "test_recording_count": 24,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P10",
+      "model": "eegnet",
+      "seed": 0,
+      "train_preload_bytes": 1410905080,
+      "val_preload_bytes": 176289880,
+      "total_preload_bytes": 1587194960,
+      "data_preload_seconds": 16.672278700003517,
+      "first_batch_seconds": 0.22948910000559408,
+      "train_seconds": 7138.487181800039,
+      "val_seconds": 523.457208900043,
+      "train_epoch_seconds": [
+        357.07231480001064,
+        357.74308179999935,
+        357.0253714999999,
+        357.11108489999606,
+        357.1808655000059,
+        358.30738060000294,
+        358.34864159999415,
+        356.0807566000003,
+        356.06375819999084,
+        356.4822484999895,
+        357.1493039000052,
+        356.8122527000087,
+        356.7086578000017,
+        356.88194309998653,
+        357.4844035999995,
+        355.15327740000794,
+        356.24102409998886,
+        356.61140120000346,
+        356.52039689999947,
+        357.5090368999954
+      ],
+      "val_epoch_seconds": [
+        26.283485699997982,
+        25.999907100005657,
+        26.404802700009895,
+        26.138444000011077,
+        26.250559100008104,
+        26.24854049998976,
+        26.357919500005664,
+        26.239275499989162,
+        26.094118099994375,
+        25.991558099995018,
+        26.320183999996516,
+        26.140411800006405,
+        26.119717699999455,
+        26.326358900012565,
+        26.019757500005653,
+        26.182448099993053,
+        26.28711379999004,
+        25.87355380000372,
+        26.25028169999132,
+        25.928790999998455
+      ],
+      "test_prediction_seconds": 1.2779846000048565,
+      "metric_write_seconds": 0.006799700000556186,
+      "batch_compute_seconds": 2730.9522840010177,
+      "data_wait_seconds": 4215.374250502413,
+      "total_job_seconds": 7680.204630799999,
+      "torch_cuda_is_available": true,
+      "device": "cuda",
+      "gpu_name": "NVIDIA GeForce RTX 5060 Ti",
+      "gpu_memory_allocated_mb": 18.84619140625,
+      "gpu_memory_reserved_mb": 398.0,
+      "gpu_memory_peak_allocated_mb": 135.4873046875,
+      "gpu_memory_peak_reserved_mb": 398.0,
+      "gpu_memory_mb": 398.0,
+      "input_tensor_shape_example": [
+        940,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        940
+      ],
+      "prediction_shape_example": [
+        940
+      ],
+      "target_shape_example": [
+        940
+      ],
+      "scorer_input_shape_example": [
+        940
+      ],
+      "train_window_count": 5395590,
+      "val_window_count": 647070,
+      "train_batches_per_epoch": 21077,
+      "val_batches_per_epoch": 2528,
+      "test_recording_count": 40,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P15",
+      "model": "eegnet",
+      "seed": 0,
+      "train_preload_bytes": 1410905080,
+      "val_preload_bytes": 176289880,
+      "total_preload_bytes": 1587194960,
+      "data_preload_seconds": 4.035240299999714,
+      "first_batch_seconds": 0.5585767000011401,
+      "train_seconds": 7369.318979399992,
+      "val_seconds": 545.5644895000005,
+      "train_epoch_seconds": [
+        351.01860589999706,
+        350.40708370000357,
+        350.09360089999973,
+        349.5288658000063,
+        350.8501940999995,
+        350.8700020000106,
+        350.9424386000028,
+        356.5244589000067,
+        351.2356319999817,
+        351.12958939999226,
+        350.0810214999947,
+        349.97586870001396,
+        350.56423519999953,
+        351.21623170000385,
+        351.67291809999733,
+        350.4435689999955,
+        350.33715879998636,
+        350.40648870001314,
+        350.8077451999998,
+        350.411815999978,
+        350.80147989999386
+      ],
+      "val_epoch_seconds": [
+        25.576344999994035,
+        25.722834900007,
+        26.35864350000338,
+        25.860890299998573,
+        25.767514299994218,
+        25.62916630000109,
+        25.75850939999509,
+        29.47068310000759,
+        25.582451299997047,
+        25.833760899986373,
+        25.76632850000169,
+        25.75386850000359,
+        25.845790099992882,
+        25.910847200022545,
+        25.84355140000116,
+        25.80246080001234,
+        25.72309650000534,
+        26.025224900018657,
+        25.84664169998723,
+        25.52211919997353,
+        25.963785400002962
+      ],
+      "test_prediction_seconds": 1.5128421999979764,
+      "metric_write_seconds": 0.005639499984681606,
+      "batch_compute_seconds": 2819.135329500903,
+      "data_wait_seconds": 4349.420943091012,
+      "total_job_seconds": 7922.3485257999855,
+      "torch_cuda_is_available": true,
+      "device": "cuda",
+      "gpu_name": "NVIDIA GeForce RTX 5060 Ti",
+      "gpu_memory_allocated_mb": 18.84619140625,
+      "gpu_memory_reserved_mb": 398.0,
+      "gpu_memory_peak_allocated_mb": 135.4873046875,
+      "gpu_memory_peak_reserved_mb": 398.0,
+      "gpu_memory_mb": 398.0,
+      "input_tensor_shape_example": [
+        940,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        940
+      ],
+      "prediction_shape_example": [
+        940
+      ],
+      "target_shape_example": [
+        940
+      ],
+      "scorer_input_shape_example": [
+        940
+      ],
+      "train_window_count": 5395590,
+      "val_window_count": 647070,
+      "train_batches_per_epoch": 21077,
+      "val_batches_per_epoch": 2528,
+      "test_recording_count": 40,
+      "batch_size": 256,
+      "eval_batch_size": 1024
     }
   ],
-  "train_loss": -0.07255135156328611,
-  "current_loss": 0.06948492676019669,
-  "best_val_score": 0.08803662887368781
+  "train_loss": -0.07470796416860934,
+  "current_loss": 0.024198846891522408,
+  "best_val_score": 0.0916321649071975
 }

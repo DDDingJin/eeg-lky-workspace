@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from collections import OrderedDict
 from dataclasses import dataclass
+from datetime import datetime
 import json
 import math
 import os
@@ -54,6 +55,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--startup-only", action="store_true")
     parser.add_argument("--repair-state-only", action="store_true")
     parser.add_argument("--job-plan-only", action="store_true")
+    parser.add_argument("--checkpoint-path-builder-test", action="store_true")
+    parser.add_argument("--mock-checkpoint-save-load-test", action="store_true")
     return parser.parse_args()
 
 
@@ -178,7 +181,115 @@ def atomic_write_csv(path: Path, rows: list[dict[str, object]], fieldnames: list
 
 
 def repo_relative(path: Path) -> str:
+    if not path.is_absolute():
+        path = (ROOT / path).resolve()
     return path.relative_to(ROOT).as_posix()
+
+
+def current_git_commit_sha() -> str | None:
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            check=False,
+        )
+        if result.returncode == 0:
+            value = result.stdout.strip()
+            return value or None
+    except Exception:
+        return None
+    return None
+
+
+def local_checkpoint_root() -> Path:
+    return ROOT / "local_checkpoints" / "loso"
+
+
+def checkpoint_local_id(*, job: "JobKey", best_epoch: int) -> str:
+    return f"loso:{job.model}:{job.dataset}:{job.subject_id}:seed{job.seed}:best_epoch_{best_epoch}"
+
+
+def checkpoint_relative_path(*, job: "JobKey", best_epoch: int) -> Path:
+    return Path(job.model) / job.dataset / job.subject_id / f"seed{job.seed}" / f"best_epoch_{best_epoch}.pt"
+
+
+def checkpoint_absolute_path(*, job: "JobKey", best_epoch: int) -> Path:
+    return local_checkpoint_root() / checkpoint_relative_path(job=job, best_epoch=best_epoch)
+
+
+def read_checkpoint_manifest(path: Path) -> list[dict[str, object]]:
+    if not path.exists():
+        return []
+    with open(path, "r", encoding="utf-8") as handle:
+        payload = json.load(handle)
+    rows = payload.get("checkpoints", [])
+    if not isinstance(rows, list):
+        raise ValueError(f"checkpoint_manifest.json must contain list under 'checkpoints', got {type(rows).__name__}")
+    return rows
+
+
+def write_checkpoint_manifest(
+    manifest_path: Path,
+    *,
+    entries: list[dict[str, object]],
+) -> None:
+    entries = sorted(entries, key=lambda row: (row["dataset"], row["model"], row["subject_id"], int(row["seed"])))
+    atomic_write_json(manifest_path, {"checkpoints": entries})
+
+
+def upsert_checkpoint_manifest_entry(entries: list[dict[str, object]], entry: dict[str, object]) -> list[dict[str, object]]:
+    key = (entry["dataset"], entry["subject_id"], entry["model"], int(entry["seed"]))
+    kept = [
+        row
+        for row in entries
+        if (row["dataset"], row["subject_id"], row["model"], int(row["seed"])) != key
+    ]
+    kept.append(entry)
+    return kept
+
+
+def save_local_checkpoint(
+    *,
+    job: "JobKey",
+    best_epoch: int,
+    best_val_score: float,
+    best_state: dict[str, torch.Tensor],
+    config: dict,
+    config_path: Path,
+    logger: "JobLogger | None" = None,
+) -> tuple[str, Path]:
+    checkpoint_id = checkpoint_local_id(job=job, best_epoch=best_epoch)
+    checkpoint_path = checkpoint_absolute_path(job=job, best_epoch=best_epoch)
+    ensure_dir(checkpoint_path.parent)
+    payload = {
+        "model_state_dict": {key: value.detach().cpu().clone() for key, value in best_state.items()},
+        "dataset": job.dataset,
+        "subject_id": job.subject_id,
+        "model": job.model,
+        "seed": int(job.seed),
+        "best_epoch": int(best_epoch),
+        "best_val_score": float(best_val_score),
+        "protocol": config["protocol"],
+        "config_path": repo_relative(config_path),
+        "branch": config.get("current_branch"),
+        "commit_sha": current_git_commit_sha(),
+        "created_at": datetime.now().isoformat(timespec="seconds"),
+    }
+    torch.save(payload, checkpoint_path)
+    if logger is not None:
+        logger.event(
+            "checkpoint_saved",
+            subject=job.subject_id,
+            checkpoint_local_id=checkpoint_id,
+            checkpoint_path=repo_relative(checkpoint_path),
+            best_epoch=best_epoch,
+            best_val_score=best_val_score,
+        )
+    return checkpoint_id, checkpoint_path
 
 
 def default_run_state(planned_jobs: list["JobKey"], *, device: str | None = None) -> dict[str, object]:
@@ -927,6 +1038,7 @@ def synthesize_model_run_entries(
                 "seed": int(row["seed"]),
                 "status": "success",
                 "checkpoint_id": row.get("checkpoint_id") or metric_row.get("checkpoint_id"),
+                "checkpoint_local_id": row.get("checkpoint_local_id"),
                 "epochs_completed": None,
                 "best_epoch": None,
                 "best_val_score": None,
@@ -1305,6 +1417,7 @@ def load_existing_state(output_dir: Path, planned_jobs: list[JobKey]) -> dict[st
             "leakage_entries": [],
             "model_run_entries": [],
             "memory_runtime_entries": [],
+            "checkpoint_manifest_entries": [],
         }
     with open(state_path, "r", encoding="utf-8") as handle:
         payload = json.load(handle)
@@ -1338,6 +1451,7 @@ def load_existing_state(output_dir: Path, planned_jobs: list[JobKey]) -> dict[st
         "leakage_entries": [],
         "model_run_entries": [],
         "memory_runtime_entries": [],
+        "checkpoint_manifest_entries": [],
     }
     for key, value in defaults.items():
         payload.setdefault(key, value)
@@ -1595,6 +1709,7 @@ def validate_completed_jobs_against_metrics(
 def write_outputs(
     *,
     output_dir: Path,
+    config_path: Path,
     config: dict,
     dataset_subjects: dict[str, list[str]],
     subject_rows: list[dict[str, object]],
@@ -1604,6 +1719,7 @@ def write_outputs(
     model_run_entries: list[dict[str, object]],
     failure_rows: list[dict[str, object]],
     memory_runtime_entries: list[dict[str, object]],
+    checkpoint_manifest_entries: list[dict[str, object]],
 ) -> dict[str, object]:
     subject_rows = sorted(subject_rows, key=lambda row: (row["dataset"], row["model"], row["subject_id"]))
     recording_rows = sorted(recording_rows, key=lambda row: (row["dataset"], row["model"], row["subject_id"], row["recording_id"]))
@@ -1617,6 +1733,7 @@ def write_outputs(
     atomic_write_json(output_dir / "model_run_entries.json", {"model_run_entries": model_run_entries})
     atomic_write_json(output_dir / "failure_report.json", {"failures": failure_rows})
     atomic_write_json(output_dir / "completed_jobs.json", {"completed_jobs": completed_jobs})
+    write_checkpoint_manifest(output_dir / "checkpoint_manifest.json", entries=checkpoint_manifest_entries)
 
     leakage_lines = [
         "# Leakage Summary",
@@ -1751,6 +1868,7 @@ def write_outputs(
         f"- datasets: `{', '.join(dataset_subjects.keys())}`",
         f"- models: `{', '.join(config['models'])}`",
         f"- seed: `{config['seed']}`",
+        f"- config path: `{repo_relative(config_path)}`",
         f"- num_workers: `{config['dataloader']['num_workers']}`",
         f"- persistent_workers: `{config['dataloader']['persistent_workers']}`",
     ]
@@ -1775,12 +1893,15 @@ def write_outputs(
             "base_branch": config["base_branch"],
             "base_commit": config["base_commit"],
             "current_branch": config["current_branch"],
+            "config_path": repo_relative(config_path),
+            "commit_sha": current_git_commit_sha(),
             "seed": int(config["seed"]),
             "models": config["models"],
             "datasets": dataset_subjects,
             "dataloader": config["dataloader"],
             "ridge_reference_filter_rule": "dataset == active dataset AND subject_id in active heldout subjects AND model == ridge AND seed == active seed",
             "artifacts": {
+                "checkpoint_manifest": repo_relative(output_dir / "checkpoint_manifest.json"),
                 "run_state": repo_relative(output_dir / "run_state.json"),
                 "heartbeat": repo_relative(output_dir / "heartbeat.json"),
                 "completed_jobs": repo_relative(output_dir / "completed_jobs.json"),
@@ -1973,6 +2094,75 @@ def print_job_plan_summary(plan: dict[str, object]) -> None:
             f"sample_input_shape: {plan['sample_input_shape']}",
             f"sample_target_shape: {plan['sample_target_shape']}",
             f"target/scorer alignment: {plan['target_scorer_alignment']}",
+        ],
+    )
+
+
+def print_checkpoint_path_builder(job: JobKey, *, best_epoch: int) -> None:
+    stdout_block(
+        "[CHECKPOINT PATH BUILDER TEST]",
+        [
+            f"job: {job.as_dict()}",
+            f"best_epoch: {best_epoch}",
+            f"checkpoint_local_id: {checkpoint_local_id(job=job, best_epoch=best_epoch)}",
+            f"checkpoint_relative_path: {checkpoint_relative_path(job=job, best_epoch=best_epoch)}",
+            f"checkpoint_absolute_path: {checkpoint_absolute_path(job=job, best_epoch=best_epoch)}",
+        ],
+    )
+
+
+def run_mock_checkpoint_save_load_test(
+    *,
+    config: dict,
+    config_path: Path,
+    output_dir: Path,
+    job: JobKey,
+) -> None:
+    dummy_state = {
+        "linear.weight": torch.ones((2, 2), dtype=torch.float32),
+        "linear.bias": torch.zeros((2,), dtype=torch.float32),
+    }
+    checkpoint_local_id_value, checkpoint_path = save_local_checkpoint(
+        job=job,
+        best_epoch=3,
+        best_val_score=0.123456,
+        best_state=dummy_state,
+        config=config,
+        config_path=config_path,
+        logger=None,
+    )
+    loaded = torch.load(checkpoint_path, map_location="cpu")
+    manifest_entry = {
+        "dataset": job.dataset,
+        "subject_id": job.subject_id,
+        "model": job.model,
+        "seed": int(job.seed),
+        "source_job_key": f"{job.dataset}:{job.subject_id}:{job.model}:seed{job.seed}",
+        "checkpoint_local_id": checkpoint_local_id_value,
+        "checkpoint_relative_path": repo_relative(checkpoint_path),
+        "checkpoint_artifact_status": "local_only_not_committed",
+        "best_epoch": 3,
+        "best_val_score": 0.123456,
+        "protocol": config["protocol"],
+        "config_path": repo_relative(config_path),
+        "branch": config.get("current_branch"),
+        "commit_sha": current_git_commit_sha(),
+    }
+    write_checkpoint_manifest(output_dir / "checkpoint_manifest.json", entries=[manifest_entry])
+    stdout_block(
+        "[MOCK CHECKPOINT SAVE/LOAD TEST]",
+        [
+            f"checkpoint_local_id: {checkpoint_local_id_value}",
+            f"checkpoint_path: {checkpoint_path}",
+            f"checkpoint_exists: {checkpoint_path.exists()}",
+            f"loaded_dataset: {loaded['dataset']}",
+            f"loaded_subject_id: {loaded['subject_id']}",
+            f"loaded_model: {loaded['model']}",
+            f"loaded_seed: {loaded['seed']}",
+            f"loaded_best_epoch: {loaded['best_epoch']}",
+            f"loaded_best_val_score: {loaded['best_val_score']}",
+            f"manifest_path: {output_dir / 'checkpoint_manifest.json'}",
+            "checkpoint_artifact_status: local_only_not_committed",
         ],
     )
 
@@ -2201,7 +2391,8 @@ def fit_job(
     run_state: dict[str, object],
     state_path: Path,
     planned_jobs: list[JobKey],
-) -> tuple[list[dict[str, object]], list[dict[str, object]], dict[str, object], dict[str, object], dict[str, object]]:
+    config_path: Path,
+) -> tuple[list[dict[str, object]], list[dict[str, object]], dict[str, object], dict[str, object], dict[str, object], dict[str, object]]:
     heldout_subject = job.subject_id
     train_subjects = [subject for subject in all_subjects if subject != heldout_subject]
     val_subjects = list(train_subjects)
@@ -2593,6 +2784,15 @@ def fit_job(
             )
             stdout_message("[TEST DONE]")
             checkpoint_id = f"{job.model}_epoch_{best_epoch}"
+            checkpoint_local_id_value, checkpoint_path = save_local_checkpoint(
+                job=job,
+                best_epoch=best_epoch,
+                best_val_score=best_score,
+                best_state=best_state,
+                config=config,
+                config_path=config_path,
+                logger=logger,
+            )
             for row in recording_rows:
                 row["checkpoint_id"] = checkpoint_id
             for row in subject_rows:
@@ -2617,6 +2817,7 @@ def fit_job(
                 "seed": job.seed,
                 "status": "success",
                 "checkpoint_id": checkpoint_id,
+                "checkpoint_local_id": checkpoint_local_id_value,
                 "epochs_completed": len(val_history),
                 "best_epoch": int(best_epoch),
                 "best_val_score": float(best_score),
@@ -2631,6 +2832,22 @@ def fit_job(
                 "test_recording_count": int(len(recording_rows)),
                 "batch_size": int(config["dataloader"]["batch_size"]),
                 "eval_batch_size": int(config["dataloader"]["eval_batch_size"]),
+            }
+            checkpoint_manifest_entry = {
+                "dataset": job.dataset,
+                "subject_id": job.subject_id,
+                "model": job.model,
+                "seed": int(job.seed),
+                "source_job_key": f"{job.dataset}:{job.subject_id}:{job.model}:seed{job.seed}",
+                "checkpoint_local_id": checkpoint_local_id_value,
+                "checkpoint_relative_path": repo_relative(checkpoint_path),
+                "checkpoint_artifact_status": "local_only_not_committed",
+                "best_epoch": int(best_epoch),
+                "best_val_score": float(best_score),
+                "protocol": config["protocol"],
+                "config_path": repo_relative(config_path),
+                "branch": config.get("current_branch"),
+                "commit_sha": current_git_commit_sha(),
             }
             memory_runtime_entry = {
                 "dataset": job.dataset,
@@ -2668,7 +2885,7 @@ def fit_job(
                 "batch_size": int(config["dataloader"]["batch_size"]),
                 "eval_batch_size": int(config["dataloader"]["eval_batch_size"]),
             }
-            return recording_rows, subject_rows, leakage_entry, model_run_entry, memory_runtime_entry
+            return recording_rows, subject_rows, leakage_entry, model_run_entry, memory_runtime_entry, checkpoint_manifest_entry
 
         if job.model == "adt":
             model_cfg = config["adt"]
@@ -2783,6 +3000,15 @@ def fit_job(
                 logger=logger,
             )
             checkpoint_id = f"adt_epoch_{best_epoch}"
+            checkpoint_local_id_value, checkpoint_path = save_local_checkpoint(
+                job=job,
+                best_epoch=best_epoch,
+                best_val_score=best_val_metric,
+                best_state=best_state,
+                config=config,
+                config_path=config_path,
+                logger=logger,
+            )
             for row in recording_rows:
                 row["checkpoint_id"] = checkpoint_id
             for row in subject_rows:
@@ -2807,6 +3033,7 @@ def fit_job(
                 "seed": job.seed,
                 "status": "success",
                 "checkpoint_id": checkpoint_id,
+                "checkpoint_local_id": checkpoint_local_id_value,
                 "epochs_completed": len(train_metric_history),
                 "best_epoch": int(best_epoch),
                 "best_val_score": float(best_val_metric),
@@ -2819,6 +3046,22 @@ def fit_job(
                 "test_recording_count": int(len(recording_rows)),
                 "batch_size": int(model_cfg["batch_size"]),
                 "eval_batch_size": int(config["dataloader"]["eval_batch_size"]),
+            }
+            checkpoint_manifest_entry = {
+                "dataset": job.dataset,
+                "subject_id": job.subject_id,
+                "model": job.model,
+                "seed": int(job.seed),
+                "source_job_key": f"{job.dataset}:{job.subject_id}:{job.model}:seed{job.seed}",
+                "checkpoint_local_id": checkpoint_local_id_value,
+                "checkpoint_relative_path": repo_relative(checkpoint_path),
+                "checkpoint_artifact_status": "local_only_not_committed",
+                "best_epoch": int(best_epoch),
+                "best_val_score": float(best_val_metric),
+                "protocol": config["protocol"],
+                "config_path": repo_relative(config_path),
+                "branch": config.get("current_branch"),
+                "commit_sha": current_git_commit_sha(),
             }
             memory_runtime_entry = {
                 "dataset": job.dataset,
@@ -2843,7 +3086,7 @@ def fit_job(
                 "batch_size": int(model_cfg["batch_size"]),
                 "eval_batch_size": int(config["dataloader"]["eval_batch_size"]),
             }
-            return recording_rows, subject_rows, leakage_entry, model_run_entry, memory_runtime_entry
+            return recording_rows, subject_rows, leakage_entry, model_run_entry, memory_runtime_entry, checkpoint_manifest_entry
 
         raise ValueError(f"unsupported model {job.model}")
     except JobExecutionError:
@@ -2990,6 +3233,7 @@ def main() -> int:
             leakage_entries = list(run_state.get("leakage_entries", []))
             model_run_entries = list(run_state.get("model_run_entries", []))
             memory_runtime_entries = list(run_state.get("memory_runtime_entries", []))
+            checkpoint_manifest_entries = read_checkpoint_manifest(output_dir / "checkpoint_manifest.json")
         else:
             subject_rows = list(recovery_evidence["subject_rows"])
             recording_rows = list(recovery_evidence["recording_rows"])
@@ -2998,6 +3242,7 @@ def main() -> int:
             leakage_entries = list(run_state.get("leakage_entries", []))
             model_run_entries = list(run_state.get("model_run_entries", []))
             memory_runtime_entries = list(run_state.get("memory_runtime_entries", []))
+            checkpoint_manifest_entries = list(run_state.get("checkpoint_manifest_entries", []))
     else:
         subject_rows = []
         recording_rows = []
@@ -3006,6 +3251,7 @@ def main() -> int:
         leakage_entries = []
         model_run_entries = []
         memory_runtime_entries = []
+        checkpoint_manifest_entries = []
 
     completed_pairs = validate_completed_jobs_against_metrics(
         completed_jobs_path=output_dir / "completed_jobs.json",
@@ -3023,6 +3269,7 @@ def main() -> int:
         update_run_state(state_path, run_state, planned_jobs=planned_jobs)
         write_outputs(
             output_dir=output_dir,
+            config_path=config_path,
             config=config,
             dataset_subjects=dataset_subjects,
             subject_rows=subject_rows,
@@ -3032,6 +3279,7 @@ def main() -> int:
             model_run_entries=model_run_entries,
             failure_rows=failure_rows,
             memory_runtime_entries=memory_runtime_entries,
+            checkpoint_manifest_entries=checkpoint_manifest_entries,
         )
     failed_pairs = {
         (row["dataset"], row["subject_id"], row["model"], int(row["seed"]))
@@ -3052,6 +3300,42 @@ def main() -> int:
         summary=summary,
         resume_mode=bool(args.resume),
     )
+    if args.checkpoint_path_builder_test:
+        if not planned_jobs:
+            stdout_message("[CHECKPOINT PATH BUILDER TEST] no planned jobs")
+            return 0
+        target_job = summary["next_job"]
+        if target_job is None:
+            target_job = planned_jobs[0].as_dict()
+        print_checkpoint_path_builder(
+            JobKey(
+                dataset=str(target_job["dataset"]),
+                subject_id=str(target_job["subject_id"]),
+                model=str(target_job["model"]),
+                seed=int(target_job["seed"]),
+            ),
+            best_epoch=24,
+        )
+        return 0
+    if args.mock_checkpoint_save_load_test:
+        if not planned_jobs:
+            stdout_message("[MOCK CHECKPOINT SAVE/LOAD TEST] no planned jobs")
+            return 0
+        target_job = summary["next_job"]
+        if target_job is None:
+            target_job = planned_jobs[0].as_dict()
+        run_mock_checkpoint_save_load_test(
+            config=config,
+            config_path=config_path,
+            output_dir=output_dir,
+            job=JobKey(
+                dataset=str(target_job["dataset"]),
+                subject_id=str(target_job["subject_id"]),
+                model=str(target_job["model"]),
+                seed=int(target_job["seed"]),
+            ),
+        )
+        return 0
     if args.job_plan_only:
         if not planned_jobs:
             stdout_message("[JOB PLAN ONLY] no planned jobs")
@@ -3136,7 +3420,7 @@ def main() -> int:
         all_subjects = full_dataset_subjects[job.dataset]
         job_start = time.perf_counter()
         try:
-            rows_recording, rows_subject, leakage_entry, model_run_entry, memory_runtime_entry = fit_job(
+            rows_recording, rows_subject, leakage_entry, model_run_entry, memory_runtime_entry, checkpoint_manifest_entry = fit_job(
                 job=job,
                 config=config,
                 dataset_dir=dataset_dir,
@@ -3147,6 +3431,7 @@ def main() -> int:
                 run_state=run_state,
                 state_path=state_path,
                 planned_jobs=planned_jobs,
+                config_path=config_path,
             )
             write_start = time.perf_counter()
             update_job_progress_state(
@@ -3183,6 +3468,7 @@ def main() -> int:
             memory_runtime_entry["metric_write_seconds"] = metric_write_seconds
             memory_runtime_entry["total_job_seconds"] = float(time.perf_counter() - job_start)
             memory_runtime_entries.append(memory_runtime_entry)
+            checkpoint_manifest_entries = upsert_checkpoint_manifest_entry(checkpoint_manifest_entries, checkpoint_manifest_entry)
             completed_jobs_payload.append(
                 {
                     "dataset": job.dataset,
@@ -3191,6 +3477,7 @@ def main() -> int:
                     "seed": job.seed,
                     "status": "success",
                     "checkpoint_id": model_run_entry["checkpoint_id"],
+                    "checkpoint_local_id": model_run_entry["checkpoint_local_id"],
                     "total_job_seconds": memory_runtime_entry["total_job_seconds"],
                 }
             )
@@ -3198,6 +3485,7 @@ def main() -> int:
             run_state["leakage_entries"] = leakage_entries
             run_state["model_run_entries"] = model_run_entries
             run_state["memory_runtime_entries"] = memory_runtime_entries
+            run_state["checkpoint_manifest_entries"] = checkpoint_manifest_entries
             run_state["running_job"] = None
             update_run_state(state_path, run_state, planned_jobs=planned_jobs)
             logger.event(
@@ -3205,11 +3493,13 @@ def main() -> int:
                 subject=job.subject_id,
                 completed_jobs=len(completed_jobs_payload),
                 completed_job_key=f"{job.dataset}:{job.subject_id}:{job.model}:seed{job.seed}",
+                checkpoint_local_id=model_run_entry["checkpoint_local_id"],
                 device=device,
             )
             stdout_message("[COMPLETED JOBS WRITTEN]")
             schema = write_outputs(
                 output_dir=output_dir,
+                config_path=config_path,
                 config=config,
                 dataset_subjects=dataset_subjects,
                 subject_rows=subject_rows,
@@ -3219,6 +3509,7 @@ def main() -> int:
                 model_run_entries=model_run_entries,
                 failure_rows=failure_rows,
                 memory_runtime_entries=memory_runtime_entries,
+                checkpoint_manifest_entries=checkpoint_manifest_entries,
             )
             completed_pairs = validate_completed_jobs_against_metrics(
                 completed_jobs_path=output_dir / "completed_jobs.json",
@@ -3241,6 +3532,7 @@ def main() -> int:
                 best_val_score=float(model_run_entry["best_val_score"]),
             )
             run_state["running_job"] = None
+            run_state["checkpoint_manifest_entries"] = checkpoint_manifest_entries
             update_run_state(state_path, run_state, planned_jobs=planned_jobs)
             logger.event(
                 "job_completed",
@@ -3307,6 +3599,7 @@ def main() -> int:
             update_run_state(state_path, run_state, planned_jobs=planned_jobs)
             write_outputs(
                 output_dir=output_dir,
+                config_path=config_path,
                 config=config,
                 dataset_subjects=dataset_subjects,
                 subject_rows=subject_rows,
@@ -3316,6 +3609,7 @@ def main() -> int:
                 model_run_entries=model_run_entries,
                 failure_rows=failure_rows,
                 memory_runtime_entries=memory_runtime_entries,
+                checkpoint_manifest_entries=checkpoint_manifest_entries,
             )
             error_type = exc.error.split("(", 1)[0] if "(" in exc.error else exc.error
             logger.log(f"job_failed phase={exc.phase} error={exc.error}")

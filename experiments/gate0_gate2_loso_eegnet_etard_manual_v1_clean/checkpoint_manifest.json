@@ -1,0 +1,20 @@
+{
+  "checkpoints": [
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P00",
+      "model": "eegnet",
+      "seed": 0,
+      "source_job_key": "etard_tf64:P00:eegnet:seed0",
+      "checkpoint_local_id": "loso:eegnet:etard_tf64:P00:seed0:best_epoch_3",
+      "checkpoint_relative_path": "local_checkpoints/loso/eegnet/etard_tf64/P00/seed0/best_epoch_3.pt",
+      "checkpoint_artifact_status": "local_only_not_committed",
+      "best_epoch": 3,
+      "best_val_score": 0.123456,
+      "protocol": "gate0_gate2_loso_eegnet_etard_manual_v1",
+      "config_path": "configs/benchmark/gate0_gate2_loso_eegnet_etard_manual_v1.json",
+      "branch": "fix/ar-20260625-161300-a43831b-loso-eegnet-etard-full-v1",
+      "commit_sha": "150829ccadb2faa9386030ad82fdb8dec8974716"
+    }
+  ]
+}

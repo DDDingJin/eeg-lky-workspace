@@ -66,3 +66,20 @@ cd E:\decode\_fix_loso_resumable_runner_closure_v1
 
 F:\miniconda\envs\decode-torch\python.exe scripts\run_gate0_gate2_loso_resumable_runner_closure_v1.py --config configs\benchmark\gate0_gate2_loso_checkpoint_saving_real_closure_v1.json --device auto --resume --models eegnet --subjects P01 --max-jobs 1
 ```
+
+## Subject-holdout fixed split zero-shot closure
+
+- branch: `fix/ar-20260625-161300-a43831b-subject-holdout-fixed-split-v1`
+- config: `configs\benchmark\gate0_gate2_subject_holdout_fixed_split_v1_weissbart_eegnet_seed0.json`
+- output_dir: `E:\decode\_fix_loso_resumable_runner_closure_v1\experiments\gate0_gate2_subject_holdout_fixed_split_v1`
+- split manifest: `splits\subject_holdout_fixed_split_v1\weissbart_tf64.json`
+- dataset: `weissbart_tf64`
+- model: `eegnet`
+- seed: `0`
+- note: `long zero-shot training; manual run only`
+
+```powershell
+cd E:\decode\_fix_loso_resumable_runner_closure_v1
+
+F:\miniconda\envs\decode-torch\python.exe scripts\run_gate0_gate2_subject_holdout_fixed_split_v1.py --config configs\benchmark\gate0_gate2_subject_holdout_fixed_split_v1_weissbart_eegnet_seed0.json --device auto
+```

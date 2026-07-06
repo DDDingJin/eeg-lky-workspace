@@ -1,0 +1,50 @@
+{
+  "protocol": "gate0_gate2_subject_holdout_fixed_split_v1",
+  "artifact_scope": "subject_holdout_zero_shot_fixed_split_v1",
+  "base_branch": "fix/ar-20260625-161300-a43831b-loso-checkpoint-saving-closure-v1",
+  "base_commit": "2e8cd52",
+  "current_branch": "fix/ar-20260625-161300-a43831b-subject-holdout-fixed-split-v1",
+  "config_fingerprint_version": 1,
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "dataset_metric=mean_subject_pearson_r_over_test_subjects; fixed_subject_holdout; eegnet_zero_shot; seed0_only; weissbart_only",
+  "output_dir": "experiments/gate0_gate2_subject_holdout_fixed_split_v1",
+  "seed": 0,
+  "dataset": {
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "sampling_rate": 64,
+    "split_manifest_path": "splits/subject_holdout_fixed_split_v1/weissbart_tf64.json"
+  },
+  "models": [
+    "eegnet"
+  ],
+  "dataloader": {
+    "batch_size": 256,
+    "eval_batch_size": 1024,
+    "shuffle_train": true,
+    "num_workers": 0,
+    "persistent_workers": false
+  },
+  "heartbeat": {
+    "batch_interval": 100,
+    "time_interval_seconds": 30
+  },
+  "eegnet": {
+    "family": "eegnet_family",
+    "architecture_id": "eegnet_subject_holdout_fixed_split_v1",
+    "implementation_file": "src/repro/mldecoders/models.py::EEGNetRegressor",
+    "selection_rule": "choose checkpoint by pooled val-subject validation Pearson",
+    "training_protocol": "train only on train_subjects train split recordings; validate only on val_subjects val split recordings; zero-shot evaluate only on test_subjects test split recordings; no full window matrix materialization",
+    "window_size": 50,
+    "target_index": "last",
+    "temporal_filters": 8,
+    "depth_multiplier": 2,
+    "separable_filters": 16,
+    "dropout_rate": 0.25,
+    "batch_size": 256,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001
+  }
+}

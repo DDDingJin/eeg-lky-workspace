@@ -1,0 +1,28 @@
+{
+  "protocol": "gate0_gate2_subject_holdout_finetune_v1",
+  "passed": true,
+  "scope": {
+    "planned_subjects": [
+      "P01",
+      "P05",
+      "P08"
+    ],
+    "completed_subjects": [
+      "P01",
+      "P05",
+      "P08"
+    ],
+    "pending_subjects": [],
+    "mode": "global"
+  },
+  "checks": {
+    "completed_job_key_contains_dataset_subject_model_seed_split_id": true,
+    "source_checkpoint_load_verified": true,
+    "calibration_uses_non_test_splits_only": true,
+    "failure_report_empty": true,
+    "comparison_rows_match_subject_rows": true,
+    "zero_shot_reference_alignment_with_source_eval": true,
+    "fine_tuned_checkpoints_saved_locally": true
+  },
+  "notes": []
+}

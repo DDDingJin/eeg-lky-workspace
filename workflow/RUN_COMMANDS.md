@@ -83,3 +83,41 @@ cd E:\decode\_fix_loso_resumable_runner_closure_v1
 
 F:\miniconda\envs\decode-torch\python.exe scripts\run_gate0_gate2_subject_holdout_fixed_split_v1.py --config configs\benchmark\gate0_gate2_subject_holdout_fixed_split_v1_weissbart_eegnet_seed0.json --device auto
 ```
+
+## Subject-holdout 5min fine-tuning closure
+
+- branch: `fix/ar-20260625-161300-a43831b-subject-holdout-finetune-v1`
+- config: `configs\benchmark\gate0_gate2_subject_holdout_finetune_v1_weissbart_eegnet_seed0.json`
+- output_dir: `E:\decode\_fix_loso_resumable_runner_closure_v1\experiments\gate0_gate2_subject_holdout_finetune_v1`
+- dataset: `weissbart_tf64`
+- model: `eegnet`
+- seed: `0`
+- split_id: `subject_holdout_fixed_split_v1`
+- target subjects: `P01 P05 P08`
+- source checkpoint: `local_checkpoints\subject_holdout\eegnet\weissbart_tf64\subject_holdout_fixed_split_v1\seed0\best_epoch_5.pt`
+
+## Subject-holdout fine-tuning preflight
+
+```powershell
+F:\miniconda\envs\decode-torch\python.exe scripts\run_gate0_gate2_subject_holdout_finetune_v1.py --config configs\benchmark\gate0_gate2_subject_holdout_finetune_v1_weissbart_eegnet_seed0.json --device auto --checkpoint-load-preflight
+```
+
+## Subject-holdout fine-tuning startup-only
+
+```powershell
+F:\miniconda\envs\decode-torch\python.exe scripts\run_gate0_gate2_subject_holdout_finetune_v1.py --config configs\benchmark\gate0_gate2_subject_holdout_finetune_v1_weissbart_eegnet_seed0.json --device auto --startup-only
+```
+
+## Subject-holdout fine-tuning job-plan-only
+
+```powershell
+F:\miniconda\envs\decode-torch\python.exe scripts\run_gate0_gate2_subject_holdout_finetune_v1.py --config configs\benchmark\gate0_gate2_subject_holdout_finetune_v1_weissbart_eegnet_seed0.json --device auto --job-plan-only --subjects P01
+```
+
+## Subject-holdout fine-tuning full closure
+
+```powershell
+cd E:\decode\_fix_loso_resumable_runner_closure_v1
+
+F:\miniconda\envs\decode-torch\python.exe scripts\run_gate0_gate2_subject_holdout_finetune_v1.py --config configs\benchmark\gate0_gate2_subject_holdout_finetune_v1_weissbart_eegnet_seed0.json --device auto --resume --subjects P01 P05 P08 --max-jobs 3
+```

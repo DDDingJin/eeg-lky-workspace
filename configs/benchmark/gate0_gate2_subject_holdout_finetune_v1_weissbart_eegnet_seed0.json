@@ -1,0 +1,65 @@
+{
+  "protocol": "gate0_gate2_subject_holdout_finetune_v1",
+  "artifact_scope": "subject_holdout_finetune_5min_closure_v1",
+  "base_branch": "fix/ar-20260625-161300-a43831b-subject-holdout-fixed-split-v1",
+  "base_commit": "0fe6a57",
+  "current_branch": "fix/ar-20260625-161300-a43831b-subject-holdout-finetune-v1",
+  "config_fingerprint_version": 1,
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_level_compare_zero_shot_vs_fine_tuned_on_fixed_test_recordings; dataset_metric=mean_subject_pearson_r_over_test_subjects; subject_holdout_finetune_5min; eegnet; seed0_only; weissbart_only",
+  "output_dir": "experiments/gate0_gate2_subject_holdout_finetune_v1",
+  "seed": 0,
+  "subjects": [
+    "P01",
+    "P05",
+    "P08"
+  ],
+  "dataset": {
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "sampling_rate": 64,
+    "split_manifest_path": "splits/subject_holdout_fixed_split_v1/weissbart_tf64.json"
+  },
+  "source_zero_shot": {
+    "output_dir": "experiments/gate0_gate2_subject_holdout_fixed_split_v1",
+    "subject_metrics_path": "experiments/gate0_gate2_subject_holdout_fixed_split_v1/subject_metrics.csv",
+    "run_manifest_path": "experiments/gate0_gate2_subject_holdout_fixed_split_v1/run_manifest.json",
+    "checkpoint_manifest_path": "experiments/gate0_gate2_subject_holdout_fixed_split_v1/checkpoint_manifest.json",
+    "checkpoint_local_id": "subject_holdout:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_5",
+    "checkpoint_path": "local_checkpoints/subject_holdout/eegnet/weissbart_tf64/subject_holdout_fixed_split_v1/seed0/best_epoch_5.pt"
+  },
+  "dataloader": {
+    "batch_size": 256,
+    "eval_batch_size": 1024,
+    "shuffle_train": true,
+    "num_workers": 0,
+    "persistent_workers": false
+  },
+  "fine_tune": {
+    "calibration_budget_seconds": 300,
+    "train_budget_seconds": 240,
+    "val_budget_seconds": 60,
+    "selection_rule": "sort target subject recording_ids ascending within train split and val split separately, then take full recordings in order until cumulative duration meets or exceeds the respective budget; keep fixed test recordings unchanged; no result-based selection",
+    "learning_rate": 0.0001,
+    "max_epochs": 100,
+    "early_stopping_patience": 10
+  },
+  "eegnet": {
+    "family": "eegnet_family",
+    "architecture_id": "eegnet_subject_holdout_fixed_split_v1",
+    "implementation_file": "src/repro/mldecoders/models.py::EEGNetRegressor",
+    "selection_rule": "choose fine-tuned checkpoint by target-subject calibration val Pearson; source initialization from accepted zero-shot checkpoint",
+    "training_protocol": "load accepted fixed subject-holdout zero-shot checkpoint, fine-tune only on target-subject train split calibration recordings, validate only on target-subject val split calibration recordings, evaluate zero-shot and fine-tuned checkpoints only on fixed target-subject test split recordings; no test leakage; no full window matrix materialization",
+    "window_size": 50,
+    "target_index": "last",
+    "temporal_filters": 8,
+    "depth_multiplier": 2,
+    "separable_filters": 16,
+    "dropout_rate": 0.25,
+    "batch_size": 256,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001
+  }
+}

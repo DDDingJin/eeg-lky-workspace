@@ -1,0 +1,91 @@
+{
+  "model_run_entries": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "status": "success",
+      "source_checkpoint_local_id": "subject_holdout:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_5",
+      "checkpoint_id": "finetune_epoch_41",
+      "checkpoint_local_id": "subject_holdout_finetune:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:P01:seed0:best_epoch_41",
+      "epochs_completed": 51,
+      "best_epoch": 41,
+      "best_val_score": 0.12646214850246906,
+      "zero_shot_metric": 0.06733708950404578,
+      "fine_tuned_metric": 0.06265764860642783,
+      "delta": -0.004679440897617945,
+      "actual_calibration_seconds": 318.09375,
+      "actual_fine_tune_train_seconds": 257.0,
+      "actual_fine_tune_val_seconds": 61.09375,
+      "input_tensor_shape_example": [
+        1,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        1
+      ],
+      "prediction_target_alignment_ok": true
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P05",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "status": "success",
+      "source_checkpoint_local_id": "subject_holdout:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_5",
+      "checkpoint_id": "finetune_epoch_1",
+      "checkpoint_local_id": "subject_holdout_finetune:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:P05:seed0:best_epoch_1",
+      "epochs_completed": 11,
+      "best_epoch": 1,
+      "best_val_score": 0.18614593148231506,
+      "zero_shot_metric": 0.04903786329944087,
+      "fine_tuned_metric": 0.057729342231511424,
+      "delta": 0.008691478932070555,
+      "actual_calibration_seconds": 318.09375,
+      "actual_fine_tune_train_seconds": 257.0,
+      "actual_fine_tune_val_seconds": 61.09375,
+      "input_tensor_shape_example": [
+        1,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        1
+      ],
+      "prediction_target_alignment_ok": true
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P08",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "status": "success",
+      "source_checkpoint_local_id": "subject_holdout:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_5",
+      "checkpoint_id": "finetune_epoch_0",
+      "checkpoint_local_id": "subject_holdout_finetune:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:P08:seed0:best_epoch_0",
+      "epochs_completed": 10,
+      "best_epoch": 0,
+      "best_val_score": 0.08105507958680391,
+      "zero_shot_metric": 0.1270739269673292,
+      "fine_tuned_metric": 0.1270739269673292,
+      "delta": 0.0,
+      "actual_calibration_seconds": 318.09375,
+      "actual_fine_tune_train_seconds": 257.0,
+      "actual_fine_tune_val_seconds": 61.09375,
+      "input_tensor_shape_example": [
+        1,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        1
+      ],
+      "prediction_target_alignment_ok": true
+    }
+  ]
+}

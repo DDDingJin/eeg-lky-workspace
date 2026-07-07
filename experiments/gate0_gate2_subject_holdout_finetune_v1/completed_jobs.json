@@ -1,0 +1,37 @@
+{
+  "completed_jobs": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "status": "success",
+      "source_checkpoint_local_id": "subject_holdout:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_5",
+      "checkpoint_id": "finetune_epoch_41",
+      "checkpoint_local_id": "subject_holdout_finetune:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:P01:seed0:best_epoch_41"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P05",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "status": "success",
+      "source_checkpoint_local_id": "subject_holdout:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_5",
+      "checkpoint_id": "finetune_epoch_1",
+      "checkpoint_local_id": "subject_holdout_finetune:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:P05:seed0:best_epoch_1"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P08",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "status": "success",
+      "source_checkpoint_local_id": "subject_holdout:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_5",
+      "checkpoint_id": "finetune_epoch_0",
+      "checkpoint_local_id": "subject_holdout_finetune:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:P08:seed0:best_epoch_0"
+    }
+  ]
+}

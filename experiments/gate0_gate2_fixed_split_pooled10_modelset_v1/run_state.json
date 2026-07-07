@@ -1,8 +1,13 @@
 {
   "phase": "completed",
   "completed_job_keys": [
-    "weissbart_tf64:eegnet:seed0:subject_holdout_fixed_split_v1:zero_shot"
+    "weissbart_tf64:adt:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+    "weissbart_tf64:adt:seed0:subject_holdout_fixed_split_v1:zero_shot",
+    "weissbart_tf64:eegnet:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+    "weissbart_tf64:eegnet:seed0:subject_holdout_fixed_split_v1:zero_shot",
+    "weissbart_tf64:fcnn:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+    "weissbart_tf64:fcnn:seed0:subject_holdout_fixed_split_v1:zero_shot"
   ],
   "pending_jobs": [],
-  "last_update_time": "2026-07-07 16:52:05"
+  "last_update_time": "2026-07-07 19:59:46"
 }

@@ -1,82 +1,109 @@
 {
-  "model_run_entries": [
-    {
-      "model": "eegnet",
-      "input_shape": [
-        1,
-        64,
-        50
-      ],
-      "raw_output_shape": [
-        1
-      ],
-      "postprocessed_prediction_shape": [
-        1
-      ],
-      "scorer_input_shape": [
-        1
-      ],
-      "target_index": "last",
-      "target_contract": "scalar target per window",
-      "passed": true
-    },
-    {
-      "model": "fcnn",
-      "input_shape": [
-        1,
-        64,
-        50
-      ],
-      "raw_output_shape": [
-        1
-      ],
-      "postprocessed_prediction_shape": [
-        1
-      ],
-      "scorer_input_shape": [
-        1
-      ],
-      "target_index": "last",
-      "target_contract": "scalar target per window",
-      "passed": true
-    },
-    {
-      "model": "adt",
-      "input_shape": [
-        1,
-        320,
-        64
-      ],
-      "raw_output_shape": [
-        1,
-        320,
-        1
-      ],
-      "postprocessed_prediction_shape": [
-        1,
-        320
-      ],
-      "scorer_input_shape": [
-        320
-      ],
-      "target_index": "full_window_sequence",
-      "target_contract": "sequence target per window",
-      "passed": true
-    },
-    {
-      "job_key": "weissbart_tf64:eegnet:seed0:subject_holdout_fixed_split_v1:zero_shot",
-      "dataset": "weissbart_tf64",
-      "model": "eegnet",
-      "seed": 0,
-      "split_id": "subject_holdout_fixed_split_v1",
-      "stage": "zero_shot",
-      "status": "success",
-      "checkpoint_id": "eegnet_epoch_5",
-      "checkpoint_local_id": "subject_holdout:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_5",
-      "epochs_completed": 6,
-      "best_epoch": 5,
-      "best_val_score": 0.14754597400515823,
-      "prediction_target_alignment_ok": true
-    }
-  ]
+    "model_run_entries":  [
+                              {
+                                  "job_key":  "weissbart_tf64:eegnet:seed0:subject_holdout_fixed_split_v1:zero_shot",
+                                  "dataset":  "weissbart_tf64",
+                                  "model":  "eegnet",
+                                  "seed":  0,
+                                  "split_id":  "subject_holdout_fixed_split_v1",
+                                  "stage":  "zero_shot",
+                                  "status":  "success",
+                                  "checkpoint_id":  "eegnet_epoch_5",
+                                  "checkpoint_local_id":  "subject_holdout:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_5",
+                                  "epochs_completed":  6,
+                                  "best_epoch":  5,
+                                  "best_val_score":  0.14754597400515823,
+                                  "prediction_target_alignment_ok":  true
+                              },
+                              {
+                                  "job_key":  "weissbart_tf64:eegnet:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+                                  "dataset":  "weissbart_tf64",
+                                  "model":  "eegnet",
+                                  "seed":  0,
+                                  "split_id":  "subject_holdout_fixed_split_v1",
+                                  "stage":  "pooled10_finetune",
+                                  "status":  "success",
+                                  "source_checkpoint_local_id":  "subject_holdout:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_5",
+                                  "checkpoint_id":  "eegnet_pooled10_epoch_31",
+                                  "checkpoint_local_id":  "subject_holdout_pooled10_finetune:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_31",
+                                  "epochs_completed":  42,
+                                  "best_epoch":  31,
+                                  "best_val_score":  0.1366591578698717,
+                                  "pooled_train_seconds":  1466.953125,
+                                  "pooled_val_seconds":  394.875,
+                                  "pooled_calibration_total_seconds":  1861.828125,
+                                  "final_test_seconds":  715.359375,
+                                  "prediction_target_alignment_ok":  true
+                              },
+                              {
+                                  "job_key":  "weissbart_tf64:fcnn:seed0:subject_holdout_fixed_split_v1:zero_shot",
+                                  "dataset":  "weissbart_tf64",
+                                  "model":  "fcnn",
+                                  "seed":  0,
+                                  "split_id":  "subject_holdout_fixed_split_v1",
+                                  "stage":  "zero_shot",
+                                  "status":  "success",
+                                  "checkpoint_id":  "fcnn_epoch_2",
+                                  "checkpoint_local_id":  "subject_holdout:fcnn:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_2",
+                                  "epochs_completed":  13,
+                                  "best_epoch":  2,
+                                  "best_val_score":  0.09901179361221349,
+                                  "prediction_target_alignment_ok":  true
+                              },
+                              {
+                                  "job_key":  "weissbart_tf64:fcnn:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+                                  "dataset":  "weissbart_tf64",
+                                  "model":  "fcnn",
+                                  "seed":  0,
+                                  "split_id":  "subject_holdout_fixed_split_v1",
+                                  "stage":  "pooled10_finetune",
+                                  "status":  "success",
+                                  "source_checkpoint_local_id":  "subject_holdout:fcnn:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_2",
+                                  "checkpoint_id":  "fcnn_pooled10_epoch_11",
+                                  "checkpoint_local_id":  "subject_holdout_pooled10_finetune:fcnn:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_11",
+                                  "epochs_completed":  22,
+                                  "best_epoch":  11,
+                                  "best_val_score":  0.07050916208633377,
+                                  "pooled_train_seconds":  1466.953125,
+                                  "pooled_val_seconds":  394.875,
+                                  "pooled_calibration_total_seconds":  1861.828125,
+                                  "final_test_seconds":  715.359375,
+                                  "prediction_target_alignment_ok":  true
+                              },
+                              {
+                                  "job_key":  "weissbart_tf64:adt:seed0:subject_holdout_fixed_split_v1:zero_shot",
+                                  "dataset":  "weissbart_tf64",
+                                  "model":  "adt",
+                                  "seed":  0,
+                                  "split_id":  "subject_holdout_fixed_split_v1",
+                                  "stage":  "zero_shot",
+                                  "status":  "success",
+                                  "checkpoint_id":  "adt_epoch_2",
+                                  "checkpoint_local_id":  "subject_holdout:adt:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_2",
+                                  "epochs_completed":  13,
+                                  "best_epoch":  2,
+                                  "best_val_score":  0.15464070439338684,
+                                  "prediction_target_alignment_ok":  true
+                              },
+                              {
+                                  "job_key":  "weissbart_tf64:adt:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+                                  "dataset":  "weissbart_tf64",
+                                  "model":  "adt",
+                                  "seed":  0,
+                                  "split_id":  "subject_holdout_fixed_split_v1",
+                                  "stage":  "pooled10_finetune",
+                                  "status":  "success",
+                                  "source_checkpoint_local_id":  "subject_holdout:adt:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_2",
+                                  "checkpoint_id":  "adt_pooled10_epoch_1",
+                                  "checkpoint_local_id":  "subject_holdout_pooled10_finetune:adt:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_1",
+                                  "epochs_completed":  12,
+                                  "best_epoch":  1,
+                                  "best_val_score":  0.11600673198699951,
+                                  "pooled_train_seconds":  1466.953125,
+                                  "pooled_val_seconds":  394.875,
+                                  "pooled_calibration_total_seconds":  1861.828125,
+                                  "final_test_seconds":  715.359375,
+                                  "prediction_target_alignment_ok":  true
+                              }
+                          ]
 }

@@ -1298,6 +1298,10 @@ def build_manual_commands(config_path: Path, selected_datasets: list[dict[str, o
     ]
 
 
+def preflight_output_dir(output_dir: Path) -> Path:
+    return output_dir / "preflight"
+
+
 def write_preflight_artifacts(
     *,
     config: dict,
@@ -1308,6 +1312,8 @@ def write_preflight_artifacts(
     checkpoint_checks: list[dict[str, object]],
     job_plan: dict[str, object],
 ) -> None:
+    target_dir = preflight_output_dir(output_dir)
+    ensure_dir(target_dir)
     run_manifest = {
         "protocol": config["protocol"],
         "artifact_scope": config["artifact_scope"],
@@ -1318,12 +1324,12 @@ def write_preflight_artifacts(
         "commit_sha": current_git_commit_sha(),
         "stage_scope": "preflight_only_no_training_started",
         "artifacts": {
-            "duration_audit": repo_relative(output_dir / "duration_audit.json"),
-            "calibration_plan": repo_relative(output_dir / "calibration_plan.json"),
-            "checkpoint_manifest": repo_relative(output_dir / "checkpoint_manifest.json"),
-            "model_run_entries": repo_relative(output_dir / "model_run_entries.json"),
-            "schema_validation_report": repo_relative(output_dir / "schema_validation_report.json"),
-            "failure_report": repo_relative(output_dir / "failure_report.json"),
+            "duration_audit": repo_relative(target_dir / "duration_audit.json"),
+            "calibration_plan": repo_relative(target_dir / "calibration_plan.json"),
+            "checkpoint_manifest": repo_relative(target_dir / "checkpoint_manifest.json"),
+            "model_run_entries": repo_relative(target_dir / "model_run_entries.json"),
+            "schema_validation_report": repo_relative(target_dir / "schema_validation_report.json"),
+            "failure_report": repo_relative(target_dir / "failure_report.json"),
         },
     }
     calibration_plan = {
@@ -1345,16 +1351,16 @@ def write_preflight_artifacts(
         },
         "notes": ["preflight only; no zero-shot or pooled10 fine-tuning jobs executed"],
     }
-    atomic_write_json(output_dir / "run_manifest.json", run_manifest)
-    atomic_write_json(output_dir / "duration_audit.json", {"datasets": duration_audits})
-    atomic_write_json(output_dir / "calibration_plan.json", calibration_plan)
-    atomic_write_json(output_dir / "checkpoint_manifest.json", checkpoint_manifest)
-    atomic_write_json(output_dir / "model_run_entries.json", model_run_entries)
-    atomic_write_json(output_dir / "completed_jobs.json", {"completed_jobs": []})
-    atomic_write_json(output_dir / "run_state.json", {"phase": "preflight_only", "pending_jobs": job_plan["planned_jobs"], "last_update_time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())})
-    atomic_write_json(output_dir / "failure_report.json", failures)
-    atomic_write_json(output_dir / "schema_validation_report.json", schema_validation)
-    atomic_write_text(output_dir / "adaptation_or_leakage_summary.md", "# Preflight Only\n\nNo training started.\n")
+    atomic_write_json(target_dir / "run_manifest.json", run_manifest)
+    atomic_write_json(target_dir / "duration_audit.json", {"datasets": duration_audits})
+    atomic_write_json(target_dir / "calibration_plan.json", calibration_plan)
+    atomic_write_json(target_dir / "checkpoint_manifest.json", checkpoint_manifest)
+    atomic_write_json(target_dir / "model_run_entries.json", model_run_entries)
+    atomic_write_json(target_dir / "completed_jobs.json", {"completed_jobs": []})
+    atomic_write_json(target_dir / "run_state.json", {"phase": "preflight_only", "pending_jobs": job_plan["planned_jobs"], "last_update_time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())})
+    atomic_write_json(target_dir / "failure_report.json", failures)
+    atomic_write_json(target_dir / "schema_validation_report.json", schema_validation)
+    atomic_write_text(target_dir / "adaptation_or_leakage_summary.md", "# Preflight Only\n\nNo training started.\n")
 
 
 def load_existing_runtime_state(output_dir: Path) -> dict[str, object]:
@@ -1960,16 +1966,27 @@ def main() -> int:
     shape_checks = [shape_check_for_model(config, model_name, device) for model_name in selected_models]
     checkpoint_checks = checkpoint_path_check(config, selected_datasets, selected_models, device)
     job_plan = build_job_plan(config, selected_datasets, selected_models, args.stage)
-    write_preflight_artifacts(
-        config=config,
-        config_path=config_path,
-        output_dir=output_dir,
-        duration_audits=duration_audits,
-        shape_checks=shape_checks,
-        checkpoint_checks=checkpoint_checks,
-        job_plan=job_plan,
-    )
     manual_commands = build_manual_commands(config_path, selected_datasets, selected_models)
+    preflight_mode = any(
+        [
+            args.duration_audit_only,
+            args.shape_check_only,
+            args.checkpoint_path_check_only,
+            args.startup_only,
+            args.dry_run_plan,
+            args.rebuild_preflight_artifacts_only,
+        ]
+    )
+    if preflight_mode:
+        write_preflight_artifacts(
+            config=config,
+            config_path=config_path,
+            output_dir=output_dir,
+            duration_audits=duration_audits,
+            shape_checks=shape_checks,
+            checkpoint_checks=checkpoint_checks,
+            job_plan=job_plan,
+        )
     if args.duration_audit_only:
         stdout_block("[DURATION AUDIT]", [json.dumps({"datasets": duration_audits}, indent=2)])
         return 0

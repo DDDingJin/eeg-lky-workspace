@@ -1,0 +1,2 @@
+dataset,model,seed,split_id,stage,n_subjects,mean_pearson,std_pearson,min_pearson,max_pearson
+weissbart_tf64,eegnet,0,subject_holdout_fixed_split_v1,zero_shot,3,0.08114962659027194,0.03332162904944735,0.04903786329944087,0.1270739269673292

@@ -62,21 +62,6 @@
       "target_index": "full_window_sequence",
       "target_contract": "sequence target per window",
       "passed": true
-    },
-    {
-      "job_key": "weissbart_tf64:eegnet:seed0:subject_holdout_fixed_split_v1:zero_shot",
-      "dataset": "weissbart_tf64",
-      "model": "eegnet",
-      "seed": 0,
-      "split_id": "subject_holdout_fixed_split_v1",
-      "stage": "zero_shot",
-      "status": "success",
-      "checkpoint_id": "eegnet_epoch_5",
-      "checkpoint_local_id": "subject_holdout:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_5",
-      "epochs_completed": 6,
-      "best_epoch": 5,
-      "best_val_score": 0.14754597400515823,
-      "prediction_target_alignment_ok": true
     }
   ]
 }

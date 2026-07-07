@@ -2,12 +2,12 @@
   "protocol": "gate0_gate2_fixed_split_pooled10_modelset_v1",
   "passed": true,
   "checks": {
-    "split_manifests_loaded": true,
     "duration_audit_passed": true,
-    "shape_checks_passed": true,
-    "failure_report_empty": true
+    "failure_report_empty": true,
+    "completed_jobs_written_incrementally": true,
+    "checkpoint_manifest_written_incrementally": true
   },
-  "notes": [
-    "preflight only; no zero-shot or pooled10 fine-tuning jobs executed"
+  "datasets": [
+    "weissbart_tf64"
   ]
 }

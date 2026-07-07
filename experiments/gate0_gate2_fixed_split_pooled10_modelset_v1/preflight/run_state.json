@@ -1,0 +1,120 @@
+{
+  "phase": "preflight_only",
+  "pending_jobs": [
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "zero_shot",
+      "job_key": "weissbart_tf64:eegnet:seed0:subject_holdout_fixed_split_v1:zero_shot",
+      "reuse_allowed": true,
+      "reusable_checkpoint_path": "E:\\decode\\_fix_loso_resumable_runner_closure_v1\\local_checkpoints\\subject_holdout\\eegnet\\weissbart_tf64\\subject_holdout_fixed_split_v1\\seed0\\best_epoch_5.pt"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "pooled10_finetune",
+      "job_key": "weissbart_tf64:eegnet:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+      "depends_on_zero_shot": true
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "zero_shot",
+      "job_key": "weissbart_tf64:fcnn:seed0:subject_holdout_fixed_split_v1:zero_shot",
+      "reuse_allowed": false,
+      "reusable_checkpoint_path": null
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "pooled10_finetune",
+      "job_key": "weissbart_tf64:fcnn:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+      "depends_on_zero_shot": true
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "zero_shot",
+      "job_key": "weissbart_tf64:adt:seed0:subject_holdout_fixed_split_v1:zero_shot",
+      "reuse_allowed": false,
+      "reusable_checkpoint_path": null
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "pooled10_finetune",
+      "job_key": "weissbart_tf64:adt:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+      "depends_on_zero_shot": true
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "zero_shot",
+      "job_key": "etard_tf64:eegnet:seed0:subject_holdout_fixed_split_v1:zero_shot",
+      "reuse_allowed": false,
+      "reusable_checkpoint_path": null
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "pooled10_finetune",
+      "job_key": "etard_tf64:eegnet:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+      "depends_on_zero_shot": true
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "zero_shot",
+      "job_key": "etard_tf64:fcnn:seed0:subject_holdout_fixed_split_v1:zero_shot",
+      "reuse_allowed": false,
+      "reusable_checkpoint_path": null
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "pooled10_finetune",
+      "job_key": "etard_tf64:fcnn:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+      "depends_on_zero_shot": true
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "zero_shot",
+      "job_key": "etard_tf64:adt:seed0:subject_holdout_fixed_split_v1:zero_shot",
+      "reuse_allowed": false,
+      "reusable_checkpoint_path": null
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "pooled10_finetune",
+      "job_key": "etard_tf64:adt:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+      "depends_on_zero_shot": true
+    }
+  ],
+  "last_update_time": "2026-07-07 16:51:07"
+}

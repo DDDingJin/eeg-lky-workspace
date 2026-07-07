@@ -5,14 +5,20 @@
   "base_commit": "0fe6a57",
   "current_branch": "fix/ar-20260625-161300-a43831b-fixed-split-pooled10-modelset-v1",
   "config_path": "configs/benchmark/gate0_gate2_fixed_split_pooled10_modelset_v1.json",
-  "commit_sha": "0fe6a579205a92d7d4cb27143985adcda888c370",
-  "stage_scope": "preflight_only_no_training_started",
+  "commit_sha": "a8e183ebc840dd6ea71d2eefcf0c03dd6928e442",
   "artifacts": {
     "duration_audit": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/duration_audit.json",
     "calibration_plan": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/calibration_plan.json",
     "checkpoint_manifest": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/checkpoint_manifest.json",
+    "subject_metrics": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/subject_metrics.csv",
+    "recording_metrics": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/recording_metrics.csv",
+    "dataset_metrics": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/dataset_metrics.csv",
+    "zero_shot_vs_pooled10_finetune_comparison": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/zero_shot_vs_pooled10_finetune_comparison.csv",
+    "completed_jobs": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/completed_jobs.json",
     "model_run_entries": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/model_run_entries.json",
+    "failure_report": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/failure_report.json",
     "schema_validation_report": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/schema_validation_report.json",
-    "failure_report": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/failure_report.json"
+    "adaptation_or_leakage_summary": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/adaptation_or_leakage_summary.md",
+    "logs": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/logs"
   }
 }

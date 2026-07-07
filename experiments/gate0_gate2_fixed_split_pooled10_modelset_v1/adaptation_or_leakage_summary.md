@@ -4,9 +4,9 @@
 - pooled calibration uses only original train/val split recordings of fixed test subjects
 - final test always remains the original fixed test split
 
-## weissbart_tf64
-- test_subjects: `P08, P05, P01`
-- pooled_train_seconds: `1466.953125`
-- pooled_val_seconds: `394.875`
-- final_test_seconds: `715.359375`
+## etard_tf64
+- test_subjects: `P17, P16, P10, P03`
+- pooled_train_seconds: `1951.3125`
+- pooled_val_seconds: `504.46875`
+- final_test_seconds: `2419.53125`
 

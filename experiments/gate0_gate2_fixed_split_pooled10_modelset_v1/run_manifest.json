@@ -5,7 +5,7 @@
   "base_commit": "0fe6a57",
   "current_branch": "fix/ar-20260625-161300-a43831b-fixed-split-pooled10-modelset-v1",
   "config_path": "configs/benchmark/gate0_gate2_fixed_split_pooled10_modelset_v1.json",
-  "commit_sha": "6b965d97ff87e3b8aec5f4c1dc21a38a7dee1156",
+  "commit_sha": "c463d5c84c51c51b80dd3692d69801eef1aca20b",
   "artifacts": {
     "duration_audit": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/duration_audit.json",
     "calibration_plan": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/calibration_plan.json",

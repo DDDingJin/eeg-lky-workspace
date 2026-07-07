@@ -1,0 +1,18 @@
+{
+  "protocol": "gate0_gate2_fixed_split_pooled10_modelset_v1",
+  "artifact_scope": "fixed_split_zero_shot_plus_pooled10_finetune_modelset_v1",
+  "base_branch": "fix/ar-20260625-161300-a43831b-subject-holdout-fixed-split-v1",
+  "base_commit": "0fe6a57",
+  "current_branch": "fix/ar-20260625-161300-a43831b-fixed-split-pooled10-modelset-v1",
+  "config_path": "configs/benchmark/gate0_gate2_fixed_split_pooled10_modelset_v1.json",
+  "commit_sha": "0fe6a579205a92d7d4cb27143985adcda888c370",
+  "stage_scope": "preflight_only_no_training_started",
+  "artifacts": {
+    "duration_audit": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/duration_audit.json",
+    "calibration_plan": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/calibration_plan.json",
+    "checkpoint_manifest": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/checkpoint_manifest.json",
+    "model_run_entries": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/model_run_entries.json",
+    "schema_validation_report": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/schema_validation_report.json",
+    "failure_report": "experiments/gate0_gate2_fixed_split_pooled10_modelset_v1/failure_report.json"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "protocol": "gate0_gate2_subject_holdout_fixed_split_v1",
+  "artifact_scope": "subject_holdout_zero_shot_fixed_split_v1",
+  "base_branch": "fix/ar-20260625-161300-a43831b-loso-checkpoint-saving-closure-v1",
+  "base_commit": "2e8cd52",
+  "current_branch": "fix/ar-20260625-161300-a43831b-subject-holdout-fixed-split-v1",
+  "config_path": "configs/benchmark/gate0_gate2_subject_holdout_fixed_split_v1_weissbart_eegnet_seed0.json",
+  "split_manifest_path": "splits/subject_holdout_fixed_split_v1/weissbart_tf64.json",
+  "commit_sha": "4727969092b6d7789571727434ea24694aae2c22",
+  "dataset": "weissbart_tf64",
+  "model": "eegnet",
+  "seed": 0,
+  "split_id": "subject_holdout_fixed_split_v1",
+  "artifacts": {
+    "checkpoint_manifest": "experiments/gate0_gate2_subject_holdout_fixed_split_v1/checkpoint_manifest.json",
+    "split_manifest_snapshot": "experiments/gate0_gate2_subject_holdout_fixed_split_v1/split_manifest_snapshot.json",
+    "subject_metrics": "experiments/gate0_gate2_subject_holdout_fixed_split_v1/subject_metrics.csv",
+    "recording_metrics": "experiments/gate0_gate2_subject_holdout_fixed_split_v1/recording_metrics.csv",
+    "dataset_metrics": "experiments/gate0_gate2_subject_holdout_fixed_split_v1/dataset_metrics.csv",
+    "completed_jobs": "experiments/gate0_gate2_subject_holdout_fixed_split_v1/completed_jobs.json",
+    "model_run_entries": "experiments/gate0_gate2_subject_holdout_fixed_split_v1/model_run_entries.json",
+    "failure_report": "experiments/gate0_gate2_subject_holdout_fixed_split_v1/failure_report.json",
+    "schema_validation_report": "experiments/gate0_gate2_subject_holdout_fixed_split_v1/schema_validation_report.json",
+    "leakage_or_split_summary": "experiments/gate0_gate2_subject_holdout_fixed_split_v1/leakage_or_split_summary.md",
+    "logs": "experiments/gate0_gate2_subject_holdout_fixed_split_v1/logs"
+  }
+}

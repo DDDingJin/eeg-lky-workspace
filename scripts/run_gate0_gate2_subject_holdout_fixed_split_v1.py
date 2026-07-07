@@ -45,6 +45,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--job-plan-only", action="store_true")
     parser.add_argument("--shape-contract-check", action="store_true")
     parser.add_argument("--checkpoint-path-builder-test", action="store_true")
+    parser.add_argument("--verify-existing-output-only", action="store_true")
     return parser.parse_args()
 
 
@@ -413,6 +414,24 @@ def inspect_plan(config: dict, split_manifest: dict[str, object], dataset_dir: P
 
 def print_plan(plan: dict[str, object], output_dir: Path, config_path: Path, device: str) -> None:
     stdout_block(
+        "[STARTUP]",
+        [
+            f"config path: {config_path}",
+            f"output_dir: {output_dir}",
+            f"dataset: {plan['dataset']}",
+            f"split_id: {plan['split_id']}",
+            f"train_subjects: {plan['train_subjects']}",
+            f"val_subjects: {plan['val_subjects']}",
+            f"test_subjects: {plan['test_subjects']}",
+            f"device: {device}",
+            f"train_window_count: {plan['train_window_count']}",
+            f"val_window_count: {plan['val_window_count']}",
+            f"test_recording_count: {plan['test_recording_count']}",
+            f"batch_size: {plan['batch_size']}",
+            f"eval_batch_size: {plan['eval_batch_size']}",
+        ],
+    )
+    stdout_block(
         "[STARTUP SUMMARY]",
         [
             f"config path: {config_path}",
@@ -623,8 +642,10 @@ def run_job(config: dict, split_manifest: dict[str, object], dataset_dir: Path, 
     max_epochs = int(config["eegnet"]["max_epochs"])
     patience = int(config["eegnet"]["early_stopping_patience"])
 
+    stdout_message("[TRAIN START]")
     for epoch in range(max_epochs):
         logger.event("train_epoch_started", epoch=epoch + 1, max_epochs=max_epochs)
+        stdout_message(f"[TRAIN EPOCH] epoch={epoch + 1}/{max_epochs}")
         model.train()
         for x, y in train_loader:
             x = x.to(device=device, dtype=torch.float32)
@@ -645,16 +666,19 @@ def run_job(config: dict, split_manifest: dict[str, object], dataset_dir: Path, 
         val_score = float(np.mean(scores)) if scores else float("nan")
         val_history.append(val_score)
         logger.event("val_epoch_completed", epoch=epoch + 1, val_score=val_score)
+        stdout_message(f"[VAL DONE] epoch={epoch + 1} val_score={val_score} best_val={best_score if best_epoch >= 0 else 'None'}")
         if scores and val_score > best_score:
             best_score = val_score
             best_epoch = epoch
             best_state = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
             stale_epochs = 0
             logger.event("best_checkpoint_updated", epoch=epoch + 1, best_val_score=best_score)
+            stdout_message(f"[BEST UPDATED] epoch={epoch + 1} best_val={best_score}")
         else:
             stale_epochs += 1
             if stale_epochs >= patience:
                 logger.event("early_stopping_triggered", epoch=epoch + 1, best_epoch=best_epoch + 1, best_val_score=best_score)
+                stdout_message(f"[EARLY STOPPING] epoch={epoch + 1} best_epoch={best_epoch + 1} best_val={best_score}")
                 break
     if best_epoch < 0:
         raise RuntimeError("no checkpoint selected from val subjects")
@@ -674,7 +698,9 @@ def run_job(config: dict, split_manifest: dict[str, object], dataset_dir: Path, 
         best_epoch=best_epoch,
         best_val_score=best_score,
     )
+    stdout_message(f"[CHECKPOINT SAVED] checkpoint_local_id={checkpoint_local_id_value} path={repo_relative(checkpoint_path)}")
     checkpoint_id = f"eegnet_epoch_{best_epoch}"
+    stdout_message("[TEST START]")
     recording_rows, subject_rows = predict_test_subjects(
         config=config,
         split_manifest=split_manifest,
@@ -685,6 +711,7 @@ def run_job(config: dict, split_manifest: dict[str, object], dataset_dir: Path, 
         device=device,
         checkpoint_id=checkpoint_id,
     )
+    stdout_message("[TEST DONE]")
     dataset_metrics = [mean_dataset_metric(subject_rows)]
     completed_jobs = [
         {
@@ -840,12 +867,14 @@ def run_job(config: dict, split_manifest: dict[str, object], dataset_dir: Path, 
     atomic_write_text(output_dir / "result_summary.md", result_summary)
     atomic_write_json(output_dir / "run_state.json", run_state)
     atomic_write_json(output_dir / "heartbeat.json", heartbeat)
+    stdout_message("[METRICS WRITTEN]")
     logger.event(
         "job_completed",
         checkpoint_local_id=checkpoint_local_id_value,
         mean_pearson=dataset_metrics[0]["mean_pearson"],
         n_test_subjects=dataset_metrics[0]["n_subjects"],
     )
+    stdout_message(f"[JOB DONE] mean_pearson={dataset_metrics[0]['mean_pearson']} n_test_subjects={dataset_metrics[0]['n_subjects']}")
 
 
 def run_checkpoint_load_verification(config: dict, split_manifest: dict[str, object], output_dir: Path, config_path: Path, device: str) -> tuple[str, str]:
@@ -857,7 +886,10 @@ def run_checkpoint_load_verification(config: dict, split_manifest: dict[str, obj
     model.load_state_dict(loaded["model_state_dict"], strict=True)
     dataset_dir = resolve_dataset_path(config["dataset"]["dataset_locator"])
     subject_id = str(split_manifest["test_subjects"][0])
-    eeg_path = next(sorted(dataset_dir.glob(f"test_-_{subject_id}_-_*_-_eeg.npy")))
+    paths = sorted(dataset_dir.glob(f"test_-_{subject_id}_-_*_-_eeg.npy"))
+    if not paths:
+        raise FileNotFoundError(f"no test eeg files found for subject {subject_id} in {dataset_dir}")
+    eeg_path = paths[0]
     eeg = np.asarray(np.load(eeg_path)[:, :64], dtype=np.float32)
     x = torch.from_numpy(eeg[: int(model_kwargs["input_length"])].T[None, :, :]).to(device=device, dtype=torch.float32)
     model = model.to(device)
@@ -865,6 +897,66 @@ def run_checkpoint_load_verification(config: dict, split_manifest: dict[str, obj
     with torch.no_grad():
         y_hat = model(x)
     return repo_relative(checkpoint_path), f"strict_load=True sample_input_shape={list(x.shape)} raw_output_shape={list(y_hat.shape)}"
+
+
+def run_verify_existing_output_only(config: dict, split_manifest: dict[str, object], output_dir: Path, device: str) -> None:
+    stdout_message("[VERIFY START]")
+    checkpoint_manifest_path = output_dir / "checkpoint_manifest.json"
+    subject_metrics_path = output_dir / "subject_metrics.csv"
+    recording_metrics_path = output_dir / "recording_metrics.csv"
+    dataset_metrics_path = output_dir / "dataset_metrics.csv"
+    completed_jobs_path = output_dir / "completed_jobs.json"
+    schema_validation_path = output_dir / "schema_validation_report.json"
+    failure_report_path = output_dir / "failure_report.json"
+    leakage_summary_path = output_dir / "leakage_or_split_summary.md"
+
+    for path in [
+        checkpoint_manifest_path,
+        subject_metrics_path,
+        recording_metrics_path,
+        dataset_metrics_path,
+        completed_jobs_path,
+        schema_validation_path,
+        failure_report_path,
+        leakage_summary_path,
+    ]:
+        if not path.exists():
+            raise FileNotFoundError(f"required artifact missing: {path}")
+        if path.suffix in {".csv", ".json", ".md"} and path.stat().st_size == 0:
+            raise ValueError(f"required artifact is empty: {path}")
+
+    checkpoint_rel_path, verification = run_checkpoint_load_verification(
+        config=config,
+        split_manifest=split_manifest,
+        output_dir=output_dir,
+        config_path=Path(config["dataset"]["split_manifest_path"]),
+        device=device,
+    )
+    stdout_message("[CHECKPOINT LOAD OK]")
+    stdout_message("[STRICT LOAD OK]")
+    parts = verification.split(" sample_input_shape=")
+    shape_part = "sample_input_shape=" + parts[1] if len(parts) > 1 else verification
+    stdout_message(f"[SHAPE CHECK OK] {shape_part.replace(' raw_output_shape=', ' output_shape=')}")
+
+    schema_payload = json.loads(schema_validation_path.read_text(encoding="utf-8"))
+    if not bool(schema_payload.get("passed", False)):
+        raise ValueError("schema_validation_report.json passed=false")
+    failure_payload = json.loads(failure_report_path.read_text(encoding="utf-8"))
+    if failure_payload.get("failures", None) != []:
+        raise ValueError("failure_report.json is not empty")
+    stdout_block(
+        "[VERIFY DONE]",
+        [
+            f"checkpoint_relative_path: {checkpoint_rel_path}",
+            f"subject_metrics_exists: {subject_metrics_path.exists()}",
+            f"recording_metrics_exists: {recording_metrics_path.exists()}",
+            f"dataset_metrics_exists: {dataset_metrics_path.exists()}",
+            f"completed_jobs_exists: {completed_jobs_path.exists()}",
+            f"schema_passed: {schema_payload.get('passed')}",
+            "failure_report_empty: True",
+            f"leakage_or_split_summary_exists: {leakage_summary_path.exists()}",
+        ],
+    )
 
 
 def main() -> int:
@@ -913,6 +1005,9 @@ def main() -> int:
         return 0
     if args.checkpoint_path_builder_test:
         print_checkpoint_path_builder(config, split_manifest)
+        return 0
+    if args.verify_existing_output_only:
+        run_verify_existing_output_only(config, split_manifest, output_dir, device)
         return 0
     run_job(config, split_manifest, dataset_dir, output_dir, config_path, device)
     checkpoint_rel_path, verification = run_checkpoint_load_verification(config, split_manifest, output_dir, config_path, device)

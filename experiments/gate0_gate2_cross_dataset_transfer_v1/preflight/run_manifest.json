@@ -5,7 +5,7 @@
   "base_commit": "ac847dd508a9c63ae546049f6a62b82fc34afc38",
   "current_branch": "fix/ar-20260625-161300-a43831b-cross-dataset-transfer-v1",
   "config_path": "configs/benchmark/gate0_gate2_cross_dataset_transfer_v1.json",
-  "commit_sha": "91ad558c0ca2c292848604daf1a0e0ba8a8fd35a",
+  "commit_sha": "291ce877957195f90f31cb6cc3360e71a32c0d31",
   "stage_scope": "preflight_only_no_training_started",
   "artifacts": {
     "transfer_plan": "experiments/gate0_gate2_cross_dataset_transfer_v1/preflight/transfer_plan.json",

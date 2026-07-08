@@ -1,0 +1,63 @@
+{
+  "model_run_entries": [
+    {
+      "job_key": "weissbart_tf64:eegnet:seed0:source_zero_shot",
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": null,
+      "model": "eegnet",
+      "seed": 0,
+      "stage": "source_zero_shot",
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_4",
+      "checkpoint_local_id": "cross_dataset_source_only:eegnet:weissbart_tf64:seed0:best_epoch_4",
+      "epochs_completed": 15,
+      "best_epoch": 4,
+      "best_val_score": 0.14332639425190102,
+      "prediction_target_alignment_ok": true,
+      "source_train_subject_count": 8,
+      "source_val_subject_count": 2,
+      "target_test_subject_count": 0
+    },
+    {
+      "job_key": "weissbart_tf64->etard_tf64:eegnet:seed0:cross_dataset_zero_shot_eval",
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": "etard_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "stage": "cross_dataset_zero_shot_eval",
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_4",
+      "checkpoint_local_id": "cross_dataset_source_only:eegnet:weissbart_tf64:seed0:best_epoch_4",
+      "epochs_completed": null,
+      "best_epoch": 4,
+      "best_val_score": 0.14332639425190102,
+      "prediction_target_alignment_ok": true,
+      "source_train_subject_count": 8,
+      "source_val_subject_count": 2,
+      "target_test_subject_count": 4
+    },
+    {
+      "job_key": "weissbart_tf64->etard_tf64:eegnet:seed0:pooled10_target_calibration",
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": "etard_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "stage": "pooled10_target_calibration",
+      "status": "success",
+      "source_checkpoint_local_id": "cross_dataset_source_only:eegnet:weissbart_tf64:seed0:best_epoch_4",
+      "checkpoint_id": "eegnet_pooled10_epoch_0",
+      "checkpoint_local_id": "cross_dataset_pooled10_target_calibration:eegnet:weissbart_tf64->etard_tf64:seed0:best_epoch_0",
+      "epochs_completed": 1,
+      "best_epoch": 0,
+      "best_val_score": 0.13618506689866383,
+      "pooled_train_seconds": 1951.3125,
+      "pooled_val_seconds": 504.46875,
+      "pooled_calibration_total_seconds": 2455.78125,
+      "final_test_seconds": 2419.53125,
+      "prediction_target_alignment_ok": true,
+      "source_zero_shot_mean_pearson": 0.06983227014459673,
+      "calibrated_mean_pearson": 0.07921797577009865,
+      "delta_mean_pearson": 0.009385705625501922
+    }
+  ]
+}

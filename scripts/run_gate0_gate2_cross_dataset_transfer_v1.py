@@ -53,6 +53,13 @@ COMPARISON_FIELDS = [
     "zero_shot_metric",
     "calibrated_metric",
     "delta",
+    "actual_calibration_seconds",
+    "actual_train_seconds",
+    "actual_val_seconds",
+    "final_test_seconds",
+    "calibration_train_recording_ids",
+    "calibration_val_recording_ids",
+    "test_recording_ids",
 ]
 CROSS_SUBJECT_FIELDS = [
     "source_dataset",
@@ -323,6 +330,57 @@ class SubjectSplitWindowDataset(Dataset):
         return x.astype(np.float32), np.float32(y)
 
 
+class SelectedRecordingWindowDataset(Dataset):
+    def __init__(
+        self,
+        dataset_dir: Path,
+        *,
+        recording_ids: list[str],
+        window_size: int,
+        channels: range,
+        target_index: str,
+    ) -> None:
+        self.window_size = int(window_size)
+        self.target_index = target_index
+        self.channel_idx = np.asarray(list(channels), dtype=int)
+        self.recordings: list[tuple[str, str, np.ndarray, np.ndarray]] = []
+        self.index_rows: list[tuple[int, int]] = []
+        self.total_recordings = 0
+        self.preloaded_bytes = 0
+        for recording_id in recording_ids:
+            eeg_path = dataset_dir / f"{recording_id}_-_eeg.npy"
+            env_path = dataset_dir / f"{recording_id}_-_envelope.npy"
+            if not eeg_path.exists() or not env_path.exists():
+                raise FileNotFoundError(f"missing recording pair for {recording_id}")
+            eeg = np.asarray(np.load(eeg_path, mmap_mode="r")[:, self.channel_idx], dtype=np.float32)
+            env = np.asarray(np.load(env_path, mmap_mode="r")[:, 0], dtype=np.float32)
+            rec_idx = len(self.recordings)
+            self.recordings.append((parse_subject_id(recording_id), recording_id, eeg, env))
+            self.total_recordings += 1
+            self.preloaded_bytes += int(eeg.nbytes + env.nbytes)
+            max_start = eeg.shape[0] - self.window_size
+            if max_start >= 0:
+                for start in range(max_start + 1):
+                    self.index_rows.append((rec_idx, start))
+        if not self.recordings:
+            raise ValueError("no recordings selected")
+
+    def __len__(self) -> int:
+        return len(self.index_rows)
+
+    def __getitem__(self, idx: int) -> tuple[np.ndarray, np.float32]:
+        rec_idx, start = self.index_rows[idx]
+        _, _, eeg, env = self.recordings[rec_idx]
+        x = eeg[start : start + self.window_size].T
+        if self.target_index == "first":
+            y = env[start]
+        elif self.target_index == "center":
+            y = env[start + self.window_size // 2]
+        else:
+            y = env[start + self.window_size - 1]
+        return x.astype(np.float32), np.float32(y)
+
+
 def batch_corr(y_true: torch.Tensor, y_pred: torch.Tensor, eps: float = 1e-8) -> torch.Tensor:
     y_true0 = y_true - torch.mean(y_true)
     y_pred0 = y_pred - torch.mean(y_pred)
@@ -569,6 +627,14 @@ def cross_source_only_checkpoint_path_pattern(*, source_dataset: str, model: str
 
 def cross_calibration_checkpoint_path_pattern(*, source_dataset: str, target_dataset: str, model: str, seed: int) -> Path:
     return cross_calibration_checkpoint_root() / model / source_dataset / target_dataset / f"seed{seed}" / "best_epoch_PENDING.pt"
+
+
+def cross_calibration_checkpoint_relative_path(*, source_dataset: str, target_dataset: str, model: str, seed: int, best_epoch: int) -> Path:
+    return Path(model) / source_dataset / target_dataset / f"seed{seed}" / f"best_epoch_{best_epoch}.pt"
+
+
+def cross_calibration_checkpoint_local_id(*, source_dataset: str, target_dataset: str, model: str, seed: int, best_epoch: int) -> str:
+    return f"cross_dataset_pooled10_target_calibration:{model}:{source_dataset}->{target_dataset}:seed{seed}:best_epoch_{best_epoch}"
 
 
 def checkpoint_epoch_from_name(path: Path) -> int:
@@ -1178,11 +1244,120 @@ def load_source_zero_shot_checkpoint_payload(
         if checkpoint_entry_matches_source_job(entry, source_dataset=source_dataset, model_name=model_name, seed=seed):
             path = ROOT / str(entry["checkpoint_relative_path"])
             if path.exists():
-                return torch.load(path, map_location="cpu"), path
+                payload = torch.load(path, map_location="cpu")
+                payload["checkpoint_local_id"] = str(entry["checkpoint_local_id"])
+                payload["checkpoint_relative_path"] = str(entry["checkpoint_relative_path"])
+                return payload, path
     existing = find_existing_source_zero_shot_checkpoint(source_dataset=source_dataset, model_name=model_name, seed=seed)
     if existing is None:
         raise FileNotFoundError(f"source-only checkpoint not found for {source_dataset}/{model_name}/seed{seed}")
-    return torch.load(existing, map_location="cpu"), existing
+    payload = torch.load(existing, map_location="cpu")
+    payload["checkpoint_local_id"] = str(
+        payload.get(
+            "checkpoint_local_id",
+            cross_source_only_checkpoint_local_id(
+                source_dataset=source_dataset,
+                model=model_name,
+                seed=seed,
+                best_epoch=int(payload["best_epoch"]),
+            ),
+        )
+    )
+    payload["checkpoint_relative_path"] = str(repo_relative(existing))
+    return payload, existing
+
+
+def load_existing_zero_shot_eval_metrics(
+    *,
+    output_dir: Path,
+    source_dataset: str,
+    target_dataset: str,
+    model_name: str,
+    seed: int,
+) -> tuple[list[dict[str, str]], list[dict[str, str]], dict[str, str]]:
+    subject_rows = filter_rows_to_fieldnames(read_csv_rows(output_dir / "subject_metrics.csv"), CROSS_SUBJECT_FIELDS)
+    recording_rows = filter_rows_to_fieldnames(read_csv_rows(output_dir / "recording_metrics.csv"), CROSS_RECORDING_FIELDS)
+    dataset_rows = read_csv_rows(output_dir / "dataset_metrics.csv")
+    stage = "cross_dataset_zero_shot_eval"
+    subject_filtered = [
+        row for row in subject_rows
+        if row.get("source_dataset") == source_dataset and row.get("target_dataset") == target_dataset and row.get("model") == model_name and int(row.get("seed", -1)) == seed and row.get("stage") == stage
+    ]
+    recording_filtered = [
+        row for row in recording_rows
+        if row.get("source_dataset") == source_dataset and row.get("target_dataset") == target_dataset and row.get("model") == model_name and int(row.get("seed", -1)) == seed and row.get("stage") == stage
+    ]
+    dataset_filtered = [
+        row for row in dataset_rows
+        if row.get("source_dataset") == source_dataset and row.get("target_dataset") == target_dataset and row.get("model") == model_name and int(row.get("seed", -1)) == seed and row.get("stage") == stage
+    ]
+    if not subject_filtered or not recording_filtered or not dataset_filtered:
+        raise RuntimeError(f"missing completed zero-shot eval baseline for {source_dataset}->{target_dataset}/{model_name}/seed{seed}")
+    return subject_filtered, recording_filtered, dataset_filtered[-1]
+
+
+def save_cross_pooled10_checkpoint(
+    *,
+    config: dict,
+    config_path: Path,
+    source_cfg: dict[str, object],
+    target_cfg: dict[str, object],
+    source_payload: dict[str, object],
+    model_name: str,
+    best_state: dict[str, torch.Tensor],
+    best_epoch: int,
+    best_val_score: float,
+    audit: dict[str, object],
+) -> tuple[str, Path]:
+    source_dataset = str(source_cfg["dataset_id"])
+    target_dataset = str(target_cfg["dataset_id"])
+    seed = int(config["seed"])
+    checkpoint_local_id = cross_calibration_checkpoint_local_id(
+        source_dataset=source_dataset,
+        target_dataset=target_dataset,
+        model=model_name,
+        seed=seed,
+        best_epoch=best_epoch,
+    )
+    path = cross_calibration_checkpoint_root() / cross_calibration_checkpoint_relative_path(
+        source_dataset=source_dataset,
+        target_dataset=target_dataset,
+        model=model_name,
+        seed=seed,
+        best_epoch=best_epoch,
+    )
+    ensure_dir(path.parent)
+    payload = {
+        "model_state_dict": {key: value.detach().cpu().clone() for key, value in best_state.items()},
+        "source_dataset": source_dataset,
+        "target_dataset": target_dataset,
+        "model": model_name,
+        "seed": seed,
+        "stage": "pooled10_target_calibration",
+        "protocol": f"{config['protocol']}::pooled10_target_calibration",
+        "config_path": repo_relative(config_path),
+        "source_split_manifest_path": repo_relative(ROOT / str(source_cfg["split_manifest_path"])),
+        "target_split_manifest_path": repo_relative(ROOT / str(target_cfg["split_manifest_path"])),
+        "source_checkpoint_local_id": str(source_payload["checkpoint_local_id"]),
+        "source_checkpoint_relative_path": str(source_payload["checkpoint_relative_path"]),
+        "source_checkpoint_best_epoch": int(source_payload["best_epoch"]),
+        "source_checkpoint_best_val_score": float(source_payload["best_val_score"]),
+        "target_test_subjects": list(audit["target_test_subjects"]),
+        "calibration_train_recording_ids": [rec_id for subject in audit["subjects"] for rec_id in subject["calibration"]["train_recording_ids"]],
+        "calibration_val_recording_ids": [rec_id for subject in audit["subjects"] for rec_id in subject["calibration"]["val_recording_ids"]],
+        "test_recording_ids": [rec_id for subject in audit["subjects"] for rec_id in subject["final_test"]["recording_ids"]],
+        "actual_train_seconds": float(audit["pooled_target_calibration"]["train_seconds"]),
+        "actual_val_seconds": float(audit["pooled_target_calibration"]["val_seconds"]),
+        "actual_calibration_seconds": float(audit["pooled_target_calibration"]["calibration_total_seconds"]),
+        "final_test_seconds": float(audit["pooled_target_calibration"]["final_test_seconds"]),
+        "best_epoch": int(best_epoch),
+        "best_val_score": float(best_val_score),
+        "branch": current_git_branch_name(),
+        "commit_sha": current_git_commit_sha(),
+        "created_at": time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime()),
+    }
+    torch.save(payload, path)
+    return checkpoint_local_id, path
 
 
 def mean_dataset_metric(subject_rows: list[dict[str, object]], *, source_dataset: str, target_dataset: str, model_name: str, seed: int, stage: str) -> dict[str, object]:
@@ -1273,6 +1448,10 @@ def build_cross_recording_rows(
             }
         )
     return rows
+
+
+def group_cross_subject_metrics(rows: list[dict[str, object]]) -> dict[str, float]:
+    return {str(row["subject_id"]): float(row["metric_value"]) for row in rows}
 
 
 def run_source_zero_shot_job(
@@ -1405,6 +1584,246 @@ def run_source_zero_shot_job(
         "completed_job": completed_job,
         "cross_subject_rows": [],
         "cross_recording_rows": [],
+    }
+
+
+def run_pooled10_target_calibration_job(
+    *,
+    config: dict,
+    config_path: Path,
+    source_cfg: dict[str, object],
+    target_cfg: dict[str, object],
+    audit: dict[str, object],
+    model_name: str,
+    output_dir: Path,
+    device: str,
+) -> dict[str, object]:
+    source_dataset = str(source_cfg["dataset_id"])
+    target_dataset = str(target_cfg["dataset_id"])
+    seed = int(config["seed"])
+    logger = JobLogger(output_dir / "logs" / f"{source_dataset}_to_{target_dataset}_{model_name}_seed{seed}_pooled10_target_calibration.log")
+    if not bool(audit["all_target_test_subjects_support_10min"]):
+        raise RuntimeError(f"target calibration audit failed for {source_dataset}->{target_dataset}/{model_name}")
+    source_payload, _ = load_source_zero_shot_checkpoint_payload(
+        output_dir=output_dir,
+        source_dataset=source_dataset,
+        model_name=model_name,
+        seed=seed,
+    )
+    zero_subject_rows, _, zero_dataset_row = load_existing_zero_shot_eval_metrics(
+        output_dir=output_dir,
+        source_dataset=source_dataset,
+        target_dataset=target_dataset,
+        model_name=model_name,
+        seed=seed,
+    )
+    pooled_train_ids = [rec_id for subject in audit["subjects"] for rec_id in subject["calibration"]["train_recording_ids"]]
+    pooled_val_ids = [rec_id for subject in audit["subjects"] for rec_id in subject["calibration"]["val_recording_ids"]]
+    pooled_test_ids = [rec_id for subject in audit["subjects"] for rec_id in subject["final_test"]["recording_ids"]]
+    train_set = set(pooled_train_ids)
+    val_set = set(pooled_val_ids)
+    test_set = set(pooled_test_ids)
+    if train_set & val_set or train_set & test_set or val_set & test_set:
+        raise RuntimeError("target calibration/train/val/test recording overlap detected")
+    if not pooled_train_ids or not pooled_val_ids or not pooled_test_ids:
+        raise RuntimeError("target calibration or final test recordings are empty")
+    target_dir = resolve_dataset_path(str(target_cfg["dataset_locator"]))
+    model_handle, model_kwargs = instantiate_model(config, model_name)
+    train_dataset = SelectedRecordingWindowDataset(
+        target_dir,
+        recording_ids=pooled_train_ids,
+        window_size=model_window_size(config, model_name),
+        channels=range(64),
+        target_index=str(config[model_name]["target_index"]),
+    )
+    val_dataset = SelectedRecordingWindowDataset(
+        target_dir,
+        recording_ids=pooled_val_ids,
+        window_size=model_window_size(config, model_name),
+        channels=range(64),
+        target_index=str(config[model_name]["target_index"]),
+    )
+    if len(train_dataset) == 0 or len(val_dataset) == 0:
+        raise RuntimeError("pooled calibration windows are empty")
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=int(config[model_name]["batch_size"]),
+        shuffle=bool(config["dataloader"]["shuffle_train"]),
+        num_workers=0,
+        pin_memory=(device == "cuda"),
+    )
+    val_loader = DataLoader(
+        val_dataset,
+        batch_size=int(config["dataloader"]["eval_batch_size"]),
+        shuffle=False,
+        num_workers=0,
+        pin_memory=(device == "cuda"),
+    )
+    model = model_handle(**model_kwargs).to(device)
+    model.load_state_dict(source_payload["model_state_dict"], strict=True)
+    state_dict, best_epoch, best_val_score, epochs_completed = train_window_model(
+        model=model,
+        train_loader=train_loader,
+        val_loader=val_loader,
+        device=device,
+        lr=float(config[model_name]["fine_tune_learning_rate"]),
+        weight_decay=float(config[model_name]["weight_decay"]),
+        max_epochs=int(config[model_name]["max_epochs"]),
+        patience=int(config[model_name]["early_stopping_patience"]),
+        logger=logger,
+    )
+    checkpoint_local_id, checkpoint_path = save_cross_pooled10_checkpoint(
+        config=config,
+        config_path=config_path,
+        source_cfg=source_cfg,
+        target_cfg=target_cfg,
+        source_payload=source_payload,
+        model_name=model_name,
+        best_state=state_dict,
+        best_epoch=best_epoch,
+        best_val_score=best_val_score,
+        audit=audit,
+    )
+    logger.event("checkpoint_saved", checkpoint_local_id=checkpoint_local_id, checkpoint_path=repo_relative(checkpoint_path))
+    stdout_message(f"[CHECKPOINT SAVED] checkpoint_local_id={checkpoint_local_id} path={repo_relative(checkpoint_path)}")
+    strict_payload = torch.load(checkpoint_path, map_location="cpu")
+    strict_model = model_handle(**model_kwargs)
+    strict_model.load_state_dict(strict_payload["model_state_dict"], strict=True)
+    fine_model = model_handle(**model_kwargs).to(device)
+    fine_model.load_state_dict(state_dict, strict=True)
+    checkpoint_id = f"{model_name}_pooled10_epoch_{best_epoch}"
+    stdout_message("[TEST START]")
+    recording_rows_raw, subject_rows_raw = predict_target_recordings_window(
+        config=config,
+        target_cfg=target_cfg,
+        model_name=model_name,
+        model=fine_model,
+        checkpoint_id=checkpoint_id,
+        recording_ids=pooled_test_ids,
+        device=device,
+        protocol=f"{config['protocol']}::pooled10_target_calibration",
+        artifact_scope=f"{config['artifact_scope']}::pooled10_target_calibration",
+        dataset_label=target_dataset,
+        seed=seed,
+    )
+    stdout_message("[TEST DONE]")
+    subject_rows = build_cross_subject_rows(
+        subject_rows_raw,
+        source_dataset=source_dataset,
+        target_dataset=target_dataset,
+        stage="pooled10_target_calibration",
+    )
+    recording_rows = build_cross_recording_rows(
+        recording_rows_raw,
+        source_dataset=source_dataset,
+        target_dataset=target_dataset,
+        stage="pooled10_target_calibration",
+    )
+    dataset_row = mean_dataset_metric(
+        subject_rows_raw,
+        source_dataset=source_dataset,
+        target_dataset=target_dataset,
+        model_name=model_name,
+        seed=seed,
+        stage="pooled10_target_calibration",
+    )
+    zero_metrics = group_cross_subject_metrics(zero_subject_rows)
+    fine_metrics = group_cross_subject_metrics(subject_rows)
+    comparison_rows: list[dict[str, object]] = []
+    for subject in audit["subjects"]:
+        subject_id = str(subject["subject_id"])
+        comparison_rows.append(
+            {
+                "source_dataset": source_dataset,
+                "target_dataset": target_dataset,
+                "model": model_name,
+                "seed": seed,
+                "stage": "pooled10_target_calibration",
+                "subject_id": subject_id,
+                "zero_shot_metric": float(zero_metrics[subject_id]),
+                "calibrated_metric": float(fine_metrics[subject_id]),
+                "delta": float(fine_metrics[subject_id] - zero_metrics[subject_id]),
+                "actual_calibration_seconds": float(subject["calibration"]["actual_total_seconds"]),
+                "actual_train_seconds": float(subject["calibration"]["actual_train_seconds"]),
+                "actual_val_seconds": float(subject["calibration"]["actual_val_seconds"]),
+                "final_test_seconds": float(subject["final_test"]["seconds"]),
+                "calibration_train_recording_ids": "|".join(subject["calibration"]["train_recording_ids"]),
+                "calibration_val_recording_ids": "|".join(subject["calibration"]["val_recording_ids"]),
+                "test_recording_ids": "|".join(subject["final_test"]["recording_ids"]),
+            }
+        )
+    logger.event("job_completed", mean_pearson=dataset_row["mean_pearson"], n_test_subjects=dataset_row["n_subjects"])
+    stdout_message(f"[JOB DONE] mean_pearson={dataset_row['mean_pearson']} n_test_subjects={dataset_row['n_subjects']}")
+    checkpoint_entry = {
+        "source_dataset": source_dataset,
+        "target_dataset": target_dataset,
+        "model": model_name,
+        "seed": seed,
+        "stage": "pooled10_target_calibration",
+        "source_job_key": build_job_key(source_dataset, None, model_name, seed, "source_zero_shot"),
+        "source_eval_job_key": build_job_key(source_dataset, target_dataset, model_name, seed, "cross_dataset_zero_shot_eval"),
+        "source_checkpoint_local_id": str(source_payload["checkpoint_local_id"]),
+        "source_checkpoint_relative_path": str(source_payload["checkpoint_relative_path"]),
+        "source_checkpoint_load_verified": True,
+        "source_checkpoint_best_epoch": int(source_payload["best_epoch"]),
+        "source_checkpoint_best_val_score": float(source_payload["best_val_score"]),
+        "checkpoint_local_id": checkpoint_local_id,
+        "checkpoint_relative_path": repo_relative(checkpoint_path),
+        "checkpoint_artifact_status": "local_only_not_committed",
+        "best_epoch": int(best_epoch),
+        "best_val_score": float(best_val_score),
+        "target_test_subjects": list(audit["target_test_subjects"]),
+        "protocol": f"{config['protocol']}::pooled10_target_calibration",
+        "config_path": repo_relative(config_path),
+        "source_split_manifest_path": repo_relative(ROOT / str(source_cfg["split_manifest_path"])),
+        "target_split_manifest_path": repo_relative(ROOT / str(target_cfg["split_manifest_path"])),
+        "branch": current_git_branch_name(),
+        "commit_sha": current_git_commit_sha(),
+    }
+    model_run_entry = {
+        "job_key": build_job_key(source_dataset, target_dataset, model_name, seed, "pooled10_target_calibration"),
+        "source_dataset": source_dataset,
+        "target_dataset": target_dataset,
+        "model": model_name,
+        "seed": seed,
+        "stage": "pooled10_target_calibration",
+        "status": "success",
+        "source_checkpoint_local_id": str(source_payload["checkpoint_local_id"]),
+        "checkpoint_id": checkpoint_id,
+        "checkpoint_local_id": checkpoint_local_id,
+        "epochs_completed": int(epochs_completed),
+        "best_epoch": int(best_epoch),
+        "best_val_score": float(best_val_score),
+        "pooled_train_seconds": float(audit["pooled_target_calibration"]["train_seconds"]),
+        "pooled_val_seconds": float(audit["pooled_target_calibration"]["val_seconds"]),
+        "pooled_calibration_total_seconds": float(audit["pooled_target_calibration"]["calibration_total_seconds"]),
+        "final_test_seconds": float(audit["pooled_target_calibration"]["final_test_seconds"]),
+        "prediction_target_alignment_ok": True,
+        "source_zero_shot_mean_pearson": float(zero_dataset_row["mean_pearson"]),
+        "calibrated_mean_pearson": float(dataset_row["mean_pearson"]),
+        "delta_mean_pearson": float(float(dataset_row["mean_pearson"]) - float(zero_dataset_row["mean_pearson"])),
+    }
+    completed_job = {
+        "job_key": build_job_key(source_dataset, target_dataset, model_name, seed, "pooled10_target_calibration"),
+        "source_dataset": source_dataset,
+        "target_dataset": target_dataset,
+        "model": model_name,
+        "seed": seed,
+        "stage": "pooled10_target_calibration",
+        "status": "success",
+        "checkpoint_id": checkpoint_id,
+        "checkpoint_local_id": checkpoint_local_id,
+    }
+    return {
+        "recording_rows": recording_rows,
+        "subject_rows": subject_rows,
+        "dataset_row": dataset_row,
+        "comparison_rows": comparison_rows,
+        "checkpoint_entry": checkpoint_entry,
+        "model_run_entry": model_run_entry,
+        "completed_job": completed_job,
+        "cross_subject_rows": subject_rows,
+        "cross_recording_rows": recording_rows,
     }
 
 
@@ -1670,8 +2089,29 @@ def main() -> int:
                     device=device,
                 )
                 append_job_result(state, result)
+            elif stage == "pooled10_target_calibration":
+                if target_dataset is None:
+                    raise RuntimeError("target_dataset is required for pooled10_target_calibration")
+                source_job_key = build_job_key(source_dataset, None, model_name, int(config["seed"]), "source_zero_shot")
+                eval_job_key = build_job_key(source_dataset, target_dataset, model_name, int(config["seed"]), "cross_dataset_zero_shot_eval")
+                state_completed = {str(item["job_key"]) for item in state["completed_jobs"]}
+                if source_job_key not in state_completed:
+                    raise RuntimeError(f"required source_zero_shot checkpoint job not completed: {source_job_key}")
+                if eval_job_key not in state_completed:
+                    raise RuntimeError(f"required cross_dataset_zero_shot_eval baseline job not completed: {eval_job_key}")
+                result = run_pooled10_target_calibration_job(
+                    config=config,
+                    config_path=config_path,
+                    source_cfg=datasets_by_id[source_dataset],
+                    target_cfg=datasets_by_id[target_dataset],
+                    audit=audit_map[(source_dataset, target_dataset)],
+                    model_name=model_name,
+                    output_dir=output_dir,
+                    device=device,
+                )
+                append_job_result(state, result)
             else:
-                raise NotImplementedError("pooled10_target_calibration runtime is not implemented yet")
+                raise RuntimeError(f"unknown stage: {stage}")
         except Exception as exc:
             state["failures"].append(
                 {

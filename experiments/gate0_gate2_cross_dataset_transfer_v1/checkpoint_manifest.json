@@ -1,3 +1,78 @@
 {
-  "checkpoints": []
+  "checkpoints": [
+    {
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": null,
+      "model": "eegnet",
+      "seed": 0,
+      "stage": "source_zero_shot",
+      "source_job_key": "weissbart_tf64:eegnet:seed0:source_zero_shot",
+      "checkpoint_local_id": "cross_dataset_source_only:eegnet:weissbart_tf64:seed0:best_epoch_4",
+      "checkpoint_relative_path": "local_checkpoints/cross_dataset/source_only/eegnet/weissbart_tf64/seed0/best_epoch_4.pt",
+      "checkpoint_artifact_status": "local_only_not_committed",
+      "best_epoch": 4,
+      "best_val_score": 0.14332639425190102,
+      "source_train_subjects": [
+        "P00",
+        "P09",
+        "P02",
+        "P07",
+        "P11",
+        "P06",
+        "P04",
+        "P03"
+      ],
+      "source_val_subjects": [
+        "P12",
+        "P10"
+      ],
+      "target_test_subjects": [],
+      "protocol": "gate0_gate2_cross_dataset_transfer_v1::source_zero_shot",
+      "config_path": "configs/benchmark/gate0_gate2_cross_dataset_transfer_v1.json",
+      "source_split_manifest_path": "splits/subject_holdout_fixed_split_v1/weissbart_tf64.json",
+      "target_split_manifest_path": null,
+      "branch": "fix/ar-20260625-161300-a43831b-cross-dataset-transfer-v1",
+      "commit_sha": "b3ee42e4088380bb113793ef1a0c785aed427ce1"
+    },
+    {
+      "source_dataset": "etard_tf64",
+      "target_dataset": null,
+      "model": "eegnet",
+      "seed": 0,
+      "stage": "source_zero_shot",
+      "source_job_key": "etard_tf64:eegnet:seed0:source_zero_shot",
+      "checkpoint_local_id": "cross_dataset_source_only:eegnet:etard_tf64:seed0:best_epoch_4",
+      "checkpoint_relative_path": "local_checkpoints/cross_dataset/source_only/eegnet/etard_tf64/seed0/best_epoch_4.pt",
+      "checkpoint_artifact_status": "local_only_not_committed",
+      "best_epoch": 4,
+      "best_val_score": 0.08103472415132273,
+      "source_train_subjects": [
+        "P05",
+        "P02",
+        "P00",
+        "P01",
+        "P13",
+        "P04",
+        "P11",
+        "P07",
+        "P18",
+        "P06",
+        "P08",
+        "P12"
+      ],
+      "source_val_subjects": [
+        "P09",
+        "P15",
+        "P14",
+        "P19"
+      ],
+      "target_test_subjects": [],
+      "protocol": "gate0_gate2_cross_dataset_transfer_v1::source_zero_shot",
+      "config_path": "configs/benchmark/gate0_gate2_cross_dataset_transfer_v1.json",
+      "source_split_manifest_path": "splits/subject_holdout_fixed_split_v1/etard_tf64.json",
+      "target_split_manifest_path": null,
+      "branch": "fix/ar-20260625-161300-a43831b-cross-dataset-transfer-v1",
+      "commit_sha": "b3ee42e4088380bb113793ef1a0c785aed427ce1"
+    }
+  ]
 }

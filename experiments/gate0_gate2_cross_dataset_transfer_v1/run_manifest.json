@@ -5,7 +5,7 @@
   "base_commit": "ac847dd508a9c63ae546049f6a62b82fc34afc38",
   "current_branch": "fix/ar-20260625-161300-a43831b-cross-dataset-transfer-v1",
   "config_path": "configs/benchmark/gate0_gate2_cross_dataset_transfer_v1.json",
-  "commit_sha": "ac847dd508a9c63ae546049f6a62b82fc34afc38",
+  "commit_sha": "b3ee42e4088380bb113793ef1a0c785aed427ce1",
   "artifacts": {
     "transfer_plan": "experiments/gate0_gate2_cross_dataset_transfer_v1/transfer_plan.json",
     "calibration_plan": "experiments/gate0_gate2_cross_dataset_transfer_v1/calibration_plan.json",

@@ -1,1 +1,3 @@
 source_dataset,target_dataset,model,seed,stage,n_subjects,mean_pearson,std_pearson,min_pearson,max_pearson
+weissbart_tf64,etard_tf64,eegnet,0,cross_dataset_zero_shot_eval,4,0.06983227014459673,0.011688924303997417,0.053457501127396244,0.08548281576210448
+etard_tf64,weissbart_tf64,eegnet,0,cross_dataset_zero_shot_eval,3,0.06586572288439119,0.03956076541755672,0.011986955014292117,0.10585845965441815

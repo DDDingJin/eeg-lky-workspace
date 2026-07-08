@@ -1,0 +1,26 @@
+{
+  "checkpoints": [
+    {
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": "etard_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "cross_dataset_zero_shot_checkpoint_path_pattern": "local_checkpoints/cross_dataset/zero_shot/eegnet/weissbart_tf64/etard_tf64/seed0/best_epoch_PENDING.pt",
+      "pooled10_target_calibration_checkpoint_path_pattern": "local_checkpoints/cross_dataset/pooled10_target_calibration/eegnet/weissbart_tf64/etard_tf64/seed0/best_epoch_PENDING.pt",
+      "existing_zero_shot_checkpoint": null,
+      "torch_load_smoke": true,
+      "strict_load_state_dict_smoke": true
+    },
+    {
+      "source_dataset": "etard_tf64",
+      "target_dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "cross_dataset_zero_shot_checkpoint_path_pattern": "local_checkpoints/cross_dataset/zero_shot/eegnet/etard_tf64/weissbart_tf64/seed0/best_epoch_PENDING.pt",
+      "pooled10_target_calibration_checkpoint_path_pattern": "local_checkpoints/cross_dataset/pooled10_target_calibration/eegnet/etard_tf64/weissbart_tf64/seed0/best_epoch_PENDING.pt",
+      "existing_zero_shot_checkpoint": null,
+      "torch_load_smoke": true,
+      "strict_load_state_dict_smoke": true
+    }
+  ]
+}

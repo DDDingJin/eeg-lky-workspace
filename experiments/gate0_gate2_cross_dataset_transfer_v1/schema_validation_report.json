@@ -1,0 +1,12 @@
+{
+  "protocol": "gate0_gate2_cross_dataset_transfer_v1",
+  "passed": true,
+  "checks": {
+    "target_calibration_audit_passed": true,
+    "failure_report_empty": true,
+    "runtime_jobs_executed": false
+  },
+  "notes": [
+    "preflight closure only; runtime files initialized without training"
+  ]
+}

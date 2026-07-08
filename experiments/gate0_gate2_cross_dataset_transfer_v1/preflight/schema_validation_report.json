@@ -1,0 +1,14 @@
+{
+  "protocol": "gate0_gate2_cross_dataset_transfer_v1",
+  "passed": true,
+  "checks": {
+    "split_manifests_loaded": true,
+    "target_calibration_audit_passed": true,
+    "shape_checks_passed": true,
+    "failure_report_empty": true,
+    "cross_dataset_stage_requires_training": true
+  },
+  "notes": [
+    "preflight only; no cross-dataset zero-shot or pooled10 target calibration jobs executed"
+  ]
+}

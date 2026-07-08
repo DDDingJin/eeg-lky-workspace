@@ -1,0 +1,24 @@
+{
+  "model_run_entries": [
+    {
+      "model": "eegnet",
+      "input_shape": [
+        1,
+        64,
+        50
+      ],
+      "raw_output_shape": [
+        1
+      ],
+      "postprocessed_prediction_shape": [
+        1
+      ],
+      "scorer_input_shape": [
+        1
+      ],
+      "target_index": "last",
+      "target_contract": "scalar target per window",
+      "passed": true
+    }
+  ]
+}

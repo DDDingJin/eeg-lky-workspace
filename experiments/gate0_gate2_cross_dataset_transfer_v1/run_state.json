@@ -1,30 +1,25 @@
 {
-  "phase": "partial",
+  "phase": "completed",
   "completed_job_keys": [
+    "etard_tf64->weissbart_tf64:adt:seed0:cross_dataset_zero_shot_eval",
+    "etard_tf64->weissbart_tf64:adt:seed0:pooled10_target_calibration",
     "etard_tf64->weissbart_tf64:eegnet:seed0:cross_dataset_zero_shot_eval",
+    "etard_tf64->weissbart_tf64:eegnet:seed0:pooled10_target_calibration",
+    "etard_tf64->weissbart_tf64:fcnn:seed0:cross_dataset_zero_shot_eval",
+    "etard_tf64->weissbart_tf64:fcnn:seed0:pooled10_target_calibration",
+    "etard_tf64:adt:seed0:source_zero_shot",
     "etard_tf64:eegnet:seed0:source_zero_shot",
+    "etard_tf64:fcnn:seed0:source_zero_shot",
+    "weissbart_tf64->etard_tf64:adt:seed0:cross_dataset_zero_shot_eval",
+    "weissbart_tf64->etard_tf64:adt:seed0:pooled10_target_calibration",
     "weissbart_tf64->etard_tf64:eegnet:seed0:cross_dataset_zero_shot_eval",
-    "weissbart_tf64:eegnet:seed0:source_zero_shot"
+    "weissbart_tf64->etard_tf64:eegnet:seed0:pooled10_target_calibration",
+    "weissbart_tf64->etard_tf64:fcnn:seed0:cross_dataset_zero_shot_eval",
+    "weissbart_tf64->etard_tf64:fcnn:seed0:pooled10_target_calibration",
+    "weissbart_tf64:adt:seed0:source_zero_shot",
+    "weissbart_tf64:eegnet:seed0:source_zero_shot",
+    "weissbart_tf64:fcnn:seed0:source_zero_shot"
   ],
-  "pending_jobs": [
-    {
-      "source_dataset": "weissbart_tf64",
-      "target_dataset": "etard_tf64",
-      "model": "eegnet",
-      "seed": 0,
-      "stage": "pooled10_target_calibration",
-      "job_key": "weissbart_tf64->etard_tf64:eegnet:seed0:pooled10_target_calibration",
-      "depends_on_zero_shot_eval": "weissbart_tf64->etard_tf64:eegnet:seed0:cross_dataset_zero_shot_eval"
-    },
-    {
-      "source_dataset": "etard_tf64",
-      "target_dataset": "weissbart_tf64",
-      "model": "eegnet",
-      "seed": 0,
-      "stage": "pooled10_target_calibration",
-      "job_key": "etard_tf64->weissbart_tf64:eegnet:seed0:pooled10_target_calibration",
-      "depends_on_zero_shot_eval": "etard_tf64->weissbart_tf64:eegnet:seed0:cross_dataset_zero_shot_eval"
-    }
-  ],
-  "last_update_time": "2026-07-08 15:16:16"
+  "pending_jobs": [],
+  "last_update_time": "2026-07-08 22:08:16"
 }

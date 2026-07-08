@@ -1,0 +1,8 @@
+{
+  "phase": "completed",
+  "completed_job_keys": [
+    "weissbart_tf64->etard_tf64:eegnet:seed0:cross_dataset_zero_shot"
+  ],
+  "pending_jobs": [],
+  "last_update_time": "2026-07-08 09:46:32"
+}

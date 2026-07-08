@@ -3,8 +3,10 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import threading
@@ -13,6 +15,8 @@ import uuid
 
 import numpy as np
 import torch
+from torch.optim import NAdam
+from torch.utils.data import DataLoader, Dataset
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,11 +24,25 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from benchmark.result_schema import RECORDING_METRIC_FIELDS, SUBJECT_METRIC_FIELDS, RecordingMetricRow
+from benchmark.scoring import WindowPrediction, aggregate_overlapping_windows, recording_metric_row, subject_metric_rows
 from repro.mldecoders.models import EEGNetRegressor
 
 
 ATOMIC_RETRY_ATTEMPTS = 5
 ATOMIC_RETRY_SLEEP_SECONDS = 0.05
+DATASET_METRIC_FIELDS = [
+    "source_dataset",
+    "target_dataset",
+    "model",
+    "seed",
+    "stage",
+    "n_subjects",
+    "mean_pearson",
+    "std_pearson",
+    "min_pearson",
+    "max_pearson",
+]
 COMPARISON_FIELDS = [
     "source_dataset",
     "target_dataset",
@@ -120,6 +138,13 @@ def read_json(path: Path, default: object) -> object:
         return json.load(handle)
 
 
+def read_csv_rows(path: Path) -> list[dict[str, str]]:
+    if not path.exists() or path.stat().st_size == 0:
+        return []
+    with open(path, "r", encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
 def repo_relative(path: Path) -> str:
     if not path.is_absolute():
         path = (ROOT / path).resolve()
@@ -191,6 +216,83 @@ def stdout_block(title: str, lines: list[str]) -> None:
         print(line, flush=True)
 
 
+class JobLogger:
+    def __init__(self, path: Path) -> None:
+        ensure_dir(path.parent)
+        self.path = path
+
+    def event(self, name: str, **payload: object) -> None:
+        line = f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] " + " ".join([name] + [f"{key}={payload[key]}" for key in payload]) + "\n"
+        with open(self.path, "a", encoding="utf-8") as handle:
+            handle.write(line)
+
+
+class SubjectSplitWindowDataset(Dataset):
+    def __init__(
+        self,
+        dataset_dir: Path,
+        split: str,
+        *,
+        subjects: list[str],
+        window_size: int,
+        channels: range,
+        target_index: str,
+    ) -> None:
+        self.window_size = int(window_size)
+        self.target_index = target_index
+        self.channel_idx = np.asarray(list(channels), dtype=int)
+        self.recordings: list[tuple[str, str, np.ndarray, np.ndarray]] = []
+        self.index_rows: list[tuple[int, int]] = []
+        self.total_recordings = 0
+        self.preloaded_bytes = 0
+        for subject_id in subjects:
+            for eeg_path in sorted(dataset_dir.glob(f"{split}_-_{subject_id}_-_*_-_eeg.npy")):
+                recording_id = eeg_path.stem.replace("_-_eeg", "")
+                env_path = eeg_path.with_name(f"{recording_id}_-_envelope.npy")
+                if not env_path.exists():
+                    continue
+                eeg = np.asarray(np.load(eeg_path, mmap_mode="r")[:, self.channel_idx], dtype=np.float32)
+                env = np.asarray(np.load(env_path, mmap_mode="r")[:, 0], dtype=np.float32)
+                rec_idx = len(self.recordings)
+                self.recordings.append((subject_id, recording_id, eeg, env))
+                self.total_recordings += 1
+                self.preloaded_bytes += int(eeg.nbytes + env.nbytes)
+                max_start = eeg.shape[0] - self.window_size
+                if max_start >= 0:
+                    for start in range(max_start + 1):
+                        self.index_rows.append((rec_idx, start))
+        if not self.recordings:
+            raise ValueError(f"no recordings found for split={split} subjects={subjects}")
+
+    def __len__(self) -> int:
+        return len(self.index_rows)
+
+    def __getitem__(self, idx: int) -> tuple[np.ndarray, np.float32]:
+        rec_idx, start = self.index_rows[idx]
+        _, _, eeg, env = self.recordings[rec_idx]
+        x = eeg[start : start + self.window_size].T
+        if self.target_index == "first":
+            y = env[start]
+        elif self.target_index == "center":
+            y = env[start + self.window_size // 2]
+        else:
+            y = env[start + self.window_size - 1]
+        return x.astype(np.float32), np.float32(y)
+
+
+def batch_corr(y_true: torch.Tensor, y_pred: torch.Tensor, eps: float = 1e-8) -> torch.Tensor:
+    y_true0 = y_true - torch.mean(y_true)
+    y_pred0 = y_pred - torch.mean(y_pred)
+    return torch.sum(y_true0 * y_pred0) / (torch.sqrt(torch.sum(y_true0**2)) * torch.sqrt(torch.sum(y_pred0**2)) + eps)
+
+
+def parse_subject_id(recording_id: str) -> str:
+    parts = recording_id.split("_-_")
+    if len(parts) < 3:
+        raise ValueError(f"unexpected recording id: {recording_id}")
+    return parts[1]
+
+
 def load_split_manifest(path: Path) -> dict[str, object]:
     payload = read_json(path, {})
     if not isinstance(payload, dict):
@@ -204,7 +306,7 @@ def load_split_manifest(path: Path) -> dict[str, object]:
 
 def model_contract(config: dict, model_name: str) -> dict[str, object]:
     if model_name != "eegnet":
-        raise ValueError(f"unsupported model for cross-dataset transfer preflight: {model_name}")
+        raise ValueError(f"unsupported model for cross-dataset transfer: {model_name}")
     return {
         "family": "window_scalar",
         "input_tensor_shape": [1, 64, int(config["eegnet"]["window_size"])],
@@ -218,7 +320,7 @@ def model_contract(config: dict, model_name: str) -> dict[str, object]:
 
 def instantiate_model(config: dict, model_name: str) -> tuple[object, dict[str, object]]:
     if model_name != "eegnet":
-        raise ValueError(f"unsupported model for cross-dataset transfer preflight: {model_name}")
+        raise ValueError(f"unsupported model for cross-dataset transfer: {model_name}")
     cfg = config["eegnet"]
     return EEGNetRegressor, {
         "num_input_channels": 64,
@@ -228,6 +330,14 @@ def instantiate_model(config: dict, model_name: str) -> tuple[object, dict[str, 
         "separable_filters": int(cfg["separable_filters"]),
         "dropout_rate": float(cfg["dropout_rate"]),
     }
+
+
+def postprocess_model_output(raw_output: torch.Tensor) -> torch.Tensor:
+    return raw_output.reshape(-1)
+
+
+def model_window_size(config: dict, model_name: str) -> int:
+    return int(config[model_name]["window_size"])
 
 
 def discover_recordings(dataset_dir: Path, *, split: str, subject_id: str, sampling_rate: int, window_size: int) -> list[dict[str, object]]:
@@ -381,15 +491,16 @@ def shape_check_for_model(config: dict, model_name: str, device: str) -> dict[st
     x = torch.zeros(*contract["input_tensor_shape"], device=device, dtype=torch.float32)
     with torch.no_grad():
         raw = model(x)
+        post = postprocess_model_output(raw)
     return {
         "model": model_name,
         "input_shape": list(contract["input_tensor_shape"]),
         "raw_output_shape": list(raw.shape),
-        "postprocessed_prediction_shape": [int(raw.reshape(-1).shape[0])],
+        "postprocessed_prediction_shape": list(post.shape),
         "scorer_input_shape": contract["scorer_input_shape"],
         "target_index": contract["target_index"],
         "target_contract": contract["target_contract"],
-        "passed": list(raw.shape) == contract["raw_output_shape"],
+        "passed": list(raw.shape) == contract["raw_output_shape"] and list(post.shape) == contract["postprocessed_prediction_shape"],
     }
 
 
@@ -401,6 +512,14 @@ def cross_calibration_checkpoint_root() -> Path:
     return ROOT / "local_checkpoints" / "cross_dataset" / "pooled10_target_calibration"
 
 
+def cross_zero_shot_checkpoint_local_id(*, source_dataset: str, target_dataset: str, model: str, seed: int, best_epoch: int) -> str:
+    return f"cross_dataset_zero_shot:{model}:{source_dataset}->{target_dataset}:seed{seed}:best_epoch_{best_epoch}"
+
+
+def cross_zero_shot_checkpoint_relative_path(*, source_dataset: str, target_dataset: str, model: str, seed: int, best_epoch: int) -> Path:
+    return Path(model) / source_dataset / target_dataset / f"seed{seed}" / f"best_epoch_{best_epoch}.pt"
+
+
 def cross_zero_shot_checkpoint_path_pattern(*, source_dataset: str, target_dataset: str, model: str, seed: int) -> Path:
     return cross_zero_shot_checkpoint_root() / model / source_dataset / target_dataset / f"seed{seed}" / "best_epoch_PENDING.pt"
 
@@ -409,10 +528,15 @@ def cross_calibration_checkpoint_path_pattern(*, source_dataset: str, target_dat
     return cross_calibration_checkpoint_root() / model / source_dataset / target_dataset / f"seed{seed}" / "best_epoch_PENDING.pt"
 
 
-def load_latest_local_checkpoint(path: Path) -> Path | None:
-    if not path.parent.exists():
+def checkpoint_epoch_from_name(path: Path) -> int:
+    match = re.search(r"best_epoch_(\d+)\.pt$", path.name)
+    return int(match.group(1)) if match else -1
+
+
+def latest_checkpoint_in_dir(path: Path) -> Path | None:
+    if not path.exists():
         return None
-    candidates = sorted(path.parent.glob("best_epoch_*.pt"))
+    candidates = sorted(path.glob("best_epoch_*.pt"), key=checkpoint_epoch_from_name)
     return candidates[-1] if candidates else None
 
 
@@ -432,30 +556,23 @@ def checkpoint_path_check(config: dict, transfer_audits: list[dict[str, object]]
                 model=model_name,
                 seed=int(config["seed"]),
             )
-            zero_existing = load_latest_local_checkpoint(zero_pattern)
+            existing = latest_checkpoint_in_dir(zero_pattern.parent)
             model_handle, model_kwargs = instantiate_model(config, model_name)
             model = model_handle(**model_kwargs)
-            smoke_path = zero_pattern.parent / "smoke_checkpoint_tmp.pt"
+            smoke_path = build_tmp_path(zero_pattern.parent / "smoke_checkpoint_tmp.pt")
             ensure_dir(smoke_path.parent)
-            torch.save(
-                {
-                    "model_state_dict": {key: value.detach().cpu().clone() for key, value in model.state_dict().items()},
-                    "source_dataset": str(audit["source_dataset"]),
-                    "target_dataset": str(audit["target_dataset"]),
-                    "model": model_name,
-                    "seed": int(config["seed"]),
-                    "created_at": time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime()),
-                },
-                smoke_path,
-            )
+            torch.save({"model_state_dict": {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}}, smoke_path)
             smoke_payload = torch.load(smoke_path, map_location="cpu")
             model.load_state_dict(smoke_payload["model_state_dict"], strict=True)
-            smoke_path.unlink(missing_ok=True)
-            load_ok = True
-            strict_ok = True
-            if zero_existing is not None and zero_existing.exists():
-                payload = torch.load(zero_existing, map_location="cpu")
-                model.load_state_dict(payload["model_state_dict"], strict=True)
+            del smoke_payload
+            for attempt in range(1, ATOMIC_RETRY_ATTEMPTS + 1):
+                try:
+                    smoke_path.unlink(missing_ok=True)
+                    break
+                except PermissionError:
+                    if attempt == ATOMIC_RETRY_ATTEMPTS:
+                        raise
+                    time.sleep(ATOMIC_RETRY_SLEEP_SECONDS * attempt)
             rows.append(
                 {
                     "source_dataset": str(audit["source_dataset"]),
@@ -464,9 +581,9 @@ def checkpoint_path_check(config: dict, transfer_audits: list[dict[str, object]]
                     "seed": int(config["seed"]),
                     "cross_dataset_zero_shot_checkpoint_path_pattern": repo_relative(zero_pattern),
                     "pooled10_target_calibration_checkpoint_path_pattern": repo_relative(cal_pattern),
-                    "existing_zero_shot_checkpoint": repo_relative(zero_existing) if zero_existing is not None else None,
-                    "torch_load_smoke": load_ok,
-                    "strict_load_state_dict_smoke": strict_ok,
+                    "existing_zero_shot_checkpoint": repo_relative(existing) if existing is not None else None,
+                    "torch_load_smoke": True,
+                    "strict_load_state_dict_smoke": True,
                 }
             )
     return rows
@@ -521,7 +638,6 @@ def build_manual_commands(config_path: Path, transfer_audits: list[dict[str, obj
         f"cd {ROOT}",
         f"F:\\miniconda\\envs\\decode-torch\\python.exe scripts\\run_gate0_gate2_cross_dataset_transfer_v1.py --config {config_path_ps} --device auto --resume --source-dataset {sources} --target-dataset {targets} --models {models_arg} --stage cross_dataset_zero_shot --max-jobs 1",
         f"F:\\miniconda\\envs\\decode-torch\\python.exe scripts\\run_gate0_gate2_cross_dataset_transfer_v1.py --config {config_path_ps} --device auto --resume --source-dataset {sources} --target-dataset {targets} --models {models_arg} --stage pooled10_target_calibration --max-jobs 1",
-        f"F:\\miniconda\\envs\\decode-torch\\python.exe scripts\\run_gate0_gate2_cross_dataset_transfer_v1.py --config {config_path_ps} --device auto --resume --source-dataset {sources} --target-dataset {targets} --models {models_arg} --stage all --max-jobs 2",
     ]
 
 
@@ -622,6 +738,19 @@ def write_preflight_artifacts(
     atomic_write_text(target_dir / "transfer_or_leakage_summary.md", "# Preflight Only\n\nNo training started.\n")
 
 
+def load_existing_runtime_state(output_dir: Path) -> dict[str, object]:
+    return {
+        "recording_rows": read_csv_rows(output_dir / "recording_metrics.csv"),
+        "subject_rows": read_csv_rows(output_dir / "subject_metrics.csv"),
+        "dataset_rows": read_csv_rows(output_dir / "dataset_metrics.csv"),
+        "comparison_rows": read_csv_rows(output_dir / "cross_dataset_zero_shot_vs_calibrated_comparison.csv"),
+        "checkpoint_entries": list(read_json(output_dir / "checkpoint_manifest.json", {"checkpoints": []}).get("checkpoints", [])),
+        "model_run_entries": list(read_json(output_dir / "model_run_entries.json", {"model_run_entries": []}).get("model_run_entries", [])),
+        "completed_jobs": list(read_json(output_dir / "completed_jobs.json", {"completed_jobs": []}).get("completed_jobs", [])),
+        "failures": list(read_json(output_dir / "failure_report.json", {"failures": []}).get("failures", [])),
+    }
+
+
 def write_runtime_state(
     *,
     config: dict,
@@ -629,10 +758,10 @@ def write_runtime_state(
     output_dir: Path,
     transfer_audits: list[dict[str, object]],
     job_plan: dict[str, object],
+    state: dict[str, object],
 ) -> None:
-    completed_job_keys = list(read_json(output_dir / "completed_jobs.json", {"completed_jobs": []}).get("completed_jobs", []))
-    completed_keys = {str(item["job_key"]) for item in completed_job_keys}
-    pending_jobs = [job for job in job_plan["planned_jobs"] if str(job["job_key"]) not in completed_keys]
+    completed_job_keys = {str(item["job_key"]) for item in state["completed_jobs"]}
+    pending_jobs = [job for job in job_plan["planned_jobs"] if str(job["job_key"]) not in completed_job_keys]
     leakage_lines = [
         "# Transfer / Leakage Summary",
         "",
@@ -654,13 +783,14 @@ def write_runtime_state(
         leakage_lines.append("")
     schema_validation = {
         "protocol": config["protocol"],
-        "passed": all(item["all_target_test_subjects_support_10min"] for item in transfer_audits),
+        "passed": all(item["all_target_test_subjects_support_10min"] for item in transfer_audits) and len(state["failures"]) == 0,
         "checks": {
             "target_calibration_audit_passed": all(item["all_target_test_subjects_support_10min"] for item in transfer_audits),
-            "failure_report_empty": True,
-            "runtime_jobs_executed": False,
+            "failure_report_empty": len(state["failures"]) == 0,
+            "completed_jobs_written_incrementally": True,
+            "checkpoint_manifest_written_incrementally": True,
         },
-        "notes": ["preflight closure only; runtime files initialized without training"],
+        "notes": [],
     }
     run_manifest = {
         "protocol": config["protocol"],
@@ -690,25 +820,527 @@ def write_runtime_state(
     atomic_write_json(output_dir / "run_manifest.json", run_manifest)
     atomic_write_json(output_dir / "transfer_plan.json", {"pairs": transfer_audits})
     atomic_write_json(output_dir / "calibration_plan.json", {"selection_rule": config["target_calibration"]["selection_rule"], "pairs": transfer_audits})
-    atomic_write_json(output_dir / "checkpoint_manifest.json", {"checkpoints": []})
-    atomic_write_json(output_dir / "model_run_entries.json", {"model_run_entries": []})
-    atomic_write_json(output_dir / "completed_jobs.json", {"completed_jobs": []})
-    atomic_write_json(output_dir / "failure_report.json", {"failures": []})
+    atomic_write_json(output_dir / "checkpoint_manifest.json", {"checkpoints": state["checkpoint_entries"]})
+    atomic_write_json(output_dir / "model_run_entries.json", {"model_run_entries": state["model_run_entries"]})
+    atomic_write_csv(output_dir / "recording_metrics.csv", state["recording_rows"], RECORDING_METRIC_FIELDS)
+    atomic_write_csv(output_dir / "subject_metrics.csv", state["subject_rows"], SUBJECT_METRIC_FIELDS)
+    atomic_write_csv(output_dir / "dataset_metrics.csv", state["dataset_rows"], DATASET_METRIC_FIELDS)
+    atomic_write_csv(output_dir / "cross_dataset_zero_shot_vs_calibrated_comparison.csv", state["comparison_rows"], COMPARISON_FIELDS)
+    atomic_write_json(output_dir / "failure_report.json", {"failures": state["failures"]})
     atomic_write_json(output_dir / "schema_validation_report.json", schema_validation)
+    atomic_write_text(output_dir / "transfer_or_leakage_summary.md", "\n".join(leakage_lines) + "\n")
+    atomic_write_json(output_dir / "completed_jobs.json", {"completed_jobs": state["completed_jobs"]})
     atomic_write_json(
         output_dir / "run_state.json",
         {
-            "phase": "preflight_only",
-            "completed_job_keys": [],
+            "phase": "partial" if pending_jobs else "completed",
+            "completed_job_keys": sorted(completed_job_keys),
             "pending_jobs": pending_jobs,
             "last_update_time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
         },
     )
-    atomic_write_text(output_dir / "transfer_or_leakage_summary.md", "\n".join(leakage_lines) + "\n")
-    atomic_write_csv(output_dir / "subject_metrics.csv", [], ["source_dataset", "target_dataset", "model", "seed", "stage", "subject_id", "metric_value", "checkpoint_id"])
-    atomic_write_csv(output_dir / "recording_metrics.csv", [], ["source_dataset", "target_dataset", "model", "seed", "stage", "subject_id", "recording_id", "metric_value", "checkpoint_id"])
-    atomic_write_csv(output_dir / "dataset_metrics.csv", [], ["source_dataset", "target_dataset", "model", "seed", "stage", "n_subjects", "mean_pearson", "std_pearson", "min_pearson", "max_pearson"])
-    atomic_write_csv(output_dir / "cross_dataset_zero_shot_vs_calibrated_comparison.csv", [], COMPARISON_FIELDS)
+
+
+def build_series_window(
+    *,
+    dataset: str,
+    model: str,
+    protocol: str,
+    seed: int,
+    subject_id: str,
+    recording_id: str,
+    sampling_rate: int,
+    checkpoint_id: str,
+    full_length: int,
+    offset: int,
+    prediction: np.ndarray,
+    target: np.ndarray,
+) -> WindowPrediction:
+    return WindowPrediction(
+        dataset=dataset,
+        model=model,
+        task="reconstruction",
+        protocol=protocol,
+        seed=seed,
+        subject_id=subject_id,
+        recording_id=recording_id,
+        sampling_rate=sampling_rate,
+        checkpoint_id=checkpoint_id,
+        recording_length=int(full_length),
+        start_index=int(offset),
+        prediction=prediction.astype(np.float32),
+        target=target.astype(np.float32),
+    )
+
+
+def aggregate_model_outputs(windows: list[WindowPrediction], artifact_scope: str) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    grouped: dict[tuple[str, str], list[WindowPrediction]] = {}
+    for window in windows:
+        grouped.setdefault((window.subject_id, window.recording_id), []).append(window)
+    recording_rows: list[dict[str, object]] = []
+    for (_, _), recording_windows in sorted(grouped.items()):
+        first = recording_windows[0]
+        prediction, target, valid_mask = aggregate_overlapping_windows(first.recording_length, recording_windows)
+        recording_rows.append(
+            recording_metric_row(
+                dataset=first.dataset,
+                model=first.model,
+                task=first.task,
+                protocol=first.protocol,
+                seed=first.seed,
+                subject_id=first.subject_id,
+                recording_id=first.recording_id,
+                sampling_rate=first.sampling_rate,
+                checkpoint_id=first.checkpoint_id,
+                artifact_scope=artifact_scope,
+                prediction=prediction,
+                target=target,
+                valid_mask=valid_mask,
+            ).__dict__
+        )
+    subject_rows = [row.__dict__ for row in subject_metric_rows([RecordingMetricRow(**row) for row in recording_rows])]
+    return recording_rows, subject_rows
+
+
+def collect_target_test_recording_ids(target_cfg: dict[str, object], target_test_subjects: list[str]) -> list[str]:
+    dataset_dir = resolve_dataset_path(str(target_cfg["dataset_locator"]))
+    rows: list[str] = []
+    for subject_id in target_test_subjects:
+        for eeg_path in sorted(dataset_dir.glob(f"test_-_{subject_id}_-_*_-_eeg.npy")):
+            rows.append(eeg_path.stem.replace("_-_eeg", ""))
+    return rows
+
+
+def predict_target_recordings_window(
+    *,
+    config: dict,
+    target_cfg: dict[str, object],
+    model_name: str,
+    model: torch.nn.Module,
+    checkpoint_id: str,
+    recording_ids: list[str],
+    device: str,
+    protocol: str,
+    artifact_scope: str,
+    dataset_label: str,
+    seed: int,
+) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    windows: list[WindowPrediction] = []
+    dataset_dir = resolve_dataset_path(str(target_cfg["dataset_locator"]))
+    sampling_rate = int(target_cfg["sampling_rate"])
+    window_size = int(config[model_name]["window_size"])
+    eval_batch_size = int(config["dataloader"]["eval_batch_size"])
+    model.eval()
+    for recording_id in recording_ids:
+        eeg_path = dataset_dir / f"{recording_id}_-_eeg.npy"
+        env_path = dataset_dir / f"{recording_id}_-_envelope.npy"
+        eeg = np.asarray(np.load(eeg_path)[:, :64], dtype=np.float32)
+        env = np.asarray(np.load(env_path)[:, 0], dtype=np.float32)
+        total_windows = eeg.shape[0] - window_size + 1
+        preds: list[np.ndarray] = []
+        with torch.no_grad():
+            for start in range(0, total_windows, eval_batch_size):
+                stop = min(total_windows, start + eval_batch_size)
+                batch = np.stack([eeg[offset : offset + window_size].T for offset in range(start, stop)], axis=0)
+                batch_tensor = torch.from_numpy(batch).to(device=device, dtype=torch.float32)
+                preds.append(model(batch_tensor).detach().cpu().numpy().astype(np.float32).reshape(-1))
+        pred_arr = np.concatenate(preds, axis=0) if preds else np.asarray([], dtype=np.float32)
+        target_arr = np.asarray([env[offset + window_size - 1] for offset in range(total_windows)], dtype=np.float32)
+        windows.append(
+            build_series_window(
+                dataset=dataset_label,
+                model=model_name,
+                protocol=protocol,
+                seed=seed,
+                subject_id=parse_subject_id(recording_id),
+                recording_id=recording_id,
+                sampling_rate=sampling_rate,
+                checkpoint_id=checkpoint_id,
+                full_length=len(env),
+                offset=window_size - 1,
+                prediction=pred_arr,
+                target=target_arr,
+            )
+        )
+    return aggregate_model_outputs(windows, artifact_scope)
+
+
+def evaluate_window_val(model: torch.nn.Module, loader: DataLoader, device: str) -> float:
+    model.eval()
+    scores: list[float] = []
+    with torch.no_grad():
+        for x, y in loader:
+            x = x.to(device=device, dtype=torch.float32)
+            y = y.to(device=device, dtype=torch.float32)
+            y_hat = model(x)
+            scores.append(float(batch_corr(y, y_hat).item()))
+    return float(np.mean(scores)) if scores else float("nan")
+
+
+def train_window_model(
+    *,
+    model: torch.nn.Module,
+    train_loader: DataLoader,
+    val_loader: DataLoader,
+    device: str,
+    lr: float,
+    weight_decay: float,
+    max_epochs: int,
+    patience: int,
+    logger: JobLogger,
+) -> tuple[dict[str, torch.Tensor], int, float, int]:
+    optimizer = NAdam(model.parameters(), lr=lr, weight_decay=weight_decay)
+    best_state = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
+    best_score = float("-inf")
+    best_epoch = -1
+    stale_epochs = 0
+    epochs_completed = 0
+    stdout_message("[TRAIN START]")
+    for epoch in range(max_epochs):
+        logger.event("train_epoch_started", epoch=epoch + 1, max_epochs=max_epochs)
+        stdout_message(f"[TRAIN EPOCH] epoch={epoch + 1}/{max_epochs}")
+        model.train()
+        for x, y in train_loader:
+            x = x.to(device=device, dtype=torch.float32)
+            y = y.to(device=device, dtype=torch.float32)
+            y_hat = model(x)
+            loss = -batch_corr(y, y_hat)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+        val_score = evaluate_window_val(model, val_loader, device)
+        epochs_completed = epoch + 1
+        logger.event("val_epoch_completed", epoch=epoch + 1, val_score=val_score)
+        stdout_message(f"[VAL DONE] epoch={epoch + 1} val_score={val_score} best_val={best_score if best_epoch >= 0 else 'None'}")
+        if math.isfinite(val_score) and val_score > best_score:
+            best_score = val_score
+            best_epoch = epoch
+            best_state = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
+            stale_epochs = 0
+            logger.event("best_checkpoint_updated", epoch=epoch + 1, best_val_score=best_score)
+            stdout_message(f"[BEST UPDATED] epoch={epoch + 1} best_val={best_score}")
+        else:
+            stale_epochs += 1
+            if stale_epochs >= patience:
+                logger.event("early_stopping_triggered", epoch=epoch + 1, best_epoch=best_epoch, best_val_score=best_score)
+                stdout_message(f"[EARLY STOPPING] epoch={epoch + 1} best_epoch={best_epoch} best_val={best_score}")
+                break
+    if best_epoch < 0:
+        raise RuntimeError("no checkpoint selected from validation set")
+    return best_state, best_epoch, best_score, epochs_completed
+
+
+def save_cross_zero_shot_checkpoint(
+    *,
+    config: dict,
+    config_path: Path,
+    source_cfg: dict[str, object],
+    target_cfg: dict[str, object],
+    source_manifest: dict[str, object],
+    target_manifest: dict[str, object],
+    model_name: str,
+    best_state: dict[str, torch.Tensor],
+    best_epoch: int,
+    best_val_score: float,
+) -> tuple[str, Path]:
+    source_dataset = str(source_cfg["dataset_id"])
+    target_dataset = str(target_cfg["dataset_id"])
+    seed = int(config["seed"])
+    checkpoint_local_id = cross_zero_shot_checkpoint_local_id(
+        source_dataset=source_dataset,
+        target_dataset=target_dataset,
+        model=model_name,
+        seed=seed,
+        best_epoch=best_epoch,
+    )
+    path = cross_zero_shot_checkpoint_root() / cross_zero_shot_checkpoint_relative_path(
+        source_dataset=source_dataset,
+        target_dataset=target_dataset,
+        model=model_name,
+        seed=seed,
+        best_epoch=best_epoch,
+    )
+    ensure_dir(path.parent)
+    payload = {
+        "model_state_dict": {key: value.detach().cpu().clone() for key, value in best_state.items()},
+        "source_dataset": source_dataset,
+        "target_dataset": target_dataset,
+        "model": model_name,
+        "seed": seed,
+        "source_split_id": str(source_manifest["split_id"]),
+        "target_split_id": str(target_manifest["split_id"]),
+        "source_train_subjects": list(source_manifest["train_subjects"]),
+        "source_val_subjects": list(source_manifest["val_subjects"]),
+        "target_test_subjects": list(target_manifest["test_subjects"]),
+        "best_epoch": int(best_epoch),
+        "best_val_score": float(best_val_score),
+        "protocol": f"{config['protocol']}::cross_dataset_zero_shot",
+        "config_path": repo_relative(config_path),
+        "source_split_manifest_path": repo_relative(ROOT / str(source_cfg["split_manifest_path"])),
+        "target_split_manifest_path": repo_relative(ROOT / str(target_cfg["split_manifest_path"])),
+        "branch": current_git_branch_name(),
+        "commit_sha": current_git_commit_sha(),
+        "created_at": time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime()),
+    }
+    torch.save(payload, path)
+    return checkpoint_local_id, path
+
+
+def mean_dataset_metric(subject_rows: list[dict[str, object]], *, source_dataset: str, target_dataset: str, model_name: str, seed: int, stage: str) -> dict[str, object]:
+    values = [float(row["metric_value"]) for row in subject_rows]
+    return {
+        "source_dataset": source_dataset,
+        "target_dataset": target_dataset,
+        "model": model_name,
+        "seed": seed,
+        "stage": stage,
+        "n_subjects": len(subject_rows),
+        "mean_pearson": float(np.mean(values)) if values else float("nan"),
+        "std_pearson": float(np.std(values, ddof=0)) if values else float("nan"),
+        "min_pearson": float(np.min(values)) if values else float("nan"),
+        "max_pearson": float(np.max(values)) if values else float("nan"),
+    }
+
+
+def annotate_rows(
+    rows: list[dict[str, object]],
+    *,
+    source_dataset: str,
+    target_dataset: str,
+) -> list[dict[str, object]]:
+    annotated: list[dict[str, object]] = []
+    for row in rows:
+        item = dict(row)
+        item["dataset"] = f"{source_dataset}->{target_dataset}"
+        annotated.append(item)
+    return annotated
+
+
+def build_cross_subject_rows(
+    subject_rows: list[dict[str, object]],
+    *,
+    source_dataset: str,
+    target_dataset: str,
+    stage: str,
+) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for row in subject_rows:
+        rows.append(
+            {
+                "source_dataset": source_dataset,
+                "target_dataset": target_dataset,
+                "model": row["model"],
+                "seed": row["seed"],
+                "stage": stage,
+                "subject_id": row["subject_id"],
+                "metric_value": row["metric_value"],
+                "checkpoint_id": row["checkpoint_id"],
+            }
+        )
+    return rows
+
+
+def build_cross_recording_rows(
+    recording_rows: list[dict[str, object]],
+    *,
+    source_dataset: str,
+    target_dataset: str,
+    stage: str,
+) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for row in recording_rows:
+        rows.append(
+            {
+                "source_dataset": source_dataset,
+                "target_dataset": target_dataset,
+                "model": row["model"],
+                "seed": row["seed"],
+                "stage": stage,
+                "subject_id": row["subject_id"],
+                "recording_id": row["recording_id"],
+                "metric_value": row["metric_value"],
+                "checkpoint_id": row["checkpoint_id"],
+            }
+        )
+    return rows
+
+
+def run_cross_dataset_zero_shot_job(
+    *,
+    config: dict,
+    config_path: Path,
+    source_cfg: dict[str, object],
+    target_cfg: dict[str, object],
+    audit: dict[str, object],
+    model_name: str,
+    output_dir: Path,
+    device: str,
+) -> dict[str, object]:
+    source_dataset = str(source_cfg["dataset_id"])
+    target_dataset = str(target_cfg["dataset_id"])
+    seed = int(config["seed"])
+    logger = JobLogger(output_dir / "logs" / f"{source_dataset}_to_{target_dataset}_{model_name}_seed{seed}_cross_dataset_zero_shot.log")
+    source_manifest = load_split_manifest(ROOT / str(source_cfg["split_manifest_path"]))
+    target_manifest = load_split_manifest(ROOT / str(target_cfg["split_manifest_path"]))
+    source_dir = resolve_dataset_path(str(source_cfg["dataset_locator"]))
+    model_handle, model_kwargs = instantiate_model(config, model_name)
+    train_dataset = SubjectSplitWindowDataset(
+        source_dir,
+        "train",
+        subjects=list(source_manifest["train_subjects"]),
+        window_size=model_window_size(config, model_name),
+        channels=range(64),
+        target_index=str(config[model_name]["target_index"]),
+    )
+    val_dataset = SubjectSplitWindowDataset(
+        source_dir,
+        "val",
+        subjects=list(source_manifest["val_subjects"]),
+        window_size=model_window_size(config, model_name),
+        channels=range(64),
+        target_index=str(config[model_name]["target_index"]),
+    )
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=int(config[model_name]["batch_size"]),
+        shuffle=bool(config["dataloader"]["shuffle_train"]),
+        num_workers=0,
+        pin_memory=(device == "cuda"),
+    )
+    val_loader = DataLoader(
+        val_dataset,
+        batch_size=int(config["dataloader"]["eval_batch_size"]),
+        shuffle=False,
+        num_workers=0,
+        pin_memory=(device == "cuda"),
+    )
+    model = model_handle(**model_kwargs).to(device)
+    best_state, best_epoch, best_val_score, epochs_completed = train_window_model(
+        model=model,
+        train_loader=train_loader,
+        val_loader=val_loader,
+        device=device,
+        lr=float(config[model_name]["learning_rate"]),
+        weight_decay=float(config[model_name]["weight_decay"]),
+        max_epochs=int(config[model_name]["max_epochs"]),
+        patience=int(config[model_name]["early_stopping_patience"]),
+        logger=logger,
+    )
+    checkpoint_local_id, checkpoint_path = save_cross_zero_shot_checkpoint(
+        config=config,
+        config_path=config_path,
+        source_cfg=source_cfg,
+        target_cfg=target_cfg,
+        source_manifest=source_manifest,
+        target_manifest=target_manifest,
+        model_name=model_name,
+        best_state=best_state,
+        best_epoch=best_epoch,
+        best_val_score=best_val_score,
+    )
+    logger.event("checkpoint_saved", checkpoint_local_id=checkpoint_local_id, checkpoint_path=repo_relative(checkpoint_path))
+    stdout_message(f"[CHECKPOINT SAVED] checkpoint_local_id={checkpoint_local_id} path={repo_relative(checkpoint_path)}")
+    model = model_handle(**model_kwargs).to(device)
+    model.load_state_dict(best_state, strict=True)
+    checkpoint_id = f"{model_name}_epoch_{best_epoch}"
+    target_recording_ids = collect_target_test_recording_ids(target_cfg, list(target_manifest["test_subjects"]))
+    stdout_message("[TEST START]")
+    recording_rows, subject_rows = predict_target_recordings_window(
+        config=config,
+        target_cfg=target_cfg,
+        model_name=model_name,
+        model=model,
+        checkpoint_id=checkpoint_id,
+        recording_ids=target_recording_ids,
+        device=device,
+        protocol=f"{config['protocol']}::cross_dataset_zero_shot",
+        artifact_scope=f"{config['artifact_scope']}::cross_dataset_zero_shot",
+        dataset_label=f"{source_dataset}->{target_dataset}",
+        seed=seed,
+    )
+    stdout_message("[TEST DONE]")
+    dataset_row = mean_dataset_metric(
+        subject_rows,
+        source_dataset=source_dataset,
+        target_dataset=target_dataset,
+        model_name=model_name,
+        seed=seed,
+        stage="cross_dataset_zero_shot",
+    )
+    logger.event("job_completed", mean_pearson=dataset_row["mean_pearson"], n_test_subjects=dataset_row["n_subjects"])
+    stdout_message(f"[JOB DONE] mean_pearson={dataset_row['mean_pearson']} n_test_subjects={dataset_row['n_subjects']}")
+    checkpoint_entry = {
+        "source_dataset": source_dataset,
+        "target_dataset": target_dataset,
+        "model": model_name,
+        "seed": seed,
+        "stage": "cross_dataset_zero_shot",
+        "source_job_key": build_job_key(source_dataset, target_dataset, model_name, seed, "cross_dataset_zero_shot"),
+        "checkpoint_local_id": checkpoint_local_id,
+        "checkpoint_relative_path": repo_relative(checkpoint_path),
+        "checkpoint_artifact_status": "local_only_not_committed",
+        "best_epoch": int(best_epoch),
+        "best_val_score": float(best_val_score),
+        "source_train_subjects": list(source_manifest["train_subjects"]),
+        "source_val_subjects": list(source_manifest["val_subjects"]),
+        "target_test_subjects": list(target_manifest["test_subjects"]),
+        "protocol": f"{config['protocol']}::cross_dataset_zero_shot",
+        "config_path": repo_relative(config_path),
+        "source_split_manifest_path": repo_relative(ROOT / str(source_cfg["split_manifest_path"])),
+        "target_split_manifest_path": repo_relative(ROOT / str(target_cfg["split_manifest_path"])),
+        "branch": current_git_branch_name(),
+        "commit_sha": current_git_commit_sha(),
+    }
+    model_run_entry = {
+        "job_key": build_job_key(source_dataset, target_dataset, model_name, seed, "cross_dataset_zero_shot"),
+        "source_dataset": source_dataset,
+        "target_dataset": target_dataset,
+        "model": model_name,
+        "seed": seed,
+        "stage": "cross_dataset_zero_shot",
+        "status": "success",
+        "checkpoint_id": checkpoint_id,
+        "checkpoint_local_id": checkpoint_local_id,
+        "epochs_completed": int(epochs_completed),
+        "best_epoch": int(best_epoch),
+        "best_val_score": float(best_val_score),
+        "prediction_target_alignment_ok": True,
+        "source_train_subject_count": len(source_manifest["train_subjects"]),
+        "source_val_subject_count": len(source_manifest["val_subjects"]),
+        "target_test_subject_count": len(target_manifest["test_subjects"]),
+    }
+    completed_job = {
+        "job_key": build_job_key(source_dataset, target_dataset, model_name, seed, "cross_dataset_zero_shot"),
+        "source_dataset": source_dataset,
+        "target_dataset": target_dataset,
+        "model": model_name,
+        "seed": seed,
+        "stage": "cross_dataset_zero_shot",
+        "status": "success",
+        "checkpoint_id": checkpoint_id,
+        "checkpoint_local_id": checkpoint_local_id,
+    }
+    return {
+        "recording_rows": recording_rows,
+        "subject_rows": subject_rows,
+        "dataset_row": dataset_row,
+        "comparison_rows": [],
+        "checkpoint_entry": checkpoint_entry,
+        "model_run_entry": model_run_entry,
+        "completed_job": completed_job,
+        "cross_subject_rows": build_cross_subject_rows(subject_rows, source_dataset=source_dataset, target_dataset=target_dataset, stage="cross_dataset_zero_shot"),
+        "cross_recording_rows": build_cross_recording_rows(recording_rows, source_dataset=source_dataset, target_dataset=target_dataset, stage="cross_dataset_zero_shot"),
+    }
+
+
+def append_job_result(state: dict[str, object], result: dict[str, object]) -> None:
+    state["recording_rows"].extend(result["recording_rows"])
+    state["subject_rows"].extend(result["subject_rows"])
+    state["dataset_rows"].append(result["dataset_row"])
+    state["comparison_rows"].extend(result["comparison_rows"])
+    state["checkpoint_entries"].append(result["checkpoint_entry"])
+    state["model_run_entries"].append(result["model_run_entry"])
+    state["completed_jobs"].append(result["completed_job"])
 
 
 def main() -> int:
@@ -788,22 +1420,78 @@ def main() -> int:
         stdout_block("[REBUILD DONE]", ["preflight artifacts rewritten", "no training started"])
         return 0
 
-    # This closure intentionally stops at preflight.
-    write_runtime_state(
-        config=config,
-        config_path=config_path,
-        output_dir=output_dir,
-        transfer_audits=transfer_audits,
-        job_plan=job_plan,
-    )
-    stdout_block(
-        "[PRECHECK COMPLETE]",
-        [
-            "cross-dataset transfer preflight prepared",
-            "no training started",
-            "runtime placeholders initialized for future manual runs",
-        ],
-    )
+    state = load_existing_runtime_state(output_dir) if args.resume else {
+        "recording_rows": [],
+        "subject_rows": [],
+        "dataset_rows": [],
+        "comparison_rows": [],
+        "checkpoint_entries": [],
+        "model_run_entries": [],
+        "completed_jobs": [],
+        "failures": [],
+    }
+    completed_keys = {str(item["job_key"]) for item in state["completed_jobs"]}
+    pending_jobs = [job for job in job_plan["planned_jobs"] if str(job["job_key"]) not in completed_keys]
+    if args.max_jobs is not None:
+        pending_jobs = pending_jobs[: int(args.max_jobs)]
+
+    if not pending_jobs:
+        stdout_block("[NO PENDING JOBS]", ["All requested jobs are already completed for the selected stage/source-target/model set."])
+        write_runtime_state(
+            config=config,
+            config_path=config_path,
+            output_dir=output_dir,
+            transfer_audits=transfer_audits,
+            job_plan=job_plan,
+            state=state,
+        )
+        return 0
+
+    audit_map = {(str(item["source_dataset"]), str(item["target_dataset"])): item for item in transfer_audits}
+    for job in pending_jobs:
+        source_dataset = str(job["source_dataset"])
+        target_dataset = str(job["target_dataset"])
+        model_name = str(job["model"])
+        stage = str(job["stage"])
+        try:
+            if stage == "cross_dataset_zero_shot":
+                result = run_cross_dataset_zero_shot_job(
+                    config=config,
+                    config_path=config_path,
+                    source_cfg=datasets_by_id[source_dataset],
+                    target_cfg=datasets_by_id[target_dataset],
+                    audit=audit_map[(source_dataset, target_dataset)],
+                    model_name=model_name,
+                    output_dir=output_dir,
+                    device=device,
+                )
+                append_job_result(state, result)
+            else:
+                raise NotImplementedError("pooled10_target_calibration runtime is not implemented yet")
+        except Exception as exc:
+            state["failures"].append(
+                {
+                    "job_key": job["job_key"],
+                    "source_dataset": source_dataset,
+                    "target_dataset": target_dataset,
+                    "model": model_name,
+                    "seed": int(config["seed"]),
+                    "stage": stage,
+                    "error": repr(exc),
+                    "timestamp": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
+                }
+            )
+            stdout_message(f"[JOB FAILED] {job['job_key']} error={exc!r}")
+        write_runtime_state(
+            config=config,
+            config_path=config_path,
+            output_dir=output_dir,
+            transfer_audits=transfer_audits,
+            job_plan=job_plan,
+            state=state,
+        )
+        stdout_message("[METRICS WRITTEN]")
+
     return 0
 
 

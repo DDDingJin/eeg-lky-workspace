@@ -34,7 +34,9 @@
     }
   ],
   "models": [
-    "eegnet"
+    "eegnet",
+    "fcnn",
+    "adt"
   ],
   "dataloader": {
     "batch_size": 256,
@@ -64,6 +66,32 @@
     "early_stopping_patience": 10,
     "learning_rate": 0.001,
     "weight_decay": 0.0001,
+    "fine_tune_learning_rate": 0.0001
+  },
+  "fcnn": {
+    "family": "mlp_fcnn_family",
+    "implementation_file": "src/repro/simple_models.py::FCNNBaseline",
+    "window_size": 50,
+    "target_index": "last",
+    "hidden_layers": 3,
+    "dropout_rate": 0.45,
+    "batch_size": 256,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001,
+    "fine_tune_learning_rate": 1e-05
+  },
+  "adt": {
+    "family": "transformer_adt_family",
+    "implementation_file": "src/repro/adt_exact.py::ADTExactRegressor",
+    "window_length": 320,
+    "hop_length": 64,
+    "batch_size": 32,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.001,
+    "min_lr": 0.0001,
     "fine_tune_learning_rate": 0.0001
   }
 }

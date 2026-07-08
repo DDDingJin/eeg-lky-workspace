@@ -3,22 +3,44 @@
     {
       "source_dataset": "weissbart_tf64",
       "target_dataset": "etard_tf64",
-      "model": "eegnet",
+      "model": "fcnn",
       "seed": 0,
-      "cross_dataset_source_only_checkpoint_path_pattern": "local_checkpoints/cross_dataset/source_only/eegnet/weissbart_tf64/seed0/best_epoch_PENDING.pt",
-      "pooled10_target_calibration_checkpoint_path_pattern": "local_checkpoints/cross_dataset/pooled10_target_calibration/eegnet/weissbart_tf64/etard_tf64/seed0/best_epoch_PENDING.pt",
-      "existing_source_only_checkpoint": "local_checkpoints/cross_dataset/source_only/eegnet/weissbart_tf64/seed0/best_epoch_4.pt",
+      "cross_dataset_source_only_checkpoint_path_pattern": "local_checkpoints/cross_dataset/source_only/fcnn/weissbart_tf64/seed0/best_epoch_PENDING.pt",
+      "pooled10_target_calibration_checkpoint_path_pattern": "local_checkpoints/cross_dataset/pooled10_target_calibration/fcnn/weissbart_tf64/etard_tf64/seed0/best_epoch_PENDING.pt",
+      "existing_source_only_checkpoint": null,
+      "torch_load_smoke": true,
+      "strict_load_state_dict_smoke": true
+    },
+    {
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": "etard_tf64",
+      "model": "adt",
+      "seed": 0,
+      "cross_dataset_source_only_checkpoint_path_pattern": "local_checkpoints/cross_dataset/source_only/adt/weissbart_tf64/seed0/best_epoch_PENDING.pt",
+      "pooled10_target_calibration_checkpoint_path_pattern": "local_checkpoints/cross_dataset/pooled10_target_calibration/adt/weissbart_tf64/etard_tf64/seed0/best_epoch_PENDING.pt",
+      "existing_source_only_checkpoint": null,
       "torch_load_smoke": true,
       "strict_load_state_dict_smoke": true
     },
     {
       "source_dataset": "etard_tf64",
       "target_dataset": "weissbart_tf64",
-      "model": "eegnet",
+      "model": "fcnn",
       "seed": 0,
-      "cross_dataset_source_only_checkpoint_path_pattern": "local_checkpoints/cross_dataset/source_only/eegnet/etard_tf64/seed0/best_epoch_PENDING.pt",
-      "pooled10_target_calibration_checkpoint_path_pattern": "local_checkpoints/cross_dataset/pooled10_target_calibration/eegnet/etard_tf64/weissbart_tf64/seed0/best_epoch_PENDING.pt",
-      "existing_source_only_checkpoint": "local_checkpoints/cross_dataset/source_only/eegnet/etard_tf64/seed0/best_epoch_4.pt",
+      "cross_dataset_source_only_checkpoint_path_pattern": "local_checkpoints/cross_dataset/source_only/fcnn/etard_tf64/seed0/best_epoch_PENDING.pt",
+      "pooled10_target_calibration_checkpoint_path_pattern": "local_checkpoints/cross_dataset/pooled10_target_calibration/fcnn/etard_tf64/weissbart_tf64/seed0/best_epoch_PENDING.pt",
+      "existing_source_only_checkpoint": null,
+      "torch_load_smoke": true,
+      "strict_load_state_dict_smoke": true
+    },
+    {
+      "source_dataset": "etard_tf64",
+      "target_dataset": "weissbart_tf64",
+      "model": "adt",
+      "seed": 0,
+      "cross_dataset_source_only_checkpoint_path_pattern": "local_checkpoints/cross_dataset/source_only/adt/etard_tf64/seed0/best_epoch_PENDING.pt",
+      "pooled10_target_calibration_checkpoint_path_pattern": "local_checkpoints/cross_dataset/pooled10_target_calibration/adt/etard_tf64/weissbart_tf64/seed0/best_epoch_PENDING.pt",
+      "existing_source_only_checkpoint": null,
       "torch_load_smoke": true,
       "strict_load_state_dict_smoke": true
     }

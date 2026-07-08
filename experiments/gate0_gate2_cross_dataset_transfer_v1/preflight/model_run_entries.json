@@ -1,7 +1,7 @@
 {
   "model_run_entries": [
     {
-      "model": "eegnet",
+      "model": "fcnn",
       "input_shape": [
         1,
         64,
@@ -18,6 +18,29 @@
       ],
       "target_index": "last",
       "target_contract": "scalar target per window",
+      "passed": true
+    },
+    {
+      "model": "adt",
+      "input_shape": [
+        1,
+        320,
+        64
+      ],
+      "raw_output_shape": [
+        1,
+        320,
+        1
+      ],
+      "postprocessed_prediction_shape": [
+        1,
+        320
+      ],
+      "scorer_input_shape": [
+        320
+      ],
+      "target_index": "full_window_sequence",
+      "target_contract": "sequence target per window",
       "passed": true
     }
   ]

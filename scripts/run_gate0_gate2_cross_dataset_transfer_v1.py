@@ -26,7 +26,9 @@ if str(SRC) not in sys.path:
 
 from benchmark.result_schema import RECORDING_METRIC_FIELDS, SUBJECT_METRIC_FIELDS, RecordingMetricRow
 from benchmark.scoring import WindowPrediction, aggregate_overlapping_windows, recording_metric_row, subject_metric_rows
+from repro.adt_exact import ADTExactRegressor, pearson_loss as adt_pearson_loss, pearson_metric as adt_pearson_metric
 from repro.mldecoders.models import EEGNetRegressor
+from repro.simple_models import FCNNBaseline
 
 
 ATOMIC_RETRY_ATTEMPTS = 5
@@ -381,6 +383,105 @@ class SelectedRecordingWindowDataset(Dataset):
         return x.astype(np.float32), np.float32(y)
 
 
+class SubjectSplitSequenceDataset(Dataset):
+    def __init__(
+        self,
+        dataset_dir: Path,
+        split: str,
+        *,
+        subjects: list[str],
+        window_length: int,
+        hop_length: int,
+        channels: range,
+    ) -> None:
+        self.dataset_dir = dataset_dir
+        self.split = split
+        self.subjects = subjects
+        self.window_length = int(window_length)
+        self.hop_length = int(hop_length)
+        self.channel_idx = np.asarray(list(channels), dtype=int)
+        self.recordings: list[tuple[str, str, np.ndarray, np.ndarray]] = []
+        self.index_rows: list[tuple[int, int]] = []
+        self.total_recordings = 0
+        self.preloaded_bytes = 0
+        for subject_id in subjects:
+            for eeg_path in sorted(dataset_dir.glob(f"{split}_-_{subject_id}_-_*_-_eeg.npy")):
+                recording_id = eeg_path.stem.replace("_-_eeg", "")
+                env_path = eeg_path.with_name(f"{recording_id}_-_envelope.npy")
+                if not env_path.exists():
+                    continue
+                eeg = np.asarray(np.load(eeg_path, mmap_mode="r")[:, self.channel_idx], dtype=np.float32)
+                env = np.asarray(np.load(env_path, mmap_mode="r")[:, 0], dtype=np.float32)
+                rec_idx = len(self.recordings)
+                self.recordings.append((subject_id, recording_id, eeg, env))
+                self.total_recordings += 1
+                self.preloaded_bytes += int(eeg.nbytes + env.nbytes)
+                max_start = eeg.shape[0] - self.window_length
+                if max_start >= 0:
+                    for start in range(0, max_start + 1, self.hop_length):
+                        self.index_rows.append((rec_idx, start))
+        if not self.recordings:
+            raise ValueError(f"no recordings found for split={split} subjects={subjects}")
+
+    def __len__(self) -> int:
+        return len(self.index_rows)
+
+    def __getitem__(self, idx: int) -> tuple[np.ndarray, np.ndarray]:
+        rec_idx, start = self.index_rows[idx]
+        _, _, eeg, env = self.recordings[rec_idx]
+        x = eeg[start : start + self.window_length]
+        y = env[start : start + self.window_length]
+        return x.astype(np.float32), y.astype(np.float32)
+
+
+class SelectedRecordingSequenceDataset(Dataset):
+    def __init__(
+        self,
+        dataset_dir: Path,
+        *,
+        recording_ids: list[str],
+        window_length: int,
+        hop_length: int,
+        channels: range,
+    ) -> None:
+        self.dataset_dir = dataset_dir
+        self.recording_ids = recording_ids
+        self.window_length = int(window_length)
+        self.hop_length = int(hop_length)
+        self.channel_idx = np.asarray(list(channels), dtype=int)
+        self.recordings: list[tuple[str, str, np.ndarray, np.ndarray]] = []
+        self.index_rows: list[tuple[int, int]] = []
+        self.total_recordings = 0
+        self.preloaded_bytes = 0
+        for recording_id in recording_ids:
+            eeg_path = dataset_dir / f"{recording_id}_-_eeg.npy"
+            env_path = dataset_dir / f"{recording_id}_-_envelope.npy"
+            if not eeg_path.exists() or not env_path.exists():
+                raise FileNotFoundError(f"missing recording pair for {recording_id}")
+            eeg = np.asarray(np.load(eeg_path, mmap_mode="r")[:, self.channel_idx], dtype=np.float32)
+            env = np.asarray(np.load(env_path, mmap_mode="r")[:, 0], dtype=np.float32)
+            rec_idx = len(self.recordings)
+            self.recordings.append((parse_subject_id(recording_id), recording_id, eeg, env))
+            self.total_recordings += 1
+            self.preloaded_bytes += int(eeg.nbytes + env.nbytes)
+            max_start = eeg.shape[0] - self.window_length
+            if max_start >= 0:
+                for start in range(0, max_start + 1, self.hop_length):
+                    self.index_rows.append((rec_idx, start))
+        if not self.recordings:
+            raise ValueError("no recordings selected")
+
+    def __len__(self) -> int:
+        return len(self.index_rows)
+
+    def __getitem__(self, idx: int) -> tuple[np.ndarray, np.ndarray]:
+        rec_idx, start = self.index_rows[idx]
+        _, _, eeg, env = self.recordings[rec_idx]
+        x = eeg[start : start + self.window_length]
+        y = env[start : start + self.window_length]
+        return x.astype(np.float32), y.astype(np.float32)
+
+
 def batch_corr(y_true: torch.Tensor, y_pred: torch.Tensor, eps: float = 1e-8) -> torch.Tensor:
     y_true0 = y_true - torch.mean(y_true)
     y_pred0 = y_pred - torch.mean(y_pred)
@@ -406,47 +507,105 @@ def load_split_manifest(path: Path) -> dict[str, object]:
 
 
 def model_contract(config: dict, model_name: str) -> dict[str, object]:
-    if model_name != "eegnet":
-        raise ValueError(f"unsupported model for cross-dataset transfer: {model_name}")
-    return {
-        "family": "window_scalar",
-        "input_tensor_shape": [1, 64, int(config["eegnet"]["window_size"])],
-        "raw_output_shape": [1],
-        "postprocessed_prediction_shape": [1],
-        "scorer_input_shape": [1],
-        "target_index": str(config["eegnet"]["target_index"]),
-        "target_contract": "scalar target per window",
-    }
+    if model_name == "eegnet":
+        return {
+            "family": "window_scalar",
+            "input_tensor_shape": [1, 64, int(config["eegnet"]["window_size"])],
+            "raw_output_shape": [1],
+            "postprocessed_prediction_shape": [1],
+            "scorer_input_shape": [1],
+            "target_index": str(config["eegnet"]["target_index"]),
+            "target_contract": "scalar target per window",
+        }
+    if model_name == "fcnn":
+        return {
+            "family": "window_scalar",
+            "input_tensor_shape": [1, 64, int(config["fcnn"]["window_size"])],
+            "raw_output_shape": [1],
+            "postprocessed_prediction_shape": [1],
+            "scorer_input_shape": [1],
+            "target_index": str(config["fcnn"]["target_index"]),
+            "target_contract": "scalar target per window",
+        }
+    if model_name == "adt":
+        return {
+            "family": "sequence",
+            "input_tensor_shape": [1, int(config["adt"]["window_length"]), 64],
+            "raw_output_shape": [1, int(config["adt"]["window_length"]), 1],
+            "postprocessed_prediction_shape": [1, int(config["adt"]["window_length"])],
+            "scorer_input_shape": [int(config["adt"]["window_length"])],
+            "target_index": "full_window_sequence",
+            "target_contract": "sequence target per window",
+        }
+    raise ValueError(f"unsupported model for cross-dataset transfer: {model_name}")
 
 
 def instantiate_model(config: dict, model_name: str) -> tuple[object, dict[str, object]]:
-    if model_name != "eegnet":
-        raise ValueError(f"unsupported model for cross-dataset transfer: {model_name}")
-    cfg = config["eegnet"]
-    return EEGNetRegressor, {
-        "num_input_channels": 64,
-        "input_length": int(cfg["window_size"]),
-        "temporal_filters": int(cfg["temporal_filters"]),
-        "depth_multiplier": int(cfg["depth_multiplier"]),
-        "separable_filters": int(cfg["separable_filters"]),
-        "dropout_rate": float(cfg["dropout_rate"]),
-    }
+    if model_name == "eegnet":
+        cfg = config["eegnet"]
+        return EEGNetRegressor, {
+            "num_input_channels": 64,
+            "input_length": int(cfg["window_size"]),
+            "temporal_filters": int(cfg["temporal_filters"]),
+            "depth_multiplier": int(cfg["depth_multiplier"]),
+            "separable_filters": int(cfg["separable_filters"]),
+            "dropout_rate": float(cfg["dropout_rate"]),
+        }
+    if model_name == "fcnn":
+        cfg = config["fcnn"]
+        return FCNNBaseline, {
+            "num_hidden": int(cfg["hidden_layers"]),
+            "dropout_rate": float(cfg["dropout_rate"]),
+            "input_length": int(cfg["window_size"]),
+            "num_input_channels": 64,
+        }
+    if model_name == "adt":
+        cfg = config["adt"]
+        return ADTExactRegressor, {
+            "seq_len": int(cfg["window_length"]),
+        }
+    raise ValueError(f"unsupported model for cross-dataset transfer: {model_name}")
 
 
-def postprocess_model_output(raw_output: torch.Tensor) -> torch.Tensor:
-    return raw_output.reshape(-1)
+def postprocess_model_output(model_name: str, raw_output: torch.Tensor) -> torch.Tensor:
+    if model_name in {"eegnet", "fcnn"}:
+        return raw_output.reshape(-1)
+    if model_name == "adt":
+        if raw_output.ndim == 3 and raw_output.shape[-1] == 1:
+            return raw_output.squeeze(-1)
+        return raw_output
+    raise ValueError(f"unsupported model for cross-dataset transfer: {model_name}")
 
 
 def model_window_size(config: dict, model_name: str) -> int:
+    if model_name == "adt":
+        return int(config["adt"]["window_length"])
     return int(config[model_name]["window_size"])
 
 
-def discover_recordings(dataset_dir: Path, *, split: str, subject_id: str, sampling_rate: int, window_size: int) -> list[dict[str, object]]:
+def model_hop_length(config: dict, model_name: str) -> int | None:
+    if model_name == "adt":
+        return int(config["adt"]["hop_length"])
+    return None
+
+
+def discover_recordings(
+    dataset_dir: Path,
+    *,
+    split: str,
+    subject_id: str,
+    sampling_rate: int,
+    window_size: int,
+    hop_length: int | None = None,
+) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for eeg_path in sorted(dataset_dir.glob(f"{split}_-_{subject_id}_-_*_-_eeg.npy")):
         recording_id = eeg_path.stem.replace("_-_eeg", "")
         num_samples = int(np.load(eeg_path, mmap_mode="r").shape[0])
-        window_count = max(0, num_samples - window_size + 1)
+        if hop_length is None:
+            window_count = max(0, num_samples - window_size + 1)
+        else:
+            window_count = max(((num_samples - window_size) // hop_length) + 1, 0) if num_samples >= window_size else 0
         rows.append(
             {
                 "recording_id": recording_id,
@@ -592,7 +751,7 @@ def shape_check_for_model(config: dict, model_name: str, device: str) -> dict[st
     x = torch.zeros(*contract["input_tensor_shape"], device=device, dtype=torch.float32)
     with torch.no_grad():
         raw = model(x)
-        post = postprocess_model_output(raw)
+        post = postprocess_model_output(model_name, raw)
     return {
         "model": model_name,
         "input_shape": list(contract["input_tensor_shape"]),
@@ -758,26 +917,19 @@ def build_job_plan(config: dict, transfer_audits: list[dict[str, object]], selec
 def build_manual_commands(config_path: Path, transfer_audits: list[dict[str, object]], selected_models: list[str]) -> list[str]:
     models_arg = " ".join(selected_models)
     config_path_ps = str(config_path).replace("/", "\\")
-    commands = [f"cd {ROOT}"]
-    for audit in transfer_audits:
-        source_dataset = str(audit["source_dataset"])
-        target_dataset = str(audit["target_dataset"])
-        commands.append(
-            f"F:\\miniconda\\envs\\decode-torch\\python.exe scripts\\run_gate0_gate2_cross_dataset_transfer_v1.py --config {config_path_ps} --device auto --resume --source-dataset {source_dataset} --target-dataset {target_dataset} --models {models_arg} --stage cross_dataset_zero_shot --max-jobs 1"
-        )
-        commands.append(
-            f"F:\\miniconda\\envs\\decode-torch\\python.exe scripts\\run_gate0_gate2_cross_dataset_transfer_v1.py --config {config_path_ps} --device auto --resume --source-dataset {source_dataset} --target-dataset {target_dataset} --models {models_arg} --stage cross_dataset_zero_shot --max-jobs 1"
-        )
-    commands.append(
-        f"F:\\miniconda\\envs\\decode-torch\\python.exe scripts\\run_gate0_gate2_cross_dataset_transfer_v1.py --config {config_path_ps} --device auto --resume --source-dataset weissbart_tf64 etard_tf64 --target-dataset etard_tf64 weissbart_tf64 --models {models_arg} --stage pooled10_target_calibration --max-jobs 1"
-    )
-    return commands
+    sources = " ".join(str(audit["source_dataset"]) for audit in transfer_audits)
+    targets = " ".join(str(audit["target_dataset"]) for audit in transfer_audits)
+    return [
+        f"cd {ROOT}",
+        f"F:\\miniconda\\envs\\decode-torch\\python.exe scripts\\run_gate0_gate2_cross_dataset_transfer_v1.py --config {config_path_ps} --device auto --resume --source-dataset {sources} --target-dataset {targets} --models {models_arg} --stage all --max-jobs 12",
+    ]
 
 
 def build_job_plan_only_summary(config: dict, transfer_audits: list[dict[str, object]], selected_models: list[str]) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for audit in transfer_audits:
         for model_name in selected_models:
+            contract = model_contract(config, model_name)
             rows.append(
                 {
                     "source_dataset": audit["source_dataset"],
@@ -793,8 +945,8 @@ def build_job_plan_only_summary(config: dict, transfer_audits: list[dict[str, ob
                     "target_final_test_recording_count": audit["pooled_target_calibration"]["final_test_recording_count"],
                     "target_pooled_train_window_count": audit["pooled_target_calibration"]["train_window_count"],
                     "target_pooled_val_window_count": audit["pooled_target_calibration"]["val_window_count"],
-                    "input_tensor_contract": "[batch, 64, 50] -> [batch]",
-                    "target_scorer_alignment": "scalar target per window, Pearson on valid overlap",
+                    "input_tensor_contract": f"{contract['input_tensor_shape']} -> {contract['postprocessed_prediction_shape']}",
+                    "target_scorer_alignment": f"{contract['target_contract']}, Pearson on valid overlap",
                 }
             )
     return rows
@@ -1100,6 +1252,57 @@ def predict_target_recordings_window(
     return aggregate_model_outputs(windows, artifact_scope)
 
 
+def predict_target_recordings_sequence(
+    *,
+    config: dict,
+    target_cfg: dict[str, object],
+    model_name: str,
+    model: torch.nn.Module,
+    checkpoint_id: str,
+    recording_ids: list[str],
+    device: str,
+    protocol: str,
+    artifact_scope: str,
+    dataset_label: str,
+    seed: int,
+) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    windows: list[WindowPrediction] = []
+    dataset_dir = resolve_dataset_path(str(target_cfg["dataset_locator"]))
+    sampling_rate = int(target_cfg["sampling_rate"])
+    window_length = int(config["adt"]["window_length"])
+    hop_length = int(config["adt"]["hop_length"])
+    model.eval()
+    with torch.no_grad():
+        for recording_id in recording_ids:
+            eeg_path = dataset_dir / f"{recording_id}_-_eeg.npy"
+            env_path = dataset_dir / f"{recording_id}_-_envelope.npy"
+            eeg = np.asarray(np.load(eeg_path)[:, :64], dtype=np.float32)
+            env = np.asarray(np.load(env_path)[:, 0], dtype=np.float32)
+            max_start = eeg.shape[0] - window_length
+            for start in range(0, max_start + 1, hop_length):
+                batch = torch.from_numpy(eeg[start : start + window_length]).unsqueeze(0).to(device=device, dtype=torch.float32)
+                pred = postprocess_model_output(model_name, model(batch)).squeeze(0).detach().cpu().numpy().astype(np.float32)
+                target = env[start : start + window_length].astype(np.float32)
+                windows.append(
+                    WindowPrediction(
+                        dataset=dataset_label,
+                        model=model_name,
+                        task="reconstruction",
+                        protocol=protocol,
+                        seed=seed,
+                        subject_id=parse_subject_id(recording_id),
+                        recording_id=recording_id,
+                        sampling_rate=sampling_rate,
+                        checkpoint_id=checkpoint_id,
+                        recording_length=int(len(env)),
+                        start_index=int(start),
+                        prediction=pred,
+                        target=target,
+                    )
+                )
+    return aggregate_model_outputs(windows, artifact_scope)
+
+
 def evaluate_window_val(model: torch.nn.Module, loader: DataLoader, device: str) -> float:
     model.eval()
     scores: list[float] = []
@@ -1109,6 +1312,18 @@ def evaluate_window_val(model: torch.nn.Module, loader: DataLoader, device: str)
             y = y.to(device=device, dtype=torch.float32)
             y_hat = model(x)
             scores.append(float(batch_corr(y, y_hat).item()))
+    return float(np.mean(scores)) if scores else float("nan")
+
+
+def evaluate_sequence_val(model: torch.nn.Module, loader: DataLoader, device: str) -> float:
+    model.eval()
+    scores: list[float] = []
+    with torch.no_grad():
+        for x, y in loader:
+            x = x.to(device=device, dtype=torch.float32)
+            y = y.to(device=device, dtype=torch.float32)
+            y_hat = postprocess_model_output("adt", model(x))
+            scores.append(float(adt_pearson_metric(y, y_hat).item()))
     return float(np.mean(scores)) if scores else float("nan")
 
 
@@ -1144,6 +1359,58 @@ def train_window_model(
             loss.backward()
             optimizer.step()
         val_score = evaluate_window_val(model, val_loader, device)
+        epochs_completed = epoch + 1
+        logger.event("val_epoch_completed", epoch=epoch + 1, val_score=val_score)
+        stdout_message(f"[VAL DONE] epoch={epoch + 1} val_score={val_score} best_val={best_score if best_epoch >= 0 else 'None'}")
+        if math.isfinite(val_score) and val_score > best_score:
+            best_score = val_score
+            best_epoch = epoch
+            best_state = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
+            stale_epochs = 0
+            logger.event("best_checkpoint_updated", epoch=epoch + 1, best_val_score=best_score)
+            stdout_message(f"[BEST UPDATED] epoch={epoch + 1} best_val={best_score}")
+        else:
+            stale_epochs += 1
+            if stale_epochs >= patience:
+                logger.event("early_stopping_triggered", epoch=epoch + 1, best_epoch=best_epoch, best_val_score=best_score)
+                stdout_message(f"[EARLY STOPPING] epoch={epoch + 1} best_epoch={best_epoch} best_val={best_score}")
+                break
+    if best_epoch < 0:
+        raise RuntimeError("no checkpoint selected from validation set")
+    return best_state, best_epoch, best_score, epochs_completed
+
+
+def train_sequence_model(
+    *,
+    model: torch.nn.Module,
+    train_loader: DataLoader,
+    val_loader: DataLoader,
+    device: str,
+    lr: float,
+    max_epochs: int,
+    patience: int,
+    logger: JobLogger,
+) -> tuple[dict[str, torch.Tensor], int, float, int]:
+    optimizer = NAdam(model.parameters(), lr=lr, weight_decay=0.0)
+    best_state = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
+    best_score = float("-inf")
+    best_epoch = -1
+    stale_epochs = 0
+    epochs_completed = 0
+    stdout_message("[TRAIN START]")
+    for epoch in range(max_epochs):
+        logger.event("train_epoch_started", epoch=epoch + 1, max_epochs=max_epochs)
+        stdout_message(f"[TRAIN EPOCH] epoch={epoch + 1}/{max_epochs}")
+        model.train()
+        for x, y in train_loader:
+            x = x.to(device=device, dtype=torch.float32)
+            y = y.to(device=device, dtype=torch.float32)
+            y_hat = postprocess_model_output("adt", model(x))
+            loss = adt_pearson_loss(y, y_hat)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+        val_score = evaluate_sequence_val(model, val_loader, device)
         epochs_completed = epoch + 1
         logger.event("val_epoch_completed", epoch=epoch + 1, val_score=val_score)
         stdout_message(f"[VAL DONE] epoch={epoch + 1} val_score={val_score} best_val={best_score if best_epoch >= 0 else 'None'}")
@@ -1468,49 +1735,93 @@ def run_source_zero_shot_job(
     logger = JobLogger(output_dir / "logs" / f"{source_dataset}_{model_name}_seed{seed}_source_zero_shot.log")
     source_manifest = load_split_manifest(ROOT / str(source_cfg["split_manifest_path"]))
     source_dir = resolve_dataset_path(str(source_cfg["dataset_locator"]))
+    contract = model_contract(config, model_name)
     model_handle, model_kwargs = instantiate_model(config, model_name)
-    train_dataset = SubjectSplitWindowDataset(
-        source_dir,
-        "train",
-        subjects=list(source_manifest["train_subjects"]),
-        window_size=model_window_size(config, model_name),
-        channels=range(64),
-        target_index=str(config[model_name]["target_index"]),
-    )
-    val_dataset = SubjectSplitWindowDataset(
-        source_dir,
-        "val",
-        subjects=list(source_manifest["val_subjects"]),
-        window_size=model_window_size(config, model_name),
-        channels=range(64),
-        target_index=str(config[model_name]["target_index"]),
-    )
-    train_loader = DataLoader(
-        train_dataset,
-        batch_size=int(config[model_name]["batch_size"]),
-        shuffle=bool(config["dataloader"]["shuffle_train"]),
-        num_workers=0,
-        pin_memory=(device == "cuda"),
-    )
-    val_loader = DataLoader(
-        val_dataset,
-        batch_size=int(config["dataloader"]["eval_batch_size"]),
-        shuffle=False,
-        num_workers=0,
-        pin_memory=(device == "cuda"),
-    )
-    model = model_handle(**model_kwargs).to(device)
-    best_state, best_epoch, best_val_score, epochs_completed = train_window_model(
-        model=model,
-        train_loader=train_loader,
-        val_loader=val_loader,
-        device=device,
-        lr=float(config[model_name]["learning_rate"]),
-        weight_decay=float(config[model_name]["weight_decay"]),
-        max_epochs=int(config[model_name]["max_epochs"]),
-        patience=int(config[model_name]["early_stopping_patience"]),
-        logger=logger,
-    )
+    if contract["family"] == "window_scalar":
+        train_dataset = SubjectSplitWindowDataset(
+            source_dir,
+            "train",
+            subjects=list(source_manifest["train_subjects"]),
+            window_size=model_window_size(config, model_name),
+            channels=range(64),
+            target_index=str(config[model_name]["target_index"]),
+        )
+        val_dataset = SubjectSplitWindowDataset(
+            source_dir,
+            "val",
+            subjects=list(source_manifest["val_subjects"]),
+            window_size=model_window_size(config, model_name),
+            channels=range(64),
+            target_index=str(config[model_name]["target_index"]),
+        )
+        train_loader = DataLoader(
+            train_dataset,
+            batch_size=int(config[model_name]["batch_size"]),
+            shuffle=bool(config["dataloader"]["shuffle_train"]),
+            num_workers=0,
+            pin_memory=(device == "cuda"),
+        )
+        val_loader = DataLoader(
+            val_dataset,
+            batch_size=int(config["dataloader"]["eval_batch_size"]),
+            shuffle=False,
+            num_workers=0,
+            pin_memory=(device == "cuda"),
+        )
+        model = model_handle(**model_kwargs).to(device)
+        best_state, best_epoch, best_val_score, epochs_completed = train_window_model(
+            model=model,
+            train_loader=train_loader,
+            val_loader=val_loader,
+            device=device,
+            lr=float(config[model_name]["learning_rate"]),
+            weight_decay=float(config[model_name].get("weight_decay", 0.0)),
+            max_epochs=int(config[model_name]["max_epochs"]),
+            patience=int(config[model_name]["early_stopping_patience"]),
+            logger=logger,
+        )
+    else:
+        train_dataset = SubjectSplitSequenceDataset(
+            source_dir,
+            "train",
+            subjects=list(source_manifest["train_subjects"]),
+            window_length=int(config["adt"]["window_length"]),
+            hop_length=int(config["adt"]["hop_length"]),
+            channels=range(64),
+        )
+        val_dataset = SubjectSplitSequenceDataset(
+            source_dir,
+            "val",
+            subjects=list(source_manifest["val_subjects"]),
+            window_length=int(config["adt"]["window_length"]),
+            hop_length=int(config["adt"]["hop_length"]),
+            channels=range(64),
+        )
+        train_loader = DataLoader(
+            train_dataset,
+            batch_size=int(config["adt"]["batch_size"]),
+            shuffle=bool(config["dataloader"]["shuffle_train"]),
+            num_workers=0,
+            pin_memory=(device == "cuda"),
+        )
+        val_loader = DataLoader(
+            val_dataset,
+            batch_size=int(config["dataloader"]["eval_batch_size"]),
+            shuffle=False,
+            num_workers=0,
+            pin_memory=(device == "cuda"),
+        )
+        model = model_handle(**model_kwargs).to(device)
+        best_state, best_epoch, best_val_score, epochs_completed = train_sequence_model(
+            model=model,
+            train_loader=train_loader,
+            val_loader=val_loader,
+            device=device,
+            lr=float(config["adt"]["learning_rate"]),
+            max_epochs=int(config["adt"]["max_epochs"]),
+            patience=int(config["adt"]["early_stopping_patience"]),
+            logger=logger,
+        )
     checkpoint_local_id, checkpoint_path = save_cross_zero_shot_checkpoint(
         config=config,
         config_path=config_path,
@@ -1628,50 +1939,95 @@ def run_pooled10_target_calibration_job(
     if not pooled_train_ids or not pooled_val_ids or not pooled_test_ids:
         raise RuntimeError("target calibration or final test recordings are empty")
     target_dir = resolve_dataset_path(str(target_cfg["dataset_locator"]))
+    contract = model_contract(config, model_name)
     model_handle, model_kwargs = instantiate_model(config, model_name)
-    train_dataset = SelectedRecordingWindowDataset(
-        target_dir,
-        recording_ids=pooled_train_ids,
-        window_size=model_window_size(config, model_name),
-        channels=range(64),
-        target_index=str(config[model_name]["target_index"]),
-    )
-    val_dataset = SelectedRecordingWindowDataset(
-        target_dir,
-        recording_ids=pooled_val_ids,
-        window_size=model_window_size(config, model_name),
-        channels=range(64),
-        target_index=str(config[model_name]["target_index"]),
-    )
-    if len(train_dataset) == 0 or len(val_dataset) == 0:
-        raise RuntimeError("pooled calibration windows are empty")
-    train_loader = DataLoader(
-        train_dataset,
-        batch_size=int(config[model_name]["batch_size"]),
-        shuffle=bool(config["dataloader"]["shuffle_train"]),
-        num_workers=0,
-        pin_memory=(device == "cuda"),
-    )
-    val_loader = DataLoader(
-        val_dataset,
-        batch_size=int(config["dataloader"]["eval_batch_size"]),
-        shuffle=False,
-        num_workers=0,
-        pin_memory=(device == "cuda"),
-    )
-    model = model_handle(**model_kwargs).to(device)
-    model.load_state_dict(source_payload["model_state_dict"], strict=True)
-    state_dict, best_epoch, best_val_score, epochs_completed = train_window_model(
-        model=model,
-        train_loader=train_loader,
-        val_loader=val_loader,
-        device=device,
-        lr=float(config[model_name]["fine_tune_learning_rate"]),
-        weight_decay=float(config[model_name]["weight_decay"]),
-        max_epochs=int(config[model_name]["max_epochs"]),
-        patience=int(config[model_name]["early_stopping_patience"]),
-        logger=logger,
-    )
+    if contract["family"] == "window_scalar":
+        train_dataset = SelectedRecordingWindowDataset(
+            target_dir,
+            recording_ids=pooled_train_ids,
+            window_size=model_window_size(config, model_name),
+            channels=range(64),
+            target_index=str(config[model_name]["target_index"]),
+        )
+        val_dataset = SelectedRecordingWindowDataset(
+            target_dir,
+            recording_ids=pooled_val_ids,
+            window_size=model_window_size(config, model_name),
+            channels=range(64),
+            target_index=str(config[model_name]["target_index"]),
+        )
+        if len(train_dataset) == 0 or len(val_dataset) == 0:
+            raise RuntimeError("pooled calibration windows are empty")
+        train_loader = DataLoader(
+            train_dataset,
+            batch_size=int(config[model_name]["batch_size"]),
+            shuffle=bool(config["dataloader"]["shuffle_train"]),
+            num_workers=0,
+            pin_memory=(device == "cuda"),
+        )
+        val_loader = DataLoader(
+            val_dataset,
+            batch_size=int(config["dataloader"]["eval_batch_size"]),
+            shuffle=False,
+            num_workers=0,
+            pin_memory=(device == "cuda"),
+        )
+        model = model_handle(**model_kwargs).to(device)
+        model.load_state_dict(source_payload["model_state_dict"], strict=True)
+        state_dict, best_epoch, best_val_score, epochs_completed = train_window_model(
+            model=model,
+            train_loader=train_loader,
+            val_loader=val_loader,
+            device=device,
+            lr=float(config[model_name]["fine_tune_learning_rate"]),
+            weight_decay=float(config[model_name].get("weight_decay", 0.0)),
+            max_epochs=int(config[model_name]["max_epochs"]),
+            patience=int(config[model_name]["early_stopping_patience"]),
+            logger=logger,
+        )
+    else:
+        train_dataset = SelectedRecordingSequenceDataset(
+            target_dir,
+            recording_ids=pooled_train_ids,
+            window_length=int(config["adt"]["window_length"]),
+            hop_length=int(config["adt"]["hop_length"]),
+            channels=range(64),
+        )
+        val_dataset = SelectedRecordingSequenceDataset(
+            target_dir,
+            recording_ids=pooled_val_ids,
+            window_length=int(config["adt"]["window_length"]),
+            hop_length=int(config["adt"]["hop_length"]),
+            channels=range(64),
+        )
+        if len(train_dataset) == 0 or len(val_dataset) == 0:
+            raise RuntimeError("pooled calibration windows are empty")
+        train_loader = DataLoader(
+            train_dataset,
+            batch_size=int(config["adt"]["batch_size"]),
+            shuffle=bool(config["dataloader"]["shuffle_train"]),
+            num_workers=0,
+            pin_memory=(device == "cuda"),
+        )
+        val_loader = DataLoader(
+            val_dataset,
+            batch_size=int(config["dataloader"]["eval_batch_size"]),
+            shuffle=False,
+            num_workers=0,
+            pin_memory=(device == "cuda"),
+        )
+        model = model_handle(**model_kwargs).to(device)
+        model.load_state_dict(source_payload["model_state_dict"], strict=True)
+        state_dict, best_epoch, best_val_score, epochs_completed = train_sequence_model(
+            model=model,
+            train_loader=train_loader,
+            val_loader=val_loader,
+            device=device,
+            lr=float(config["adt"]["fine_tune_learning_rate"]),
+            max_epochs=int(config["adt"]["max_epochs"]),
+            patience=int(config["adt"]["early_stopping_patience"]),
+            logger=logger,
+        )
     checkpoint_local_id, checkpoint_path = save_cross_pooled10_checkpoint(
         config=config,
         config_path=config_path,
@@ -1693,19 +2049,34 @@ def run_pooled10_target_calibration_job(
     fine_model.load_state_dict(state_dict, strict=True)
     checkpoint_id = f"{model_name}_pooled10_epoch_{best_epoch}"
     stdout_message("[TEST START]")
-    recording_rows_raw, subject_rows_raw = predict_target_recordings_window(
-        config=config,
-        target_cfg=target_cfg,
-        model_name=model_name,
-        model=fine_model,
-        checkpoint_id=checkpoint_id,
-        recording_ids=pooled_test_ids,
-        device=device,
-        protocol=f"{config['protocol']}::pooled10_target_calibration",
-        artifact_scope=f"{config['artifact_scope']}::pooled10_target_calibration",
-        dataset_label=target_dataset,
-        seed=seed,
-    )
+    if contract["family"] == "window_scalar":
+        recording_rows_raw, subject_rows_raw = predict_target_recordings_window(
+            config=config,
+            target_cfg=target_cfg,
+            model_name=model_name,
+            model=fine_model,
+            checkpoint_id=checkpoint_id,
+            recording_ids=pooled_test_ids,
+            device=device,
+            protocol=f"{config['protocol']}::pooled10_target_calibration",
+            artifact_scope=f"{config['artifact_scope']}::pooled10_target_calibration",
+            dataset_label=target_dataset,
+            seed=seed,
+        )
+    else:
+        recording_rows_raw, subject_rows_raw = predict_target_recordings_sequence(
+            config=config,
+            target_cfg=target_cfg,
+            model_name=model_name,
+            model=fine_model,
+            checkpoint_id=checkpoint_id,
+            recording_ids=pooled_test_ids,
+            device=device,
+            protocol=f"{config['protocol']}::pooled10_target_calibration",
+            artifact_scope=f"{config['artifact_scope']}::pooled10_target_calibration",
+            dataset_label=target_dataset,
+            seed=seed,
+        )
     stdout_message("[TEST DONE]")
     subject_rows = build_cross_subject_rows(
         subject_rows_raw,
@@ -1848,6 +2219,7 @@ def run_cross_dataset_zero_shot_eval_job(
         model_name=model_name,
         seed=seed,
     )
+    contract = model_contract(config, model_name)
     model_handle, model_kwargs = instantiate_model(config, model_name)
     model = model_handle(**model_kwargs).to(device)
     model.load_state_dict(payload["model_state_dict"], strict=True)
@@ -1865,19 +2237,34 @@ def run_cross_dataset_zero_shot_eval_job(
     checkpoint_id = f"{model_name}_epoch_{int(payload['best_epoch'])}"
     logger.event("checkpoint_loaded_for_eval", checkpoint_local_id=checkpoint_local_id, checkpoint_path=repo_relative(checkpoint_path))
     stdout_message("[TEST START]")
-    recording_rows_raw, subject_rows_raw = predict_target_recordings_window(
-        config=config,
-        target_cfg=target_cfg,
-        model_name=model_name,
-        model=model,
-        checkpoint_id=checkpoint_id,
-        recording_ids=target_recording_ids,
-        device=device,
-        protocol=f"{config['protocol']}::cross_dataset_zero_shot_eval",
-        artifact_scope=f"{config['artifact_scope']}::cross_dataset_zero_shot_eval",
-        dataset_label=target_dataset,
-        seed=seed,
-    )
+    if contract["family"] == "window_scalar":
+        recording_rows_raw, subject_rows_raw = predict_target_recordings_window(
+            config=config,
+            target_cfg=target_cfg,
+            model_name=model_name,
+            model=model,
+            checkpoint_id=checkpoint_id,
+            recording_ids=target_recording_ids,
+            device=device,
+            protocol=f"{config['protocol']}::cross_dataset_zero_shot_eval",
+            artifact_scope=f"{config['artifact_scope']}::cross_dataset_zero_shot_eval",
+            dataset_label=target_dataset,
+            seed=seed,
+        )
+    else:
+        recording_rows_raw, subject_rows_raw = predict_target_recordings_sequence(
+            config=config,
+            target_cfg=target_cfg,
+            model_name=model_name,
+            model=model,
+            checkpoint_id=checkpoint_id,
+            recording_ids=target_recording_ids,
+            device=device,
+            protocol=f"{config['protocol']}::cross_dataset_zero_shot_eval",
+            artifact_scope=f"{config['artifact_scope']}::cross_dataset_zero_shot_eval",
+            dataset_label=target_dataset,
+            seed=seed,
+        )
     stdout_message("[TEST DONE]")
     subject_rows = build_cross_subject_rows(
         subject_rows_raw,

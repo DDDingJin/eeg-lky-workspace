@@ -4,6 +4,8 @@
       "source_dataset": "weissbart_tf64",
       "target_dataset": "etard_tf64",
       "model": "eegnet",
+      "source_job_key": "weissbart_tf64:eegnet:seed0:source_zero_shot",
+      "target_eval_job_key": "weissbart_tf64->etard_tf64:eegnet:seed0:cross_dataset_zero_shot_eval",
       "source_train_subjects": [
         "P00",
         "P09",
@@ -36,6 +38,8 @@
       "source_dataset": "etard_tf64",
       "target_dataset": "weissbart_tf64",
       "model": "eegnet",
+      "source_job_key": "etard_tf64:eegnet:seed0:source_zero_shot",
+      "target_eval_job_key": "etard_tf64->weissbart_tf64:eegnet:seed0:cross_dataset_zero_shot_eval",
       "source_train_subjects": [
         "P05",
         "P02",

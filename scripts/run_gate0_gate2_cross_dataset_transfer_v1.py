@@ -54,6 +54,38 @@ COMPARISON_FIELDS = [
     "calibrated_metric",
     "delta",
 ]
+CROSS_SUBJECT_FIELDS = [
+    "source_dataset",
+    "target_dataset",
+    "model",
+    "task",
+    "protocol",
+    "seed",
+    "stage",
+    "subject_id",
+    "metric_name",
+    "metric_value",
+    "num_recordings",
+    "checkpoint_id",
+    "artifact_scope",
+]
+CROSS_RECORDING_FIELDS = [
+    "source_dataset",
+    "target_dataset",
+    "model",
+    "task",
+    "protocol",
+    "seed",
+    "stage",
+    "subject_id",
+    "recording_id",
+    "sampling_rate",
+    "metric_name",
+    "metric_value",
+    "num_valid_samples",
+    "checkpoint_id",
+    "artifact_scope",
+]
 
 
 def parse_args() -> argparse.Namespace:
@@ -143,6 +175,17 @@ def read_csv_rows(path: Path) -> list[dict[str, str]]:
         return []
     with open(path, "r", encoding="utf-8", newline="") as handle:
         return list(csv.DictReader(handle))
+
+
+def filter_rows_to_fieldnames(rows: list[dict[str, object]], fieldnames: list[str]) -> list[dict[str, object]]:
+    allowed = set(fieldnames)
+    filtered: list[dict[str, object]] = []
+    for row in rows:
+        keys = set(row.keys())
+        if not keys.issubset(allowed):
+            continue
+        filtered.append({field: row.get(field, "") for field in fieldnames})
+    return filtered
 
 
 def repo_relative(path: Path) -> str:
@@ -504,24 +547,24 @@ def shape_check_for_model(config: dict, model_name: str, device: str) -> dict[st
     }
 
 
-def cross_zero_shot_checkpoint_root() -> Path:
-    return ROOT / "local_checkpoints" / "cross_dataset" / "zero_shot"
+def cross_source_only_checkpoint_root() -> Path:
+    return ROOT / "local_checkpoints" / "cross_dataset" / "source_only"
 
 
 def cross_calibration_checkpoint_root() -> Path:
     return ROOT / "local_checkpoints" / "cross_dataset" / "pooled10_target_calibration"
 
 
-def cross_zero_shot_checkpoint_local_id(*, source_dataset: str, target_dataset: str, model: str, seed: int, best_epoch: int) -> str:
-    return f"cross_dataset_zero_shot:{model}:{source_dataset}->{target_dataset}:seed{seed}:best_epoch_{best_epoch}"
+def cross_source_only_checkpoint_local_id(*, source_dataset: str, model: str, seed: int, best_epoch: int) -> str:
+    return f"cross_dataset_source_only:{model}:{source_dataset}:seed{seed}:best_epoch_{best_epoch}"
 
 
-def cross_zero_shot_checkpoint_relative_path(*, source_dataset: str, target_dataset: str, model: str, seed: int, best_epoch: int) -> Path:
-    return Path(model) / source_dataset / target_dataset / f"seed{seed}" / f"best_epoch_{best_epoch}.pt"
+def cross_source_only_checkpoint_relative_path(*, source_dataset: str, model: str, seed: int, best_epoch: int) -> Path:
+    return Path(model) / source_dataset / f"seed{seed}" / f"best_epoch_{best_epoch}.pt"
 
 
-def cross_zero_shot_checkpoint_path_pattern(*, source_dataset: str, target_dataset: str, model: str, seed: int) -> Path:
-    return cross_zero_shot_checkpoint_root() / model / source_dataset / target_dataset / f"seed{seed}" / "best_epoch_PENDING.pt"
+def cross_source_only_checkpoint_path_pattern(*, source_dataset: str, model: str, seed: int) -> Path:
+    return cross_source_only_checkpoint_root() / model / source_dataset / f"seed{seed}" / "best_epoch_PENDING.pt"
 
 
 def cross_calibration_checkpoint_path_pattern(*, source_dataset: str, target_dataset: str, model: str, seed: int) -> Path:
@@ -544,9 +587,8 @@ def checkpoint_path_check(config: dict, transfer_audits: list[dict[str, object]]
     rows: list[dict[str, object]] = []
     for audit in transfer_audits:
         for model_name in selected_models:
-            zero_pattern = cross_zero_shot_checkpoint_path_pattern(
+            zero_pattern = cross_source_only_checkpoint_path_pattern(
                 source_dataset=str(audit["source_dataset"]),
-                target_dataset=str(audit["target_dataset"]),
                 model=model_name,
                 seed=int(config["seed"]),
             )
@@ -579,9 +621,9 @@ def checkpoint_path_check(config: dict, transfer_audits: list[dict[str, object]]
                     "target_dataset": str(audit["target_dataset"]),
                     "model": model_name,
                     "seed": int(config["seed"]),
-                    "cross_dataset_zero_shot_checkpoint_path_pattern": repo_relative(zero_pattern),
+                    "cross_dataset_source_only_checkpoint_path_pattern": repo_relative(zero_pattern),
                     "pooled10_target_calibration_checkpoint_path_pattern": repo_relative(cal_pattern),
-                    "existing_zero_shot_checkpoint": repo_relative(existing) if existing is not None else None,
+                    "existing_source_only_checkpoint": repo_relative(existing) if existing is not None else None,
                     "torch_load_smoke": True,
                     "strict_load_state_dict_smoke": True,
                 }
@@ -589,25 +631,42 @@ def checkpoint_path_check(config: dict, transfer_audits: list[dict[str, object]]
     return rows
 
 
-def build_job_key(source_dataset: str, target_dataset: str, model: str, seed: int, stage: str) -> str:
-    return f"{source_dataset}->{target_dataset}:{model}:seed{seed}:{stage}"
+def build_job_key(source_dataset: str, target_dataset: str | None, model: str, seed: int, stage: str) -> str:
+    if target_dataset:
+        return f"{source_dataset}->{target_dataset}:{model}:seed{seed}:{stage}"
+    return f"{source_dataset}:{model}:seed{seed}:{stage}"
 
 
 def build_job_plan(config: dict, transfer_audits: list[dict[str, object]], selected_models: list[str], stage: str) -> dict[str, object]:
     jobs: list[dict[str, object]] = []
+    seen_source_jobs: set[tuple[str, str, int]] = set()
     for audit in transfer_audits:
         source_dataset = str(audit["source_dataset"])
         target_dataset = str(audit["target_dataset"])
         for model_name in selected_models:
             if stage in {"cross_dataset_zero_shot", "all"}:
+                source_job_signature = (source_dataset, model_name, int(config["seed"]))
+                if source_job_signature not in seen_source_jobs:
+                    jobs.append(
+                        {
+                            "source_dataset": source_dataset,
+                            "target_dataset": None,
+                            "model": model_name,
+                            "seed": int(config["seed"]),
+                            "stage": "source_zero_shot",
+                            "job_key": build_job_key(source_dataset, None, model_name, int(config["seed"]), "source_zero_shot"),
+                        }
+                    )
+                    seen_source_jobs.add(source_job_signature)
                 jobs.append(
                     {
                         "source_dataset": source_dataset,
                         "target_dataset": target_dataset,
                         "model": model_name,
                         "seed": int(config["seed"]),
-                        "stage": "cross_dataset_zero_shot",
-                        "job_key": build_job_key(source_dataset, target_dataset, model_name, int(config["seed"]), "cross_dataset_zero_shot"),
+                        "stage": "cross_dataset_zero_shot_eval",
+                        "job_key": build_job_key(source_dataset, target_dataset, model_name, int(config["seed"]), "cross_dataset_zero_shot_eval"),
+                        "depends_on_source_zero_shot": build_job_key(source_dataset, None, model_name, int(config["seed"]), "source_zero_shot"),
                     }
                 )
             if stage in {"pooled10_target_calibration", "all"}:
@@ -619,29 +678,37 @@ def build_job_plan(config: dict, transfer_audits: list[dict[str, object]], selec
                         "seed": int(config["seed"]),
                         "stage": "pooled10_target_calibration",
                         "job_key": build_job_key(source_dataset, target_dataset, model_name, int(config["seed"]), "pooled10_target_calibration"),
-                        "depends_on_zero_shot": True,
+                        "depends_on_zero_shot_eval": build_job_key(source_dataset, target_dataset, model_name, int(config["seed"]), "cross_dataset_zero_shot_eval"),
                     }
                 )
     return {
         "planned_jobs": jobs,
-        "cross_dataset_zero_shot_job_count": sum(1 for job in jobs if job["stage"] == "cross_dataset_zero_shot"),
+        "source_zero_shot_job_count": sum(1 for job in jobs if job["stage"] == "source_zero_shot"),
+        "cross_dataset_zero_shot_eval_job_count": sum(1 for job in jobs if job["stage"] == "cross_dataset_zero_shot_eval"),
         "pooled10_target_calibration_job_count": sum(1 for job in jobs if job["stage"] == "pooled10_target_calibration"),
     }
 
 
 def build_manual_commands(config_path: Path, transfer_audits: list[dict[str, object]], selected_models: list[str]) -> list[str]:
-    sources = " ".join(str(item["source_dataset"]) for item in transfer_audits)
-    targets = " ".join(str(item["target_dataset"]) for item in transfer_audits)
     models_arg = " ".join(selected_models)
     config_path_ps = str(config_path).replace("/", "\\")
-    return [
-        f"cd {ROOT}",
-        f"F:\\miniconda\\envs\\decode-torch\\python.exe scripts\\run_gate0_gate2_cross_dataset_transfer_v1.py --config {config_path_ps} --device auto --resume --source-dataset {sources} --target-dataset {targets} --models {models_arg} --stage cross_dataset_zero_shot --max-jobs 1",
-        f"F:\\miniconda\\envs\\decode-torch\\python.exe scripts\\run_gate0_gate2_cross_dataset_transfer_v1.py --config {config_path_ps} --device auto --resume --source-dataset {sources} --target-dataset {targets} --models {models_arg} --stage pooled10_target_calibration --max-jobs 1",
-    ]
+    commands = [f"cd {ROOT}"]
+    for audit in transfer_audits:
+        source_dataset = str(audit["source_dataset"])
+        target_dataset = str(audit["target_dataset"])
+        commands.append(
+            f"F:\\miniconda\\envs\\decode-torch\\python.exe scripts\\run_gate0_gate2_cross_dataset_transfer_v1.py --config {config_path_ps} --device auto --resume --source-dataset {source_dataset} --target-dataset {target_dataset} --models {models_arg} --stage cross_dataset_zero_shot --max-jobs 1"
+        )
+        commands.append(
+            f"F:\\miniconda\\envs\\decode-torch\\python.exe scripts\\run_gate0_gate2_cross_dataset_transfer_v1.py --config {config_path_ps} --device auto --resume --source-dataset {source_dataset} --target-dataset {target_dataset} --models {models_arg} --stage cross_dataset_zero_shot --max-jobs 1"
+        )
+    commands.append(
+        f"F:\\miniconda\\envs\\decode-torch\\python.exe scripts\\run_gate0_gate2_cross_dataset_transfer_v1.py --config {config_path_ps} --device auto --resume --source-dataset weissbart_tf64 etard_tf64 --target-dataset etard_tf64 weissbart_tf64 --models {models_arg} --stage pooled10_target_calibration --max-jobs 1"
+    )
+    return commands
 
 
-def build_job_plan_only_summary(transfer_audits: list[dict[str, object]], selected_models: list[str]) -> list[dict[str, object]]:
+def build_job_plan_only_summary(config: dict, transfer_audits: list[dict[str, object]], selected_models: list[str]) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for audit in transfer_audits:
         for model_name in selected_models:
@@ -650,6 +717,8 @@ def build_job_plan_only_summary(transfer_audits: list[dict[str, object]], select
                     "source_dataset": audit["source_dataset"],
                     "target_dataset": audit["target_dataset"],
                     "model": model_name,
+                    "source_job_key": build_job_key(str(audit["source_dataset"]), None, model_name, int(config["seed"]), "source_zero_shot"),
+                    "target_eval_job_key": build_job_key(str(audit["source_dataset"]), str(audit["target_dataset"]), model_name, int(config["seed"]), "cross_dataset_zero_shot_eval"),
                     "source_train_subjects": audit["source_train_subjects"],
                     "source_val_subjects": audit["source_val_subjects"],
                     "target_test_subjects": audit["target_test_subjects"],
@@ -740,8 +809,8 @@ def write_preflight_artifacts(
 
 def load_existing_runtime_state(output_dir: Path) -> dict[str, object]:
     return {
-        "recording_rows": read_csv_rows(output_dir / "recording_metrics.csv"),
-        "subject_rows": read_csv_rows(output_dir / "subject_metrics.csv"),
+        "recording_rows": filter_rows_to_fieldnames(read_csv_rows(output_dir / "recording_metrics.csv"), CROSS_RECORDING_FIELDS),
+        "subject_rows": filter_rows_to_fieldnames(read_csv_rows(output_dir / "subject_metrics.csv"), CROSS_SUBJECT_FIELDS),
         "dataset_rows": read_csv_rows(output_dir / "dataset_metrics.csv"),
         "comparison_rows": read_csv_rows(output_dir / "cross_dataset_zero_shot_vs_calibrated_comparison.csv"),
         "checkpoint_entries": list(read_json(output_dir / "checkpoint_manifest.json", {"checkpoints": []}).get("checkpoints", [])),
@@ -822,8 +891,8 @@ def write_runtime_state(
     atomic_write_json(output_dir / "calibration_plan.json", {"selection_rule": config["target_calibration"]["selection_rule"], "pairs": transfer_audits})
     atomic_write_json(output_dir / "checkpoint_manifest.json", {"checkpoints": state["checkpoint_entries"]})
     atomic_write_json(output_dir / "model_run_entries.json", {"model_run_entries": state["model_run_entries"]})
-    atomic_write_csv(output_dir / "recording_metrics.csv", state["recording_rows"], RECORDING_METRIC_FIELDS)
-    atomic_write_csv(output_dir / "subject_metrics.csv", state["subject_rows"], SUBJECT_METRIC_FIELDS)
+    atomic_write_csv(output_dir / "recording_metrics.csv", state["recording_rows"], CROSS_RECORDING_FIELDS)
+    atomic_write_csv(output_dir / "subject_metrics.csv", state["subject_rows"], CROSS_SUBJECT_FIELDS)
     atomic_write_csv(output_dir / "dataset_metrics.csv", state["dataset_rows"], DATASET_METRIC_FIELDS)
     atomic_write_csv(output_dir / "cross_dataset_zero_shot_vs_calibrated_comparison.csv", state["comparison_rows"], COMPARISON_FIELDS)
     atomic_write_json(output_dir / "failure_report.json", {"failures": state["failures"]})
@@ -1035,27 +1104,22 @@ def save_cross_zero_shot_checkpoint(
     config: dict,
     config_path: Path,
     source_cfg: dict[str, object],
-    target_cfg: dict[str, object],
     source_manifest: dict[str, object],
-    target_manifest: dict[str, object],
     model_name: str,
     best_state: dict[str, torch.Tensor],
     best_epoch: int,
     best_val_score: float,
 ) -> tuple[str, Path]:
     source_dataset = str(source_cfg["dataset_id"])
-    target_dataset = str(target_cfg["dataset_id"])
     seed = int(config["seed"])
-    checkpoint_local_id = cross_zero_shot_checkpoint_local_id(
+    checkpoint_local_id = cross_source_only_checkpoint_local_id(
         source_dataset=source_dataset,
-        target_dataset=target_dataset,
         model=model_name,
         seed=seed,
         best_epoch=best_epoch,
     )
-    path = cross_zero_shot_checkpoint_root() / cross_zero_shot_checkpoint_relative_path(
+    path = cross_source_only_checkpoint_root() / cross_source_only_checkpoint_relative_path(
         source_dataset=source_dataset,
-        target_dataset=target_dataset,
         model=model_name,
         seed=seed,
         best_epoch=best_epoch,
@@ -1064,26 +1128,61 @@ def save_cross_zero_shot_checkpoint(
     payload = {
         "model_state_dict": {key: value.detach().cpu().clone() for key, value in best_state.items()},
         "source_dataset": source_dataset,
-        "target_dataset": target_dataset,
         "model": model_name,
         "seed": seed,
         "source_split_id": str(source_manifest["split_id"]),
-        "target_split_id": str(target_manifest["split_id"]),
         "source_train_subjects": list(source_manifest["train_subjects"]),
         "source_val_subjects": list(source_manifest["val_subjects"]),
-        "target_test_subjects": list(target_manifest["test_subjects"]),
         "best_epoch": int(best_epoch),
         "best_val_score": float(best_val_score),
-        "protocol": f"{config['protocol']}::cross_dataset_zero_shot",
+        "stage": "source_zero_shot",
+        "protocol": f"{config['protocol']}::source_zero_shot",
         "config_path": repo_relative(config_path),
         "source_split_manifest_path": repo_relative(ROOT / str(source_cfg["split_manifest_path"])),
-        "target_split_manifest_path": repo_relative(ROOT / str(target_cfg["split_manifest_path"])),
         "branch": current_git_branch_name(),
         "commit_sha": current_git_commit_sha(),
         "created_at": time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime()),
     }
     torch.save(payload, path)
     return checkpoint_local_id, path
+
+
+def find_existing_source_zero_shot_checkpoint(
+    *,
+    source_dataset: str,
+    model_name: str,
+    seed: int,
+) -> Path | None:
+    pattern = cross_source_only_checkpoint_path_pattern(source_dataset=source_dataset, model=model_name, seed=seed)
+    return latest_checkpoint_in_dir(pattern.parent)
+
+
+def checkpoint_entry_matches_source_job(entry: dict[str, object], *, source_dataset: str, model_name: str, seed: int) -> bool:
+    return (
+        str(entry.get("stage")) == "source_zero_shot"
+        and str(entry.get("source_dataset")) == source_dataset
+        and str(entry.get("model")) == model_name
+        and int(entry.get("seed", -1)) == seed
+    )
+
+
+def load_source_zero_shot_checkpoint_payload(
+    *,
+    output_dir: Path,
+    source_dataset: str,
+    model_name: str,
+    seed: int,
+) -> tuple[dict[str, object], Path]:
+    manifest = read_json(output_dir / "checkpoint_manifest.json", {"checkpoints": []})
+    for entry in manifest.get("checkpoints", []):
+        if checkpoint_entry_matches_source_job(entry, source_dataset=source_dataset, model_name=model_name, seed=seed):
+            path = ROOT / str(entry["checkpoint_relative_path"])
+            if path.exists():
+                return torch.load(path, map_location="cpu"), path
+    existing = find_existing_source_zero_shot_checkpoint(source_dataset=source_dataset, model_name=model_name, seed=seed)
+    if existing is None:
+        raise FileNotFoundError(f"source-only checkpoint not found for {source_dataset}/{model_name}/seed{seed}")
+    return torch.load(existing, map_location="cpu"), existing
 
 
 def mean_dataset_metric(subject_rows: list[dict[str, object]], *, source_dataset: str, target_dataset: str, model_name: str, seed: int, stage: str) -> dict[str, object]:
@@ -1130,11 +1229,16 @@ def build_cross_subject_rows(
                 "source_dataset": source_dataset,
                 "target_dataset": target_dataset,
                 "model": row["model"],
+                "task": row["task"],
+                "protocol": row["protocol"],
                 "seed": row["seed"],
                 "stage": stage,
                 "subject_id": row["subject_id"],
+                "metric_name": row["metric_name"],
                 "metric_value": row["metric_value"],
+                "num_recordings": row["num_recordings"],
                 "checkpoint_id": row["checkpoint_id"],
+                "artifact_scope": row["artifact_scope"],
             }
         )
     return rows
@@ -1154,34 +1258,36 @@ def build_cross_recording_rows(
                 "source_dataset": source_dataset,
                 "target_dataset": target_dataset,
                 "model": row["model"],
+                "task": row["task"],
+                "protocol": row["protocol"],
                 "seed": row["seed"],
                 "stage": stage,
                 "subject_id": row["subject_id"],
                 "recording_id": row["recording_id"],
+                "sampling_rate": row["sampling_rate"],
+                "metric_name": row["metric_name"],
                 "metric_value": row["metric_value"],
+                "num_valid_samples": row["num_valid_samples"],
                 "checkpoint_id": row["checkpoint_id"],
+                "artifact_scope": row["artifact_scope"],
             }
         )
     return rows
 
 
-def run_cross_dataset_zero_shot_job(
+def run_source_zero_shot_job(
     *,
     config: dict,
     config_path: Path,
     source_cfg: dict[str, object],
-    target_cfg: dict[str, object],
-    audit: dict[str, object],
     model_name: str,
     output_dir: Path,
     device: str,
 ) -> dict[str, object]:
     source_dataset = str(source_cfg["dataset_id"])
-    target_dataset = str(target_cfg["dataset_id"])
     seed = int(config["seed"])
-    logger = JobLogger(output_dir / "logs" / f"{source_dataset}_to_{target_dataset}_{model_name}_seed{seed}_cross_dataset_zero_shot.log")
+    logger = JobLogger(output_dir / "logs" / f"{source_dataset}_{model_name}_seed{seed}_source_zero_shot.log")
     source_manifest = load_split_manifest(ROOT / str(source_cfg["split_manifest_path"]))
-    target_manifest = load_split_manifest(ROOT / str(target_cfg["split_manifest_path"]))
     source_dir = resolve_dataset_path(str(source_cfg["dataset_locator"]))
     model_handle, model_kwargs = instantiate_model(config, model_name)
     train_dataset = SubjectSplitWindowDataset(
@@ -1230,9 +1336,7 @@ def run_cross_dataset_zero_shot_job(
         config=config,
         config_path=config_path,
         source_cfg=source_cfg,
-        target_cfg=target_cfg,
         source_manifest=source_manifest,
-        target_manifest=target_manifest,
         model_name=model_name,
         best_state=best_state,
         best_epoch=best_epoch,
@@ -1240,42 +1344,13 @@ def run_cross_dataset_zero_shot_job(
     )
     logger.event("checkpoint_saved", checkpoint_local_id=checkpoint_local_id, checkpoint_path=repo_relative(checkpoint_path))
     stdout_message(f"[CHECKPOINT SAVED] checkpoint_local_id={checkpoint_local_id} path={repo_relative(checkpoint_path)}")
-    model = model_handle(**model_kwargs).to(device)
-    model.load_state_dict(best_state, strict=True)
-    checkpoint_id = f"{model_name}_epoch_{best_epoch}"
-    target_recording_ids = collect_target_test_recording_ids(target_cfg, list(target_manifest["test_subjects"]))
-    stdout_message("[TEST START]")
-    recording_rows, subject_rows = predict_target_recordings_window(
-        config=config,
-        target_cfg=target_cfg,
-        model_name=model_name,
-        model=model,
-        checkpoint_id=checkpoint_id,
-        recording_ids=target_recording_ids,
-        device=device,
-        protocol=f"{config['protocol']}::cross_dataset_zero_shot",
-        artifact_scope=f"{config['artifact_scope']}::cross_dataset_zero_shot",
-        dataset_label=f"{source_dataset}->{target_dataset}",
-        seed=seed,
-    )
-    stdout_message("[TEST DONE]")
-    dataset_row = mean_dataset_metric(
-        subject_rows,
-        source_dataset=source_dataset,
-        target_dataset=target_dataset,
-        model_name=model_name,
-        seed=seed,
-        stage="cross_dataset_zero_shot",
-    )
-    logger.event("job_completed", mean_pearson=dataset_row["mean_pearson"], n_test_subjects=dataset_row["n_subjects"])
-    stdout_message(f"[JOB DONE] mean_pearson={dataset_row['mean_pearson']} n_test_subjects={dataset_row['n_subjects']}")
     checkpoint_entry = {
         "source_dataset": source_dataset,
-        "target_dataset": target_dataset,
+        "target_dataset": None,
         "model": model_name,
         "seed": seed,
-        "stage": "cross_dataset_zero_shot",
-        "source_job_key": build_job_key(source_dataset, target_dataset, model_name, seed, "cross_dataset_zero_shot"),
+        "stage": "source_zero_shot",
+        "source_job_key": build_job_key(source_dataset, None, model_name, seed, "source_zero_shot"),
         "checkpoint_local_id": checkpoint_local_id,
         "checkpoint_relative_path": repo_relative(checkpoint_path),
         "checkpoint_artifact_status": "local_only_not_committed",
@@ -1283,23 +1358,23 @@ def run_cross_dataset_zero_shot_job(
         "best_val_score": float(best_val_score),
         "source_train_subjects": list(source_manifest["train_subjects"]),
         "source_val_subjects": list(source_manifest["val_subjects"]),
-        "target_test_subjects": list(target_manifest["test_subjects"]),
-        "protocol": f"{config['protocol']}::cross_dataset_zero_shot",
+        "target_test_subjects": [],
+        "protocol": f"{config['protocol']}::source_zero_shot",
         "config_path": repo_relative(config_path),
         "source_split_manifest_path": repo_relative(ROOT / str(source_cfg["split_manifest_path"])),
-        "target_split_manifest_path": repo_relative(ROOT / str(target_cfg["split_manifest_path"])),
+        "target_split_manifest_path": None,
         "branch": current_git_branch_name(),
         "commit_sha": current_git_commit_sha(),
     }
     model_run_entry = {
-        "job_key": build_job_key(source_dataset, target_dataset, model_name, seed, "cross_dataset_zero_shot"),
+        "job_key": build_job_key(source_dataset, None, model_name, seed, "source_zero_shot"),
         "source_dataset": source_dataset,
-        "target_dataset": target_dataset,
+        "target_dataset": None,
         "model": model_name,
         "seed": seed,
-        "stage": "cross_dataset_zero_shot",
+        "stage": "source_zero_shot",
         "status": "success",
-        "checkpoint_id": checkpoint_id,
+        "checkpoint_id": f"{model_name}_epoch_{best_epoch}",
         "checkpoint_local_id": checkpoint_local_id,
         "epochs_completed": int(epochs_completed),
         "best_epoch": int(best_epoch),
@@ -1307,15 +1382,131 @@ def run_cross_dataset_zero_shot_job(
         "prediction_target_alignment_ok": True,
         "source_train_subject_count": len(source_manifest["train_subjects"]),
         "source_val_subject_count": len(source_manifest["val_subjects"]),
-        "target_test_subject_count": len(target_manifest["test_subjects"]),
+        "target_test_subject_count": 0,
     }
     completed_job = {
-        "job_key": build_job_key(source_dataset, target_dataset, model_name, seed, "cross_dataset_zero_shot"),
+        "job_key": build_job_key(source_dataset, None, model_name, seed, "source_zero_shot"),
+        "source_dataset": source_dataset,
+        "target_dataset": None,
+        "model": model_name,
+        "seed": seed,
+        "stage": "source_zero_shot",
+        "status": "success",
+        "checkpoint_id": f"{model_name}_epoch_{best_epoch}",
+        "checkpoint_local_id": checkpoint_local_id,
+    }
+    return {
+        "recording_rows": [],
+        "subject_rows": [],
+        "dataset_row": None,
+        "comparison_rows": [],
+        "checkpoint_entry": checkpoint_entry,
+        "model_run_entry": model_run_entry,
+        "completed_job": completed_job,
+        "cross_subject_rows": [],
+        "cross_recording_rows": [],
+    }
+
+
+def run_cross_dataset_zero_shot_eval_job(
+    *,
+    config: dict,
+    source_cfg: dict[str, object],
+    target_cfg: dict[str, object],
+    model_name: str,
+    output_dir: Path,
+    device: str,
+) -> dict[str, object]:
+    source_dataset = str(source_cfg["dataset_id"])
+    target_dataset = str(target_cfg["dataset_id"])
+    seed = int(config["seed"])
+    logger = JobLogger(output_dir / "logs" / f"{source_dataset}_to_{target_dataset}_{model_name}_seed{seed}_cross_dataset_zero_shot_eval.log")
+    target_manifest = load_split_manifest(ROOT / str(target_cfg["split_manifest_path"]))
+    target_recording_ids = collect_target_test_recording_ids(target_cfg, list(target_manifest["test_subjects"]))
+    payload, checkpoint_path = load_source_zero_shot_checkpoint_payload(
+        output_dir=output_dir,
+        source_dataset=source_dataset,
+        model_name=model_name,
+        seed=seed,
+    )
+    model_handle, model_kwargs = instantiate_model(config, model_name)
+    model = model_handle(**model_kwargs).to(device)
+    model.load_state_dict(payload["model_state_dict"], strict=True)
+    checkpoint_local_id = str(
+        payload.get(
+            "checkpoint_local_id",
+            cross_source_only_checkpoint_local_id(
+                source_dataset=source_dataset,
+                model=model_name,
+                seed=seed,
+                best_epoch=int(payload["best_epoch"]),
+            ),
+        )
+    )
+    checkpoint_id = f"{model_name}_epoch_{int(payload['best_epoch'])}"
+    logger.event("checkpoint_loaded_for_eval", checkpoint_local_id=checkpoint_local_id, checkpoint_path=repo_relative(checkpoint_path))
+    stdout_message("[TEST START]")
+    recording_rows_raw, subject_rows_raw = predict_target_recordings_window(
+        config=config,
+        target_cfg=target_cfg,
+        model_name=model_name,
+        model=model,
+        checkpoint_id=checkpoint_id,
+        recording_ids=target_recording_ids,
+        device=device,
+        protocol=f"{config['protocol']}::cross_dataset_zero_shot_eval",
+        artifact_scope=f"{config['artifact_scope']}::cross_dataset_zero_shot_eval",
+        dataset_label=target_dataset,
+        seed=seed,
+    )
+    stdout_message("[TEST DONE]")
+    subject_rows = build_cross_subject_rows(
+        subject_rows_raw,
+        source_dataset=source_dataset,
+        target_dataset=target_dataset,
+        stage="cross_dataset_zero_shot_eval",
+    )
+    recording_rows = build_cross_recording_rows(
+        recording_rows_raw,
+        source_dataset=source_dataset,
+        target_dataset=target_dataset,
+        stage="cross_dataset_zero_shot_eval",
+    )
+    dataset_row = mean_dataset_metric(
+        subject_rows_raw,
+        source_dataset=source_dataset,
+        target_dataset=target_dataset,
+        model_name=model_name,
+        seed=seed,
+        stage="cross_dataset_zero_shot_eval",
+    )
+    logger.event("job_completed", mean_pearson=dataset_row["mean_pearson"], n_test_subjects=dataset_row["n_subjects"])
+    stdout_message(f"[JOB DONE] mean_pearson={dataset_row['mean_pearson']} n_test_subjects={dataset_row['n_subjects']}")
+    model_run_entry = {
+        "job_key": build_job_key(source_dataset, target_dataset, model_name, seed, "cross_dataset_zero_shot_eval"),
         "source_dataset": source_dataset,
         "target_dataset": target_dataset,
         "model": model_name,
         "seed": seed,
-        "stage": "cross_dataset_zero_shot",
+        "stage": "cross_dataset_zero_shot_eval",
+        "status": "success",
+        "checkpoint_id": checkpoint_id,
+        "checkpoint_local_id": checkpoint_local_id,
+        "epochs_completed": None,
+        "best_epoch": int(payload["best_epoch"]),
+        "best_val_score": float(payload["best_val_score"]),
+        "prediction_target_alignment_ok": True,
+        "source_train_subject_count": len(payload.get("source_train_subjects", [])),
+        "source_val_subject_count": len(payload.get("source_val_subjects", [])),
+        "target_test_subject_count": len(target_manifest["test_subjects"]),
+    }
+    completed_job = {
+        "job_key": build_job_key(source_dataset, target_dataset, model_name, seed, "cross_dataset_zero_shot_eval"),
+        "source_dataset": source_dataset,
+        "target_dataset": target_dataset,
+        "model": model_name,
+        "seed": seed,
+        "stage": "cross_dataset_zero_shot_eval",
         "status": "success",
         "checkpoint_id": checkpoint_id,
         "checkpoint_local_id": checkpoint_local_id,
@@ -1325,20 +1516,22 @@ def run_cross_dataset_zero_shot_job(
         "subject_rows": subject_rows,
         "dataset_row": dataset_row,
         "comparison_rows": [],
-        "checkpoint_entry": checkpoint_entry,
+        "checkpoint_entry": None,
         "model_run_entry": model_run_entry,
         "completed_job": completed_job,
-        "cross_subject_rows": build_cross_subject_rows(subject_rows, source_dataset=source_dataset, target_dataset=target_dataset, stage="cross_dataset_zero_shot"),
-        "cross_recording_rows": build_cross_recording_rows(recording_rows, source_dataset=source_dataset, target_dataset=target_dataset, stage="cross_dataset_zero_shot"),
+        "cross_subject_rows": subject_rows,
+        "cross_recording_rows": recording_rows,
     }
 
 
 def append_job_result(state: dict[str, object], result: dict[str, object]) -> None:
     state["recording_rows"].extend(result["recording_rows"])
     state["subject_rows"].extend(result["subject_rows"])
-    state["dataset_rows"].append(result["dataset_row"])
+    if result["dataset_row"] is not None:
+        state["dataset_rows"].append(result["dataset_row"])
     state["comparison_rows"].extend(result["comparison_rows"])
-    state["checkpoint_entries"].append(result["checkpoint_entry"])
+    if result["checkpoint_entry"] is not None:
+        state["checkpoint_entries"].append(result["checkpoint_entry"])
     state["model_run_entries"].append(result["model_run_entry"])
     state["completed_jobs"].append(result["completed_job"])
 
@@ -1358,7 +1551,7 @@ def main() -> int:
     shape_checks = [shape_check_for_model(config, model_name, device) for model_name in selected_models]
     checkpoint_checks = checkpoint_path_check(config, transfer_audits, selected_models, device)
     job_plan = build_job_plan(config, transfer_audits, selected_models, args.stage)
-    job_plan_only = build_job_plan_only_summary(transfer_audits, selected_models)
+    job_plan_only = build_job_plan_only_summary(config, transfer_audits, selected_models)
     manual_commands = build_manual_commands(config_path, transfer_audits, selected_models)
     preflight_mode = any(
         [
@@ -1404,7 +1597,8 @@ def main() -> int:
             f"models: {selected_models}",
             f"stage: {args.stage}",
             f"planned_jobs: {len(job_plan['planned_jobs'])}",
-            f"cross_dataset_zero_shot_jobs: {job_plan['cross_dataset_zero_shot_job_count']}",
+            f"source_zero_shot_jobs: {job_plan['source_zero_shot_job_count']}",
+            f"cross_dataset_zero_shot_eval_jobs: {job_plan['cross_dataset_zero_shot_eval_job_count']}",
             f"pooled10_target_calibration_jobs: {job_plan['pooled10_target_calibration_job_count']}",
             "no training started: True",
         ]
@@ -1450,17 +1644,27 @@ def main() -> int:
     audit_map = {(str(item["source_dataset"]), str(item["target_dataset"])): item for item in transfer_audits}
     for job in pending_jobs:
         source_dataset = str(job["source_dataset"])
-        target_dataset = str(job["target_dataset"])
+        target_dataset = str(job["target_dataset"]) if job["target_dataset"] is not None else None
         model_name = str(job["model"])
         stage = str(job["stage"])
         try:
-            if stage == "cross_dataset_zero_shot":
-                result = run_cross_dataset_zero_shot_job(
+            if stage == "source_zero_shot":
+                result = run_source_zero_shot_job(
                     config=config,
                     config_path=config_path,
                     source_cfg=datasets_by_id[source_dataset],
+                    model_name=model_name,
+                    output_dir=output_dir,
+                    device=device,
+                )
+                append_job_result(state, result)
+            elif stage == "cross_dataset_zero_shot_eval":
+                if target_dataset is None:
+                    raise RuntimeError("target_dataset is required for cross_dataset_zero_shot_eval")
+                result = run_cross_dataset_zero_shot_eval_job(
+                    config=config,
+                    source_cfg=datasets_by_id[source_dataset],
                     target_cfg=datasets_by_id[target_dataset],
-                    audit=audit_map[(source_dataset, target_dataset)],
                     model_name=model_name,
                     output_dir=output_dir,
                     device=device,

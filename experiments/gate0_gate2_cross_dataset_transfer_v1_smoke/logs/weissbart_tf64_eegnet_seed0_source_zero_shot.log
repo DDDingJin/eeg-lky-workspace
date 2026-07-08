@@ -1,0 +1,12 @@
+[2026-07-08 11:03:11] train_epoch_started epoch=1 max_epochs=1
+[2026-07-08 11:03:42] val_epoch_completed epoch=1 val_score=0.13245079358076228
+[2026-07-08 11:03:42] best_checkpoint_updated epoch=1 best_val_score=0.13245079358076228
+[2026-07-08 11:03:42] checkpoint_saved checkpoint_local_id=cross_dataset_source_only:eegnet:weissbart_tf64:seed0:best_epoch_0 checkpoint_path=local_checkpoints/cross_dataset/source_only/eegnet/weissbart_tf64/seed0/best_epoch_0.pt
+[2026-07-08 11:04:08] train_epoch_started epoch=1 max_epochs=1
+[2026-07-08 11:04:39] val_epoch_completed epoch=1 val_score=0.12095368200720384
+[2026-07-08 11:04:39] best_checkpoint_updated epoch=1 best_val_score=0.12095368200720384
+[2026-07-08 11:04:39] checkpoint_saved checkpoint_local_id=cross_dataset_source_only:eegnet:weissbart_tf64:seed0:best_epoch_0 checkpoint_path=local_checkpoints/cross_dataset/source_only/eegnet/weissbart_tf64/seed0/best_epoch_0.pt
+[2026-07-08 11:05:05] train_epoch_started epoch=1 max_epochs=1
+[2026-07-08 11:05:37] val_epoch_completed epoch=1 val_score=0.10910212457308481
+[2026-07-08 11:05:37] best_checkpoint_updated epoch=1 best_val_score=0.10910212457308481
+[2026-07-08 11:05:37] checkpoint_saved checkpoint_local_id=cross_dataset_source_only:eegnet:weissbart_tf64:seed0:best_epoch_0 checkpoint_path=local_checkpoints/cross_dataset/source_only/eegnet/weissbart_tf64/seed0/best_epoch_0.pt

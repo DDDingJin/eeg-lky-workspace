@@ -1,5 +1,0 @@
-[2026-07-08 09:45:09] train_epoch_started epoch=1 max_epochs=1
-[2026-07-08 09:45:40] val_epoch_completed epoch=1 val_score=0.12710450564768036
-[2026-07-08 09:45:40] best_checkpoint_updated epoch=1 best_val_score=0.12710450564768036
-[2026-07-08 09:45:40] checkpoint_saved checkpoint_local_id=cross_dataset_zero_shot:eegnet:weissbart_tf64->etard_tf64:seed0:best_epoch_0 checkpoint_path=local_checkpoints/cross_dataset/zero_shot/eegnet/weissbart_tf64/etard_tf64/seed0/best_epoch_0.pt
-[2026-07-08 09:45:42] job_completed mean_pearson=0.059151942354283116 n_test_subjects=4

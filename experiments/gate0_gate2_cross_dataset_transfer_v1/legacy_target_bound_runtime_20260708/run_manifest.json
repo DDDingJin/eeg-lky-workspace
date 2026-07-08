@@ -1,0 +1,25 @@
+{
+  "protocol": "gate0_gate2_cross_dataset_transfer_v1",
+  "artifact_scope": "cross_dataset_transfer_zero_shot_plus_pooled10_target_calibration_v1",
+  "base_branch": "fix/ar-20260625-161300-a43831b-fixed-split-pooled10-modelset-v1",
+  "base_commit": "ac847dd508a9c63ae546049f6a62b82fc34afc38",
+  "current_branch": "fix/ar-20260625-161300-a43831b-cross-dataset-transfer-v1",
+  "config_path": "configs/benchmark/gate0_gate2_cross_dataset_transfer_v1.json",
+  "commit_sha": "91ad558c0ca2c292848604daf1a0e0ba8a8fd35a",
+  "artifacts": {
+    "transfer_plan": "experiments/gate0_gate2_cross_dataset_transfer_v1/transfer_plan.json",
+    "calibration_plan": "experiments/gate0_gate2_cross_dataset_transfer_v1/calibration_plan.json",
+    "subject_metrics": "experiments/gate0_gate2_cross_dataset_transfer_v1/subject_metrics.csv",
+    "recording_metrics": "experiments/gate0_gate2_cross_dataset_transfer_v1/recording_metrics.csv",
+    "dataset_metrics": "experiments/gate0_gate2_cross_dataset_transfer_v1/dataset_metrics.csv",
+    "comparison": "experiments/gate0_gate2_cross_dataset_transfer_v1/cross_dataset_zero_shot_vs_calibrated_comparison.csv",
+    "checkpoint_manifest": "experiments/gate0_gate2_cross_dataset_transfer_v1/checkpoint_manifest.json",
+    "model_run_entries": "experiments/gate0_gate2_cross_dataset_transfer_v1/model_run_entries.json",
+    "completed_jobs": "experiments/gate0_gate2_cross_dataset_transfer_v1/completed_jobs.json",
+    "run_state": "experiments/gate0_gate2_cross_dataset_transfer_v1/run_state.json",
+    "failure_report": "experiments/gate0_gate2_cross_dataset_transfer_v1/failure_report.json",
+    "schema_validation_report": "experiments/gate0_gate2_cross_dataset_transfer_v1/schema_validation_report.json",
+    "transfer_or_leakage_summary": "experiments/gate0_gate2_cross_dataset_transfer_v1/transfer_or_leakage_summary.md",
+    "logs": "experiments/gate0_gate2_cross_dataset_transfer_v1/logs"
+  }
+}

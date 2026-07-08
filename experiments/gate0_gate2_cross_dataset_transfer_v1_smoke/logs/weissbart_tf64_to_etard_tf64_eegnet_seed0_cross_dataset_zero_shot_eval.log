@@ -1,0 +1,2 @@
+[2026-07-08 11:05:59] checkpoint_loaded_for_eval checkpoint_local_id=cross_dataset_source_only:eegnet:weissbart_tf64:seed0:best_epoch_0 checkpoint_path=local_checkpoints/cross_dataset/source_only/eegnet/weissbart_tf64/seed0/best_epoch_0.pt
+[2026-07-08 11:06:01] job_completed mean_pearson=0.05234549604814213 n_test_subjects=4

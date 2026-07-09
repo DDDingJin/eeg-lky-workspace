@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "checks": {
+    "all_requested_models_recorded": true,
+    "success_models_have_subject_metrics": true,
+    "success_models_have_recording_metrics": true,
+    "success_models_have_run_entries": true,
+    "all_non_success_models_have_reason": true
+  },
+  "status_by_model": {
+    "linear": "success",
+    "lasso": "success",
+    "elasticnet": "success",
+    "vlaai": "success",
+    "happyquokka": "success"
+  },
+  "success_models": [
+    "elasticnet",
+    "happyquokka",
+    "lasso",
+    "linear",
+    "vlaai"
+  ],
+  "subject_metric_rows": 5,
+  "recording_metric_rows": 75
+}

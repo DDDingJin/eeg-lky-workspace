@@ -92,6 +92,9 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True)
     parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
+    parser.add_argument("--startup-only", action="store_true")
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--shape-check-only", action="store_true")
     return parser.parse_args()
 
 
@@ -507,6 +510,7 @@ def run_vlaai_full_eval(config: dict, dataset_dir: Path, dataset_id: str, subjec
         "window_size": input_length,
         "batch_size": int(model_cfg["batch_size"]),
         "max_epochs": int(model_cfg["max_epochs"]),
+        "early_stopping_patience": int(model_cfg["early_stopping_patience"]),
         "learning_rate": float(model_cfg["learning_rate"]),
         "weight_decay": float(model_cfg["weight_decay"]),
         "best_epoch": int(train_result.best_epoch),
@@ -536,6 +540,9 @@ def run_vlaai_full_eval(config: dict, dataset_dir: Path, dataset_id: str, subjec
     model_run_entry = deepcopy(matrix_row)
     model_run_entry["checkpoint_id"] = f"vlaai_epoch_{train_result.best_epoch}"
     model_run_entry["best_val_score"] = float(train_result.best_val_score)
+    model_run_entry["best_epoch"] = int(train_result.best_epoch)
+    model_run_entry["epochs_completed"] = int(train_result.epochs_completed)
+    model_run_entry["history_val_score"] = [float(item) for item in train_result.val_history]
     shape_markdown = "\n".join(
         [
             "## `vlaai`",
@@ -565,6 +572,8 @@ def train_happyquokka_subject_specific(
     learning_rate: float,
     dropout: float,
     lamda: float,
+    g_con: bool,
+    early_stopping_patience: int,
 ) -> tuple[torch.nn.Module, dict[str, object]]:
     if Decoder is None:
         raise RuntimeError("HappyQuokka upstream decoder import failed")
@@ -579,7 +588,7 @@ def train_happyquokka_subject_specific(
         fft_conv1d_kernel=(9, 1),
         fft_conv1d_padding=(4, 0),
         dropout=dropout,
-        g_con=False,
+        g_con=g_con,
         within_sub_num=1,
     ).to(device)
     optimizer = Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.98), eps=1e-9)
@@ -589,6 +598,7 @@ def train_happyquokka_subject_specific(
     best_val_metric = -float("inf")
     history = {"train_loss": [], "val_metric": []}
     val_recordings = load_reference_recordings(input_dir, "val", participant, channels=range(64))
+    stale_epochs = 0
     for epoch in range(epochs):
         model.train()
         train_losses = []
@@ -629,12 +639,17 @@ def train_happyquokka_subject_specific(
             best_val_metric = mean_val_metric
             best_epoch = epoch + 1
             best_state = deepcopy(model.state_dict())
+            stale_epochs = 0
+        else:
+            stale_epochs += 1
+            if stale_epochs >= early_stopping_patience:
+                break
 
     model.load_state_dict(best_state)
     return model, {
         "best_epoch": best_epoch,
         "best_val_metric": best_val_metric,
-        "epochs_completed": epochs,
+        "epochs_completed": len(history["val_metric"]),
         "history": history,
     }
 
@@ -677,6 +692,8 @@ def run_happyquokka_full_eval(config: dict, dataset_dir: Path, dataset_id: str, 
         learning_rate=float(hq_cfg["learning_rate"]),
         dropout=float(hq_cfg["dropout"]),
         lamda=float(hq_cfg["lamda"]),
+        g_con=bool(hq_cfg.get("g_con", False)),
+        early_stopping_patience=int(hq_cfg["early_stopping_patience"]),
     )
     first_eeg = torch.from_numpy(first_test[1][:input_length].astype(np.float32)).unsqueeze(0).to(device)
     first_sub_id = torch.zeros(1, dtype=torch.long, device=device)
@@ -735,10 +752,11 @@ def run_happyquokka_full_eval(config: dict, dataset_dir: Path, dataset_id: str, 
         "input_length": input_length,
         "batch_size": int(hq_cfg["batch_size"]),
         "max_epochs": int(hq_cfg["max_epochs"]),
+        "early_stopping_patience": int(hq_cfg["early_stopping_patience"]),
         "learning_rate": float(hq_cfg["learning_rate"]),
         "dropout": float(hq_cfg["dropout"]),
         "lamda": float(hq_cfg["lamda"]),
-        "g_con": False,
+        "g_con": bool(hq_cfg.get("g_con", False)),
         "best_epoch": int(summary["best_epoch"]),
     }
     first_post_shape = (first_test[1].shape[0] // input_length * input_length,)
@@ -766,6 +784,10 @@ def run_happyquokka_full_eval(config: dict, dataset_dir: Path, dataset_id: str, 
     model_run_entry = deepcopy(matrix_row)
     model_run_entry["checkpoint_id"] = f"happyquokka_epoch_{summary['best_epoch']}"
     model_run_entry["best_val_score"] = float(summary["best_val_metric"])
+    model_run_entry["best_epoch"] = int(summary["best_epoch"])
+    model_run_entry["epochs_completed"] = int(summary["epochs_completed"])
+    model_run_entry["history_train_loss"] = [float(item) for item in summary["history"]["train_loss"]]
+    model_run_entry["history_val_score"] = [float(item) for item in summary["history"]["val_metric"]]
     shape_markdown = "\n".join(
         [
             "## `happyquokka`",
@@ -785,7 +807,9 @@ def run_happyquokka_full_eval(config: dict, dataset_dir: Path, dataset_id: str, 
 
 
 def load_accepted_p00_reference(config: dict) -> list[dict[str, object]]:
-    source_cfg = config["reference_metrics_source"]
+    source_cfg = config.get("reference_metrics_source")
+    if not source_cfg:
+        return []
     csv_path = ROOT / source_cfg["subject_metrics_csv"]
     rows = list(csv.DictReader(csv_path.open("r", encoding="utf-8", newline="")))
     accepted_models = set(source_cfg["accepted_models"])
@@ -817,13 +841,26 @@ def build_schema_validation(
     subject_rows: list[object],
     recording_rows: list[dict[str, object]],
     failure_entries: list[dict[str, object]],
+    model_run_entries: list[dict[str, object]],
+    training_curve_rows: list[dict[str, object]],
 ) -> dict[str, object]:
     success_models = sorted(str(row["model"]) for row in matrix_rows if str(row["status"]) == "success")
     subject_models = sorted(row.model for row in subject_rows)
     recording_models = sorted({str(row["model"]) for row in recording_rows})
+    training_curve_models = sorted({str(row["model"]) for row in training_curve_rows})
+    training_metadata_models = sorted(
+        str(row["model"])
+        for row in model_run_entries
+        if str(row.get("status")) == "success"
+        and row.get("best_epoch") is not None
+        and row.get("epochs_completed") is not None
+        and row.get("best_val_score") is not None
+    )
     checks = {
         "subject_metrics_match_success_models": success_models == subject_models,
         "recording_metrics_match_success_models": success_models == recording_models,
+        "training_curve_models_match_success_models": success_models == training_curve_models,
+        "success_models_have_training_metadata": success_models == training_metadata_models,
         "every_recording_has_num_valid_samples": all(int(row["num_valid_samples"]) >= 0 for row in recording_rows),
         "every_recording_has_coverage_ratio": all("coverage_ratio" in row and float(row["coverage_ratio"]) >= 0.0 for row in recording_rows),
         "every_model_full_eval_not_capped": all(bool(row["full_eval_not_capped"]) for row in matrix_rows if str(row["status"]) == "success"),
@@ -838,6 +875,7 @@ def build_schema_validation(
         "success_models": success_models,
         "subject_metric_rows": len(subject_rows),
         "recording_metric_rows": len(recording_rows),
+        "training_curve_rows": len(training_curve_rows),
         "failure_count": len(failure_entries),
     }
 
@@ -879,6 +917,129 @@ def write_shape_audit(path: Path, config: dict, matrix_rows: list[dict[str, obje
     lines.append("")
     lines.extend(sections)
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def build_training_curve_rows(
+    *,
+    config: dict,
+    dataset_id: str,
+    subject_id: str,
+    model_run_entries: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for entry in model_run_entries:
+        if str(entry.get("status")) != "success":
+            continue
+        val_history = [float(item) for item in entry.get("history_val_score", [])]
+        train_history = entry.get("history_train_loss", [])
+        best_epoch = entry.get("best_epoch")
+        epochs_completed = entry.get("epochs_completed")
+        for idx, val_score in enumerate(val_history, start=1):
+            train_loss = ""
+            if idx - 1 < len(train_history):
+                train_loss = float(train_history[idx - 1])
+            rows.append(
+                {
+                    "dataset": dataset_id,
+                    "subject_id": subject_id,
+                    "model": entry["model"],
+                    "seed": int(config["seed"]),
+                    "protocol": config["protocol"],
+                    "epoch": idx,
+                    "train_loss": train_loss,
+                    "val_score": float(val_score),
+                    "best_epoch": best_epoch,
+                    "epochs_completed": epochs_completed,
+                    "is_best_epoch": bool(best_epoch == idx),
+                }
+            )
+    return rows
+
+
+def write_training_summary(
+    path: Path,
+    *,
+    config: dict,
+    matrix_rows: list[dict[str, object]],
+    model_run_entries: list[dict[str, object]],
+    recording_rows: list[dict[str, object]],
+) -> None:
+    entry_lookup = {str(item["model"]): item for item in model_run_entries}
+    lines = [
+        "# Training Summary",
+        "",
+        f"- protocol: `{config['protocol']}`",
+        f"- dataset: `{config['dataset']['dataset_id']}`",
+        f"- subject: `{config['dataset']['subject_id']}`",
+        f"- seed: `{config['seed']}`",
+        "",
+    ]
+    for row in matrix_rows:
+        if str(row["status"]) != "success":
+            continue
+        model = str(row["model"])
+        entry = entry_lookup[model]
+        model_recordings = [item for item in recording_rows if str(item["model"]) == model]
+        valid_samples = [int(item["num_valid_samples"]) for item in model_recordings]
+        coverages = [float(item["coverage_ratio"]) for item in model_recordings]
+        lines.extend(
+            [
+                f"## `{model}`",
+                "",
+                f"- epochs_completed: `{entry['epochs_completed']}`",
+                f"- best_epoch: `{entry['best_epoch']}`",
+                f"- best_val_score: `{entry['best_val_score']:.6f}`",
+                f"- test_metric: `{row['subject_metric']}`",
+                f"- num_valid_samples range: `{min(valid_samples)} .. {max(valid_samples)}`",
+                f"- coverage_ratio range: `{min(coverages):.6f} .. {max(coverages):.6f}`",
+                f"- full_eval_not_capped: `{row['full_eval_not_capped']}`",
+                f"- model_family_contract: `{row['model_family_contract']}`",
+                "",
+            ]
+        )
+    path.write_text("\n".join(lines), encoding="utf-8")
+
+
+def run_shape_check(config: dict, dataset_dir: Path, dataset_id: str, subject_id: str, device: str) -> int:
+    sampling_rate = int(config["dataset"]["sampling_rate"])
+    for model_name in config["models"]:
+        print_event("SHAPE CHECK", f"model={model_name}")
+        if model_name == "vlaai":
+            model_cfg = config["vlaai"]
+            input_length = int(model_cfg["window_size"])
+            first_recording = load_reference_recordings(dataset_dir, "test", subject_id, channels=range(64))[0]
+            first_eeg = torch.from_numpy(first_recording[1][:input_length].astype(np.float32)).T.unsqueeze(0).to(device)
+            model = VLAAIExactOfficialRegressor(num_input_channels=64, input_length=input_length).to(device)
+            with torch.no_grad():
+                raw = model(first_eeg).detach().cpu().numpy()
+            print_event("SHAPE CHECK", f"model=vlaai input_shape={shape_text(tuple(first_eeg.shape))} raw_output_shape={shape_text(tuple(raw.shape))} scorer_shape={shape_text((first_recording[1].shape[0] - input_length + 1,))}")
+        elif model_name == "happyquokka":
+            hq_cfg = config["happyquokka"]
+            if Decoder is None:
+                print_event("SHAPE CHECK", "model=happyquokka skipped dependency_missing")
+                continue
+            input_length = int(hq_cfg["win_len_seconds"]) * int(hq_cfg["sample_rate"])
+            first_recording = load_reference_recordings(dataset_dir, "test", subject_id, channels=range(64))[0]
+            first_eeg = torch.from_numpy(first_recording[1][:input_length].astype(np.float32)).unsqueeze(0).to(device)
+            sub_id = torch.zeros(1, dtype=torch.long, device=device)
+            model = Decoder(
+                in_channel=64,
+                d_model=128,
+                d_inner=1024,
+                n_head=2,
+                n_layers=8,
+                fft_conv1d_kernel=(9, 1),
+                fft_conv1d_padding=(4, 0),
+                dropout=float(hq_cfg["dropout"]),
+                g_con=bool(hq_cfg.get("g_con", False)),
+                within_sub_num=1,
+            ).to(device)
+            with torch.no_grad():
+                raw = model(first_eeg, sub_id).detach().cpu().numpy()
+            print_event("SHAPE CHECK", f"model=happyquokka input_shape={shape_text(tuple(first_eeg.shape))} raw_output_shape={shape_text(tuple(raw.shape))} scorer_shape={shape_text((input_length,))}")
+        else:
+            print_event("SHAPE CHECK", f"model={model_name} skipped unsupported_in_this_runner sampling_rate={sampling_rate}")
+    return 0
 
 
 def write_result_summary(path: Path, config: dict, matrix_rows: list[dict[str, object]], comparison_rows: list[dict[str, object]]) -> None:
@@ -949,6 +1110,19 @@ def main() -> int:
 
     print_event("STARTUP", f"config={args.config}")
     print_event("STARTUP", f"output_dir={repo_relative(output_dir)} dataset={dataset_id} subject={subject_id} seed={config['seed']} device={device}")
+    print_event("STARTUP", f"models={','.join(str(item) for item in config['models'])}")
+
+    if args.startup_only:
+        print_event("STARTUP ONLY", "configuration validated; no training started")
+        return 0
+
+    if args.dry_run:
+        print_event("DRY RUN", f"planned_models={','.join(str(item) for item in config['models'])}")
+        print_event("DRY RUN", f"planned_outputs={repo_relative(output_dir / 'subject_metrics.csv')}, {repo_relative(output_dir / 'recording_metrics.csv')}, {repo_relative(output_dir / 'full_eval_matrix.csv')}, {repo_relative(output_dir / 'training_curve.csv')}, {repo_relative(output_dir / 'training_summary.md')}")
+        return 0
+
+    if args.shape_check_only:
+        return run_shape_check(config, dataset_dir, dataset_id, subject_id, device)
 
     matrix_rows: list[dict[str, object]] = []
     recording_rows: list[dict[str, object]] = []
@@ -1008,6 +1182,12 @@ def main() -> int:
             print_event("MODEL DONE", f"{model_name} status=success metric={result.matrix_row['subject_metric']}")
 
     accepted_rows = load_accepted_p00_reference(config)
+    training_curve_rows = build_training_curve_rows(
+        config=config,
+        dataset_id=dataset_id,
+        subject_id=subject_id,
+        model_run_entries=model_run_entries,
+    )
     comparison_rows = accepted_rows + [
         {
             "subject_id": subject_id,
@@ -1026,6 +1206,11 @@ def main() -> int:
     write_csv_rows(output_dir / "accepted_p00_reference_metrics.csv", accepted_rows, COMPARISON_FIELDS)
     write_csv_rows(output_dir / "metric_comparison_p00.csv", comparison_rows, COMPARISON_FIELDS)
     write_csv_rows(output_dir / "full_eval_matrix.csv", matrix_rows, DIAGNOSTIC_MATRIX_FIELDS)
+    write_csv_rows(
+        output_dir / "training_curve.csv",
+        training_curve_rows,
+        ["dataset", "subject_id", "model", "seed", "protocol", "epoch", "train_loss", "val_score", "best_epoch", "epochs_completed", "is_best_epoch"],
+    )
     write_json(output_dir / "model_run_entries.json", model_run_entries)
     write_json(output_dir / "failure_report.json", {"failures": failure_entries})
 
@@ -1034,10 +1219,19 @@ def main() -> int:
         subject_rows=subject_rows,
         recording_rows=recording_rows,
         failure_entries=failure_entries,
+        model_run_entries=model_run_entries,
+        training_curve_rows=training_curve_rows,
     )
     write_json(output_dir / "schema_validation_report.json", schema_validation)
     write_shape_audit(output_dir / "adapter_shape_audit.md", config, matrix_rows, shape_sections)
     write_full_eval_diagnostic(output_dir / "full_eval_diagnostic.md", matrix_rows, recording_rows)
+    write_training_summary(
+        output_dir / "training_summary.md",
+        config=config,
+        matrix_rows=matrix_rows,
+        model_run_entries=model_run_entries,
+        recording_rows=recording_rows,
+    )
     write_result_summary(output_dir / "result_summary.md", config, matrix_rows, comparison_rows)
     write_recommended_next_steps(output_dir / "recommended_next_steps.md", matrix_rows, accepted_rows)
 
@@ -1055,6 +1249,8 @@ def main() -> int:
             "subject_metrics": repo_relative(output_dir / "subject_metrics.csv"),
             "recording_metrics": repo_relative(output_dir / "recording_metrics.csv"),
             "model_run_entries": repo_relative(output_dir / "model_run_entries.json"),
+            "training_curve": repo_relative(output_dir / "training_curve.csv"),
+            "training_summary": repo_relative(output_dir / "training_summary.md"),
             "metric_comparison_p00": repo_relative(output_dir / "metric_comparison_p00.csv"),
             "failure_report": repo_relative(output_dir / "failure_report.json"),
             "schema_validation_report": repo_relative(output_dir / "schema_validation_report.json"),

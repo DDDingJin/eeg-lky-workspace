@@ -1,0 +1,40 @@
+{
+  "protocol": "gate0_gate2_vlaai_happyquokka_training_budget_p00_v1",
+  "artifact_scope": "subject_specific_vlaai_happyquokka_budget_validation",
+  "seed": 0,
+  "output_dir": "experiments/gate0_gate2_vlaai_happyquokka_training_budget_p00_v1",
+  "dataset": {
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "sampling_rate": 64,
+    "subject_id": "P00"
+  },
+  "models": [
+    "vlaai",
+    "happyquokka"
+  ],
+  "vlaai": {
+    "architecture_id": "vlaai_exact_official_regressor",
+    "implementation_file": "src/repro/mldecoders/models.py::VLAAIExactOfficialRegressor",
+    "window_size": 50,
+    "target_index": "last",
+    "batch_size": 64,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001
+  },
+  "happyquokka": {
+    "architecture_id": "happyquokka_subject_specific_full_eval",
+    "implementation_file": "src/repro/happyquokka_reference.py + external/upstream/HappyQuokka_system_for_EEG_Challenge",
+    "win_len_seconds": 10,
+    "sample_rate": 64,
+    "batch_size": 4,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.0005,
+    "dropout": 0.3,
+    "lamda": 0.2,
+    "g_con": false
+  }
+}

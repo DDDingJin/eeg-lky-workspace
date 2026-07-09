@@ -8,7 +8,7 @@
 ## `vlaai`
 
 - epochs_completed: `12`
-- best_epoch: `1`
+- best_epoch: `2`
 - best_val_score: `0.108968`
 - test_metric: `0.08163938835281748`
 - num_valid_samples range: `655 .. 1213`

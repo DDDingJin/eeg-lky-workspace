@@ -19,7 +19,7 @@
 - target_shape: `[990]`
 - scorer_input_shape: `[990]`
 - best_val_score: `0.108968`
-- subject_metric: `0.081639`
+- subject_metric: `0.08163938835281748`
 
 ## `happyquokka`
 
@@ -31,5 +31,4 @@
 - target_shape: `[640]`
 - scorer_input_shape: `[640]`
 - best_val_score: `0.134845`
-- subject_metric: `0.085697`
-
+- subject_metric: `0.08569685795111738`

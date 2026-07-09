@@ -449,6 +449,9 @@ def run_vlaai_full_eval(config: dict, dataset_dir: Path, dataset_id: str, subjec
     model.load_state_dict(train_result.state_dict)
     model.eval()
 
+    # `train_dnn_reference_logged` returns a 0-based best epoch index.
+    # Convert to 1-based numbering for human-facing artifacts and curve tables.
+    display_best_epoch = int(train_result.best_epoch) + 1
     input_length = int(model_cfg["window_size"])
     offset = input_length - 1
     first_recording = load_reference_recordings(dataset_dir, "test", subject_id, channels=range(64))[0]
@@ -478,7 +481,7 @@ def run_vlaai_full_eval(config: dict, dataset_dir: Path, dataset_id: str, subjec
                 subject_id=subject_id,
                 recording_id=recording_id,
                 sampling_rate=sampling_rate,
-                checkpoint_id=f"vlaai_epoch_{train_result.best_epoch}",
+                checkpoint_id=f"vlaai_epoch_{display_best_epoch}",
                 full_length=len(env),
                 offset=offset,
                 prediction=pred_arr,
@@ -500,7 +503,7 @@ def run_vlaai_full_eval(config: dict, dataset_dir: Path, dataset_id: str, subjec
         protocol=config["protocol"],
         seed=int(config["seed"]),
         subject_id=subject_id,
-        checkpoint_id=f"vlaai_epoch_{train_result.best_epoch}",
+        checkpoint_id=f"vlaai_epoch_{display_best_epoch}",
         model_family_contract="vlaai_local_adapter",
         rows=recording_rows,
         diagnostics_by_recording=diagnostics_by_recording,
@@ -513,7 +516,7 @@ def run_vlaai_full_eval(config: dict, dataset_dir: Path, dataset_id: str, subjec
         "early_stopping_patience": int(model_cfg["early_stopping_patience"]),
         "learning_rate": float(model_cfg["learning_rate"]),
         "weight_decay": float(model_cfg["weight_decay"]),
-        "best_epoch": int(train_result.best_epoch),
+        "best_epoch": display_best_epoch,
     }
     first_post_shape = (first_recording[1].shape[0] - input_length + 1,)
     matrix_row = {
@@ -538,9 +541,9 @@ def run_vlaai_full_eval(config: dict, dataset_dir: Path, dataset_id: str, subjec
         "notes": f"best_val_score={train_result.best_val_score:.6f}",
     }
     model_run_entry = deepcopy(matrix_row)
-    model_run_entry["checkpoint_id"] = f"vlaai_epoch_{train_result.best_epoch}"
+    model_run_entry["checkpoint_id"] = f"vlaai_epoch_{display_best_epoch}"
     model_run_entry["best_val_score"] = float(train_result.best_val_score)
-    model_run_entry["best_epoch"] = int(train_result.best_epoch)
+    model_run_entry["best_epoch"] = display_best_epoch
     model_run_entry["epochs_completed"] = int(train_result.epochs_completed)
     model_run_entry["history_val_score"] = [float(item) for item in train_result.val_history]
     shape_markdown = "\n".join(

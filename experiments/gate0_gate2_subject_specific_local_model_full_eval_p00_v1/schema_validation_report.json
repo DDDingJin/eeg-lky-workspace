@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "checks": {
+    "subject_metrics_match_success_models": true,
+    "recording_metrics_match_success_models": true,
+    "every_recording_has_num_valid_samples": true,
+    "every_recording_has_coverage_ratio": true,
+    "every_model_full_eval_not_capped": true,
+    "happyquokka_marked_10s_chunk": true,
+    "failure_report_empty_or_reasoned": true
+  },
+  "success_models": [
+    "elasticnet",
+    "happyquokka",
+    "lasso",
+    "linear",
+    "vlaai"
+  ],
+  "subject_metric_rows": 5,
+  "recording_metric_rows": 75,
+  "failure_count": 0
+}

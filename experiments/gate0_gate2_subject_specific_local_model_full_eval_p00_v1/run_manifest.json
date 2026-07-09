@@ -1,0 +1,27 @@
+{
+  "protocol": "gate0_gate2_subject_specific_local_model_full_eval_p00_v1",
+  "dataset": "weissbart_tf64",
+  "subject_id": "P00",
+  "seed": 0,
+  "device": "cuda",
+  "models_requested": [
+    "linear",
+    "lasso",
+    "elasticnet",
+    "vlaai",
+    "happyquokka"
+  ],
+  "artifacts": {
+    "full_eval_diagnostic": "experiments/gate0_gate2_subject_specific_local_model_full_eval_p00_v1/full_eval_diagnostic.md",
+    "adapter_shape_audit": "experiments/gate0_gate2_subject_specific_local_model_full_eval_p00_v1/adapter_shape_audit.md",
+    "accepted_p00_reference_metrics": "experiments/gate0_gate2_subject_specific_local_model_full_eval_p00_v1/accepted_p00_reference_metrics.csv",
+    "subject_metrics": "experiments/gate0_gate2_subject_specific_local_model_full_eval_p00_v1/subject_metrics.csv",
+    "recording_metrics": "experiments/gate0_gate2_subject_specific_local_model_full_eval_p00_v1/recording_metrics.csv",
+    "model_run_entries": "experiments/gate0_gate2_subject_specific_local_model_full_eval_p00_v1/model_run_entries.json",
+    "metric_comparison_p00": "experiments/gate0_gate2_subject_specific_local_model_full_eval_p00_v1/metric_comparison_p00.csv",
+    "failure_report": "experiments/gate0_gate2_subject_specific_local_model_full_eval_p00_v1/failure_report.json",
+    "schema_validation_report": "experiments/gate0_gate2_subject_specific_local_model_full_eval_p00_v1/schema_validation_report.json",
+    "result_summary": "experiments/gate0_gate2_subject_specific_local_model_full_eval_p00_v1/result_summary.md",
+    "recommended_next_steps": "experiments/gate0_gate2_subject_specific_local_model_full_eval_p00_v1/recommended_next_steps.md"
+  }
+}

@@ -566,6 +566,27 @@ def run_vlaai_full_eval(config: dict, dataset_dir: Path, dataset_id: str, subjec
     return ModelSmokeResult(matrix_row, model_run_entry, diag_recording_rows, subject_rows, None, shape_markdown)
 
 
+def hash_tensors(*tensors: torch.Tensor) -> str:
+    digest = hashlib.sha256()
+    for tensor in tensors:
+        array = tensor.detach().cpu().contiguous().numpy()
+        digest.update(str(array.shape).encode("utf-8"))
+        digest.update(str(array.dtype).encode("utf-8"))
+        digest.update(array.tobytes())
+    return digest.hexdigest()
+
+
+def hash_torch_state_dict(state_dict: dict[str, torch.Tensor]) -> str:
+    digest = hashlib.sha256()
+    for key in sorted(state_dict):
+        digest.update(key.encode("utf-8"))
+        tensor = state_dict[key].detach().cpu().contiguous()
+        digest.update(str(tuple(tensor.shape)).encode("utf-8"))
+        digest.update(str(tensor.dtype).encode("utf-8"))
+        digest.update(tensor.numpy().tobytes())
+    return digest.hexdigest()
+
+
 def train_happyquokka_subject_specific(
     *,
     input_dir: Path,
@@ -610,6 +631,8 @@ def train_happyquokka_subject_specific(
     optimizer = Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.98), eps=1e-9)
 
     best_state = deepcopy(model.state_dict())
+    initial_state_hash = hash_torch_state_dict(best_state)
+    first_train_batch_hash = ""
     best_epoch = 0
     best_val_metric = -float("inf")
     history = {"train_loss": [], "val_metric": []}
@@ -619,6 +642,8 @@ def train_happyquokka_subject_specific(
         model.train()
         train_losses = []
         for batch_index, (eeg_batch, env_batch) in enumerate(train_loader):
+            if not first_train_batch_hash:
+                first_train_batch_hash = hash_tensors(eeg_batch, env_batch)
             eeg_batch = eeg_batch.to(device)
             env_batch = env_batch.to(device)
             sub_ids = torch.zeros(eeg_batch.shape[0], dtype=torch.long, device=device)
@@ -664,6 +689,16 @@ def train_happyquokka_subject_specific(
                 break
 
     model.load_state_dict(best_state)
+    fixed_prediction_hash = ""
+    if val_recordings:
+        _, fixed_eeg, _ = val_recordings[0]
+        if fixed_eeg.shape[0] >= input_length:
+            fixed_input = torch.from_numpy(fixed_eeg[:input_length].astype(np.float32)).unsqueeze(0).to(device)
+            fixed_sub_id = torch.zeros(1, dtype=torch.long, device=device)
+            model.eval()
+            with torch.no_grad():
+                fixed_prediction = model(fixed_input, fixed_sub_id).detach().cpu()
+            fixed_prediction_hash = hash_tensors(fixed_prediction)
     return model, {
         "best_epoch": best_epoch,
         "best_val_metric": best_val_metric,
@@ -678,6 +713,10 @@ def train_happyquokka_subject_specific(
             "torch_cuda_manual_seed_all": bool(torch.cuda.is_available()),
             "dataloader_shuffle_generator_seed": int(seed),
             "initial_parameter_sha256": initial_parameter_sha256,
+            "initial_state_hash": initial_state_hash,
+            "first_train_batch_hash": first_train_batch_hash,
+            "best_state_hash": hash_torch_state_dict(best_state),
+            "fixed_prediction_hash": fixed_prediction_hash,
             "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
         },
     }

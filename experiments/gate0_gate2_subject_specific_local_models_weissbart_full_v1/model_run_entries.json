@@ -205,19 +205,17 @@
       0.06420201578487952,
       0.09145882005492846
     ],
-    "seed_control": true,
+    "seed_control": false,
     "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
     "seed_control_record": {
-      "enabled": true,
+      "enabled": false,
       "seed": 0,
-      "python_random_seed": 0,
-      "numpy_seed": 0,
-      "torch_manual_seed": 0,
-      "torch_cuda_manual_seed_all": "when_cuda_available",
-      "dataloader_shuffle_generator_seed": 0,
-      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
-      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
-    }
+      "status": "not_present_in_original_run",
+      "patch_available": true,
+      "artifact_note": "Existing metrics were not rerun; seed-control code is available for future runs only."
+    },
+    "seed_control_status": "not_present_in_original_run",
+    "seed_control_patch_available": true
   },
   {
     "dataset": "weissbart_tf64",
@@ -386,19 +384,17 @@
       -0.02096249647438526,
       0.002786667707065741
     ],
-    "seed_control": true,
+    "seed_control": false,
     "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
     "seed_control_record": {
-      "enabled": true,
+      "enabled": false,
       "seed": 0,
-      "python_random_seed": 0,
-      "numpy_seed": 0,
-      "torch_manual_seed": 0,
-      "torch_cuda_manual_seed_all": "when_cuda_available",
-      "dataloader_shuffle_generator_seed": 0,
-      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
-      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
-    }
+      "status": "not_present_in_original_run",
+      "patch_available": true,
+      "artifact_note": "Existing metrics were not rerun; seed-control code is available for future runs only."
+    },
+    "seed_control_status": "not_present_in_original_run",
+    "seed_control_patch_available": true
   },
   {
     "dataset": "weissbart_tf64",
@@ -623,19 +619,17 @@
       0.10028260162410636,
       0.11761931084717313
     ],
-    "seed_control": true,
+    "seed_control": false,
     "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
     "seed_control_record": {
-      "enabled": true,
+      "enabled": false,
       "seed": 0,
-      "python_random_seed": 0,
-      "numpy_seed": 0,
-      "torch_manual_seed": 0,
-      "torch_cuda_manual_seed_all": "when_cuda_available",
-      "dataloader_shuffle_generator_seed": 0,
-      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
-      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
-    }
+      "status": "not_present_in_original_run",
+      "patch_available": true,
+      "artifact_note": "Existing metrics were not rerun; seed-control code is available for future runs only."
+    },
+    "seed_control_status": "not_present_in_original_run",
+    "seed_control_patch_available": true
   },
   {
     "dataset": "weissbart_tf64",
@@ -921,19 +915,17 @@
       0.12476725851496061,
       0.17459496383865675
     ],
-    "seed_control": true,
+    "seed_control": false,
     "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
     "seed_control_record": {
-      "enabled": true,
+      "enabled": false,
       "seed": 0,
-      "python_random_seed": 0,
-      "numpy_seed": 0,
-      "torch_manual_seed": 0,
-      "torch_cuda_manual_seed_all": "when_cuda_available",
-      "dataloader_shuffle_generator_seed": 0,
-      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
-      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
-    }
+      "status": "not_present_in_original_run",
+      "patch_available": true,
+      "artifact_note": "Existing metrics were not rerun; seed-control code is available for future runs only."
+    },
+    "seed_control_status": "not_present_in_original_run",
+    "seed_control_patch_available": true
   },
   {
     "dataset": "weissbart_tf64",
@@ -1155,19 +1147,17 @@
       0.09837776559094588,
       0.1036403201520443
     ],
-    "seed_control": true,
+    "seed_control": false,
     "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
     "seed_control_record": {
-      "enabled": true,
+      "enabled": false,
       "seed": 0,
-      "python_random_seed": 0,
-      "numpy_seed": 0,
-      "torch_manual_seed": 0,
-      "torch_cuda_manual_seed_all": "when_cuda_available",
-      "dataloader_shuffle_generator_seed": 0,
-      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
-      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
-    }
+      "status": "not_present_in_original_run",
+      "patch_available": true,
+      "artifact_note": "Existing metrics were not rerun; seed-control code is available for future runs only."
+    },
+    "seed_control_status": "not_present_in_original_run",
+    "seed_control_patch_available": true
   },
   {
     "dataset": "weissbart_tf64",
@@ -1416,19 +1406,17 @@
       0.18925192958364884,
       0.19202665289243062
     ],
-    "seed_control": true,
+    "seed_control": false,
     "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
     "seed_control_record": {
-      "enabled": true,
+      "enabled": false,
       "seed": 0,
-      "python_random_seed": 0,
-      "numpy_seed": 0,
-      "torch_manual_seed": 0,
-      "torch_cuda_manual_seed_all": "when_cuda_available",
-      "dataloader_shuffle_generator_seed": 0,
-      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
-      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
-    }
+      "status": "not_present_in_original_run",
+      "patch_available": true,
+      "artifact_note": "Existing metrics were not rerun; seed-control code is available for future runs only."
+    },
+    "seed_control_status": "not_present_in_original_run",
+    "seed_control_patch_available": true
   },
   {
     "dataset": "weissbart_tf64",
@@ -1620,19 +1608,17 @@
       -0.03815541104413569,
       0.03930097905298074
     ],
-    "seed_control": true,
+    "seed_control": false,
     "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
     "seed_control_record": {
-      "enabled": true,
+      "enabled": false,
       "seed": 0,
-      "python_random_seed": 0,
-      "numpy_seed": 0,
-      "torch_manual_seed": 0,
-      "torch_cuda_manual_seed_all": "when_cuda_available",
-      "dataloader_shuffle_generator_seed": 0,
-      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
-      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
-    }
+      "status": "not_present_in_original_run",
+      "patch_available": true,
+      "artifact_note": "Existing metrics were not rerun; seed-control code is available for future runs only."
+    },
+    "seed_control_status": "not_present_in_original_run",
+    "seed_control_patch_available": true
   },
   {
     "dataset": "weissbart_tf64",
@@ -1841,19 +1827,17 @@
       0.2096921868622303,
       0.18614678780237834
     ],
-    "seed_control": true,
+    "seed_control": false,
     "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
     "seed_control_record": {
-      "enabled": true,
+      "enabled": false,
       "seed": 0,
-      "python_random_seed": 0,
-      "numpy_seed": 0,
-      "torch_manual_seed": 0,
-      "torch_cuda_manual_seed_all": "when_cuda_available",
-      "dataloader_shuffle_generator_seed": 0,
-      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
-      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
-    }
+      "status": "not_present_in_original_run",
+      "patch_available": true,
+      "artifact_note": "Existing metrics were not rerun; seed-control code is available for future runs only."
+    },
+    "seed_control_status": "not_present_in_original_run",
+    "seed_control_patch_available": true
   },
   {
     "dataset": "weissbart_tf64",
@@ -2020,19 +2004,17 @@
       0.026856226784487566,
       -0.003903660054008166
     ],
-    "seed_control": true,
+    "seed_control": false,
     "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
     "seed_control_record": {
-      "enabled": true,
+      "enabled": false,
       "seed": 0,
-      "python_random_seed": 0,
-      "numpy_seed": 0,
-      "torch_manual_seed": 0,
-      "torch_cuda_manual_seed_all": "when_cuda_available",
-      "dataloader_shuffle_generator_seed": 0,
-      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
-      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
-    }
+      "status": "not_present_in_original_run",
+      "patch_available": true,
+      "artifact_note": "Existing metrics were not rerun; seed-control code is available for future runs only."
+    },
+    "seed_control_status": "not_present_in_original_run",
+    "seed_control_patch_available": true
   },
   {
     "dataset": "weissbart_tf64",
@@ -2238,19 +2220,17 @@
       0.15599334115783373,
       0.16269421416024368
     ],
-    "seed_control": true,
+    "seed_control": false,
     "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
     "seed_control_record": {
-      "enabled": true,
+      "enabled": false,
       "seed": 0,
-      "python_random_seed": 0,
-      "numpy_seed": 0,
-      "torch_manual_seed": 0,
-      "torch_cuda_manual_seed_all": "when_cuda_available",
-      "dataloader_shuffle_generator_seed": 0,
-      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
-      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
-    }
+      "status": "not_present_in_original_run",
+      "patch_available": true,
+      "artifact_note": "Existing metrics were not rerun; seed-control code is available for future runs only."
+    },
+    "seed_control_status": "not_present_in_original_run",
+    "seed_control_patch_available": true
   },
   {
     "dataset": "weissbart_tf64",
@@ -2510,19 +2490,17 @@
       0.13464574987689654,
       0.13435586243867875
     ],
-    "seed_control": true,
+    "seed_control": false,
     "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
     "seed_control_record": {
-      "enabled": true,
+      "enabled": false,
       "seed": 0,
-      "python_random_seed": 0,
-      "numpy_seed": 0,
-      "torch_manual_seed": 0,
-      "torch_cuda_manual_seed_all": "when_cuda_available",
-      "dataloader_shuffle_generator_seed": 0,
-      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
-      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
-    }
+      "status": "not_present_in_original_run",
+      "patch_available": true,
+      "artifact_note": "Existing metrics were not rerun; seed-control code is available for future runs only."
+    },
+    "seed_control_status": "not_present_in_original_run",
+    "seed_control_patch_available": true
   },
   {
     "dataset": "weissbart_tf64",
@@ -2691,19 +2669,17 @@
       0.05653645232693331,
       0.021127475363512834
     ],
-    "seed_control": true,
+    "seed_control": false,
     "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
     "seed_control_record": {
-      "enabled": true,
+      "enabled": false,
       "seed": 0,
-      "python_random_seed": 0,
-      "numpy_seed": 0,
-      "torch_manual_seed": 0,
-      "torch_cuda_manual_seed_all": "when_cuda_available",
-      "dataloader_shuffle_generator_seed": 0,
-      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
-      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
-    }
+      "status": "not_present_in_original_run",
+      "patch_available": true,
+      "artifact_note": "Existing metrics were not rerun; seed-control code is available for future runs only."
+    },
+    "seed_control_status": "not_present_in_original_run",
+    "seed_control_patch_available": true
   },
   {
     "dataset": "weissbart_tf64",
@@ -2932,18 +2908,16 @@
       0.22017637242873508,
       0.24020843704541525
     ],
-    "seed_control": true,
+    "seed_control": false,
     "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
     "seed_control_record": {
-      "enabled": true,
+      "enabled": false,
       "seed": 0,
-      "python_random_seed": 0,
-      "numpy_seed": 0,
-      "torch_manual_seed": 0,
-      "torch_cuda_manual_seed_all": "when_cuda_available",
-      "dataloader_shuffle_generator_seed": 0,
-      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
-      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
-    }
+      "status": "not_present_in_original_run",
+      "patch_available": true,
+      "artifact_note": "Existing metrics were not rerun; seed-control code is available for future runs only."
+    },
+    "seed_control_status": "not_present_in_original_run",
+    "seed_control_patch_available": true
   }
 ]

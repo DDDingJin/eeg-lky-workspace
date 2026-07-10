@@ -1,0 +1,27 @@
+{
+  "protocol": "gate0_gate2_subject_specific_happyquokka_seeded_weissbart_full_v1",
+  "artifact_scope": "subject_specific_happyquokka_seeded_weissbart_full",
+  "seed": 0,
+  "output_dir": "experiments/gate0_gate2_subject_specific_happyquokka_seeded_weissbart_full_v1",
+  "dataset": {
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "sampling_rate": 64
+  },
+  "models": [
+    "happyquokka"
+  ],
+  "happyquokka": {
+    "architecture_id": "happyquokka_subject_specific_seeded_full_eval",
+    "implementation_file": "src/repro/happyquokka_reference.py + external/upstream/HappyQuokka_system_for_EEG_Challenge",
+    "win_len_seconds": 10,
+    "sample_rate": 64,
+    "batch_size": 4,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.0005,
+    "dropout": 0.3,
+    "lamda": 0.2,
+    "g_con": false
+  }
+}

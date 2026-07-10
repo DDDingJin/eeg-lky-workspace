@@ -11,7 +11,7 @@ This file is the authoritative handoff note for the current worktree. Ignore old
 - current HEAD at handoff write time: `40ed8716a558dad7b1828bc3a1359451b1f736be`
 - base branch requested by user: `fix/ar-20260625-161300-a43831b-vlaai-happyquokka-training-budget-p00-v1`
 - base commit requested by user: `40ed8716a558dad7b1828bc3a1359451b1f736be`
-- current task status: full Weissbart subject-specific local-model expansion completed; reviewer-requested engineering/protocol identity fixes applied without long rerun; compact artifacts are ready for review
+- current task status: full Weissbart subject-specific local-model expansion completed; reviewer-requested provenance, max-jobs, seed-smoke, and seeded HappyQuokka config fixes applied without training; compact artifacts are ready for review
 
 ## Current Worktree
 
@@ -154,7 +154,10 @@ Observed artifact state after completion:
 - reviewer fix note: `dataset_metrics.csv` now reports per-`dataset/model/seed` rows with `n_subjects`, mean, std, median, min, and max; it no longer mixes all five models into one n=65 aggregate
 - reviewer fix note: `schema_validation_report.json` now checks dataset metric keys and `n_subjects` against `subject_metrics.csv`
 - reviewer fix note: `model_identity_audit.md` documents VLAAI and HappyQuokka as local adaptation / not yet reference-protocol parity
-- reviewer fix note: HappyQuokka future training now uses explicit config seed control and model-run entries record the determinism policy; the 13 completed HappyQuokka full jobs were not rerun
+- reviewer fix note: old HappyQuokka model-run entries are marked `seed_control=false`, `seed_control_status=not_present_in_original_run`, and `seed_control_patch_available=true`; existing metrics were not rerun
+- reviewer fix note: `--max-jobs` now truncates pending execution jobs after completed-job exclusion
+- reviewer fix note: HappyQuokka seed smoke now compares `initial_state_hash`, `first_train_batch_hash`, `best_state_hash`, and `fixed_prediction_hash`
+- reviewer fix note: new seeded HappyQuokka-only config is `configs/benchmark/gate0_gate2_subject_specific_happyquokka_seeded_weissbart_full_v1.json`, with output dir `experiments/gate0_gate2_subject_specific_happyquokka_seeded_weissbart_full_v1`
 
 Per-model subject metric means:
 

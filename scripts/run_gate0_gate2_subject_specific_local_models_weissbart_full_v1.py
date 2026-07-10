@@ -180,22 +180,18 @@ def expected_dataset_metric_counts(subject_metric_rows: list[dict[str, object]])
 
 
 def update_happyquokka_seed_metadata(model_run_entries: list[dict[str, object]], seed: int) -> None:
-    policy = "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)"
     for entry in model_run_entries:
         if str(entry.get("model")) != "happyquokka":
             continue
-        entry["seed_control"] = True
-        entry["determinism_policy"] = policy
+        entry["seed_control"] = False
+        entry["seed_control_status"] = "not_present_in_original_run"
+        entry["seed_control_patch_available"] = True
         entry["seed_control_record"] = {
-            "enabled": True,
+            "enabled": False,
             "seed": int(seed),
-            "python_random_seed": int(seed),
-            "numpy_seed": int(seed),
-            "torch_manual_seed": int(seed),
-            "torch_cuda_manual_seed_all": "when_cuda_available",
-            "dataloader_shuffle_generator_seed": int(seed),
-            "determinism_policy": policy,
-            "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun.",
+            "status": "not_present_in_original_run",
+            "patch_available": True,
+            "artifact_note": "Existing metrics were not rerun; seed-control code is available for future runs only.",
         }
 
 
@@ -282,11 +278,11 @@ def rebuild_compact_artifacts(
     return schema
 
 
-def print_job_plan(planned_jobs: list[dict[str, object]], completed_lookup: set[str]) -> None:
+def print_job_plan(planned_jobs: list[dict[str, object]], completed_lookup: set[str], execution_jobs: list[dict[str, object]]) -> None:
     completed_jobs = [job for job in planned_jobs if str(job["job_key"]) in completed_lookup]
     pending_jobs = [job for job in planned_jobs if str(job["job_key"]) not in completed_lookup]
-    print_event("DRY RUN", f"planned_jobs={len(planned_jobs)} completed_jobs={len(completed_jobs)} pending_jobs={len(pending_jobs)}")
-    for prefix, jobs in (("planned", planned_jobs), ("completed", completed_jobs), ("pending", pending_jobs)):
+    print_event("DRY RUN", f"planned_jobs={len(planned_jobs)} completed_jobs={len(completed_jobs)} pending_jobs={len(pending_jobs)} execution_jobs={len(execution_jobs)}")
+    for prefix, jobs in (("planned", planned_jobs), ("completed", completed_jobs), ("pending", pending_jobs), ("execution", execution_jobs)):
         keys = ",".join(str(job["job_key"]) for job in jobs) if jobs else "none"
         print_event("DRY RUN", f"{prefix}={keys}")
 
@@ -311,10 +307,21 @@ def run_happyquokka_seed_smoke(config: dict, dataset_dir: Path, subject_id: str,
             seed=int(config["seed"]),
             max_train_batches=1,
         )
-        records.append(summary["seed_control"])
+        record = summary["seed_control"]
+        records.append(
+            {
+                "initial_state_hash": record["initial_state_hash"],
+                "first_train_batch_hash": record["first_train_batch_hash"],
+                "best_state_hash": record["best_state_hash"],
+                "fixed_prediction_hash": record["fixed_prediction_hash"],
+            }
+        )
     passed = records[0] == records[1]
     print_event("SEED SMOKE", f"subject={subject_id} model=happyquokka seed={config['seed']} passed={passed}")
-    print_event("SEED SMOKE", json.dumps(records[0], sort_keys=True))
+    print_event("SEED SMOKE", f"run1={json.dumps(records[0], sort_keys=True)}")
+    print_event("SEED SMOKE", f"run2={json.dumps(records[1], sort_keys=True)}")
+    if not passed:
+        print_event("SEED SMOKE", "failed because at least one deterministic hash differed")
     return 0 if passed else 1
 
 
@@ -666,10 +673,8 @@ def main() -> int:
         for subject_id in subjects
         for model_name in models
     ]
-    if args.max_jobs is not None:
-        if args.max_jobs < 0:
-            raise ValueError("--max-jobs must be non-negative")
-        planned_jobs = planned_jobs[: args.max_jobs]
+    if args.max_jobs is not None and args.max_jobs < 0:
+        raise ValueError("--max-jobs must be non-negative")
 
     print_event("STARTUP", f"config={args.config}")
     print_event("STARTUP", f"output_dir={repo_relative(output_dir)} dataset={dataset_id} seed={config['seed']} device={device}")
@@ -704,13 +709,15 @@ def main() -> int:
 
     completed_jobs = load_existing_json(completed_path, {"completed_jobs": []})
     completed_lookup = {item["job_key"] for item in completed_jobs.get("completed_jobs", [])}
+    pending_jobs = [item for item in planned_jobs if item["job_key"] not in completed_lookup]
+    execution_jobs = pending_jobs[: args.max_jobs] if args.max_jobs is not None else pending_jobs
 
     if args.startup_only:
         print_event("STARTUP ONLY", "configuration and protocol audit validated; no training started")
         return 0
 
     if args.dry_run_plan:
-        print_job_plan(planned_jobs, completed_lookup)
+        print_job_plan(planned_jobs, completed_lookup, execution_jobs)
         return 0
 
     if args.happyquokka_seed_smoke:
@@ -763,14 +770,13 @@ def main() -> int:
         print_event("RECOMPUTE", f"schema_passed={schema['passed']} dataset_metric_rows={schema['dataset_metric_rows']}")
         return 0 if schema["passed"] else 1
 
-    pending_jobs = [item for item in planned_jobs if item["job_key"] not in completed_lookup]
-    if args.resume and not pending_jobs:
+    if args.resume and not execution_jobs:
         append_log(log_lines, "no pending jobs")
         write_log(log_path, log_lines)
         print_event("NO PENDING JOBS", "all planned Weissbart jobs already completed")
         return 0
 
-    for job in pending_jobs:
+    for job in execution_jobs:
         subject_id = str(job["subject_id"])
         model_name = str(job["model"])
         append_log(log_lines, f"job_start {job['job_key']}")

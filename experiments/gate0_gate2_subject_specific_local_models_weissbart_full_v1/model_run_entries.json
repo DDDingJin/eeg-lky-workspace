@@ -204,7 +204,20 @@
       0.08184233171244462,
       0.06420201578487952,
       0.09145882005492846
-    ]
+    ],
+    "seed_control": true,
+    "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+    "seed_control_record": {
+      "enabled": true,
+      "seed": 0,
+      "python_random_seed": 0,
+      "numpy_seed": 0,
+      "torch_manual_seed": 0,
+      "torch_cuda_manual_seed_all": "when_cuda_available",
+      "dataloader_shuffle_generator_seed": 0,
+      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
+    }
   },
   {
     "dataset": "weissbart_tf64",
@@ -372,7 +385,20 @@
       -0.02306616095205148,
       -0.02096249647438526,
       0.002786667707065741
-    ]
+    ],
+    "seed_control": true,
+    "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+    "seed_control_record": {
+      "enabled": true,
+      "seed": 0,
+      "python_random_seed": 0,
+      "numpy_seed": 0,
+      "torch_manual_seed": 0,
+      "torch_cuda_manual_seed_all": "when_cuda_available",
+      "dataloader_shuffle_generator_seed": 0,
+      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
+    }
   },
   {
     "dataset": "weissbart_tf64",
@@ -596,7 +622,20 @@
       0.08550415535767873,
       0.10028260162410636,
       0.11761931084717313
-    ]
+    ],
+    "seed_control": true,
+    "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+    "seed_control_record": {
+      "enabled": true,
+      "seed": 0,
+      "python_random_seed": 0,
+      "numpy_seed": 0,
+      "torch_manual_seed": 0,
+      "torch_cuda_manual_seed_all": "when_cuda_available",
+      "dataloader_shuffle_generator_seed": 0,
+      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
+    }
   },
   {
     "dataset": "weissbart_tf64",
@@ -881,7 +920,20 @@
       0.1791180690129598,
       0.12476725851496061,
       0.17459496383865675
-    ]
+    ],
+    "seed_control": true,
+    "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+    "seed_control_record": {
+      "enabled": true,
+      "seed": 0,
+      "python_random_seed": 0,
+      "numpy_seed": 0,
+      "torch_manual_seed": 0,
+      "torch_cuda_manual_seed_all": "when_cuda_available",
+      "dataloader_shuffle_generator_seed": 0,
+      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
+    }
   },
   {
     "dataset": "weissbart_tf64",
@@ -1102,7 +1154,20 @@
       0.10474868719466031,
       0.09837776559094588,
       0.1036403201520443
-    ]
+    ],
+    "seed_control": true,
+    "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+    "seed_control_record": {
+      "enabled": true,
+      "seed": 0,
+      "python_random_seed": 0,
+      "numpy_seed": 0,
+      "torch_manual_seed": 0,
+      "torch_cuda_manual_seed_all": "when_cuda_available",
+      "dataloader_shuffle_generator_seed": 0,
+      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
+    }
   },
   {
     "dataset": "weissbart_tf64",
@@ -1350,7 +1415,20 @@
       0.1917238532875975,
       0.18925192958364884,
       0.19202665289243062
-    ]
+    ],
+    "seed_control": true,
+    "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+    "seed_control_record": {
+      "enabled": true,
+      "seed": 0,
+      "python_random_seed": 0,
+      "numpy_seed": 0,
+      "torch_manual_seed": 0,
+      "torch_cuda_manual_seed_all": "when_cuda_available",
+      "dataloader_shuffle_generator_seed": 0,
+      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
+    }
   },
   {
     "dataset": "weissbart_tf64",
@@ -1541,7 +1619,20 @@
       0.043685489272077875,
       -0.03815541104413569,
       0.03930097905298074
-    ]
+    ],
+    "seed_control": true,
+    "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+    "seed_control_record": {
+      "enabled": true,
+      "seed": 0,
+      "python_random_seed": 0,
+      "numpy_seed": 0,
+      "torch_manual_seed": 0,
+      "torch_cuda_manual_seed_all": "when_cuda_available",
+      "dataloader_shuffle_generator_seed": 0,
+      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
+    }
   },
   {
     "dataset": "weissbart_tf64",
@@ -1749,7 +1840,20 @@
       0.21248789628346762,
       0.2096921868622303,
       0.18614678780237834
-    ]
+    ],
+    "seed_control": true,
+    "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+    "seed_control_record": {
+      "enabled": true,
+      "seed": 0,
+      "python_random_seed": 0,
+      "numpy_seed": 0,
+      "torch_manual_seed": 0,
+      "torch_cuda_manual_seed_all": "when_cuda_available",
+      "dataloader_shuffle_generator_seed": 0,
+      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
+    }
   },
   {
     "dataset": "weissbart_tf64",
@@ -1915,7 +2019,20 @@
       0.03476829503973325,
       0.026856226784487566,
       -0.003903660054008166
-    ]
+    ],
+    "seed_control": true,
+    "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+    "seed_control_record": {
+      "enabled": true,
+      "seed": 0,
+      "python_random_seed": 0,
+      "numpy_seed": 0,
+      "torch_manual_seed": 0,
+      "torch_cuda_manual_seed_all": "when_cuda_available",
+      "dataloader_shuffle_generator_seed": 0,
+      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
+    }
   },
   {
     "dataset": "weissbart_tf64",
@@ -2120,7 +2237,20 @@
       0.19225576054304838,
       0.15599334115783373,
       0.16269421416024368
-    ]
+    ],
+    "seed_control": true,
+    "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+    "seed_control_record": {
+      "enabled": true,
+      "seed": 0,
+      "python_random_seed": 0,
+      "numpy_seed": 0,
+      "torch_manual_seed": 0,
+      "torch_cuda_manual_seed_all": "when_cuda_available",
+      "dataloader_shuffle_generator_seed": 0,
+      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
+    }
   },
   {
     "dataset": "weissbart_tf64",
@@ -2379,7 +2509,20 @@
       0.12287585325539112,
       0.13464574987689654,
       0.13435586243867875
-    ]
+    ],
+    "seed_control": true,
+    "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+    "seed_control_record": {
+      "enabled": true,
+      "seed": 0,
+      "python_random_seed": 0,
+      "numpy_seed": 0,
+      "torch_manual_seed": 0,
+      "torch_cuda_manual_seed_all": "when_cuda_available",
+      "dataloader_shuffle_generator_seed": 0,
+      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
+    }
   },
   {
     "dataset": "weissbart_tf64",
@@ -2547,7 +2690,20 @@
       0.06093682510157426,
       0.05653645232693331,
       0.021127475363512834
-    ]
+    ],
+    "seed_control": true,
+    "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+    "seed_control_record": {
+      "enabled": true,
+      "seed": 0,
+      "python_random_seed": 0,
+      "numpy_seed": 0,
+      "torch_manual_seed": 0,
+      "torch_cuda_manual_seed_all": "when_cuda_available",
+      "dataloader_shuffle_generator_seed": 0,
+      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
+    }
   },
   {
     "dataset": "weissbart_tf64",
@@ -2775,6 +2931,19 @@
       0.223474474499623,
       0.22017637242873508,
       0.24020843704541525
-    ]
+    ],
+    "seed_control": true,
+    "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+    "seed_control_record": {
+      "enabled": true,
+      "seed": 0,
+      "python_random_seed": 0,
+      "numpy_seed": 0,
+      "torch_manual_seed": 0,
+      "torch_cuda_manual_seed_all": "when_cuda_available",
+      "dataloader_shuffle_generator_seed": 0,
+      "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+      "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun."
+    }
   }
 ]

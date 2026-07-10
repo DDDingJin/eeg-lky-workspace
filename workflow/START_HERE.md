@@ -11,7 +11,7 @@ This file is the authoritative handoff note for the current worktree. Ignore old
 - current HEAD at handoff write time: `40ed8716a558dad7b1828bc3a1359451b1f736be`
 - base branch requested by user: `fix/ar-20260625-161300-a43831b-vlaai-happyquokka-training-budget-p00-v1`
 - base commit requested by user: `40ed8716a558dad7b1828bc3a1359451b1f736be`
-- current task status: full Weissbart subject-specific local-model expansion completed; post-run closure checks passed locally; compact artifacts are ready for review publication
+- current task status: full Weissbart subject-specific local-model expansion completed; reviewer-requested engineering/protocol identity fixes applied without long rerun; compact artifacts are ready for review
 
 ## Current Worktree
 
@@ -150,7 +150,11 @@ Observed artifact state after completion:
 - `schema_validation_report.json` has `passed = true`
 - `run_state.json` has `completed_job_count = 65`, `pending_job_count = 0`, and `last_completed_job_key = weissbart_tf64:P12:happyquokka:seed0`
 - `schema_validation_report.json` reports `subject_metric_rows = 65`, `recording_metric_rows = 975`, `training_curve_rows = 652`, and `failure_count = 0`
-- aggregate `dataset_metrics.csv` reports `mean_subject_metric = 0.1016683617285833`
+- `dataset_metrics.csv` reports per-model dataset summaries rather than a cross-model aggregate
+- reviewer fix note: `dataset_metrics.csv` now reports per-`dataset/model/seed` rows with `n_subjects`, mean, std, median, min, and max; it no longer mixes all five models into one n=65 aggregate
+- reviewer fix note: `schema_validation_report.json` now checks dataset metric keys and `n_subjects` against `subject_metrics.csv`
+- reviewer fix note: `model_identity_audit.md` documents VLAAI and HappyQuokka as local adaptation / not yet reference-protocol parity
+- reviewer fix note: HappyQuokka future training now uses explicit config seed control and model-run entries record the determinism policy; the 13 completed HappyQuokka full jobs were not rerun
 
 Per-model subject metric means:
 

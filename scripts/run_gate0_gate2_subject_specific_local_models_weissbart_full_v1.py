@@ -4,6 +4,7 @@ import argparse
 import csv
 import json
 from pathlib import Path
+import statistics
 import sys
 
 import torch
@@ -28,6 +29,7 @@ from run_gate0_gate2_subject_specific_local_model_full_eval_p00_v1 import (
     run_linear_family_full_eval,
     run_shape_check,
     run_vlaai_full_eval,
+    train_happyquokka_subject_specific,
     write_csv_rows,
     write_full_eval_diagnostic,
     write_json,
@@ -50,11 +52,15 @@ COMPLETED_JOB_FIELDS = [
 
 DATASET_METRIC_FIELDS = [
     "dataset",
+    "model",
     "seed",
     "protocol",
-    "metric_name",
-    "metric_value",
-    "num_subjects",
+    "n_subjects",
+    "metric_mean",
+    "metric_std",
+    "metric_median",
+    "metric_min",
+    "metric_max",
     "artifact_scope",
 ]
 
@@ -91,6 +97,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--startup-only", action="store_true")
     parser.add_argument("--dry-run-plan", action="store_true")
     parser.add_argument("--shape-check-only", action="store_true")
+    parser.add_argument("--subjects", default="", help="Comma-separated subject filter, for example P00,P01.")
+    parser.add_argument("--models", default="", help="Comma-separated model filter.")
+    parser.add_argument("--max-jobs", type=int, default=None, help="Cap the filtered planned job list.")
+    parser.add_argument("--recompute-artifacts-only", action="store_true", help="Recompute compact aggregate artifacts from existing outputs; no training.")
+    parser.add_argument("--happyquokka-seed-smoke", action="store_true", help="Run two one-batch HappyQuokka seed-control smoke trainings for P00; no artifact writes.")
     return parser.parse_args()
 
 
@@ -119,18 +130,192 @@ def write_log(path: Path, lines: list[str]) -> None:
 def summarize_dataset_metrics(config: dict, subject_metric_rows: list[dict[str, object]]) -> list[dict[str, object]]:
     if not subject_metric_rows:
         return []
-    values = [float(row["metric_value"]) for row in subject_metric_rows]
-    return [
-        {
-            "dataset": config["dataset"]["dataset_id"],
-            "seed": int(config["seed"]),
-            "protocol": config["protocol"],
-            "metric_name": "mean_subject_metric",
-            "metric_value": float(sum(values) / len(values)),
-            "num_subjects": len(values),
-            "artifact_scope": config["artifact_scope"],
+    grouped: dict[tuple[str, str, int], list[float]] = {}
+    for row in subject_metric_rows:
+        key = (str(row["dataset"]), str(row["model"]), int(row["seed"]))
+        grouped.setdefault(key, []).append(float(row["metric_value"]))
+    rows: list[dict[str, object]] = []
+    for (dataset, model, seed), values in sorted(grouped.items()):
+        rows.append(
+            {
+                "dataset": dataset,
+                "model": model,
+                "seed": seed,
+                "protocol": config["protocol"],
+                "n_subjects": len(values),
+                "metric_mean": float(statistics.fmean(values)),
+                "metric_std": float(statistics.stdev(values)) if len(values) > 1 else 0.0,
+                "metric_median": float(statistics.median(values)),
+                "metric_min": float(min(values)),
+                "metric_max": float(max(values)),
+                "artifact_scope": config["artifact_scope"],
+            }
+        )
+    return rows
+
+
+def parse_filter(value: str) -> set[str] | None:
+    items = {item.strip() for item in value.split(",") if item.strip()}
+    return items or None
+
+
+def filter_ordered(values: list[str], allowed: set[str] | None, label: str) -> list[str]:
+    if allowed is None:
+        return values
+    unknown = sorted(allowed - set(values))
+    if unknown:
+        raise ValueError(f"unknown {label}: {','.join(unknown)}")
+    return [value for value in values if value in allowed]
+
+
+def dataset_metric_key(row: dict[str, object]) -> tuple[str, str, int]:
+    return (str(row["dataset"]), str(row["model"]), int(row["seed"]))
+
+
+def expected_dataset_metric_counts(subject_metric_rows: list[dict[str, object]]) -> dict[tuple[str, str, int], int]:
+    counts: dict[tuple[str, str, int], set[str]] = {}
+    for row in subject_metric_rows:
+        counts.setdefault(dataset_metric_key(row), set()).add(str(row["subject_id"]))
+    return {key: len(subjects) for key, subjects in counts.items()}
+
+
+def update_happyquokka_seed_metadata(model_run_entries: list[dict[str, object]], seed: int) -> None:
+    policy = "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)"
+    for entry in model_run_entries:
+        if str(entry.get("model")) != "happyquokka":
+            continue
+        entry["seed_control"] = True
+        entry["determinism_policy"] = policy
+        entry["seed_control_record"] = {
+            "enabled": True,
+            "seed": int(seed),
+            "python_random_seed": int(seed),
+            "numpy_seed": int(seed),
+            "torch_manual_seed": int(seed),
+            "torch_cuda_manual_seed_all": "when_cuda_available",
+            "dataloader_shuffle_generator_seed": int(seed),
+            "determinism_policy": policy,
+            "artifact_note": "Metadata records the fixed seed-control policy added after review; existing full-run HappyQuokka metrics were not rerun.",
         }
+
+
+def write_model_identity_audit(config: dict, output_dir: Path) -> None:
+    lines = [
+        "# Model Identity Audit",
+        "",
+        f"- protocol: `{config['protocol']}`",
+        f"- dataset: `{config['dataset']['dataset_id']}`",
+        f"- seed: `{config['seed']}`",
+        "",
+        "## VLAAI",
+        "",
+        "- current implementation: `src/repro/mldecoders/models.py::VLAAIExactOfficialRegressor`",
+        "- current contract: within-subject local adaptation, `64 x 50` EEG window input, last-target scalar regression output, validation-selected checkpoint, full subject test aggregation.",
+        "- reference path: repository reference VLAAI paths such as `src/repro/vlaai_exact.py` and `scripts/run_vlaai_exact_reference.py` represent reference/exact structural runs with their own dataset construction and benchmark protocol.",
+        "- identity conclusion: this run is a local adaptation / not yet reference-protocol parity result. It should not be described as an official equivalent VLAAI reproduction.",
+        "",
+        "## HappyQuokka",
+        "",
+        "- current implementation: `src/repro/happyquokka_reference.py` helpers plus upstream `external/upstream/HappyQuokka_system_for_EEG_Challenge` decoder.",
+        "- current contract: within-subject local adaptation, non-overlapping `10s_chunk` windows, `g_con=false`, one local subject id, validation-selected checkpoint, and full available test chunks per recording.",
+        "- reference path: repository reference HappyQuokka paths such as `src/repro/happyquokka_reference.py`, `scripts/run_happyquokka_reference.py`, and archived `happyquokka_gcon` summaries use reference-style dataset packaging and commonly evaluate `g_con=true` subject-conditioned variants.",
+        "- seed control after this fix: HappyQuokka training receives the config seed explicitly and sets Python, NumPy, Torch, CUDA-if-available, and DataLoader shuffle generator seeds.",
+        "- identity conclusion: this run is a local adaptation / not yet reference-protocol parity result. It preserves the current 10s_chunk contract and must not be claimed as an official equivalent HappyQuokka reproduction.",
+        "",
     ]
+    (output_dir / "model_identity_audit.md").write_text("\n".join(lines), encoding="utf-8")
+
+
+def rebuild_compact_artifacts(
+    *,
+    config: dict,
+    output_dir: Path,
+    dataset_id: str,
+    subjects: list[str],
+    planned_jobs: list[dict[str, object]],
+    comparable_states: dict[str, str],
+    subject_metric_rows: list[dict[str, object]],
+    recording_rows: list[dict[str, object]],
+    matrix_rows: list[dict[str, object]],
+    model_run_entries: list[dict[str, object]],
+    failure_entries: list[dict[str, object]],
+    training_curve_rows: list[dict[str, object]],
+) -> dict[str, object]:
+    update_happyquokka_seed_metadata(model_run_entries, int(config["seed"]))
+    dataset_metric_rows = summarize_dataset_metrics(config, subject_metric_rows)
+    subject_row_objs = []
+    for row in subject_metric_rows:
+        obj = type("SubjectRow", (), {})()
+        for key, value in row.items():
+            setattr(obj, key, value)
+        subject_row_objs.append(obj)
+    schema = build_schema_validation(
+        matrix_rows=matrix_rows,
+        subject_rows=subject_row_objs,
+        recording_rows=recording_rows,
+        dataset_metric_rows=dataset_metric_rows,
+        failure_entries=failure_entries,
+        model_run_entries=model_run_entries,
+        training_curve_rows=training_curve_rows,
+    )
+    write_csv_rows(output_dir / "dataset_metrics.csv", dataset_metric_rows, DATASET_METRIC_FIELDS)
+    write_json(output_dir / "model_run_entries.json", model_run_entries)
+    write_json(output_dir / "schema_validation_report.json", schema)
+    write_model_identity_audit(config, output_dir)
+    run_manifest = {
+        "protocol": config["protocol"],
+        "dataset": dataset_id,
+        "seed": int(config["seed"]),
+        "subjects": subjects,
+        "models": list(config["models"]),
+        "planned_jobs": planned_jobs,
+        "protocol_audit_summary": comparable_states,
+        "notes": [
+            "linear/lasso/elasticnet are budgeted linear-family baselines with max_fit_samples_per_split=12000",
+            "happyquokka remains a distinct 10s_chunk contract",
+            "P00 is intentionally rerun for directory consistency",
+            "dataset_metrics.csv is grouped by dataset/model/seed and is not a cross-model aggregate",
+            "model_identity_audit.md documents local adaptation / not yet reference-protocol parity status",
+        ],
+    }
+    write_json(output_dir / "run_manifest.json", run_manifest)
+    return schema
+
+
+def print_job_plan(planned_jobs: list[dict[str, object]], completed_lookup: set[str]) -> None:
+    completed_jobs = [job for job in planned_jobs if str(job["job_key"]) in completed_lookup]
+    pending_jobs = [job for job in planned_jobs if str(job["job_key"]) not in completed_lookup]
+    print_event("DRY RUN", f"planned_jobs={len(planned_jobs)} completed_jobs={len(completed_jobs)} pending_jobs={len(pending_jobs)}")
+    for prefix, jobs in (("planned", planned_jobs), ("completed", completed_jobs), ("pending", pending_jobs)):
+        keys = ",".join(str(job["job_key"]) for job in jobs) if jobs else "none"
+        print_event("DRY RUN", f"{prefix}={keys}")
+
+
+def run_happyquokka_seed_smoke(config: dict, dataset_dir: Path, subject_id: str, device: str) -> int:
+    hq_cfg = config["happyquokka"]
+    input_length = int(hq_cfg["win_len_seconds"]) * int(hq_cfg["sample_rate"])
+    records = []
+    for _ in range(2):
+        _, summary = train_happyquokka_subject_specific(
+            input_dir=dataset_dir,
+            participant=subject_id,
+            device=device,
+            input_length=input_length,
+            batch_size=int(hq_cfg["batch_size"]),
+            epochs=1,
+            learning_rate=float(hq_cfg["learning_rate"]),
+            dropout=float(hq_cfg["dropout"]),
+            lamda=float(hq_cfg["lamda"]),
+            g_con=bool(hq_cfg.get("g_con", False)),
+            early_stopping_patience=int(hq_cfg["early_stopping_patience"]),
+            seed=int(config["seed"]),
+            max_train_batches=1,
+        )
+        records.append(summary["seed_control"])
+    passed = records[0] == records[1]
+    print_event("SEED SMOKE", f"subject={subject_id} model=happyquokka seed={config['seed']} passed={passed}")
+    print_event("SEED SMOKE", json.dumps(records[0], sort_keys=True))
+    return 0 if passed else 1
 
 
 def write_result_summary_all_subjects(
@@ -330,6 +515,7 @@ def build_schema_validation(
     matrix_rows: list[dict[str, object]],
     subject_rows: list[object],
     recording_rows: list[dict[str, object]],
+    dataset_metric_rows: list[dict[str, object]],
     failure_entries: list[dict[str, object]],
     model_run_entries: list[dict[str, object]],
     training_curve_rows: list[dict[str, object]],
@@ -355,9 +541,18 @@ def build_schema_validation(
         and row.get("epochs_completed") is not None
         and row.get("best_val_score") is not None
     )
+    subject_metric_dict_rows = [row.__dict__ for row in subject_rows]
+    expected_dataset_counts = expected_dataset_metric_counts(subject_metric_dict_rows)
+    dataset_metric_counts = {
+        dataset_metric_key(row): int(row["n_subjects"])
+        for row in dataset_metric_rows
+    }
     checks = {
         "subject_metrics_match_success_jobs": success_pairs == subject_pairs,
         "recording_metrics_cover_success_jobs": success_pairs == recording_pairs,
+        "dataset_metrics_keys_match_subject_metrics": sorted(dataset_metric_counts) == sorted(expected_dataset_counts),
+        "dataset_metrics_n_subjects_match_subject_metrics": dataset_metric_counts == expected_dataset_counts,
+        "dataset_metrics_each_model_has_13_subjects": all(count == 13 for count in dataset_metric_counts.values()),
         "deep_models_have_training_curves": deep_success_pairs == training_curve_pairs,
         "deep_models_have_training_metadata": deep_success_pairs == training_metadata_pairs,
         "every_recording_has_num_valid_samples": all(int(row["num_valid_samples"]) >= 0 for row in recording_rows),
@@ -374,6 +569,7 @@ def build_schema_validation(
         "success_job_count": len(success_pairs),
         "deep_success_job_count": len(deep_success_pairs),
         "subject_metric_rows": len(subject_rows),
+        "dataset_metric_rows": len(dataset_metric_rows),
         "recording_metric_rows": len(recording_rows),
         "training_curve_rows": len(training_curve_rows),
         "failure_count": len(failure_entries),
@@ -456,7 +652,9 @@ def main() -> int:
     if not dataset_dir.exists():
         raise FileNotFoundError(f"dataset directory does not exist: {dataset_dir}")
 
-    subjects = sorted(list_reference_subjects(dataset_dir, split="test"))
+    all_subjects = sorted(list_reference_subjects(dataset_dir, split="test"))
+    subjects = filter_ordered(all_subjects, parse_filter(args.subjects), "subjects")
+    models = filter_ordered(list(config["models"]), parse_filter(args.models), "models")
     planned_jobs = [
         {
             "dataset": dataset_id,
@@ -466,48 +664,18 @@ def main() -> int:
             "job_key": job_key(dataset_id, subject_id, model_name, int(config["seed"])),
         }
         for subject_id in subjects
-        for model_name in config["models"]
+        for model_name in models
     ]
+    if args.max_jobs is not None:
+        if args.max_jobs < 0:
+            raise ValueError("--max-jobs must be non-negative")
+        planned_jobs = planned_jobs[: args.max_jobs]
 
     print_event("STARTUP", f"config={args.config}")
     print_event("STARTUP", f"output_dir={repo_relative(output_dir)} dataset={dataset_id} seed={config['seed']} device={device}")
     print_event("STARTUP", f"subjects={','.join(subjects)}")
-    print_event("STARTUP", f"models={','.join(config['models'])}")
+    print_event("STARTUP", f"models={','.join(models)}")
     print_event("STARTUP", f"planned_jobs={len(planned_jobs)}")
-
-    audit_rows = write_protocol_audit(config, output_dir, subjects)
-    comparable_states = {row["model"]: row["comparable"] for row in audit_rows}
-    if any(state == "false" for state in comparable_states.values()):
-        print_event("AUDIT", "found comparable=false model; aborting before any training")
-        return 1
-
-    if args.startup_only:
-        print_event("STARTUP ONLY", "configuration and protocol audit validated; no training started")
-        return 0
-
-    if args.dry_run_plan:
-        write_json(output_dir / "run_manifest.json", {
-            "protocol": config["protocol"],
-            "dataset": dataset_id,
-            "seed": int(config["seed"]),
-            "output_dir": repo_relative(output_dir),
-            "models": list(config["models"]),
-            "subjects": subjects,
-            "planned_jobs": planned_jobs,
-            "protocol_audit_summary": comparable_states,
-            "notes": [
-                "preflight only; no jobs executed",
-                "P00 is intentionally included for rerun to keep this directory internally consistent",
-            ],
-        })
-        print_event("DRY RUN", f"planned_jobs={len(planned_jobs)}")
-        return 0
-
-    if args.shape_check_only:
-        shape_cfg = dict(config)
-        shape_cfg["dataset"] = dict(config["dataset"])
-        shape_cfg["dataset"]["subject_id"] = subjects[0]
-        return run_shape_check(shape_cfg, dataset_dir, dataset_id, subjects[0], device)
 
     completed_path = output_dir / "completed_jobs.json"
     run_state_path = output_dir / "run_state.json"
@@ -526,8 +694,38 @@ def main() -> int:
     diagnostic_path = output_dir / "full_eval_diagnostic.md"
     log_path = output_dir / "logs" / "run.log"
 
+    audit_config = dict(config)
+    audit_config["models"] = models
+    audit_rows = [audit_row_for_model(audit_config, model_name, subjects) for model_name in models]
+    comparable_states = {row["model"]: row["comparable"] for row in audit_rows}
+    if any(state == "false" for state in comparable_states.values()):
+        print_event("AUDIT", "found comparable=false model; aborting before any training")
+        return 1
+
     completed_jobs = load_existing_json(completed_path, {"completed_jobs": []})
     completed_lookup = {item["job_key"] for item in completed_jobs.get("completed_jobs", [])}
+
+    if args.startup_only:
+        print_event("STARTUP ONLY", "configuration and protocol audit validated; no training started")
+        return 0
+
+    if args.dry_run_plan:
+        print_job_plan(planned_jobs, completed_lookup)
+        return 0
+
+    if args.happyquokka_seed_smoke:
+        smoke_subject = subjects[0] if subjects else "P00"
+        return run_happyquokka_seed_smoke(config, dataset_dir, smoke_subject, device)
+
+    if args.shape_check_only:
+        shape_cfg = dict(config)
+        shape_cfg["dataset"] = dict(config["dataset"])
+        shape_cfg["dataset"]["subject_id"] = subjects[0]
+        return run_shape_check(shape_cfg, dataset_dir, dataset_id, subjects[0], device)
+
+    audit_rows = write_protocol_audit(audit_config, output_dir, subjects)
+    comparable_states = {row["model"]: row["comparable"] for row in audit_rows}
+
     subject_metric_rows = load_existing_csv(subject_metrics_path)
     recording_rows = load_existing_csv(recording_metrics_path)
     dataset_metric_rows = load_existing_csv(dataset_metrics_path)
@@ -536,6 +734,34 @@ def main() -> int:
     failure_entries = load_existing_json(failure_path, {"failures": []}).get("failures", [])
     training_curve_rows = load_existing_csv(training_curve_path)
     log_lines = []
+
+    if args.recompute_artifacts_only:
+        schema = rebuild_compact_artifacts(
+            config=config,
+            output_dir=output_dir,
+            dataset_id=dataset_id,
+            subjects=all_subjects,
+            planned_jobs=[
+                {
+                    "dataset": dataset_id,
+                    "subject_id": subject_id,
+                    "model": model_name,
+                    "seed": int(config["seed"]),
+                    "job_key": job_key(dataset_id, subject_id, model_name, int(config["seed"])),
+                }
+                for subject_id in all_subjects
+                for model_name in config["models"]
+            ],
+            comparable_states={row["model"]: row["comparable"] for row in write_protocol_audit(config, output_dir, all_subjects)},
+            subject_metric_rows=subject_metric_rows,
+            recording_rows=recording_rows,
+            matrix_rows=matrix_rows,
+            model_run_entries=model_run_entries,
+            failure_entries=failure_entries,
+            training_curve_rows=training_curve_rows,
+        )
+        print_event("RECOMPUTE", f"schema_passed={schema['passed']} dataset_metric_rows={schema['dataset_metric_rows']}")
+        return 0 if schema["passed"] else 1
 
     pending_jobs = [item for item in planned_jobs if item["job_key"] not in completed_lookup]
     if args.resume and not pending_jobs:
@@ -627,6 +853,7 @@ def main() -> int:
             matrix_rows=matrix_rows,
             subject_rows=subject_row_objs,
             recording_rows=recording_rows,
+            dataset_metric_rows=dataset_metric_rows,
             failure_entries=failure_entries,
             model_run_entries=model_run_entries,
             training_curve_rows=training_curve_rows,
@@ -651,6 +878,7 @@ def main() -> int:
             ["model", "recording_count", "coverage_ratio_min", "coverage_ratio_max", "num_valid_samples_min", "num_valid_samples_max", "model_family_contract"],
         )
         write_json(model_entries_path, model_run_entries)
+        write_model_identity_audit(config, output_dir)
         write_json(completed_path, completed_jobs)
         write_json(
             run_state_path,
@@ -711,6 +939,8 @@ def main() -> int:
                 "linear/lasso/elasticnet are budgeted linear-family baselines with max_fit_samples_per_split=12000",
                 "happyquokka remains a distinct 10s_chunk contract",
                 "P00 is intentionally rerun for directory consistency",
+                "dataset_metrics.csv is grouped by dataset/model/seed and is not a cross-model aggregate",
+                "model_identity_audit.md documents local adaptation / not yet reference-protocol parity status",
             ],
         }
         write_json(output_dir / "run_manifest.json", run_manifest)

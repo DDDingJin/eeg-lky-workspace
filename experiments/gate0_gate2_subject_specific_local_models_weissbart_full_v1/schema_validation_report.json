@@ -3,6 +3,9 @@
   "checks": {
     "subject_metrics_match_success_jobs": true,
     "recording_metrics_cover_success_jobs": true,
+    "dataset_metrics_keys_match_subject_metrics": true,
+    "dataset_metrics_n_subjects_match_subject_metrics": true,
+    "dataset_metrics_each_model_has_13_subjects": true,
     "deep_models_have_training_curves": true,
     "deep_models_have_training_metadata": true,
     "every_recording_has_num_valid_samples": true,
@@ -14,6 +17,7 @@
   "success_job_count": 65,
   "deep_success_job_count": 26,
   "subject_metric_rows": 65,
+  "dataset_metric_rows": 5,
   "recording_metric_rows": 975,
   "training_curve_rows": 652,
   "failure_count": 0

@@ -491,6 +491,8 @@
   "notes": [
     "linear/lasso/elasticnet are budgeted linear-family baselines with max_fit_samples_per_split=12000",
     "happyquokka remains a distinct 10s_chunk contract",
-    "P00 is intentionally rerun for directory consistency"
+    "P00 is intentionally rerun for directory consistency",
+    "dataset_metrics.csv is grouped by dataset/model/seed and is not a cross-model aggregate",
+    "model_identity_audit.md documents local adaptation / not yet reference-protocol parity status"
   ]
 }

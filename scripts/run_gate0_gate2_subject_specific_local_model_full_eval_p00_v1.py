@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 from copy import deepcopy
 from pathlib import Path
+import random
 import sys
 
 import numpy as np
@@ -577,11 +579,20 @@ def train_happyquokka_subject_specific(
     lamda: float,
     g_con: bool,
     early_stopping_patience: int,
+    seed: int,
+    max_train_batches: int | None = None,
 ) -> tuple[torch.nn.Module, dict[str, object]]:
     if Decoder is None:
         raise RuntimeError("HappyQuokka upstream decoder import failed")
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+    loader_generator = torch.Generator()
+    loader_generator.manual_seed(seed)
     train_set = SubjectSpecificHappyQuokkaTrainDataset(input_dir, "train", participant, input_length=input_length, channels=range(64))
-    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, drop_last=False)
+    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, drop_last=False, generator=loader_generator)
     model = Decoder(
         in_channel=64,
         d_model=128,
@@ -594,6 +605,8 @@ def train_happyquokka_subject_specific(
         g_con=g_con,
         within_sub_num=1,
     ).to(device)
+    first_param = next(model.parameters()).detach().cpu().numpy().tobytes()
+    initial_parameter_sha256 = hashlib.sha256(first_param).hexdigest()
     optimizer = Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.98), eps=1e-9)
 
     best_state = deepcopy(model.state_dict())
@@ -605,7 +618,7 @@ def train_happyquokka_subject_specific(
     for epoch in range(epochs):
         model.train()
         train_losses = []
-        for eeg_batch, env_batch in train_loader:
+        for batch_index, (eeg_batch, env_batch) in enumerate(train_loader):
             eeg_batch = eeg_batch.to(device)
             env_batch = env_batch.to(device)
             sub_ids = torch.zeros(eeg_batch.shape[0], dtype=torch.long, device=device)
@@ -615,6 +628,8 @@ def train_happyquokka_subject_specific(
             loss.backward()
             optimizer.step()
             train_losses.append(float(loss.item()))
+            if max_train_batches is not None and batch_index + 1 >= max_train_batches:
+                break
 
         model.eval()
         val_metrics = []
@@ -654,6 +669,17 @@ def train_happyquokka_subject_specific(
         "best_val_metric": best_val_metric,
         "epochs_completed": len(history["val_metric"]),
         "history": history,
+        "seed_control": {
+            "enabled": True,
+            "seed": int(seed),
+            "python_random_seed": int(seed),
+            "numpy_seed": int(seed),
+            "torch_manual_seed": int(seed),
+            "torch_cuda_manual_seed_all": bool(torch.cuda.is_available()),
+            "dataloader_shuffle_generator_seed": int(seed),
+            "initial_parameter_sha256": initial_parameter_sha256,
+            "determinism_policy": "random.seed, numpy.random.seed, torch.manual_seed, torch.cuda.manual_seed_all when CUDA is available, and DataLoader shuffle torch.Generator(seed)",
+        },
     }
 
 
@@ -697,6 +723,7 @@ def run_happyquokka_full_eval(config: dict, dataset_dir: Path, dataset_id: str, 
         lamda=float(hq_cfg["lamda"]),
         g_con=bool(hq_cfg.get("g_con", False)),
         early_stopping_patience=int(hq_cfg["early_stopping_patience"]),
+        seed=int(config["seed"]),
     )
     first_eeg = torch.from_numpy(first_test[1][:input_length].astype(np.float32)).unsqueeze(0).to(device)
     first_sub_id = torch.zeros(1, dtype=torch.long, device=device)
@@ -761,6 +788,8 @@ def run_happyquokka_full_eval(config: dict, dataset_dir: Path, dataset_id: str, 
         "lamda": float(hq_cfg["lamda"]),
         "g_con": bool(hq_cfg.get("g_con", False)),
         "best_epoch": int(summary["best_epoch"]),
+        "seed_control": True,
+        "dataloader_shuffle_generator_seed": int(config["seed"]),
     }
     first_post_shape = (first_test[1].shape[0] // input_length * input_length,)
     matrix_row = {
@@ -782,7 +811,7 @@ def run_happyquokka_full_eval(config: dict, dataset_dir: Path, dataset_id: str, 
         "subject_metric": subject_metric,
         "recording_count": len(diag_recording_rows),
         "failure_reason": "",
-        "notes": "HappyQuokka evaluated on all available 10-second chunks from each P00 test recording.",
+        "notes": f"HappyQuokka evaluated on all available 10-second chunks from each {subject_id} test recording.",
     }
     model_run_entry = deepcopy(matrix_row)
     model_run_entry["checkpoint_id"] = f"happyquokka_epoch_{summary['best_epoch']}"
@@ -791,6 +820,9 @@ def run_happyquokka_full_eval(config: dict, dataset_dir: Path, dataset_id: str, 
     model_run_entry["epochs_completed"] = int(summary["epochs_completed"])
     model_run_entry["history_train_loss"] = [float(item) for item in summary["history"]["train_loss"]]
     model_run_entry["history_val_score"] = [float(item) for item in summary["history"]["val_metric"]]
+    model_run_entry["seed_control"] = True
+    model_run_entry["determinism_policy"] = summary["seed_control"]["determinism_policy"]
+    model_run_entry["seed_control_record"] = summary["seed_control"]
     shape_markdown = "\n".join(
         [
             "## `happyquokka`",

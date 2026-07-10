@@ -1,0 +1,2 @@
+dataset,model,seed,protocol,n_subjects,metric_mean,metric_std,metric_median,metric_min,metric_max,artifact_scope
+weissbart_tf64,happyquokka,0,gate0_gate2_subject_specific_happyquokka_seeded_weissbart_full_v1,1,0.12398048733468973,0.0,0.12398048733468973,0.12398048733468973,0.12398048733468973,subject_specific_happyquokka_seeded_weissbart_full

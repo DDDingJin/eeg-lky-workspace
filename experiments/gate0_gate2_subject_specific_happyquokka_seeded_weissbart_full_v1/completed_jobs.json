@@ -1,0 +1,14 @@
+{
+  "completed_jobs": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P00:happyquokka:seed0",
+      "status": "success",
+      "checkpoint_id": "happyquokka_epoch_32",
+      "subject_metric": 0.12398048733468973
+    }
+  ]
+}

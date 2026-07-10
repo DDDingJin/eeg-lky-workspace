@@ -1,0 +1,126 @@
+{
+  "protocol": "gate0_gate2_subject_specific_happyquokka_seeded_weissbart_full_v1",
+  "dataset": "weissbart_tf64",
+  "seed": 0,
+  "subjects": [
+    "P00",
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12"
+  ],
+  "models": [
+    "happyquokka"
+  ],
+  "planned_jobs": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P00:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P01:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P02",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P02:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P03",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P03:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P04",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P04:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P05",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P05:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P06",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P06:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P07",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P07:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P08",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P08:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P09",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P09:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P10",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P10:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P11",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P11:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P12",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P12:happyquokka:seed0"
+    }
+  ],
+  "protocol_audit_summary": {
+    "happyquokka": "partial"
+  },
+  "notes": [
+    "linear/lasso/elasticnet are budgeted linear-family baselines with max_fit_samples_per_split=12000",
+    "happyquokka remains a distinct 10s_chunk contract",
+    "P00 is intentionally rerun for directory consistency",
+    "dataset_metrics.csv is grouped by dataset/model/seed and is not a cross-model aggregate",
+    "model_identity_audit.md documents local adaptation / not yet reference-protocol parity status"
+  ]
+}

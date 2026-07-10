@@ -1,0 +1,8 @@
+{
+  "protocol": "gate0_gate2_subject_specific_local_models_weissbart_full_v1",
+  "dataset": "weissbart_tf64",
+  "seed": 0,
+  "completed_job_count": 65,
+  "pending_job_count": 0,
+  "last_completed_job_key": "weissbart_tf64:P12:happyquokka:seed0"
+}

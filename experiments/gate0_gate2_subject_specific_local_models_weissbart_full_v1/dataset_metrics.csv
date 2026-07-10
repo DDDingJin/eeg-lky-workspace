@@ -1,0 +1,2 @@
+dataset,seed,protocol,metric_name,metric_value,num_subjects,artifact_scope
+weissbart_tf64,0,gate0_gate2_subject_specific_local_models_weissbart_full_v1,mean_subject_metric,0.1016683617285833,65,subject_specific_local_models_weissbart_full

@@ -1,0 +1,496 @@
+{
+  "protocol": "gate0_gate2_subject_specific_local_models_weissbart_full_v1",
+  "dataset": "weissbart_tf64",
+  "seed": 0,
+  "subjects": [
+    "P00",
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12"
+  ],
+  "models": [
+    "linear",
+    "lasso",
+    "elasticnet",
+    "vlaai",
+    "happyquokka"
+  ],
+  "planned_jobs": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "linear",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P00:linear:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "lasso",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P00:lasso:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "elasticnet",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P00:elasticnet:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "vlaai",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P00:vlaai:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P00:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "linear",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P01:linear:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "lasso",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P01:lasso:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "elasticnet",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P01:elasticnet:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "vlaai",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P01:vlaai:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P01:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P02",
+      "model": "linear",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P02:linear:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P02",
+      "model": "lasso",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P02:lasso:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P02",
+      "model": "elasticnet",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P02:elasticnet:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P02",
+      "model": "vlaai",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P02:vlaai:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P02",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P02:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P03",
+      "model": "linear",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P03:linear:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P03",
+      "model": "lasso",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P03:lasso:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P03",
+      "model": "elasticnet",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P03:elasticnet:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P03",
+      "model": "vlaai",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P03:vlaai:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P03",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P03:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P04",
+      "model": "linear",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P04:linear:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P04",
+      "model": "lasso",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P04:lasso:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P04",
+      "model": "elasticnet",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P04:elasticnet:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P04",
+      "model": "vlaai",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P04:vlaai:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P04",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P04:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P05",
+      "model": "linear",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P05:linear:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P05",
+      "model": "lasso",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P05:lasso:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P05",
+      "model": "elasticnet",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P05:elasticnet:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P05",
+      "model": "vlaai",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P05:vlaai:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P05",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P05:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P06",
+      "model": "linear",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P06:linear:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P06",
+      "model": "lasso",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P06:lasso:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P06",
+      "model": "elasticnet",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P06:elasticnet:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P06",
+      "model": "vlaai",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P06:vlaai:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P06",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P06:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P07",
+      "model": "linear",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P07:linear:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P07",
+      "model": "lasso",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P07:lasso:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P07",
+      "model": "elasticnet",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P07:elasticnet:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P07",
+      "model": "vlaai",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P07:vlaai:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P07",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P07:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P08",
+      "model": "linear",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P08:linear:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P08",
+      "model": "lasso",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P08:lasso:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P08",
+      "model": "elasticnet",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P08:elasticnet:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P08",
+      "model": "vlaai",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P08:vlaai:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P08",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P08:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P09",
+      "model": "linear",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P09:linear:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P09",
+      "model": "lasso",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P09:lasso:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P09",
+      "model": "elasticnet",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P09:elasticnet:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P09",
+      "model": "vlaai",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P09:vlaai:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P09",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P09:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P10",
+      "model": "linear",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P10:linear:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P10",
+      "model": "lasso",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P10:lasso:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P10",
+      "model": "elasticnet",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P10:elasticnet:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P10",
+      "model": "vlaai",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P10:vlaai:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P10",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P10:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P11",
+      "model": "linear",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P11:linear:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P11",
+      "model": "lasso",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P11:lasso:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P11",
+      "model": "elasticnet",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P11:elasticnet:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P11",
+      "model": "vlaai",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P11:vlaai:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P11",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P11:happyquokka:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P12",
+      "model": "linear",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P12:linear:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P12",
+      "model": "lasso",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P12:lasso:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P12",
+      "model": "elasticnet",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P12:elasticnet:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P12",
+      "model": "vlaai",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P12:vlaai:seed0"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P12",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P12:happyquokka:seed0"
+    }
+  ],
+  "protocol_audit_summary": {
+    "linear": "partial",
+    "lasso": "partial",
+    "elasticnet": "partial",
+    "vlaai": "true",
+    "happyquokka": "partial"
+  },
+  "notes": [
+    "linear/lasso/elasticnet are budgeted linear-family baselines with max_fit_samples_per_split=12000",
+    "happyquokka remains a distinct 10s_chunk contract",
+    "P00 is intentionally rerun for directory consistency"
+  ]
+}

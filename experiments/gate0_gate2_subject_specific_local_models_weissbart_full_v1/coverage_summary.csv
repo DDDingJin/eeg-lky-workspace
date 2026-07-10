@@ -1,0 +1,6 @@
+model,recording_count,coverage_ratio_min,coverage_ratio_max,num_valid_samples_min,num_valid_samples_max,model_family_contract
+elasticnet,195,0.9303977272727273,0.9611727416798732,655,1213,lag_matrix_trf
+happyquokka,195,0.5071315372424723,0.9090909090909091,640,640,10s_chunk
+lasso,195,0.9303977272727273,0.9611727416798732,655,1213,lag_matrix_trf
+linear,195,0.9303977272727273,0.9611727416798732,655,1213,lag_matrix_trf
+vlaai,195,0.9303977272727273,0.9611727416798732,655,1213,vlaai_local_adapter

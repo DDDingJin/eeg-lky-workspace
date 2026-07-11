@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "checks": {
+    "task_classification_context_assisted_envelope_forecasting": true,
+    "single_train_batch_loaded": true,
+    "twobranch_forward_success": true,
+    "mse_loss_finite": true,
+    "backward_optimizer_step_success": true,
+    "no_leakage": true,
+    "no_cross_recording": true,
+    "no_cross_split": true,
+    "train_only_scaler_fit": true,
+    "checkpoint_selection_val_only": true,
+    "test_context_strictly_past": true,
+    "test_initial_128_samples_excluded": true,
+    "coverage_rows_present": true,
+    "no_checkpoint_saved": true,
+    "no_test_pearson_or_scientific_metric": true
+  },
+  "smoke_status": "passed",
+  "task_classification": "context_assisted_envelope_forecasting",
+  "single_batch_loss": 1.2907449007034302,
+  "coverage_recording_count": 15
+}

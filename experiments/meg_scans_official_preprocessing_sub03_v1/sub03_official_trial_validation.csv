@@ -1,0 +1,5 @@
+subject_id,mapping_label,neuro_trials_defined,audio_trials_original,paired_trials_kept,extra_audio_trials_removed,neuro_trials_removed,min_neuro_len,max_neuro_len,min_audio_len,max_audio_len,removal_reason
+sub-03,task-audiobook1_run-01,5,5,4,0,1,7680,7680,7680,7680,short_neuro_trials_removed_by_official_script
+sub-03,task-audiobook1_run-02,5,5,4,0,1,7680,7680,7680,7680,short_neuro_trials_removed_by_official_script
+sub-03,task-audiobook2_run-01,5,5,4,0,1,7680,7680,7680,7680,short_neuro_trials_removed_by_official_script
+sub-03,task-audiobook2_run-02,5,5,4,0,1,7680,7680,7680,7680,short_neuro_trials_removed_by_official_script

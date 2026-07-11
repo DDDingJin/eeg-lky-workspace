@@ -1,0 +1,7 @@
+item,path,exists
+t1w_mri,E:/decode/data/raw/meg_scans_ds006468/sub-03/anat/sub-03_T1w.nii.gz,True
+coreg_transform,E:/decode/data/raw/meg_scans_ds006468/derivatives/sub-03/coregistration/sub-03_trans.fif,True
+empty_room_noise_01,E:/decode/data/raw/meg_scans_ds006468/derivatives/sub-03/maxfilter/sub-03_task-noise_run-01_proc-sss_meg.fif,True
+empty_room_noise_02,E:/decode/data/raw/meg_scans_ds006468/derivatives/sub-03/maxfilter/sub-03_task-noise_run-02_proc-sss_meg.fif,True
+calibration,E:/decode/data/raw/meg_scans_ds006468/sub-03/meg/sub-03_acq-calibration_meg.dat,True
+crosstalk,E:/decode/data/raw/meg_scans_ds006468/sub-03/meg/sub-03_acq-crosstalk_meg.fif,True

@@ -1,0 +1,19 @@
+{
+  "protocol": "meg_scans_official_preprocessing_sub03_v1",
+  "subject": "sub-03",
+  "dataset_root": "E:/decode/data/raw/meg_scans_ds006468",
+  "local_derivatives_root": "E:/decode/data/derived/meg_scans_official_replication_v1",
+  "official_meg_scans_repo": "E:/decode/external/upstream/MEG-SCANS",
+  "official_function": "speech/decoding/preprocessing_audiobooks_decoding.m",
+  "official_settings": "speech/settings_speech.m",
+  "official_trialfun": "helper_functions/my_trialfun_audiobook.m",
+  "use_maxfilter": true,
+  "apply_latency_correction": true,
+  "audio_latency_seconds": 0.003,
+  "bandpass_hz": [0.5, 4],
+  "trialdur_seconds": 120,
+  "fs_neuro_hz": 1000,
+  "fs_down_hz": 64,
+  "envelope_mat": "E:/decode/data/raw/meg_scans_ds006468/derivatives/stimuli/sub-others_preprocessed_audiobook_envelopes_decoding.mat",
+  "output_mat": "E:/decode/data/derived/meg_scans_official_replication_v1/sub-03/speech/sub-03_preprocessed_audiobooks_decoding.mat"
+}

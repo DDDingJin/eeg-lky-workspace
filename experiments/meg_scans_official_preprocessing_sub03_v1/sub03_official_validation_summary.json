@@ -1,0 +1,23 @@
+{
+  "output_mat": "E:\\decode\\data\\derived\\meg_scans_official_replication_v1\\sub-03\\speech\\sub-03_preprocessed_audiobooks_decoding.mat",
+  "validation_status": "passed",
+  "subject": "sub-03",
+  "mapping_labels": [
+    "task-audiobook1_run-01",
+    "task-audiobook1_run-02",
+    "task-audiobook2_run-01",
+    "task-audiobook2_run-02"
+  ],
+  "fs_down_hz": 64,
+  "trialdur_seconds": 120,
+  "bandpass_hz": [
+    0.5,
+    4
+  ],
+  "audio_latency_seconds": 0.003,
+  "use_maxfilter": true,
+  "total_trials": 16,
+  "channel_count": 306,
+  "min_dur_samples": 7680,
+  "min_dur_seconds": 120
+}

@@ -9,6 +9,10 @@
     "no_leakage": true,
     "no_cross_recording": true,
     "no_cross_split": true,
+    "split_recording_ids_pairwise_disjoint": true,
+    "train_val_intersection_count_zero": true,
+    "train_test_intersection_count_zero": true,
+    "val_test_intersection_count_zero": true,
     "train_only_scaler_fit": true,
     "checkpoint_selection_val_only": true,
     "test_context_strictly_past": true,
@@ -19,6 +23,21 @@
   },
   "smoke_status": "passed",
   "task_classification": "context_assisted_envelope_forecasting",
-  "single_batch_loss": 1.2907449007034302,
+  "single_batch_loss": 1.2288322448730469,
+  "device": "cuda",
+  "split_disjointness": {
+    "recording_id_counts": {
+      "train": 15,
+      "val": 15,
+      "test": 15
+    },
+    "train_val_intersection_count": 0,
+    "train_test_intersection_count": 0,
+    "val_test_intersection_count": 0,
+    "train_val_intersection_ids": [],
+    "train_test_intersection_ids": [],
+    "val_test_intersection_ids": [],
+    "all_pairwise_intersections_empty": true
+  },
   "coverage_recording_count": 15
 }

@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import argparse
 import csv
+import ctypes
 import importlib.util
 import json
+import os
 from pathlib import Path
 import random
 import sys
@@ -291,6 +293,26 @@ def coverage_rows(datasets: dict[str, ContextAssistedWindowDataset], config: dic
     return rows
 
 
+def split_disjointness(recordings_by_split: dict[str, list[tuple[str, np.ndarray, np.ndarray]]]) -> dict[str, Any]:
+    ids_by_split = {
+        split: {recording_id for recording_id, _, _ in recordings}
+        for split, recordings in recordings_by_split.items()
+    }
+    train_val = sorted(ids_by_split["train"] & ids_by_split["val"])
+    train_test = sorted(ids_by_split["train"] & ids_by_split["test"])
+    val_test = sorted(ids_by_split["val"] & ids_by_split["test"])
+    return {
+        "recording_id_counts": {split: len(ids) for split, ids in ids_by_split.items()},
+        "train_val_intersection_count": len(train_val),
+        "train_test_intersection_count": len(train_test),
+        "val_test_intersection_count": len(val_test),
+        "train_val_intersection_ids": train_val,
+        "train_test_intersection_ids": train_test,
+        "val_test_intersection_ids": val_test,
+        "all_pairwise_intersections_empty": len(train_val) == 0 and len(train_test) == 0 and len(val_test) == 0,
+    }
+
+
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     ensure_dir(path.parent)
     with path.open("w", newline="", encoding="utf-8") as handle:
@@ -307,6 +329,7 @@ def run_single_batch_smoke(config: dict[str, Any], device: str) -> tuple[dict[st
     dataset_dir = resolve_dataset_path(config["dataset"]["dataset_locator"])
     subject_id = config["dataset"]["subject_id"]
     recordings_by_split = load_split_recordings(dataset_dir, subject_id)
+    disjointness = split_disjointness(recordings_by_split)
     scalers = fit_train_only_scalers(recordings_by_split["train"])
     datasets = build_datasets(recordings_by_split, config, scalers)
     intervals = interval_rows(datasets, config)
@@ -340,6 +363,8 @@ def run_single_batch_smoke(config: dict[str, Any], device: str) -> tuple[dict[st
         for param in model.parameters()
     )
     optimizer.step()
+    if device == "cuda":
+        torch.cuda.synchronize()
 
     no_leakage = all(
         row["context_end_inclusive_lt_target_start"]
@@ -373,16 +398,20 @@ def run_single_batch_smoke(config: dict[str, Any], device: str) -> tuple[dict[st
         "test_pearson_computed": False,
         "checkpoint_saved": False,
     }
+    del output, prediction, loss, eeg, context, target, optimizer, model
+    if device == "cuda":
+        torch.cuda.empty_cache()
     audit = {
         "dataset_dir": repo_relative(dataset_dir) if dataset_dir.is_relative_to(ROOT) else str(dataset_dir),
         "scaler_fit_split": scalers["fit_split"],
         "scaler_fit_recording_count": int(scalers["fit_recording_count"]),
         "split_recording_counts": {split: len(items) for split, items in recordings_by_split.items()},
+        "split_disjointness": disjointness,
         "window_counts": {split: len(dataset) for split, dataset in datasets.items()},
         "interval_count": len(intervals),
         "no_leakage": no_leakage,
         "no_cross_recording": all(row["same_recording"] for row in intervals),
-        "no_cross_split": all(row["same_split"] for row in intervals),
+        "no_cross_split": disjointness["all_pairwise_intersections_empty"],
         "test_context_strictly_past": all(row["context_strictly_past"] for row in coverage),
         "test_initial_128_samples_excluded": all(int(row["excluded_initial_context_samples"]) == int(config["task"]["forward_envelope_context_samples"]) for row in coverage),
         "checkpoint_selection_split": config["training"]["checkpoint_selection_split"],
@@ -419,6 +448,10 @@ def write_markdown_artifacts(output_dir: Path, config: dict[str, Any], smoke: di
         f"- scaler_fit_split: `{audit['scaler_fit_split']}`",
         f"- scaler_fit_recording_count: `{audit['scaler_fit_recording_count']}`",
         f"- split_recording_counts: `{audit['split_recording_counts']}`",
+        f"- split_recording_id_counts: `{audit['split_disjointness']['recording_id_counts']}`",
+        f"- train_val_intersection_count: `{audit['split_disjointness']['train_val_intersection_count']}`",
+        f"- train_test_intersection_count: `{audit['split_disjointness']['train_test_intersection_count']}`",
+        f"- val_test_intersection_count: `{audit['split_disjointness']['val_test_intersection_count']}`",
         f"- window_counts: `{audit['window_counts']}`",
         f"- normalization_policy: `{audit['normalization_policy']}`",
         f"- interval_rule: `{audit['interval_rule']}`",
@@ -465,6 +498,10 @@ def build_schema(smoke: dict[str, Any] | None, audit: dict[str, Any] | None, cov
         "no_leakage": bool(audit and audit["no_leakage"]),
         "no_cross_recording": bool(audit and audit["no_cross_recording"]),
         "no_cross_split": bool(audit and audit["no_cross_split"]),
+        "split_recording_ids_pairwise_disjoint": bool(audit and audit["split_disjointness"]["all_pairwise_intersections_empty"]),
+        "train_val_intersection_count_zero": bool(audit and audit["split_disjointness"]["train_val_intersection_count"] == 0),
+        "train_test_intersection_count_zero": bool(audit and audit["split_disjointness"]["train_test_intersection_count"] == 0),
+        "val_test_intersection_count_zero": bool(audit and audit["split_disjointness"]["val_test_intersection_count"] == 0),
         "train_only_scaler_fit": bool(audit and audit["scaler_fit_split"] == "train"),
         "checkpoint_selection_val_only": bool(audit and audit["checkpoint_selection_split"] == "val"),
         "test_context_strictly_past": bool(audit and audit["test_context_strictly_past"]),
@@ -479,6 +516,8 @@ def build_schema(smoke: dict[str, Any] | None, audit: dict[str, Any] | None, cov
         "smoke_status": smoke["status"] if smoke else "not_run",
         "task_classification": smoke["task_classification"] if smoke else "",
         "single_batch_loss": smoke["mse_loss"] if smoke else None,
+        "device": smoke["device"] if smoke else "",
+        "split_disjointness": audit["split_disjointness"] if audit else {},
         "coverage_recording_count": len(coverage),
     }
 
@@ -532,8 +571,18 @@ def main() -> int:
     schema = build_schema(smoke, audit, coverage)
     write_outputs(output_dir, config, smoke, audit, coverage, schema)
     print_event("SMOKE", f"status={smoke['status']} loss={smoke['mse_loss']:.8f} schema_passed={schema['passed']}")
-    return 0 if schema["passed"] else 1
+    exit_code = 0 if schema["passed"] else 1
+    if os.name == "nt" and device == "cuda":
+        sys.stdout.flush()
+        sys.stderr.flush()
+        ctypes.windll.kernel32.ExitProcess(exit_code)
+    return exit_code
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    exit_code = int(main())
+    sys.stdout.flush()
+    sys.stderr.flush()
+    if os.name == "nt":
+        ctypes.windll.kernel32.ExitProcess(exit_code)
+    os._exit(exit_code)

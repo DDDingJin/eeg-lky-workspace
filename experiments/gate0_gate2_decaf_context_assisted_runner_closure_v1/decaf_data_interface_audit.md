@@ -4,6 +4,10 @@
 - scaler_fit_split: `train`
 - scaler_fit_recording_count: `15`
 - split_recording_counts: `{'train': 15, 'val': 15, 'test': 15}`
+- split_recording_id_counts: `{'train': 15, 'val': 15, 'test': 15}`
+- train_val_intersection_count: `0`
+- train_test_intersection_count: `0`
+- val_test_intersection_count: `0`
 - window_counts: `{'train': 528, 'val': 52, 'test': 52}`
 - normalization_policy: `EEG channel z-score and envelope z-score fitted on train recordings only; train-fitted scalers are applied to train/val/test.`
 - interval_rule: `For target [t,t+224), EEG uses [t,t+224), envelope_context uses [t-128,t), and TwoBranchModel forward trims to [t-96,t).`

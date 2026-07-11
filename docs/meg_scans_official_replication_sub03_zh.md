@@ -1,6 +1,6 @@
 # MEG-SCANS sub-03 官方 paired-trial preprocessing replication v1
 
-本轮只复现官方 `preprocessing_audiobooks_decoding.m` 的 sub-03 paired MEG-envelope trial 生成步骤。不训练 mTRF，不运行统一 benchmark，不做 R1-R5，不做 source inverse/forward，不做 EEG 权重迁移。
+本模块复现官方 sub-03 audiobook/OLSA paired MEG-envelope preprocessing，并生成一个官方 `training_decoding.m` anchor。它是 official replication only，不是本项目统一 EEG/MEG benchmark，不可与统一 Pearson benchmark 或 EEG 结果直接比较。
 
 ## 官方协议锁定
 
@@ -18,8 +18,20 @@
 
 ## 输出位置
 
-paired-trial `.mat` 保存在 Git 外部：
+`.mat` 输出均保存在 Git 外部：
 
 `E:/decode/data/derived/meg_scans_official_replication_v1/sub-03/speech/sub-03_preprocessed_audiobooks_decoding.mat`
 
+`E:/decode/data/derived/meg_scans_official_replication_v1/sub-03/speech/sub-03_preprocessed_olsa_decoding.mat`
+
+`E:/decode/data/derived/meg_scans_official_replication_v1/sub-03/speech/sub-03_decoding.mat`
+
 Git 中只提交 wrapper、provenance、CSV/JSON/MD validation reports 和文本日志摘要。
+
+## 官方 decoding anchor
+
+- 官方训练函数：`training_decoding('sub-03', settings)`
+- 官方代码使用全局 z-score；audiobook 与 OLSA 分别归一化，MEG mag 与 grad 分别归一化。
+- audiobook split 使用 `rng("shuffle")` 后随机 80/20；本次结果是非确定性官方复现 run。
+- metric 为 Spearman。
+- 本轮只提交 compact 统计，不提交模型、prediction dump 或 `.mat`。

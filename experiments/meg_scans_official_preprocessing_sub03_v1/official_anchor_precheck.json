@@ -1,0 +1,10 @@
+{
+  "artifact": "official_anchor_precheck.json",
+  "status": "passed",
+  "failures": [],
+  "official_commit": "32bfc690e28e7591b45d96615c59b2d53b6a7165",
+  "expected_official_commit": "32bfc690e28e7591b45d96615c59b2d53b6a7165",
+  "olsa_maxfilter": "E:/decode/data/raw/meg_scans_ds006468/derivatives/sub-03/maxfilter/sub-03_task-olsa_proc-tsss-mc_meg.fif",
+  "olsa_envelope": "E:/decode/data/raw/meg_scans_ds006468/derivatives/stimuli/preprocessed_olsa_envelopes_decoding.mat",
+  "audiobook_paired_mat": "E:/decode/data/derived/meg_scans_official_replication_v1/sub-03/speech/sub-03_preprocessed_audiobooks_decoding.mat"
+}

@@ -1,12 +1,20 @@
-# MEG-SCANS sub-03 Official Preprocessing Validation Report
+# MEG-SCANS sub-03 Official Decoding Replication Anchor Report
 
 - Branch: `fix/ar-20260711-meg-scans-official-preprocessing-sub03-v1`
 - Base: `fix/ar-20260711-meg-scans-representation-preflight-v1` / `69ed86096951e40728348dc1f7fc9d0b59c8556c`
 - Official MEG-SCANS commit: `32bfc690e28e7591b45d96615c59b2d53b6a7165`
 - Official function: `speech/decoding/preprocessing_audiobooks_decoding.m`
+- Official OLSA function: `speech/decoding/preprocessing_olsa_decoding.m`
+- Official training function: `speech/decoding/training_decoding.m`
 - Official settings: `speech/settings_speech.m`
 - Official trialfun: `helper_functions/my_trialfun_audiobook.m`
+- MATLAB: `24.2.0.2712019 (R2024b)`
+- mTRF Toolbox: local toolbox path `E:/decode/external/toolboxes/mTRF-Toolbox-master/mTRF-Toolbox-master/mtrf`; user-installed package recorded as mTRF-Toolbox 2.7, version metadata not exposed by the toolbox files inspected.
 - Local-only output MAT: `E:/decode/data/derived/meg_scans_official_replication_v1/sub-03/speech/sub-03_preprocessed_audiobooks_decoding.mat`
+- Local-only OLSA MAT: `E:/decode/data/derived/meg_scans_official_replication_v1/sub-03/speech/sub-03_preprocessed_olsa_decoding.mat`
+- Local-only decoding MAT: `E:/decode/data/derived/meg_scans_official_replication_v1/sub-03/speech/sub-03_decoding.mat`
+
+This is an official replication anchor only; it is not comparable to this project's unified Pearson benchmark or EEG results.
 
 ## Input Precheck
 
@@ -49,3 +57,27 @@ Each run removes 1 neuro/audio pair during the official cleanup because the last
 ## Compact Artifact Check
 
 Only wrapper/settings, provenance, CSV/JSON/MD validation reports, and text summaries are intended for Git. The generated `.mat` file and raw/processed FIF/MRI/envelope arrays remain outside Git.
+
+## OLSA Validation
+
+OLSA preprocessing used the official `preprocessing_olsa_decoding.m` with `use_maxfilter=true`, `audio_latency=0.003`, `bandpass=[0.5,4] Hz`, `fs_neuro=1000`, `fs_down=64`, `prestim=0`, and `poststim=0.5`.
+
+The OLSA output has 120 neuro/audio pairs. Every OLSA trial has 306 MEG channels, every neuro/audio pair is equal-length after truncation, and `SNR`, `intelligibility`, and `playlist` each contain 120 entries. OLSA and audiobook MEG channel labels/order match exactly.
+
+## Official Decoding Anchor
+
+Official `training_decoding('sub-03', settings)` completed successfully.
+
+- `n_trials = 16`
+- `n_trials_train = 13`
+- `n_trials_test = 3`
+- selected lambda: `0.01`
+- correlation metric: `Spearman`
+- split policy: official `rng("shuffle")`, random 80/20 audiobook split; this run is non-deterministic.
+- z-score policy: official global z-score; audiobook and OLSA normalized separately; MEG mag and grad normalized separately.
+
+Compact result summaries are in:
+
+- `sub03_official_decoding_anchor_summary.json`
+- `sub03_official_decoding_anchor_metrics.csv`
+- `sub03_official_decoding_anchor_report.md`

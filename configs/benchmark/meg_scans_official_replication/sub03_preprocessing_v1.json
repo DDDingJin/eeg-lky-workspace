@@ -1,5 +1,5 @@
 {
-  "protocol": "meg_scans_official_preprocessing_sub03_v1",
+  "protocol": "meg_scans_official_decoding_anchor_sub03_v1",
   "subject": "sub-03",
   "dataset_root": "E:/decode/data/raw/meg_scans_ds006468",
   "local_derivatives_root": "E:/decode/data/derived/meg_scans_official_replication_v1",
@@ -15,5 +15,8 @@
   "fs_neuro_hz": 1000,
   "fs_down_hz": 64,
   "envelope_mat": "E:/decode/data/raw/meg_scans_ds006468/derivatives/stimuli/sub-others_preprocessed_audiobook_envelopes_decoding.mat",
-  "output_mat": "E:/decode/data/derived/meg_scans_official_replication_v1/sub-03/speech/sub-03_preprocessed_audiobooks_decoding.mat"
+  "output_audiobook_mat": "E:/decode/data/derived/meg_scans_official_replication_v1/sub-03/speech/sub-03_preprocessed_audiobooks_decoding.mat",
+  "output_olsa_mat": "E:/decode/data/derived/meg_scans_official_replication_v1/sub-03/speech/sub-03_preprocessed_olsa_decoding.mat",
+  "output_decoding_mat": "E:/decode/data/derived/meg_scans_official_replication_v1/sub-03/speech/sub-03_decoding.mat",
+  "scope": "official replication anchor only; not comparable to unified Pearson benchmark or EEG results"
 }

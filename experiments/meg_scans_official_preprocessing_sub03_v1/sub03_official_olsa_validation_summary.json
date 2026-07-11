@@ -1,0 +1,24 @@
+{
+  "output_mat": "E:\\decode\\data\\derived\\meg_scans_official_replication_v1\\sub-03\\speech\\sub-03_preprocessed_olsa_decoding.mat",
+  "validation_status": "passed",
+  "subject": "sub-03",
+  "n_trials": 120,
+  "channel_count": 306,
+  "fsample_hz": 64,
+  "min_trial_len_samples": 147,
+  "max_trial_len_samples": 210,
+  "has_120_snr": true,
+  "has_120_intelligibility": true,
+  "has_120_playlist": true,
+  "channel_order_matches_audiobook": true,
+  "use_maxfilter": true,
+  "audio_latency_seconds": 0.003,
+  "bandpass_hz": [
+    0.5,
+    4
+  ],
+  "fs_neuro_hz": 1000,
+  "fs_down_hz": 64,
+  "olsa_prestim_seconds": 0,
+  "olsa_poststim_seconds": 0.5
+}

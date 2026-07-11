@@ -29,6 +29,13 @@ def main() -> int:
         OUT / "sub03_official_validation_summary.json",
         OUT / "sub03_official_preprocessing_log_summary.md",
         OUT / "preprocessing_validation_report.md",
+        OUT / "official_anchor_precheck.json",
+        OUT / "sub03_official_anchor_precheck.csv",
+        OUT / "sub03_official_olsa_validation_summary.json",
+        OUT / "sub03_official_olsa_trial_validation.csv",
+        OUT / "sub03_official_decoding_anchor_summary.json",
+        OUT / "sub03_official_decoding_anchor_metrics.csv",
+        OUT / "sub03_official_decoding_anchor_report.md",
     ]
     missing = [str(path) for path in required if not path.exists()]
     if missing:
@@ -37,6 +44,9 @@ def main() -> int:
         ROOT / "configs" / "benchmark" / "meg_scans_official_replication" / "sub03_preprocessing_v1.json",
         OUT / "official_preprocessing_provenance.json",
         OUT / "sub03_official_validation_summary.json",
+        OUT / "official_anchor_precheck.json",
+        OUT / "sub03_official_olsa_validation_summary.json",
+        OUT / "sub03_official_decoding_anchor_summary.json",
     ]:
         json.loads(path.read_text(encoding="utf-8"))
     precheck = read_csv(OUT / "sub03_input_precheck.csv")
@@ -57,6 +67,27 @@ def main() -> int:
             raise SystemExit(f"length mismatch spread: {row}")
         if row["min_neuro_len"] != row["min_audio_len"]:
             raise SystemExit(f"audio/neuro length mismatch: {row}")
+    anchor_precheck = read_csv(OUT / "sub03_official_anchor_precheck.csv")
+    if anchor_precheck[0]["audiobook_paired_trials"] != "16":
+        raise SystemExit("audiobook paired precheck did not confirm 16 trials")
+    if anchor_precheck[0]["olsa_envelope_readable"] != "True":
+        raise SystemExit("OLSA envelope readability was not confirmed")
+    olsa_trials = read_csv(OUT / "sub03_official_olsa_trial_validation.csv")
+    if len(olsa_trials) != 120:
+        raise SystemExit(f"expected 120 OLSA trial validation rows, found {len(olsa_trials)}")
+    for row in olsa_trials:
+        if row["meg_channels"] != "306" or row["neuro_len"] != row["audio_len"]:
+            raise SystemExit(f"bad OLSA paired trial row: {row}")
+    metrics = read_csv(OUT / "sub03_official_decoding_anchor_metrics.csv")
+    conditions = {row["condition"] for row in metrics}
+    expected = {"audiobook_sorted", "audiobook_shuffled", "olsa_sorted", "olsa_shuffled"}
+    if conditions != expected:
+        raise SystemExit(f"unexpected decoding metric conditions: {conditions}")
+    summary = json.loads((OUT / "sub03_official_decoding_anchor_summary.json").read_text(encoding="utf-8"))
+    if summary["scope"] != "official replication anchor only; not comparable to unified Pearson benchmark or EEG results":
+        raise SystemExit("decoding summary missing official-only scope")
+    if summary["n_trials"] != 16 or summary["n_trials_train"] != 13 or summary["n_trials_test"] != 3:
+        raise SystemExit("unexpected official audiobook train/test counts")
     banned_ext = {".mat", ".fif", ".gz", ".npy", ".npz", ".h5", ".hdf5", ".pt", ".pth", ".ckpt"}
     for path in ROOT.rglob("*"):
         if not path.is_file():

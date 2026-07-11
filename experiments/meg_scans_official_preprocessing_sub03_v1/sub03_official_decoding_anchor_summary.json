@@ -1,0 +1,51 @@
+{
+  "artifact": "sub03_official_decoding_anchor_summary.json",
+  "scope": "official replication anchor only; not comparable to unified Pearson benchmark or EEG results",
+  "subject": "sub-03",
+  "official_commit": "32bfc690e28e7591b45d96615c59b2d53b6a7165",
+  "input_audiobook_mat": "E:\\decode\\data\\derived\\meg_scans_official_replication_v1\\sub-03\\speech\\sub-03_preprocessed_audiobooks_decoding.mat",
+  "input_olsa_mat": "E:\\decode\\data\\derived\\meg_scans_official_replication_v1\\sub-03\\speech\\sub-03_preprocessed_olsa_decoding.mat",
+  "output_decoding_mat": "E:\\decode\\data\\derived\\meg_scans_official_replication_v1\\sub-03\\speech\\sub-03_decoding.mat",
+  "validation_status": "passed",
+  "n_trials": 16,
+  "n_trials_train": 13,
+  "n_trials_test": 3,
+  "selected_lambda": 0.01,
+  "correlation_metric": "Spearman",
+  "zscore_policy": "official global z-score; audiobook and OLSA normalized separately; MEG mag and grad normalized separately",
+  "split_policy": "official rng(\"shuffle\") random 80/20 audiobook split; non-deterministic run",
+  "audiobook_sorted_r": {
+    "n": 3,
+    "mean": 0.49064454565257964,
+    "median": 0.49971866922431385,
+    "std": 0.056343690214788335,
+    "min": 0.43031450368036911,
+    "max": 0.54190046405305592
+  },
+  "audiobook_shuffled_r": {
+    "n": 3,
+    "mean": 0.020337643915178831,
+    "median": 0.0079025118366243454,
+    "std": 0.046038038780528444,
+    "min": -0.018205561178301684,
+    "max": 0.071315981087213834
+  },
+  "olsa_sorted_r": {
+    "n": 120,
+    "mean": 0.29143688538878987,
+    "median": 0.28298639260160552,
+    "std": 0.18523834201795919,
+    "min": -0.40074650000701389,
+    "max": 0.64854809015349224
+  },
+  "olsa_shuffled_r": {
+    "n": 12000,
+    "mean": 0.11314637858652449,
+    "median": 0.11896257831897783,
+    "std": 0.19320492559677171,
+    "min": -0.57787356589001415,
+    "max": 0.68909314488104378
+  },
+  "n_olsa_trials": 120,
+  "n_olsa_shuffled_permutations": 100
+}

@@ -14,11 +14,11 @@
     "happyquokka_marked_10s_chunk": true,
     "failure_report_empty_or_reasoned": true
   },
-  "success_job_count": 1,
-  "deep_success_job_count": 1,
-  "subject_metric_rows": 1,
+  "success_job_count": 13,
+  "deep_success_job_count": 13,
+  "subject_metric_rows": 13,
   "dataset_metric_rows": 1,
-  "recording_metric_rows": 15,
-  "training_curve_rows": 42,
+  "recording_metric_rows": 195,
+  "training_curve_rows": 570,
   "failure_count": 0
 }

@@ -2,7 +2,7 @@
   "protocol": "gate0_gate2_subject_specific_happyquokka_seeded_weissbart_full_v1",
   "dataset": "weissbart_tf64",
   "seed": 0,
-  "completed_job_count": 1,
+  "completed_job_count": 13,
   "pending_job_count": 0,
-  "last_completed_job_key": "weissbart_tf64:P00:happyquokka:seed0"
+  "last_completed_job_key": "weissbart_tf64:P12:happyquokka:seed0"
 }

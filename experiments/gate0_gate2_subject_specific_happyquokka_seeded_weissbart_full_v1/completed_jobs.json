@@ -9,6 +9,126 @@
       "status": "success",
       "checkpoint_id": "happyquokka_epoch_32",
       "subject_metric": 0.12398048733468973
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P01:happyquokka:seed0",
+      "status": "success",
+      "checkpoint_id": "happyquokka_epoch_58",
+      "subject_metric": 0.11985516571673505
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P02",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P02:happyquokka:seed0",
+      "status": "success",
+      "checkpoint_id": "happyquokka_epoch_27",
+      "subject_metric": 0.08948923630210734
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P03",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P03:happyquokka:seed0",
+      "status": "success",
+      "checkpoint_id": "happyquokka_epoch_17",
+      "subject_metric": 0.09016431516507921
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P04",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P04:happyquokka:seed0",
+      "status": "success",
+      "checkpoint_id": "happyquokka_epoch_23",
+      "subject_metric": 0.06618615447026523
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P05",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P05:happyquokka:seed0",
+      "status": "success",
+      "checkpoint_id": "happyquokka_epoch_55",
+      "subject_metric": 0.17538350771711173
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P06",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P06:happyquokka:seed0",
+      "status": "success",
+      "checkpoint_id": "happyquokka_epoch_10",
+      "subject_metric": 0.010693212790145965
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P07",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P07:happyquokka:seed0",
+      "status": "success",
+      "checkpoint_id": "happyquokka_epoch_42",
+      "subject_metric": 0.14078891437872484
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P08",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P08:happyquokka:seed0",
+      "status": "success",
+      "checkpoint_id": "happyquokka_epoch_41",
+      "subject_metric": 0.08780414224816877
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P09",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P09:happyquokka:seed0",
+      "status": "success",
+      "checkpoint_id": "happyquokka_epoch_33",
+      "subject_metric": 0.19395309012394638
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P10",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P10:happyquokka:seed0",
+      "status": "success",
+      "checkpoint_id": "happyquokka_epoch_34",
+      "subject_metric": 0.08068507484370747
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P11",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P11:happyquokka:seed0",
+      "status": "success",
+      "checkpoint_id": "happyquokka_epoch_37",
+      "subject_metric": 0.19741273404829585
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P12",
+      "model": "happyquokka",
+      "seed": 0,
+      "job_key": "weissbart_tf64:P12:happyquokka:seed0",
+      "status": "success",
+      "checkpoint_id": "happyquokka_epoch_31",
+      "subject_metric": 0.2142479501669975
     }
   ]
 }

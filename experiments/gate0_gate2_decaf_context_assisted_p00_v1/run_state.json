@@ -1,0 +1,8 @@
+{
+  "status": "preflight_only",
+  "job_key": "weissbart_tf64:P00:decaf_twobranch:seed0:context_assisted_envelope_forecasting",
+  "completed_job_count": 0,
+  "pending_job_count": 1,
+  "formal_training_started": false,
+  "scientific_metric_generated": false
+}

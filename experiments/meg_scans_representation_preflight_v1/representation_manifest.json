@@ -1,0 +1,58 @@
+{
+  "artifact": "representation_manifest.json",
+  "base_branch": "origin/fix/ar-20260625-161300-a43831b-subject-specific-model-availability-v1",
+  "base_commit": "41a9c458731962b3dc1da575a159abb6a6c211a8",
+  "representations": [
+    {
+      "id": "R1",
+      "name": "MEG306-native",
+      "status": "preflight_defined",
+      "input_shape": "time x 306",
+      "notes": "Use all MEG channels in native MEG sensor order."
+    },
+    {
+      "id": "R2",
+      "name": "MEG102-mag-native",
+      "status": "preflight_defined",
+      "input_shape": "time x 102",
+      "notes": "Use magnetometers only in native order."
+    },
+    {
+      "id": "R3",
+      "name": "MEG64-select",
+      "status": "blocked",
+      "input_shape": "time x 64",
+      "notes": "Requires confirmed target EEG64 coordinates for one-to-one nearest-neighbor selection."
+    },
+    {
+      "id": "R4",
+      "name": "MEG64-interp",
+      "status": "interface_only_blocked_target_coords",
+      "input_shape": "time x 64",
+      "interface": {
+        "target_coordinates": "required EEG64 coordinate table",
+        "source_coordinates": "MEG102 magnetometer device coordinates",
+        "weights": "64 x 102 sparse interpolation matrix",
+        "generation": "fit once per target montage, apply to each time x 102 block"
+      }
+    },
+    {
+      "id": "R5",
+      "name": "virtual-EEG64",
+      "status": "workflow_only",
+      "input_shape": "time x 64",
+      "required_inputs": [
+        "T1w MRI",
+        "MEG-MRI trans.fif",
+        "empty-room noise",
+        "calibration/crosstalk",
+        "source space",
+        "BEM",
+        "MEG inverse operator",
+        "EEG64 forward model"
+      ],
+      "notes": "No inverse/forward generated in this preflight."
+    }
+  ],
+  "target_eeg64_status": "blocked_no_confirmed_coordinates"
+}

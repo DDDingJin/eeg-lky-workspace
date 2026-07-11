@@ -1,0 +1,76 @@
+{
+  "artifact": "protocol_lock.json",
+  "base_branch": "origin/fix/ar-20260625-161300-a43831b-subject-specific-model-availability-v1",
+  "base_commit": "41a9c458731962b3dc1da575a159abb6a6c211a8",
+  "lock_scope": "read-only canonical EEG protocol extraction for MEG-SCANS cross-modal preflight",
+  "fields": {
+    "sampling_rate": {
+      "value": 64,
+      "source": "configs/benchmark/gate0_gate2_full_subject_single_seed.json"
+    },
+    "legacy_baseline_sampling_rate": {
+      "value": 125,
+      "source": "configs/baseline_protocol.json"
+    },
+    "eeg_bandpass": {
+      "value": "not_locked_in_unified_runner_config",
+      "source": "not found in accepted full-subject runner/config; existing reference_splits are treated as preprocessed inputs"
+    },
+    "envelope_bandpass": {
+      "value": "not_locked_in_unified_runner_config",
+      "source": "not found in accepted full-subject runner/config; existing reference_splits are treated as preprocessed inputs"
+    },
+    "exact_envelope_extraction_definition": {
+      "value": "blocked_for_crossmodal_lock; accepted runner consumes *_envelope.npy and does not encode extraction definition",
+      "source": "src/repro/reference_baselines.py"
+    },
+    "dnn_window_size": {
+      "value": 50,
+      "source": "configs/benchmark/gate0_gate2_full_subject_single_seed.json"
+    },
+    "sequence_window_size": {
+      "value": 320,
+      "source": "configs/benchmark/gate0_gate2_full_subject_single_seed.json"
+    },
+    "sequence_hop_size": {
+      "value": 64,
+      "source": "configs/benchmark/gate0_gate2_full_subject_single_seed.json"
+    },
+    "dnn_target_index_alignment": {
+      "value": "last sample in window",
+      "source": "src/repro/reference_baselines.py:126"
+    },
+    "recording_id_definition": {
+      "value": "filename stem prefix before _-_eeg.npy; split_-_participant_-_recording_id_-_eeg.npy convention",
+      "source": "src/repro/reference_baselines.py:52"
+    },
+    "train_val_test_split_rule": {
+      "value": "accepted runner consumes pre-exported train/val/test split files; legacy baseline_protocol has part split 0-8/9-11/12-14",
+      "source": "src/repro/reference_baselines.py; configs/baseline_protocol.json:27"
+    },
+    "scaler_normalization_fitting_rule": {
+      "value": "not in accepted runner; normalization is expected to be done by dataset export/preprocessing",
+      "source": "not found in accepted full-subject runner/config"
+    },
+    "scorer_rule": {
+      "value": "benchmark.scoring.pearson_on_valid over valid mask after overlapping-window aggregation",
+      "source": "src/benchmark/scoring.py:48"
+    },
+    "aggregation_rule": {
+      "value": "recording metric = Pearson per recording; subject metric = mean_recording_pearson_r; dataset metric = mean subject metric",
+      "source": "configs/benchmark/gate0_gate2_full_subject_single_seed.json; src/benchmark/scoring.py:160"
+    },
+    "seed_rule": {
+      "value": 0,
+      "source": "configs/benchmark/gate0_gate2_full_subject_single_seed.json"
+    },
+    "input_output_tensor_contract": {
+      "value": "EEG arrays are time x channels; scalar-window models consume channels x window and target last sample; sequence models consume window x channels and output window x 1",
+      "source": "src/repro/reference_baselines.py; src/repro/adt_exact.py"
+    },
+    "target_eeg64_channel_coordinates": {
+      "value": "blocked_no_channel_coordinates",
+      "source": "E:/decode/data/processed/mldecoders/hugo_sample_125hz.h5:meta/channel_names; channel_count=64, coordinate_dataset_absent"
+    }
+  }
+}

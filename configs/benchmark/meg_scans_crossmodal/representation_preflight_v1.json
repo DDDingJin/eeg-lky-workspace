@@ -1,0 +1,14 @@
+{
+  "protocol": "meg_scans_crossmodal_representation_preflight_v1",
+  "artifact_scope": "compact_preflight_only",
+  "seed": 0,
+  "dataset_id": "meg_scans_ds006468_v1.1.2",
+  "dataset_root": "E:/decode/data/raw/meg_scans_ds006468",
+  "subjects": ["sub-01", "sub-03"],
+  "primary_preflight_subject": "sub-03",
+  "bridge_validation_subject": "sub-01",
+  "sampling_rate_hz": 64,
+  "block_duration_sec": 120,
+  "representations": ["R1_MEG306_native", "R2_MEG102_mag_native", "R3_MEG64_select", "R4_MEG64_interp", "R5_virtual_EEG64"],
+  "output_dir": "experiments/meg_scans_representation_preflight_v1"
+}

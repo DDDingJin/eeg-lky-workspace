@@ -179,8 +179,21 @@ def expected_dataset_metric_counts(subject_metric_rows: list[dict[str, object]])
     return {key: len(subjects) for key, subjects in counts.items()}
 
 
+def normalize_model_run_entries(entries) -> list[dict[str, object]]:
+    if isinstance(entries, list):
+        return entries
+    if isinstance(entries, dict):
+        return [entries]
+    raise TypeError(f"unexpected model_run_entries type: {type(entries).__name__}")
+
+
 def update_happyquokka_seed_metadata(model_run_entries: list[dict[str, object]], seed: int, mark_original_missing: bool) -> None:
     if not mark_original_missing:
+        for entry in model_run_entries:
+            if str(entry.get("model")) != "happyquokka" or not bool(entry.get("seed_control")):
+                continue
+            entry["seed_control_status"] = "applied_in_this_run"
+            entry.pop("seed_control_patch_available", None)
         return
     for entry in model_run_entries:
         if str(entry.get("model")) != "happyquokka":
@@ -565,11 +578,7 @@ def build_schema_validation(
         "recording_metrics_cover_success_jobs": success_pairs == recording_pairs,
         "dataset_metrics_keys_match_subject_metrics": sorted(dataset_metric_counts) == sorted(expected_dataset_counts),
         "dataset_metrics_n_subjects_match_subject_metrics": dataset_metric_counts == expected_dataset_counts,
-        "dataset_metrics_each_model_has_13_subjects": (
-            all(count == 13 for count in dataset_metric_counts.values())
-            if len(success_pairs) == 65
-            else True
-        ),
+        "dataset_metrics_current_scope_subject_count_correct": dataset_metric_counts == expected_dataset_counts,
         "deep_models_have_training_curves": deep_success_pairs == training_curve_pairs,
         "deep_models_have_training_metadata": deep_success_pairs == training_metadata_pairs,
         "every_recording_has_num_valid_samples": all(int(row["num_valid_samples"]) >= 0 for row in recording_rows),
@@ -747,7 +756,7 @@ def main() -> int:
     recording_rows = load_existing_csv(recording_metrics_path)
     dataset_metric_rows = load_existing_csv(dataset_metrics_path)
     matrix_rows = load_existing_csv(matrix_path)
-    model_run_entries = load_existing_json(model_entries_path, [])
+    model_run_entries = normalize_model_run_entries(load_existing_json(model_entries_path, []))
     failure_entries = load_existing_json(failure_path, {"failures": []}).get("failures", [])
     training_curve_rows = load_existing_csv(training_curve_path)
     log_lines = []

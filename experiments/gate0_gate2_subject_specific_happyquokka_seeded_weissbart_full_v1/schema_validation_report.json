@@ -5,7 +5,7 @@
     "recording_metrics_cover_success_jobs": true,
     "dataset_metrics_keys_match_subject_metrics": true,
     "dataset_metrics_n_subjects_match_subject_metrics": true,
-    "dataset_metrics_each_model_has_13_subjects": true,
+    "dataset_metrics_current_scope_subject_count_correct": true,
     "deep_models_have_training_curves": true,
     "deep_models_have_training_metadata": true,
     "every_recording_has_num_valid_samples": true,

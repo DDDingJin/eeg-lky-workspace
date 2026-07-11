@@ -1,0 +1,14 @@
+external/upstream/
+local_checkpoints/
+__pycache__/
+*.py[cod]
+*.pt
+*.pth
+*.npy
+*.npz
+*.h5
+*.mat
+*.ckpt
+*.safetensors
+*_tmp_*.md
+experiments/**/_tmp_*.md

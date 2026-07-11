@@ -1,0 +1,38 @@
+{
+  "protocol": "gate0_gate2_decaf_integration_preflight_v1",
+  "artifact_scope": "decaf_integration_preflight",
+  "seed": 0,
+  "output_dir": "experiments/gate0_gate2_decaf_integration_preflight_v1",
+  "dataset": {
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "subject_id": "P00",
+    "sampling_rate": 64
+  },
+  "decaf": {
+    "source_url": "https://github.com/carankt/DECAF.git",
+    "commit": "f4c5dbeafa93e97abb32bf189d6d1b5cb6df3332",
+    "license": "MIT",
+    "upstream_path": "external/upstream/DECAF",
+    "model_family": "HappyQuoka",
+    "implementation_file": "external/upstream/DECAF/src/models/happyquoka.py::HappyQuoka",
+    "local_adaptation_status": "DECAF local adaptation / not yet reference-protocol parity",
+    "in_channel": 64,
+    "d_model": 256,
+    "d_inner": 1024,
+    "n_head": 8,
+    "n_layers": 4,
+    "fft_conv1d_kernel": [
+      9,
+      1
+    ],
+    "fft_conv1d_padding": [
+      4,
+      0
+    ],
+    "dropout": 0.2,
+    "g_con": false,
+    "within_sub_num": 71,
+    "shape_check_samples": 640
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "checks": {
+    "required_imports_available": true,
+    "p00_split_isolation_passed": true,
+    "shape_check_present": true,
+    "coverage_full_recording_policy_defined": true,
+    "no_training_metrics_reported": true,
+    "local_adaptation_not_reference_parity": true
+  },
+  "dependency_missing": [
+    "wandb(training_only)"
+  ],
+  "subject_id": "P00",
+  "coverage_rows": 45,
+  "split_recording_counts": {
+    "train": 15,
+    "val": 15,
+    "test": 15
+  }
+}

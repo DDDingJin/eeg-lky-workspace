@@ -1,0 +1,52 @@
+{
+  "protocol": "gate0_gate2_subject_specific_modelset_two_dataset_closure_v1",
+  "scope": "weissbart_tf64 13 subjects + etard_tf64 20 subjects, 12 pure EEG-only models, seed0",
+  "planned_job_count": 396,
+  "completed_job_count": 396,
+  "failed_job_count": 0,
+  "checks": {
+    "planned_jobs_396": true,
+    "completed_jobs_396": true,
+    "failed_jobs_zero": true,
+    "subject_metrics_unique_dataset_subject_model_seed": true,
+    "dataset_metrics_unique_dataset_model_seed": true,
+    "dataset_metrics_n_subjects_correct": true,
+    "recording_metrics_cover_all_completed_jobs": true,
+    "source_schema_all_passed": true,
+    "no_decaf_twobranch_in_pure_eeg_modelset": true
+  },
+  "passed": true,
+  "source_schema_passed": {
+    "weissbart_reference": true,
+    "weissbart_local": true,
+    "weissbart_seeded_happyquokka": true,
+    "etard": true
+  },
+  "source_failure_counts": {
+    "weissbart_reference": 0,
+    "weissbart_local": 0,
+    "weissbart_seeded_happyquokka": 0,
+    "etard": 0
+  },
+  "completed_by_source": {
+    "weissbart_reference_subject_rows": 91,
+    "weissbart_local_subject_rows": 52,
+    "weissbart_seeded_happyquokka_subject_rows": 13,
+    "etard_subject_rows": 240
+  },
+  "line_counts": {
+    "combined_subject_metrics.csv_data_rows": 396,
+    "combined_dataset_metrics.csv_data_rows": 24,
+    "recording_coverage_by_job.csv_data_rows": 396,
+    "combined_recording_metric_source_rows": 10404,
+    "etard_subject_metrics.csv_data_rows": 240,
+    "etard_dataset_metrics.csv_data_rows": 12,
+    "etard_recording_metrics.csv_data_rows": 8064
+  },
+  "method_protocol_markers": {
+    "linear_lasso_elasticnet": "budgeted linear-family baseline",
+    "vlaai": "local adaptation",
+    "happyquokka": "seeded local 10s-chunk adaptation",
+    "decaf_twobranch": "not included in this pure EEG-only model set"
+  }
+}

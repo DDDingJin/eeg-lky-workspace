@@ -1,0 +1,110 @@
+[
+  {
+    "model": "linear",
+    "contract_category": "lagged_linear_family",
+    "eeg_input": "lagged EEG design matrix from 64 channels x lags 0..50",
+    "target": "trimmed envelope vector aligned after lag valid-range trim",
+    "output": "1D envelope prediction vector",
+    "true_envelope_context_input": false,
+    "shape_check_type": "contract preflight; no model training"
+  },
+  {
+    "model": "ridge",
+    "contract_category": "lagged_linear_family",
+    "eeg_input": "lagged EEG design matrix from 64 channels x lags 0..50",
+    "target": "trimmed envelope vector aligned after lag valid-range trim",
+    "output": "1D envelope prediction vector",
+    "true_envelope_context_input": false,
+    "shape_check_type": "contract preflight; no model training"
+  },
+  {
+    "model": "lasso",
+    "contract_category": "lagged_linear_family",
+    "eeg_input": "lagged EEG design matrix from 64 channels x lags 0..50",
+    "target": "trimmed envelope vector aligned after lag valid-range trim",
+    "output": "1D envelope prediction vector",
+    "true_envelope_context_input": false,
+    "shape_check_type": "contract preflight; no model training"
+  },
+  {
+    "model": "elasticnet",
+    "contract_category": "lagged_linear_family",
+    "eeg_input": "lagged EEG design matrix from 64 channels x lags 0..50",
+    "target": "trimmed envelope vector aligned after lag valid-range trim",
+    "output": "1D envelope prediction vector",
+    "true_envelope_context_input": false,
+    "shape_check_type": "contract preflight; no model training"
+  },
+  {
+    "model": "cca",
+    "contract_category": "lagged_linear_family",
+    "eeg_input": "lagged EEG design matrix from 64 channels x lags 0..50",
+    "target": "trimmed envelope vector aligned after lag valid-range trim",
+    "output": "1D envelope prediction vector",
+    "true_envelope_context_input": false,
+    "shape_check_type": "contract preflight; no model training"
+  },
+  {
+    "model": "fcnn",
+    "contract_category": "50_sample_window",
+    "eeg_input": "[batch, 64, 50] or adapter-equivalent 50-sample EEG window",
+    "target": "scalar last-sample envelope target",
+    "output": "scalar envelope prediction per window",
+    "true_envelope_context_input": false,
+    "shape_check_type": "contract preflight; no model training"
+  },
+  {
+    "model": "dnn",
+    "contract_category": "50_sample_window",
+    "eeg_input": "[batch, 64, 50] or adapter-equivalent 50-sample EEG window",
+    "target": "scalar last-sample envelope target",
+    "output": "scalar envelope prediction per window",
+    "true_envelope_context_input": false,
+    "shape_check_type": "contract preflight; no model training"
+  },
+  {
+    "model": "cnn",
+    "contract_category": "50_sample_window",
+    "eeg_input": "[batch, 64, 50] or adapter-equivalent 50-sample EEG window",
+    "target": "scalar last-sample envelope target",
+    "output": "scalar envelope prediction per window",
+    "true_envelope_context_input": false,
+    "shape_check_type": "contract preflight; no model training"
+  },
+  {
+    "model": "eegnet",
+    "contract_category": "50_sample_window",
+    "eeg_input": "[batch, 64, 50] or adapter-equivalent 50-sample EEG window",
+    "target": "scalar last-sample envelope target",
+    "output": "scalar envelope prediction per window",
+    "true_envelope_context_input": false,
+    "shape_check_type": "contract preflight; no model training"
+  },
+  {
+    "model": "adt",
+    "contract_category": "320_sample_window_hop64",
+    "eeg_input": "[batch, 64, 320] ADT window",
+    "target": "window-level envelope target under ADT exact adapter",
+    "output": "window-level envelope prediction",
+    "true_envelope_context_input": false,
+    "shape_check_type": "contract preflight; no model training"
+  },
+  {
+    "model": "vlaai",
+    "contract_category": "50_sample_window",
+    "eeg_input": "[batch, 64, 50] or adapter-equivalent 50-sample EEG window",
+    "target": "scalar last-sample envelope target",
+    "output": "scalar envelope prediction per window",
+    "true_envelope_context_input": false,
+    "shape_check_type": "contract preflight; no model training"
+  },
+  {
+    "model": "happyquokka",
+    "contract_category": "10s_chunk",
+    "eeg_input": "[batch, 640, 64] 10s EEG chunk at 64 Hz",
+    "target": "[batch, 640, 1] 10s envelope chunk",
+    "output": "[batch, 640, 1] envelope prediction",
+    "true_envelope_context_input": false,
+    "shape_check_type": "contract preflight; no model training"
+  }
+]

@@ -1,0 +1,120 @@
+{
+  "protocol": "gate0_gate2_subject_specific_modelset_etard_full_v1",
+  "artifact_scope": "subject_specific_modelset_etard_full",
+  "seed": 0,
+  "output_dir": "experiments/gate0_gate2_subject_specific_modelset_etard_full_v1",
+  "checkpoint_dir": "local_checkpoints/gate0_gate2_subject_specific_modelset_etard_full_v1",
+  "dataset": {
+    "dataset_id": "etard_tf64",
+    "dataset_locator": "data/processed/reference_splits/etard_tf64",
+    "sampling_rate": 64,
+    "subject_selection": "all_available_test_subjects",
+    "expected_subject_count": 20
+  },
+  "fit_budget": {
+    "purpose": "budgeted linear-family baseline for local candidate expansion while preserving full test evaluation",
+    "max_fit_samples_per_split": 12000
+  },
+  "models": [
+    "linear",
+    "ridge",
+    "lasso",
+    "elasticnet",
+    "cca",
+    "fcnn",
+    "dnn",
+    "cnn",
+    "eegnet",
+    "adt",
+    "vlaai",
+    "happyquokka"
+  ],
+  "excluded_models": [
+    "decaf_twobranch",
+    "lstm"
+  ],
+  "linear": {
+    "architecture_id": "lagged_linear_ols",
+    "input_contract": "lagged EEG matrix, lags 0..50, target aligned after trim_valid_range",
+    "selection_rule": "no regularization; validation Pearson recorded as auxiliary metadata",
+    "normalization": "linear-family StandardScaler fitted on train split only",
+    "training_budget": "max_fit_samples_per_split=12000"
+  },
+  "ridge": {
+    "architecture_id": "backward_trf_ridge",
+    "input_contract": "lagged EEG matrix, lags 0..50, target aligned after trim_valid_range",
+    "selection_rule": "choose alpha by validation Pearson after lag trimming",
+    "normalization": "linear-family StandardScaler fitted on train split only",
+    "training_budget": "alphas=[0.001,0.01,0.1,1,10,100]"
+  },
+  "lasso": {
+    "architecture_id": "lagged_lasso",
+    "input_contract": "lagged EEG matrix, lags 0..50, target aligned after trim_valid_range",
+    "selection_rule": "choose alpha by validation Pearson",
+    "normalization": "linear-family StandardScaler fitted on train split only",
+    "training_budget": "alphas=[0.001,0.01,0.1], max_iter=5000, max_fit_samples_per_split=12000"
+  },
+  "elasticnet": {
+    "architecture_id": "lagged_elasticnet",
+    "input_contract": "lagged EEG matrix, lags 0..50, target aligned after trim_valid_range",
+    "selection_rule": "choose alpha and l1_ratio by validation Pearson",
+    "normalization": "linear-family StandardScaler fitted on train split only",
+    "training_budget": "alphas=[0.001,0.01,0.1], l1_ratios=[0.2,0.5,0.8], max_iter=5000, max_fit_samples_per_split=12000"
+  },
+  "cca": {
+    "architecture_id": "cca_reconstruction",
+    "input_contract": "lagged EEG matrix, lags 0..50, target aligned after trim_valid_range",
+    "selection_rule": "choose PCA/component/reconstruction alpha by validation reconstruction correlation",
+    "normalization": "CCA x/y scalers fitted on train split only",
+    "training_budget": "reference CCA hyperparameter search"
+  },
+  "fcnn": {
+    "architecture_id": "fcnn_baseline",
+    "input_contract": "50-sample EEG window, target_index=last",
+    "selection_rule": "best validation Pearson checkpoint",
+    "normalization": "model-local train split handling; no test-fitted scaler",
+    "training_budget": "max_epochs=100, patience=10, batch_size=256"
+  },
+  "dnn": {
+    "architecture_id": "upstream_fcnn_subject_specific",
+    "input_contract": "50-sample EEG window, target_index=last",
+    "selection_rule": "best validation Pearson checkpoint",
+    "normalization": "model-local train split handling; no test-fitted scaler",
+    "training_budget": "max_epochs=100, patience=10, batch_size=256"
+  },
+  "cnn": {
+    "architecture_id": "upstream_cnn_subject_specific",
+    "input_contract": "50-sample EEG window, target_index=last",
+    "selection_rule": "best validation Pearson checkpoint",
+    "normalization": "model-local train split handling; no test-fitted scaler",
+    "training_budget": "max_epochs=100, patience=10, batch_size=256"
+  },
+  "eegnet": {
+    "architecture_id": "eegnet_subject_specific",
+    "input_contract": "50-sample EEG window, target_index=last",
+    "selection_rule": "best validation Pearson checkpoint",
+    "normalization": "model-local train split handling; no test-fitted scaler",
+    "training_budget": "max_epochs=100, patience=10, batch_size=256"
+  },
+  "adt": {
+    "architecture_id": "adt_exact_regressor",
+    "input_contract": "320-sample EEG window, hop_length=64",
+    "selection_rule": "best validation checkpoint",
+    "normalization": "model-local train split handling; no test-fitted scaler",
+    "training_budget": "max_epochs=100, patience=10, batch_size=32"
+  },
+  "vlaai": {
+    "architecture_id": "vlaai_exact_official_regressor",
+    "input_contract": "50-sample EEG window, target_index=last",
+    "selection_rule": "best validation Pearson checkpoint",
+    "normalization": "model-local train split handling; no test-fitted scaler",
+    "training_budget": "max_epochs=100, patience=10, batch_size=64"
+  },
+  "happyquokka": {
+    "architecture_id": "happyquokka_subject_specific_full_eval",
+    "input_contract": "10s EEG chunk at 64 Hz, g_con=false, no true envelope context input",
+    "selection_rule": "best validation Pearson checkpoint",
+    "normalization": "model-local train split handling; no test-fitted scaler",
+    "training_budget": "max_epochs=100, patience=10, batch_size=4"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "protocol": "gate0_gate2_subject_specific_targeted_audit_v1",
+  "artifact_scope": "subject_specific_targeted_audit",
+  "output_dir": "experiments/gate0_gate2_subject_specific_targeted_audit_v1",
+  "seed": 0,
+  "vlaai_repeatability": {
+    "dataset": "weissbart_tf64",
+    "subject_id": "P06",
+    "model": "vlaai",
+    "seed": 0,
+    "source_config": "configs/benchmark/gate0_gate2_subject_specific_local_models_weissbart_full_v1.json",
+    "source_result_dir": "experiments/gate0_gate2_subject_specific_local_models_weissbart_full_v1",
+    "repeat_count": 2,
+    "policy": "manual only; same formal Weissbart local-model path, seed, split, adapter, device, and training budget; no new deterministic CUDA flags"
+  },
+  "happyquokka_p11_readonly": {
+    "dataset": "etard_tf64",
+    "subject_id": "P11",
+    "model": "happyquokka",
+    "seed": 0,
+    "source_config": "configs/benchmark/gate0_gate2_subject_specific_modelset_etard_full_v1.json",
+    "source_result_dir": "experiments/gate0_gate2_subject_specific_modelset_etard_full_v1",
+    "policy": "read existing compact/job artifacts only; do not retrain or alter HappyQuokka contract, g_con, split, scorer, or hyperparameters"
+  },
+  "elasticnet_standardized": {
+    "dataset": "etard_tf64",
+    "subject_id": "P11",
+    "model": "elasticnet",
+    "seed": 0,
+    "source_config": "configs/benchmark/gate0_gate2_subject_specific_modelset_etard_full_v1.json",
+    "source_result_dir": "experiments/gate0_gate2_subject_specific_modelset_etard_full_v1",
+    "policy": "manual diagnostic only; train-only StandardScaler fit on P11 train lag matrix; do not replace published ElasticNet metric"
+  },
+  "forbidden_outputs": [
+    "checkpoint",
+    "model_weights",
+    "prediction_dump",
+    "raw_data",
+    "local_checkpoints"
+  ]
+}

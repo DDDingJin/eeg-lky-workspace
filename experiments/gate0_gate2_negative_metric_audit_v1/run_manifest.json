@@ -44,5 +44,14 @@
   },
   "manual_command": "F:\\miniconda\\envs\\decode-torch\\python.exe scripts\\run_gate0_gate2_negative_metric_audit_v1.py --config configs\\benchmark\\gate0_gate2_negative_metric_audit_v1.json --device auto --run-diagnostics",
   "preflight_only": true,
-  "training_started": false
+  "training_started": false,
+  "identity_conclusion": "functional_alias_of=fcnn",
+  "roster_decision": {
+    "dnn_main_table_independent_model": false,
+    "raw_dnn_rows_retained_for": "implementation-equivalence audit",
+    "cross_subject_roster_distinct_methods": 11,
+    "cross_subject_roster_excludes": [
+      "dnn"
+    ]
+  }
 }

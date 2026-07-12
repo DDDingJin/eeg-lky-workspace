@@ -3,9 +3,9 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
-import inspect
 import json
 from pathlib import Path
+import random
 import sys
 from typing import Any
 
@@ -128,6 +128,19 @@ def hash_state_dict(state_dict: dict[str, torch.Tensor]) -> str:
     return digest.hexdigest()
 
 
+def parameter_shapes_and_value_hash(model: torch.nn.Module) -> tuple[int, str, str]:
+    params = [parameter.detach().cpu().contiguous() for parameter in model.parameters()]
+    param_count = sum(int(parameter.numel()) for parameter in params)
+    shapes = [tuple(parameter.shape) for parameter in params]
+    shape_text = json.dumps(shapes)
+    digest = hashlib.sha256()
+    for parameter in params:
+        digest.update(str(tuple(parameter.shape)).encode("utf-8"))
+        digest.update(str(parameter.dtype).encode("utf-8"))
+        digest.update(parameter.numpy().tobytes())
+    return param_count, shape_text, digest.hexdigest()
+
+
 def hash_tensor(tensor: torch.Tensor) -> str:
     tensor = tensor.detach().cpu().contiguous()
     digest = hashlib.sha256()
@@ -144,6 +157,14 @@ def hash_array(array: np.ndarray) -> str:
     digest.update(str(array.dtype).encode("utf-8"))
     digest.update(np.ascontiguousarray(array).tobytes())
     return digest.hexdigest()
+
+
+def set_all_rng(seed: int) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
 
 
 def pearson_np(x: np.ndarray, y: np.ndarray) -> float:
@@ -206,7 +227,28 @@ def group_captured_windows(windows: list[WindowPrediction]) -> dict[str, tuple[n
     return output
 
 
+def first_test_input_hash(*, dataset_dir: Path, subject_id: str, model: str, source_config: dict[str, Any]) -> str:
+    _recording_id, eeg, env = load_reference_recordings(dataset_dir, "test", subject_id, channels=range(64))[0]
+    if model == "vlaai":
+        window_size = int(effective_model_config(source_config, "vlaai")["window_size"])
+        return hash_array(eeg[:window_size].T[None, :, :])
+    if model == "happyquokka":
+        cfg = effective_model_config(source_config, "happyquokka")
+        input_length = int(cfg["win_len_seconds"]) * int(cfg["sample_rate"])
+        return hash_array(eeg[:input_length][None, :, :])
+    if model == "elasticnet":
+        from repro.mldecoders.cca import trim_valid_range
+
+        cfg = effective_model_config(source_config, "elasticnet")
+        start_lag = int(cfg["start_lag"])
+        end_lag = int(cfg["end_lag"])
+        x_lag, _lag_indexes, _y = trim_valid_range(eeg, env, start_lag, end_lag)
+        return hash_array(x_lag[:1])
+    return hash_array(eeg[:1])
+
+
 def run_one_diagnostic(job: dict[str, Any], device: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    set_all_rng(int(job["seed"]))
     source_config = source_support_config(load_json(ROOT / job["source_config"]), str(job["model"]))
     dataset_cfg = source_config["dataset"]
     dataset_dir = resolve_dataset_path(dataset_cfg["dataset_locator"])
@@ -270,6 +312,12 @@ def run_one_diagnostic(job: dict[str, Any], device: str) -> tuple[dict[str, Any]
             }
         )
     model_entry = result.model_run_entry
+    first_input_hash = first_test_input_hash(
+        dataset_dir=dataset_dir,
+        subject_id=subject_id,
+        model=model,
+        source_config=source_config,
+    )
     summary = {
         "dataset": dataset_id,
         "subject_id": subject_id,
@@ -286,7 +334,7 @@ def run_one_diagnostic(job: dict[str, Any], device: str) -> tuple[dict[str, Any]
         "best_epoch": model_entry.get("best_epoch", ""),
         "best_val": model_entry.get("best_val_score", ""),
         "epochs_completed": model_entry.get("epochs_completed", ""),
-        "input_hash": hash_array(captured_windows[0].prediction) if captured_windows else "",
+        "input_hash": first_input_hash,
         "target_hash": hash_array(np.concatenate([window.target.reshape(-1) for window in captured_windows])) if captured_windows else "",
         "prediction_hash": hash_array(np.concatenate([window.prediction.reshape(-1) for window in captured_windows])) if captured_windows else "",
         "lag_sweep_policy": "diagnostic only; not used for checkpoint, hyperparameter, or final score selection",
@@ -401,7 +449,7 @@ def identity_audit(config: dict[str, Any], device: str) -> tuple[list[dict[str, 
     ref_config = load_json(ROOT / config["identity_audit"]["reference_config"])
     fixed_shape = tuple(int(item) for item in config["identity_audit"]["fixed_input_shape"])
     seed = int(config["identity_audit"]["comparison_seed"])
-    torch.manual_seed(seed)
+    set_all_rng(seed)
     fixed_input = torch.randn(*fixed_shape, dtype=torch.float32).to(device)
     audit_rows: list[dict[str, Any]] = []
     model_specs = [
@@ -418,12 +466,15 @@ def identity_audit(config: dict[str, Any], device: str) -> tuple[list[dict[str, 
                     "source_sha256": "",
                     "config": json.dumps(cfg, sort_keys=True),
                     "initial_state_hash": "",
+                    "parameter_count": "",
+                    "parameter_tensor_shapes": "",
+                    "parameter_value_hash_ignore_keys": "",
                     "fixed_input_output_hash": "",
                     "status": "class_unavailable",
                 }
             )
             continue
-        torch.manual_seed(seed)
+        set_all_rng(seed)
         kwargs = {
             "num_hidden": int(cfg["hidden_layers"]),
             "dropout_rate": float(cfg["dropout_rate"]),
@@ -431,6 +482,7 @@ def identity_audit(config: dict[str, Any], device: str) -> tuple[list[dict[str, 
             "num_input_channels": 64,
         }
         model = model_class(**kwargs).to(device)
+        parameter_count, parameter_shapes, parameter_value_hash = parameter_shapes_and_value_hash(model)
         model.eval()
         with torch.no_grad():
             output = model(fixed_input)
@@ -442,6 +494,9 @@ def identity_audit(config: dict[str, Any], device: str) -> tuple[list[dict[str, 
                 "source_sha256": sha256_file(source_path) if source_path.exists() else "",
                 "config": json.dumps(cfg, sort_keys=True),
                 "initial_state_hash": hash_state_dict(model.state_dict()),
+                "parameter_count": parameter_count,
+                "parameter_tensor_shapes": parameter_shapes,
+                "parameter_value_hash_ignore_keys": parameter_value_hash,
                 "fixed_input_output_hash": hash_tensor(output),
                 "status": "ok",
             }
@@ -450,10 +505,12 @@ def identity_audit(config: dict[str, Any], device: str) -> tuple[list[dict[str, 
     dnn = next(row for row in audit_rows if row["model"] == "dnn")
     if fcnn["status"] == "ok" and dnn["status"] == "ok":
         alias = (
-            fcnn["initial_state_hash"] == dnn["initial_state_hash"]
+            fcnn["parameter_count"] == dnn["parameter_count"]
+            and fcnn["parameter_tensor_shapes"] == dnn["parameter_tensor_shapes"]
+            and fcnn["parameter_value_hash_ignore_keys"] == dnn["parameter_value_hash_ignore_keys"]
             and fcnn["fixed_input_output_hash"] == dnn["fixed_input_output_hash"]
         )
-        conclusion = "dnn alias_of=fcnn" if alias else "dnn not proven alias_of=fcnn; hashes differ"
+        conclusion = "functional_alias_of=fcnn" if alias else "dnn not proven functional_alias_of=fcnn; parameter/output evidence differs"
     else:
         conclusion = "identity audit incomplete because one class was unavailable"
     return audit_rows, conclusion
@@ -484,6 +541,12 @@ def write_preflight_artifacts(config: dict[str, Any], output_dir: Path, device: 
         "failure_count": len(failures),
         "failures": failures,
         "identity_conclusion": identity_conclusion,
+        "roster_decision": {
+            "dnn_main_table_independent_model": False,
+            "raw_dnn_rows_retained_for": "implementation-equivalence audit",
+            "cross_subject_roster_distinct_methods": 11,
+            "cross_subject_roster_excludes": ["dnn"],
+        },
         "device": device,
     }
     write_json(output_dir / "schema_validation_report.json", schema)
@@ -498,6 +561,8 @@ def write_preflight_artifacts(config: dict[str, Any], output_dir: Path, device: 
             "manual_command": job_rows[0]["manual_command"] if job_rows else "",
             "preflight_only": True,
             "training_started": False,
+            "identity_conclusion": identity_conclusion,
+            "roster_decision": schema["roster_decision"],
         },
     )
     lines = [
@@ -519,6 +584,9 @@ def write_preflight_artifacts(config: dict[str, Any], output_dir: Path, device: 
         "",
         "## FCNN/DNN Identity",
         f"- conclusion: `{identity_conclusion}`",
+        "- `dnn` must not be treated as an independent main-table model when `functional_alias_of=fcnn`.",
+        "- raw `dnn` rows are retained only for implementation-equivalence audit.",
+        "- later cross-subject rosters should use 11 distinct methods and exclude `dnn`.",
         "",
         "## Policy",
         "- lag sweep is diagnostic only: -128..+128 samples; it must not select checkpoint, hyperparameter, or final score.",

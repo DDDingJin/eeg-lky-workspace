@@ -3,6 +3,7 @@ subject = 'sub-03';
 dataset_root = 'E:\decode\data\raw\meg_scans_ds006468';
 local_derivatives = 'E:\decode\data\derived\meg_scans_canonical_05_08hz_64hz_v1';
 official_repo = 'E:\decode\external\upstream\MEG-SCANS';
+expected_official_commit = '32bfc690e28e7591b45d96615c59b2d53b6a7165';
 
 fieldtrip_path = 'E:\decode\external\toolboxes\fieldtrip-master\fieldtrip-master';
 amtoolbox_path = 'E:\decode\external\toolboxes\amtoolbox-full-1.6.0\amtoolbox-1.6.0';
@@ -28,6 +29,10 @@ addpath(fullfile(official_repo, 'speech'));
 addpath(fullfile(official_repo, 'speech', 'decoding'));
 
 run(fullfile(official_repo, 'speech', 'settings_speech.m'));
+observed_official_commit = get_git_commit(official_repo);
+if ~strcmp(observed_official_commit, expected_official_commit)
+    error('MEG-SCANS upstream commit mismatch. Expected %s, observed %s.', expected_official_commit, observed_official_commit);
+end
 settings.path2bids = dataset_root;
 settings.path2derivatives = local_derivatives;
 settings.path2fieldtrip = fieldtrip_path;
@@ -52,6 +57,8 @@ diary_path = fullfile(diary_dir, 'sub-03_canonical_05_08hz_64hz_generation_diary
 diary(diary_path);
 fprintf('Canonical MEG-SCANS 0.5-8 Hz / 64 Hz generation started.\n');
 fprintf('subject=%s\n', subject);
+fprintf('official_repo=%s\n', official_repo);
+fprintf('official_repo_commit=%s\n', observed_official_commit);
 fprintf('path2bids=%s\n', settings.path2bids);
 fprintf('path2derivatives=%s\n', settings.path2derivatives);
 fprintf('use_maxfilter=%d audio_latency=%g bpfreq=[%g %g] trialdur=%g fs_neuro=%g fs_down=%g zscore=%d\n', ...
@@ -68,6 +75,14 @@ end
 
 fprintf('Canonical MEG-SCANS 0.5-8 Hz / 64 Hz generation finished.\n');
 diary off;
+end
+
+function commit = get_git_commit(repo_path)
+[status, out] = system(sprintf('git -C "%s" rev-parse HEAD', repo_path));
+if status ~= 0
+    error('Failed to read git commit for %s: %s', repo_path, out);
+end
+commit = strtrim(out);
 end
 
 function ensure_link_or_dir(link_path, target_path)

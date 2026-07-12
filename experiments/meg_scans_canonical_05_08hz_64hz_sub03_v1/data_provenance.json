@@ -1,0 +1,22 @@
+{
+  "artifact": "data_provenance.json",
+  "scope": "training-preflight metadata/provenance closure only",
+  "local_paired_mat": {
+    "path": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\sub-03\\speech\\sub-03_preprocessed_audiobooks_decoding.mat",
+    "sha256": "d7c189af6ba44031ce67745f1511162259af0a1ef07ea19eb8618b33367bf91e",
+    "bytes": 2.93587692E+8
+  },
+  "local_envelope_mat": {
+    "path": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\stimuli\\sub-others_preprocessed_audiobook_envelopes_decoding.mat",
+    "sha256": "0aed00fa9a9990d45378627911255d98cd09afc70cdff07372837d296e2b269d",
+    "bytes": 1.367985E+6
+  },
+  "upstream_version_check_path": "E:\\decode\\_meg_scans_canonical_05_08hz_64hz_sub03_v1\\experiments\\meg_scans_canonical_05_08hz_64hz_sub03_v1\\upstream_version_check.json",
+  "channel_inventory_path": "E:\\decode\\_meg_scans_canonical_05_08hz_64hz_sub03_v1\\experiments\\meg_scans_canonical_05_08hz_64hz_sub03_v1\\channel_inventory.csv",
+  "mag102_selection_path": "E:\\decode\\_meg_scans_canonical_05_08hz_64hz_sub03_v1\\experiments\\meg_scans_canonical_05_08hz_64hz_sub03_v1\\mag102_selection.json",
+  "channelwise_psd_summary_path": "E:\\decode\\_meg_scans_canonical_05_08hz_64hz_sub03_v1\\experiments\\meg_scans_canonical_05_08hz_64hz_sub03_v1\\channelwise_psd_summary.csv",
+  "preprocessing_rerun": false,
+  "training_run": false,
+  "data_body_modified": false,
+  "note": "Existing canonical paired/envelope MAT files were only read and hashed; no preprocessing or training was run."
+}

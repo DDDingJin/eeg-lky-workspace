@@ -6,6 +6,7 @@
   "base_commit": "8e8c694ee3cca1121b2031b0d00ddcfc0395d6bf",
   "official_meg_scans_repo": "E:\\decode\\external\\upstream\\MEG-SCANS",
   "official_meg_scans_commit": "32bfc690e28e7591b45d96615c59b2d53b6a7165",
+  "observed_meg_scans_commit_posthoc": "32bfc690e28e7591b45d96615c59b2d53b6a7165",
   "meg_source": "E:\\decode\\data\\raw\\meg_scans_ds006468\\derivatives\\sub-03\\maxfilter\\*_proc-tsss-mc_meg.fif",
   "wav_source": "E:\\decode\\data\\raw\\meg_scans_ds006468\\stimuli\\audiobooks\\*_stim.wav",
   "envelope_source": "raw WAV only; not refiltered from official 0.5-4 Hz envelope",

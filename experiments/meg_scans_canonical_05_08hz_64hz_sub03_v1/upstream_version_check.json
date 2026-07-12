@@ -1,0 +1,8 @@
+{
+  "expected_commit": "32bfc690e28e7591b45d96615c59b2d53b6a7165",
+  "observed_commit": "32bfc690e28e7591b45d96615c59b2d53b6a7165",
+  "repository_path": "E:\\decode\\external\\upstream\\MEG-SCANS",
+  "status": "passed",
+  "checked_at": "2026-07-12T15:42:40+08:00",
+  "scope": "post-hoc verification for already generated canonical data; not generation-time proof"
+}

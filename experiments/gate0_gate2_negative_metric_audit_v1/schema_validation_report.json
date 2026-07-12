@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "checks": {
+    "diagnostic_job_count_is_3": true,
+    "shape_preflight_all_jobs": true,
+    "source_metrics_found": true,
+    "split_ids_recorded": true,
+    "identity_audit_available": true,
+    "no_training_executed": true,
+    "no_prediction_dump_written": true,
+    "no_checkpoint_written": true
+  },
+  "failure_count": 0,
+  "failures": [],
+  "identity_conclusion": "dnn not proven alias_of=fcnn; hashes differ",
+  "device": "cuda"
+}

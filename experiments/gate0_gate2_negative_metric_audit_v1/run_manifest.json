@@ -1,0 +1,48 @@
+{
+  "protocol": "gate0_gate2_negative_metric_audit_v1",
+  "artifact_scope": "negative_metric_diagnostic_preflight",
+  "diagnostic_jobs": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P06",
+      "model": "vlaai",
+      "seed": 0,
+      "source_config": "configs/benchmark/gate0_gate2_subject_specific_local_models_weissbart_full_v1.json",
+      "source_result_dir": "experiments/gate0_gate2_subject_specific_local_models_weissbart_full_v1"
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P11",
+      "model": "happyquokka",
+      "seed": 0,
+      "source_config": "configs/benchmark/gate0_gate2_subject_specific_modelset_etard_full_v1.json",
+      "source_result_dir": "experiments/gate0_gate2_subject_specific_modelset_etard_full_v1"
+    },
+    {
+      "dataset": "etard_tf64",
+      "subject_id": "P11",
+      "model": "elasticnet",
+      "seed": 0,
+      "source_config": "configs/benchmark/gate0_gate2_subject_specific_modelset_etard_full_v1.json",
+      "source_result_dir": "experiments/gate0_gate2_subject_specific_modelset_etard_full_v1"
+    }
+  ],
+  "diagnostic_policy": {
+    "rerun_policy": "manual only via --run-diagnostics; not executed during preflight",
+    "model_policy": "reuse original config, split, adapter, seed, and training budget",
+    "metric_policy": "report current scorer metric and independent Pearson; no test-lag model selection",
+    "lag_sweep_samples": {
+      "min": -128,
+      "max": 128
+    },
+    "forbidden_outputs": [
+      "prediction_dump",
+      "raw_data",
+      "checkpoint",
+      "model_weights"
+    ]
+  },
+  "manual_command": "F:\\miniconda\\envs\\decode-torch\\python.exe scripts\\run_gate0_gate2_negative_metric_audit_v1.py --config configs\\benchmark\\gate0_gate2_negative_metric_audit_v1.json --device auto --run-diagnostics",
+  "preflight_only": true,
+  "training_started": false
+}

@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "checks": {
+    "run_manifest.json": true,
+    "data_integrity_check.json": true,
+    "split_manifest.json": true,
+    "model_run_entries.json": true,
+    "recording_metrics.csv": true,
+    "subject_metrics.csv": true,
+    "sorted_vs_mismatched.csv": true,
+    "training_history.csv": true,
+    "result_summary.md": true,
+    "failure_report.json": true,
+    "model_set": true,
+    "all_actual": true
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "paired_mat": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\sub-03\\speech\\sub-03_preprocessed_audiobooks_decoding.mat",
+  "paired_sha256": "d7c189af6ba44031ce67745f1511162259af0a1ef07ea19eb8618b33367bf91e",
+  "envelope_mat": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\stimuli\\sub-others_preprocessed_audiobook_envelopes_decoding.mat",
+  "envelope_sha256": "0aed00fa9a9990d45378627911255d98cd09afc70cdff07372837d296e2b269d",
+  "fs": 64,
+  "n_trials": 16,
+  "all306_channel_count": 306,
+  "mag102_channel_count": 102,
+  "mag102_channel_order_sha256": "9e1c53ae8d218548df09c606ea51e6eeecd1eb3190aa8010b2c1eca49aea4756",
+  "assertions": [
+    "SHA256 matched",
+    "16 trials",
+    "306 all channels",
+    "102 magnetometers selected by channel hash",
+    "each recording is 7680 samples",
+    "no NaN/Inf"
+  ]
+}

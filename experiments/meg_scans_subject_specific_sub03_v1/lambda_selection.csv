@@ -1,0 +1,7 @@
+model,representation,alpha,val_pearson_r
+recording_safe_ridge_adapter_mag102,mag102,0.001,0.13213486969470978
+recording_safe_ridge_adapter_mag102,mag102,1.0,0.13213494420051575
+recording_safe_ridge_adapter_mag102,mag102,100.0,0.1321469396352768
+recording_safe_ridge_adapter_all306,all306,0.001,0.15096351504325867
+recording_safe_ridge_adapter_all306,all306,1.0,0.15096351504325867
+recording_safe_ridge_adapter_all306,all306,100.0,0.15096640586853027

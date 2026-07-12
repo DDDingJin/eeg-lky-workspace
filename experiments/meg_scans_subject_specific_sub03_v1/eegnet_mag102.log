@@ -1,0 +1,46 @@
+device=cuda gpu=NVIDIA GeForce RTX 5060 Ti
+epoch=1 train_loss=1.016088 val_mean_recording_pearson=0.105559 best_epoch=1
+epoch=2 train_loss=0.980758 val_mean_recording_pearson=0.134638 best_epoch=2
+epoch=3 train_loss=0.971914 val_mean_recording_pearson=0.152786 best_epoch=3
+epoch=4 train_loss=0.964773 val_mean_recording_pearson=0.161718 best_epoch=4
+epoch=5 train_loss=0.961087 val_mean_recording_pearson=0.166197 best_epoch=5
+epoch=6 train_loss=0.954907 val_mean_recording_pearson=0.181066 best_epoch=6
+epoch=7 train_loss=0.951952 val_mean_recording_pearson=0.184370 best_epoch=7
+epoch=8 train_loss=0.948564 val_mean_recording_pearson=0.182706 best_epoch=7
+epoch=9 train_loss=0.944786 val_mean_recording_pearson=0.198788 best_epoch=9
+epoch=10 train_loss=0.941249 val_mean_recording_pearson=0.195477 best_epoch=9
+epoch=11 train_loss=0.939261 val_mean_recording_pearson=0.191176 best_epoch=9
+epoch=12 train_loss=0.937603 val_mean_recording_pearson=0.189438 best_epoch=9
+epoch=13 train_loss=0.934501 val_mean_recording_pearson=0.202648 best_epoch=13
+epoch=14 train_loss=0.933697 val_mean_recording_pearson=0.201437 best_epoch=13
+epoch=15 train_loss=0.931218 val_mean_recording_pearson=0.199062 best_epoch=13
+epoch=16 train_loss=0.928787 val_mean_recording_pearson=0.213347 best_epoch=16
+epoch=17 train_loss=0.928672 val_mean_recording_pearson=0.199937 best_epoch=16
+epoch=18 train_loss=0.928829 val_mean_recording_pearson=0.206069 best_epoch=16
+epoch=19 train_loss=0.924641 val_mean_recording_pearson=0.208213 best_epoch=16
+epoch=20 train_loss=0.922448 val_mean_recording_pearson=0.202771 best_epoch=16
+epoch=21 train_loss=0.922134 val_mean_recording_pearson=0.200648 best_epoch=16
+epoch=22 train_loss=0.923523 val_mean_recording_pearson=0.212847 best_epoch=16
+epoch=23 train_loss=0.920647 val_mean_recording_pearson=0.187672 best_epoch=16
+epoch=24 train_loss=0.919026 val_mean_recording_pearson=0.195684 best_epoch=16
+epoch=25 train_loss=0.918620 val_mean_recording_pearson=0.192803 best_epoch=16
+epoch=26 train_loss=0.917754 val_mean_recording_pearson=0.203576 best_epoch=16
+{
+  "model": "eegnet_mag102",
+  "model_identity": "EEGNetRegressor",
+  "representation": "mag102",
+  "input_shape": "[batch, 102, 50] -> [batch]",
+  "seed": 0,
+  "split_identity": "subject_specific_sub03_recording_level_v1",
+  "scaler_fit_scope": "train recordings only; train/val/test recordings cached after train-scaler transform",
+  "training_budget": "max_epochs=100; patience=10; batch_size=256",
+  "status": "actual",
+  "elapsed_seconds": 183.96457549999468,
+  "metric": 0.2302668917493982,
+  "device": "cuda",
+  "gpu_name": "NVIDIA GeForce RTX 5060 Ti",
+  "best_epoch": 16,
+  "best_val_score": 0.21334747293001444,
+  "epochs_completed": 26,
+  "failure_reason": ""
+}

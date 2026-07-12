@@ -1,0 +1,11 @@
+{
+  "protocol": "meg_scans_subject_specific_sub03_v1",
+  "branch": "fix/ar-20260712-meg-scans-subject-specific-sub03-v1",
+  "status": "completed",
+  "models": [
+    "recording_safe_ridge_adapter_mag102",
+    "recording_safe_ridge_adapter_all306",
+    "eegnet_mag102"
+  ],
+  "scope": "subject-specific native MEG pilot only"
+}

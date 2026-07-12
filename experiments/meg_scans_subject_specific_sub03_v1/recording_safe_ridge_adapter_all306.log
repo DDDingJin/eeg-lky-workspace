@@ -1,0 +1,17 @@
+{
+  "model": "recording_safe_ridge_adapter_all306",
+  "model_identity": "recording_safe_ridge_adapter",
+  "representation": "all306",
+  "input_shape": "[recording, 306, 7680] -> recording-safe lagged samples x channels*50",
+  "seed": 0,
+  "split_identity": "subject_specific_sub03_recording_level_v1",
+  "scaler_fit_scope": "train recordings only",
+  "training_budget": "alphas=[0.001, 1.0, 100.0]; solver=lsqr; tol=0.01; max_iter=80",
+  "status": "actual",
+  "elapsed_seconds": 139.56145600008313,
+  "metric": 0.20274655144554846,
+  "selected_lambda": 100.0,
+  "validation_pearson_r": 0.15096640586853027,
+  "sorted_vs_mismatched_delta": 0.21329069896621675,
+  "failure_reason": ""
+}

@@ -28,11 +28,11 @@ addpath(fullfile(official_repo, 'helper_functions'));
 addpath(fullfile(official_repo, 'speech'));
 addpath(fullfile(official_repo, 'speech', 'decoding'));
 
-run(fullfile(official_repo, 'speech', 'settings_speech.m'));
 observed_official_commit = get_git_commit(official_repo);
 if ~strcmp(observed_official_commit, expected_official_commit)
     error('MEG-SCANS upstream commit mismatch. Expected %s, observed %s.', expected_official_commit, observed_official_commit);
 end
+run(fullfile(official_repo, 'speech', 'settings_speech.m'));
 settings.path2bids = dataset_root;
 settings.path2derivatives = local_derivatives;
 settings.path2fieldtrip = fieldtrip_path;

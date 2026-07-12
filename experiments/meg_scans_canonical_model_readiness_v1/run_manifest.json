@@ -1,0 +1,12 @@
+{
+  "protocol": "meg_scans_canonical_model_readiness_v1",
+  "status": "completed",
+  "models": [
+    "ridge_mag102",
+    "ridge_all306",
+    "cca_mag102",
+    "eegnet_mag102_smoke"
+  ],
+  "output_dir": "E:\\decode\\_meg_scans_canonical_model_readiness_v1\\experiments\\meg_scans_canonical_model_readiness_v1",
+  "scope": "native MEG modeling readiness only"
+}

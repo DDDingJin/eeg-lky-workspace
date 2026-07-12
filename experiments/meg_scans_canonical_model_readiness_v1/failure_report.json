@@ -1,0 +1,20 @@
+{
+  "failures": [],
+  "skipped": [
+    {
+      "model": "cca_mag102",
+      "model_identity": "cca_reconstruction",
+      "representation": "mag102",
+      "input_shape": "[recording, 102, 7680]",
+      "seed": 0,
+      "split_identity": "fixed_run_balanced_recording_level_v1",
+      "scaler_fit_scope": "not run",
+      "training_budget": "not run",
+      "status": "skipped",
+      "elapsed_seconds": 0.0,
+      "metric": null,
+      "sorted_vs_mismatched_delta": null,
+      "failure_reason": "skipped_existing_interface_unavailable: accepted CCA path src/repro/mldecoders/cca.py::fit_cca_reconstruction accepts concatenated x/y and internally constructs lags, which would cross canonical recording boundaries; this round forbids cross-recording lag construction and forbids silently replacing the CCA definition."
+    }
+  ]
+}

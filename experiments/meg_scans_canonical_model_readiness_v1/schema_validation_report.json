@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "checks": {
+    "exists_data_integrity_check.json": true,
+    "exists_split_manifest.json": true,
+    "exists_loader_contract_report.md": true,
+    "exists_run_manifest.json": true,
+    "exists_model_run_entries.json": true,
+    "exists_subject_metrics.csv": true,
+    "exists_recording_metrics.csv": true,
+    "exists_sorted_vs_mismatched.csv": true,
+    "exists_result_summary.md": true,
+    "exists_failure_report.json": true,
+    "exists_incremental_comparison.md": true,
+    "model_entries_present": true,
+    "ridge_actual": true,
+    "eegnet_smoke_only": true,
+    "cca_reasoned": true
+  }
+}

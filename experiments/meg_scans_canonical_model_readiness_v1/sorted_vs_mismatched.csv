@@ -1,0 +1,9 @@
+dataset,model,subject_id,recording_id,global_trial_index,mismatched_global_trial_index,sorted_pearson_r,mismatched_pearson_r,delta
+meg_scans_canonical_05_08hz_64hz_sub03,ridge_mag102,sub-03,sub-03_task-audiobook1_run-01_trial-04,4,8,0.1267761930582315,-0.03788978418292559,0.1646659772411571
+meg_scans_canonical_05_08hz_64hz_sub03,ridge_mag102,sub-03,sub-03_task-audiobook1_run-02_trial-04,8,12,0.15614175823368426,-0.04620197970760607,0.20234373794129032
+meg_scans_canonical_05_08hz_64hz_sub03,ridge_mag102,sub-03,sub-03_task-audiobook2_run-01_trial-04,12,16,0.1257711173025378,-0.02834844984821097,0.15411956715074876
+meg_scans_canonical_05_08hz_64hz_sub03,ridge_mag102,sub-03,sub-03_task-audiobook2_run-02_trial-04,16,4,0.20453914423537298,-0.008523217872062951,0.21306236210743593
+meg_scans_canonical_05_08hz_64hz_sub03,ridge_all306,sub-03,sub-03_task-audiobook1_run-01_trial-04,4,8,0.14602719254220586,-0.005208430225981492,0.15123562276818736
+meg_scans_canonical_05_08hz_64hz_sub03,ridge_all306,sub-03,sub-03_task-audiobook1_run-02_trial-04,8,12,0.1574616523488174,-0.041916799273454146,0.19937845162227155
+meg_scans_canonical_05_08hz_64hz_sub03,ridge_all306,sub-03,sub-03_task-audiobook2_run-01_trial-04,12,16,0.16877225390401124,-0.003561396884905797,0.17233365078891705
+meg_scans_canonical_05_08hz_64hz_sub03,ridge_all306,sub-03,sub-03_task-audiobook2_run-02_trial-04,16,4,0.2068883732951966,0.01633298967681681,0.1905553836183798

@@ -1,0 +1,1 @@
+skipped_existing_interface_unavailable: accepted CCA path src/repro/mldecoders/cca.py::fit_cca_reconstruction accepts concatenated x/y and internally constructs lags, which would cross canonical recording boundaries; this round forbids cross-recording lag construction and forbids silently replacing the CCA definition.

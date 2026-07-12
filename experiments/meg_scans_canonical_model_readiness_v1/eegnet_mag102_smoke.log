@@ -1,0 +1,16 @@
+{
+  "model": "eegnet_mag102_smoke",
+  "model_identity": "EEGNetRegressor",
+  "representation": "mag102",
+  "input_shape": "[batch, 102, 50] -> [batch]",
+  "seed": 0,
+  "split_identity": "fixed_run_balanced_recording_level_v1",
+  "scaler_fit_scope": "raw X scaler and target scaler fit on train recordings only",
+  "training_budget": "1 epoch smoke",
+  "status": "smoke_only",
+  "elapsed_seconds": 27.892305299988948,
+  "metric": 0.11356901800351529,
+  "sorted_vs_mismatched_delta": null,
+  "failure_reason": "",
+  "train_loss_mean": 1.0280613669790484
+}

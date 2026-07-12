@@ -238,6 +238,9 @@ grad = epochs_neuro.grad;
 if ~isfield(grad, 'chantype')
     error('FieldTrip grad.chantype is missing; cannot determine sensor type.');
 end
+if ~isfield(grad, 'label') || ~isequal(grad.label(:), labels)
+    error('FieldTrip grad.label order does not match epochs_neuro.label order.');
+end
 chantype = grad.chantype(:);
 if numel(labels) ~= 306 || numel(chantype) ~= 306
     error('Expected 306 labels and chantype entries.');

@@ -1,0 +1,26 @@
+{
+  "artifact": "protocol_lock.json",
+  "scope": "MEG-SCANS canonical sub-03 audiobook preprocessing only; no training",
+  "subject": "sub-03",
+  "base_branch": "fix/ar-20260711-meg-scans-official-preprocessing-sub03-v1",
+  "base_commit": "8e8c694ee3cca1121b2031b0d00ddcfc0395d6bf",
+  "official_meg_scans_repo": "E:\\decode\\external\\upstream\\MEG-SCANS",
+  "official_meg_scans_commit": "32bfc690e28e7591b45d96615c59b2d53b6a7165",
+  "meg_source": "E:\\decode\\data\\raw\\meg_scans_ds006468\\derivatives\\sub-03\\maxfilter\\*_proc-tsss-mc_meg.fif",
+  "wav_source": "E:\\decode\\data\\raw\\meg_scans_ds006468\\stimuli\\audiobooks\\*_stim.wav",
+  "envelope_source": "raw WAV only; not refiltered from official 0.5-4 Hz envelope",
+  "envelope_method": "AMT auditoryfilterbank flow=50 fhigh=5000 -> abs(.)^0.6 -> mean across bands",
+  "temporal_band_hz": [
+    0.5,
+    8
+  ],
+  "filtertype": "firws",
+  "fs_audio_hz": 44100,
+  "fs_neuro_hz": 1000,
+  "fs_down_hz": 64,
+  "trialdur_seconds": 120,
+  "audio_latency_seconds": 0.003,
+  "normalization": "none during preprocessing; future scaler must fit on training split only",
+  "local_envelope_mat": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\stimuli\\sub-others_preprocessed_audiobook_envelopes_decoding.mat",
+  "local_paired_mat": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\sub-03\\speech\\sub-03_preprocessed_audiobooks_decoding.mat"
+}

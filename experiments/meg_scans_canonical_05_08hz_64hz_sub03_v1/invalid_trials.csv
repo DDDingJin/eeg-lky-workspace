@@ -1,0 +1,5 @@
+subject_id,run_label,invalid_trials,reason
+sub-03,task-audiobook1_run-01,1,official short-trial cleanup: final neuro trial shorter than 99% of 120 s target
+sub-03,task-audiobook1_run-02,1,official short-trial cleanup: final neuro trial shorter than 99% of 120 s target
+sub-03,task-audiobook2_run-01,1,official short-trial cleanup: final neuro trial shorter than 99% of 120 s target
+sub-03,task-audiobook2_run-02,1,official short-trial cleanup: final neuro trial shorter than 99% of 120 s target

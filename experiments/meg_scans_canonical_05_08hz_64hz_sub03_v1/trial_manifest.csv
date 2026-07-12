@@ -1,0 +1,17 @@
+subject_id,run_label,trial_index_in_run,global_trial_index,meg_channels,meg_samples,envelope_samples,fs_hz,validity
+sub-03,task-audiobook1_run-01,1,1,306,7680,7680,64,valid
+sub-03,task-audiobook1_run-01,2,2,306,7680,7680,64,valid
+sub-03,task-audiobook1_run-01,3,3,306,7680,7680,64,valid
+sub-03,task-audiobook1_run-01,4,4,306,7680,7680,64,valid
+sub-03,task-audiobook1_run-02,1,5,306,7680,7680,64,valid
+sub-03,task-audiobook1_run-02,2,6,306,7680,7680,64,valid
+sub-03,task-audiobook1_run-02,3,7,306,7680,7680,64,valid
+sub-03,task-audiobook1_run-02,4,8,306,7680,7680,64,valid
+sub-03,task-audiobook2_run-01,1,9,306,7680,7680,64,valid
+sub-03,task-audiobook2_run-01,2,10,306,7680,7680,64,valid
+sub-03,task-audiobook2_run-01,3,11,306,7680,7680,64,valid
+sub-03,task-audiobook2_run-01,4,12,306,7680,7680,64,valid
+sub-03,task-audiobook2_run-02,1,13,306,7680,7680,64,valid
+sub-03,task-audiobook2_run-02,2,14,306,7680,7680,64,valid
+sub-03,task-audiobook2_run-02,3,15,306,7680,7680,64,valid
+sub-03,task-audiobook2_run-02,4,16,306,7680,7680,64,valid

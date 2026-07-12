@@ -1,0 +1,33 @@
+{
+  "protocol": "meg_scans_canonical_05_08hz_64hz_sub03_v1",
+  "scope": "canonical preprocessing only; no model training",
+  "subject": "sub-03",
+  "dataset_root": "E:/decode/data/raw/meg_scans_ds006468",
+  "local_derivatives_root": "E:/decode/data/derived/meg_scans_canonical_05_08hz_64hz_v1",
+  "official_meg_scans_repo": "E:/decode/external/upstream/MEG-SCANS",
+  "official_meg_scans_commit": "32bfc690e28e7591b45d96615c59b2d53b6a7165",
+  "meg_source": "derivatives/sub-03/maxfilter/*_proc-tsss-mc_meg.fif",
+  "envelope_source": "raw audiobook WAV files, not existing 0.5-4 Hz envelopes",
+  "auditory_envelope": {
+    "filterbank": "AMT auditoryfilterbank",
+    "flow_hz": 50,
+    "fhigh_hz": 5000,
+    "compression": "abs(.)^0.6",
+    "aggregation": "mean across filterbank channels"
+  },
+  "temporal_band_hz": [0.5, 8],
+  "filtertype": "firws",
+  "fs_audio_hz": 44100,
+  "fs_neuro_hz": 1000,
+  "fs_down_hz": 64,
+  "trialdur_seconds": 120,
+  "audio_latency_seconds": 0.003,
+  "expected_paired_trials": 16,
+  "expected_samples_per_trial": 7680,
+  "expected_meg_channels": 306,
+  "normalization": "none during preprocessing; future runner must fit scaler on training split only",
+  "outputs": {
+    "local_envelope_mat": "E:/decode/data/derived/meg_scans_canonical_05_08hz_64hz_v1/stimuli/sub-others_preprocessed_audiobook_envelopes_decoding.mat",
+    "local_paired_mat": "E:/decode/data/derived/meg_scans_canonical_05_08hz_64hz_v1/sub-03/speech/sub-03_preprocessed_audiobooks_decoding.mat"
+  }
+}

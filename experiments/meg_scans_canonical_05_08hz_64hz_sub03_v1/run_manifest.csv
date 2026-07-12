@@ -1,0 +1,5 @@
+subject_id,run_label,meg_source_path,meg_source_exists,wav_source_path,wav_source_exists,neuro_trials_defined,audio_trials_generated,paired_trials_kept,invalid_trials
+sub-03,task-audiobook1_run-01,E:\decode\data\raw\meg_scans_ds006468\derivatives\sub-03\maxfilter\sub-03_task-audiobook1_run-01_proc-tsss-mc_meg.fif,1,E:\decode\data\raw\meg_scans_ds006468\stimuli\audiobooks\task-audiobook1_run-01_stim.wav,1,5,5,4,1
+sub-03,task-audiobook1_run-02,E:\decode\data\raw\meg_scans_ds006468\derivatives\sub-03\maxfilter\sub-03_task-audiobook1_run-02_proc-tsss-mc_meg.fif,1,E:\decode\data\raw\meg_scans_ds006468\stimuli\audiobooks\task-audiobook1_run-02_stim.wav,1,5,5,4,1
+sub-03,task-audiobook2_run-01,E:\decode\data\raw\meg_scans_ds006468\derivatives\sub-03\maxfilter\sub-03_task-audiobook2_run-01_proc-tsss-mc_meg.fif,1,E:\decode\data\raw\meg_scans_ds006468\stimuli\audiobooks\task-audiobook2_run-01_stim.wav,1,5,5,4,1
+sub-03,task-audiobook2_run-02,E:\decode\data\raw\meg_scans_ds006468\derivatives\sub-03\maxfilter\sub-03_task-audiobook2_run-02_proc-tsss-mc_meg.fif,1,E:\decode\data\raw\meg_scans_ds006468\stimuli\audiobooks\task-audiobook2_run-02_stim.wav,1,5,5,4,1

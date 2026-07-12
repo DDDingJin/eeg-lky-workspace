@@ -1,0 +1,27 @@
+{
+  "artifact": "run_manifest.json",
+  "subject": "sub-03",
+  "local_derivatives_root": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1",
+  "local_envelope_mat": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\stimuli\\sub-others_preprocessed_audiobook_envelopes_decoding.mat",
+  "local_paired_mat": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\sub-03\\speech\\sub-03_preprocessed_audiobooks_decoding.mat",
+  "mapping_labels": [
+    "task-audiobook1_run-01",
+    "task-audiobook1_run-02",
+    "task-audiobook2_run-01",
+    "task-audiobook2_run-02"
+  ],
+  "valid_paired_trials": 16,
+  "expected_samples_per_trial": 7680,
+  "expected_meg_channels": 306,
+  "neural_band_hz": [
+    0.5,
+    8
+  ],
+  "envelope_band_hz": [
+    0.5,
+    8
+  ],
+  "fs_hz": 64,
+  "no_zscore": true,
+  "official_anchor_0p5_4_untouched": true
+}

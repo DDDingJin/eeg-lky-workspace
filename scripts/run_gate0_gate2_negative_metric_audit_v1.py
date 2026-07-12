@@ -67,10 +67,13 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True)
     parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
+    parser.add_argument("--startup-only", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--shape-preflight", action="store_true")
     parser.add_argument("--identity-audit-only", action="store_true")
     parser.add_argument("--run-diagnostics", action="store_true")
+    parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--max-jobs", type=int, default=None)
     return parser.parse_args()
 
 
@@ -92,6 +95,10 @@ def write_csv(path: Path, rows: list[dict[str, Any]], fields: list[str] | None =
         writer.writeheader()
         for row in rows:
             writer.writerow(row)
+
+
+def print_event(label: str, message: str) -> None:
+    print(f"[{label}] {message}", flush=True)
 
 
 def repo_relative(path: Path) -> str:
@@ -208,12 +215,28 @@ def source_support_config(source_config: dict[str, Any], model: str) -> dict[str
     cfg = dict(source_config)
     if model in {"happyquokka", "vlaai", "linear", "lasso", "elasticnet"}:
         local_cfg = load_json(ROOT / "configs" / "benchmark" / "gate0_gate2_subject_specific_local_models_weissbart_full_v1.json")
-        for key in ("fit_budget", "linear", "lasso", "elasticnet", "vlaai", "happyquokka"):
-            if key in local_cfg and (key not in cfg or model == key and key == "happyquokka" and "win_len_seconds" not in cfg.get(key, {})):
-                cfg[key] = local_cfg[key]
-        if model == "happyquokka" and "win_len_seconds" not in cfg.get("happyquokka", {}):
-            cfg["happyquokka"] = local_cfg["happyquokka"]
+        cfg["fit_budget"] = local_cfg["fit_budget"]
+        cfg[model] = local_cfg[model]
     return cfg
+
+
+def validate_runtime_config(config: dict[str, Any], model: str) -> list[str]:
+    missing: list[str] = []
+    if model == "elasticnet":
+        for key in ("start_lag", "end_lag", "alphas", "l1_ratios", "max_iter"):
+            if key not in config.get("elasticnet", {}):
+                missing.append(f"elasticnet.{key}")
+        if "max_fit_samples_per_split" not in config.get("fit_budget", {}):
+            missing.append("fit_budget.max_fit_samples_per_split")
+    if model == "happyquokka":
+        for key in ("win_len_seconds", "sample_rate", "batch_size", "max_epochs", "early_stopping_patience", "learning_rate", "dropout", "lamda", "g_con"):
+            if key not in config.get("happyquokka", {}):
+                missing.append(f"happyquokka.{key}")
+    if model == "vlaai":
+        for key in ("window_size", "batch_size", "max_epochs", "early_stopping_patience", "learning_rate", "weight_decay"):
+            if key not in config.get("vlaai", {}):
+                missing.append(f"vlaai.{key}")
+    return missing
 
 
 def group_captured_windows(windows: list[WindowPrediction]) -> dict[str, tuple[np.ndarray, np.ndarray, np.ndarray]]:
@@ -250,6 +273,9 @@ def first_test_input_hash(*, dataset_dir: Path, subject_id: str, model: str, sou
 def run_one_diagnostic(job: dict[str, Any], device: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     set_all_rng(int(job["seed"]))
     source_config = source_support_config(load_json(ROOT / job["source_config"]), str(job["model"]))
+    missing = validate_runtime_config(source_config, str(job["model"]))
+    if missing:
+        raise ValueError(f"runtime config missing required fields before training: {missing}")
     dataset_cfg = source_config["dataset"]
     dataset_dir = resolve_dataset_path(dataset_cfg["dataset_locator"])
     dataset_id = str(job["dataset"])
@@ -307,6 +333,8 @@ def run_one_diagnostic(job: dict[str, Any], device: str) -> tuple[dict[str, Any]
                 "zero_lag_r": lag["zero_lag_r"],
                 "best_lag_samples": lag["best_lag_samples"],
                 "best_lag_r": lag["best_lag_r"],
+                "lag_sign_convention": "positive lag means prediction[t] is compared with target[t+lag]",
+                "lag_sweep_policy": "diagnostic only; not used for checkpoint, hyperparameter, or final score selection",
                 "prediction_hash": hash_array(pred_valid),
                 "target_hash": hash_array(target_valid),
             }
@@ -370,13 +398,27 @@ def input_contract(source_config: dict[str, Any], model: str) -> str:
 
 
 def effective_model_config(source_config: dict[str, Any], model: str) -> dict[str, Any]:
-    cfg = dict(source_config.get(model, {}))
-    if model in {"happyquokka", "vlaai", "linear", "lasso", "elasticnet"} and (
-        model not in cfg or model == "happyquokka" and "win_len_seconds" not in cfg
-    ):
-        local_cfg = load_json(ROOT / "configs" / "benchmark" / "gate0_gate2_subject_specific_local_models_weissbart_full_v1.json")
-        cfg.update(local_cfg[model])
-    return cfg
+    hydrated = source_support_config(source_config, model)
+    return dict(hydrated.get(model, {}))
+
+
+def job_key(job: dict[str, Any]) -> str:
+    return f"{job['dataset']}:{job['subject_id']}:{job['model']}:seed{job['seed']}"
+
+
+def load_completed_jobs(output_dir: Path) -> list[dict[str, Any]]:
+    path = output_dir / "completed_jobs.json"
+    if not path.exists():
+        return []
+    with path.open("r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def load_dict_rows(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
 
 
 def build_job_plan(config: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[str]]:
@@ -385,7 +427,8 @@ def build_job_plan(config: dict[str, Any]) -> tuple[list[dict[str, Any]], list[d
     failures: list[str] = []
     for job in config["diagnostic_jobs"]:
         source_config_path = ROOT / job["source_config"]
-        source_config = load_json(source_config_path)
+        raw_source_config = load_json(source_config_path)
+        source_config = source_support_config(raw_source_config, str(job["model"]))
         dataset_cfg = source_config["dataset"]
         dataset_dir = resolve_dataset_path(dataset_cfg["dataset_locator"])
         source_dir = ROOT / job["source_result_dir"]
@@ -394,6 +437,9 @@ def build_job_plan(config: dict[str, Any]) -> tuple[list[dict[str, Any]], list[d
         test_ids: list[str] = []
         adapter_status = "ok"
         try:
+            missing = validate_runtime_config(source_config, str(job["model"]))
+            if missing:
+                raise ValueError(f"missing runtime config fields: {missing}")
             available = set(list_reference_subjects(dataset_dir, split="test"))
             if job["subject_id"] not in available:
                 failures.append(f"{job['dataset']}:{job['subject_id']} missing from test subjects")
@@ -596,31 +642,77 @@ def write_preflight_artifacts(config: dict[str, Any], output_dir: Path, device: 
     return schema
 
 
-def run_diagnostics(config: dict[str, Any], output_dir: Path, device: str) -> int:
+def run_diagnostics(config: dict[str, Any], output_dir: Path, device: str, *, resume: bool, max_jobs: int | None) -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
-    summaries = []
-    recording_rows = []
-    failures = []
-    for job in config["diagnostic_jobs"]:
+    summaries = load_dict_rows(output_dir / "diagnostic_summary.csv") if resume else []
+    recording_rows = load_dict_rows(output_dir / "recording_lag_sweep.csv") if resume else []
+    completed_jobs = load_completed_jobs(output_dir) if resume else []
+    completed_keys = {str(item["job_key"]) for item in completed_jobs}
+    failures = json.loads((output_dir / "failure_report.json").read_text(encoding="utf-8")).get("failures", []) if resume and (output_dir / "failure_report.json").exists() else []
+    planned = list(config["diagnostic_jobs"])
+    pending = [job for job in planned if job_key(job) not in completed_keys]
+    if max_jobs is not None:
+        pending = pending[: int(max_jobs)]
+    if not pending:
+        print_event("NO PENDING JOBS", f"planned={len(planned)} completed={len(completed_keys)}")
+    for job in pending:
+        key = job_key(job)
+        print_event("JOB START", key)
         try:
             summary, rows = run_one_diagnostic(job, device)
-            summaries.append(summary)
-            recording_rows.extend(rows)
+            summary["job_key"] = key
+            for row in rows:
+                row["job_key"] = key
+            candidate_summaries = [row for row in summaries if row.get("job_key") != key] + [summary]
+            candidate_recording_rows = [row for row in recording_rows if row.get("job_key") != key] + rows
+            write_csv(output_dir / "diagnostic_summary.csv", candidate_summaries)
+            write_csv(output_dir / "recording_lag_sweep.csv", candidate_recording_rows)
+            write_json(output_dir / "diagnostic_summary.json", candidate_summaries)
+            completed_entry = {**job, "job_key": key, "status": "success"}
+            completed_jobs = [item for item in completed_jobs if item.get("job_key") != key] + [completed_entry]
+            write_json(output_dir / "completed_jobs.json", completed_jobs)
+            summaries = candidate_summaries
+            recording_rows = candidate_recording_rows
+            completed_keys.add(key)
+            print_event("JOB DONE", key)
         except Exception as exc:
-            failures.append({**job, "failure_reason": repr(exc)})
-    write_csv(output_dir / "diagnostic_summary.csv", summaries)
-    write_csv(output_dir / "recording_lag_sweep.csv", recording_rows)
-    write_json(output_dir / "diagnostic_summary.json", summaries)
+            failure = {**job, "job_key": key, "status": "failed", "failure_reason": repr(exc)}
+            failures = [item for item in failures if item.get("job_key") != key] + [failure]
+            print_event("JOB FAILED", f"{key} error={repr(exc)}")
+        write_json(output_dir / "failure_report.json", {"failures": failures})
+        write_json(
+            output_dir / "run_state.json",
+            {
+                "status": "completed" if len(completed_keys) == len(planned) and not failures else "partial",
+                "planned_job_count": len(planned),
+                "completed_job_count": len(completed_keys),
+                "pending_job_count": len(planned) - len(completed_keys),
+                "failure_count": len(failures),
+                "last_completed_job_key": completed_jobs[-1]["job_key"] if completed_jobs else "",
+            },
+        )
     write_json(output_dir / "failure_report.json", {"failures": failures})
+    write_json(
+        output_dir / "run_state.json",
+        {
+            "status": "completed" if len(completed_keys) == len(planned) and not failures else "partial",
+            "planned_job_count": len(planned),
+            "completed_job_count": len(completed_keys),
+            "pending_job_count": len(planned) - len(completed_keys),
+            "failure_count": len(failures),
+            "last_completed_job_key": completed_jobs[-1]["job_key"] if completed_jobs else "",
+        },
+    )
     write_json(
         output_dir / "schema_validation_report.json",
         {
-            "passed": not failures and len(summaries) == len(config["diagnostic_jobs"]),
-            "diagnostic_job_count": len(config["diagnostic_jobs"]),
-            "completed_diagnostic_count": len(summaries),
+            "passed": not failures and len(completed_keys) == len(planned),
+            "diagnostic_job_count": len(planned),
+            "completed_diagnostic_count": len(completed_keys),
             "failure_count": len(failures),
             "prediction_dump_written": False,
             "checkpoint_written": False,
+            "lag_sign_convention": "positive lag means prediction[t] is compared with target[t+lag]",
             "lag_sweep_policy": "diagnostic only; not used for checkpoint, hyperparameter, or final score selection",
         },
     )
@@ -639,6 +731,8 @@ def run_diagnostics(config: dict[str, Any], output_dir: Path, device: str) -> in
             f"independent=`{item['independent_pearson_metric']}`"
         )
     (output_dir / "diagnostic_report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    if not pending and not failures:
+        return 0
     return 0 if not failures else 1
 
 
@@ -648,10 +742,26 @@ def main() -> int:
     device = "cuda" if args.device == "auto" and torch.cuda.is_available() else ("cpu" if args.device == "auto" else args.device)
     output_dir = ROOT / config["output_dir"]
     output_dir.mkdir(parents=True, exist_ok=True)
+    if args.startup_only:
+        print_event("STARTUP", f"config={args.config}")
+        print_event("STARTUP", f"output_dir={repo_relative(output_dir)} device={device}")
+        print_event("STARTUP", f"planned_jobs={len(config['diagnostic_jobs'])}")
+        return 0
     if args.run_diagnostics:
-        return run_diagnostics(config, output_dir, device)
+        return run_diagnostics(config, output_dir, device, resume=bool(args.resume), max_jobs=args.max_jobs)
     include_identity = args.identity_audit_only or args.shape_preflight or args.dry_run
     schema = write_preflight_artifacts(config, output_dir, device, include_identity=include_identity)
+    if args.dry_run:
+        completed = load_completed_jobs(output_dir) if args.resume else []
+        completed_keys = {str(item["job_key"]) for item in completed}
+        pending = [job for job in config["diagnostic_jobs"] if job_key(job) not in completed_keys]
+        if args.max_jobs is not None:
+            pending = pending[: int(args.max_jobs)]
+        print_event("DRY RUN", f"planned={len(config['diagnostic_jobs'])} completed={len(completed_keys)} pending_execution={len(pending)}")
+        for job in pending:
+            print_event("DRY RUN", f"execution={job_key(job)}")
+        if not pending:
+            print_event("NO PENDING JOBS", f"planned={len(config['diagnostic_jobs'])} completed={len(completed_keys)}")
     print(f"[PREFLIGHT] output_dir={repo_relative(output_dir)} passed={schema['passed']} device={device}")
     print(f"[PREFLIGHT] identity_conclusion={schema['identity_conclusion']}")
     print("[PREFLIGHT] no_training_executed=true")

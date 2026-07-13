@@ -6,6 +6,7 @@ It is the staging branch for a future public release, not yet a public-release c
 
 - [`docs/OPEN_SOURCE_BRANCH_STATUS.md`](docs/OPEN_SOURCE_BRANCH_STATUS.md) for the branch scope, what was integrated, and the remaining release work.
 - [`docs/meg_scans_single_subject_training_walkthrough_zh.md`](docs/meg_scans_single_subject_training_walkthrough_zh.md) for the first code-reading path: the successfully completed MEG-SCANS single-subject training run.
+- [`docs/eeg_subject_specific_to_cross_subject_walkthrough_zh.md`](docs/eeg_subject_specific_to_cross_subject_walkthrough_zh.md) for the completed EEG subject-specific benchmark and its current transition to fixed subject-holdout training.
 
 The remainder of this README retains the earlier audit-package description and reading references.  It is useful context, but it does not replace the two consolidation documents above.
 

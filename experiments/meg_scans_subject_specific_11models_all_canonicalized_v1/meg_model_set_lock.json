@@ -17,7 +17,7 @@
   "excluded_models": [
     "dnn"
   ],
-  "source_config_path": "E:\\decode\\_fix_fixed_split_pooled20_modelset_v1\\configs\\benchmark\\gate0_gate2_subject_specific_modelset_etard_full_v1.json",
+  "source_config_path": "configs/benchmark/meg_scans_subject_specific_11models/model_lock.json",
   "source_config_commit": "6d86624",
   "source_config_models": [
     "linear",
@@ -33,7 +33,7 @@
     "vlaai",
     "happyquokka"
   ],
-  "audit_manifest_path": "E:\\decode\\_fix_fixed_split_pooled20_modelset_v1\\experiments\\gate0_gate2_negative_metric_audit_v1\\run_manifest.json",
+  "audit_manifest_path": "configs/benchmark/meg_scans_subject_specific_11models/model_lock.json",
   "audit_identity_conclusion": "functional_alias_of=fcnn",
   "audit_roster_decision": {
     "dnn_main_table_independent_model": false,

@@ -1,0 +1,10 @@
+{
+  "status": "locked",
+  "models": ["linear", "ridge", "lasso", "elasticnet", "cca", "fcnn", "cnn", "eegnet", "adt", "vlaai", "happyquokka"],
+  "excluded_models": ["dnn"],
+  "source_config_commit": "6d86624",
+  "source_config_identity": "gate0_gate2_subject_specific_modelset_etard_full_v1",
+  "audit_identity_conclusion": "dnn is a functional alias of fcnn",
+  "audit_roster_decision": "retain 11 distinct methods and exclude dnn",
+  "lock_scope": "model roster and identity only; training profiles are committed in the benchmark config"
+}

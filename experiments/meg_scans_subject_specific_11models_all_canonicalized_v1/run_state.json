@@ -26,5 +26,6 @@
     "sub-03:vlaai:seed0"
   ],
   "pending_jobs": [],
-  "ready_for_full_manual_run": false
+  "run_status": "completed",
+  "finalization": "metadata_only_no_rerun"
 }

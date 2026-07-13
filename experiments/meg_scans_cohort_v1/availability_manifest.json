@@ -1,0 +1,412 @@
+{
+  "protocol": "meg_scans_cohort_availability_v1",
+  "dataset_root": "local configuration only; raw paths are not committed",
+  "canonical_protocol": {
+    "meg_band_hz": [
+      0.5,
+      8
+    ],
+    "envelope_band_hz": [
+      0.5,
+      8
+    ],
+    "sampling_rate_hz": 64,
+    "trial_duration_seconds": 120,
+    "event_logic": "official audiobook event/latency logic",
+    "pairing_and_cleanup": "official MEG-SCANS wrapper"
+  },
+  "subjects": [
+    {
+      "subject_id": "sub-01",
+      "required_availability": {
+        "raw": false,
+        "maxfiltered": false,
+        "events": false,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "missing",
+      "missing_reason": "raw; maxfiltered; events",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": false,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-02",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-03",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "passed",
+      "canonical_paired_path_local_only": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\sub-03\\speech\\sub-03_preprocessed_audiobooks_decoding.mat"
+    },
+    {
+      "subject_id": "sub-04",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-05",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-06",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-07",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-08",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-09",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-10",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-11",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-12",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-13",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-14",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-15",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-16",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-17",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-18",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-19",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-20",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-21",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-22",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-23",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    },
+    {
+      "subject_id": "sub-24",
+      "required_availability": {
+        "raw": true,
+        "maxfiltered": true,
+        "events": true,
+        "envelope": true,
+        "mri_or_coreg": true
+      },
+      "status": "ready",
+      "missing_reason": "",
+      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "canonicalization_status": "not_run",
+      "canonical_paired_path_local_only": ""
+    }
+  ],
+  "ready_subjects": [
+    "sub-02",
+    "sub-03",
+    "sub-04",
+    "sub-05",
+    "sub-06",
+    "sub-07",
+    "sub-08",
+    "sub-09",
+    "sub-10",
+    "sub-11",
+    "sub-12",
+    "sub-13",
+    "sub-14",
+    "sub-15",
+    "sub-16",
+    "sub-17",
+    "sub-18",
+    "sub-19",
+    "sub-20",
+    "sub-21",
+    "sub-22",
+    "sub-23",
+    "sub-24"
+  ],
+  "missing_subjects": [
+    "sub-01"
+  ],
+  "invalid_subjects": [],
+  "canonicalized_subjects": [
+    "sub-03"
+  ]
+}

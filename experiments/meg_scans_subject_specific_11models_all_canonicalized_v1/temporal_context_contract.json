@@ -1,0 +1,117 @@
+{
+  "status": "passed",
+  "benchmark_definition": "offline, architecture-faithful reconstruction",
+  "causal_or_realtime_claim": false,
+  "rows": [
+    {
+      "model": "adt",
+      "implementation_identity": "accepted_adt_mag102_adapter",
+      "input_representation": "mag102 window",
+      "window_size": 320,
+      "hop": 64,
+      "target_mode": "sequence",
+      "evaluation_valid_samples_per_120s_recording": 7680,
+      "temporal_context_label": "sequence-window reconstruction"
+    },
+    {
+      "model": "cca",
+      "implementation_identity": "cca",
+      "input_representation": "mag102 lagged samples",
+      "window_size": 0,
+      "hop": 1,
+      "target_mode": "sequence",
+      "evaluation_valid_samples_per_120s_recording": 7631,
+      "temporal_context_label": "lagged linear reconstruction"
+    },
+    {
+      "model": "cnn",
+      "implementation_identity": "accepted_cnn_mag102_adapter",
+      "input_representation": "mag102 window",
+      "window_size": 50,
+      "hop": 1,
+      "target_mode": "endpoint",
+      "evaluation_valid_samples_per_120s_recording": 7631,
+      "temporal_context_label": "endpoint-window reconstruction"
+    },
+    {
+      "model": "eegnet",
+      "implementation_identity": "accepted_eegnet_mag102_adapter",
+      "input_representation": "mag102 window",
+      "window_size": 50,
+      "hop": 1,
+      "target_mode": "endpoint",
+      "evaluation_valid_samples_per_120s_recording": 7631,
+      "temporal_context_label": "endpoint-window reconstruction"
+    },
+    {
+      "model": "elasticnet",
+      "implementation_identity": "elasticnet",
+      "input_representation": "mag102 lagged samples",
+      "window_size": 0,
+      "hop": 1,
+      "target_mode": "sequence",
+      "evaluation_valid_samples_per_120s_recording": 7631,
+      "temporal_context_label": "lagged linear reconstruction"
+    },
+    {
+      "model": "fcnn",
+      "implementation_identity": "accepted_fcnn_mag102_adapter",
+      "input_representation": "mag102 window",
+      "window_size": 50,
+      "hop": 1,
+      "target_mode": "endpoint",
+      "evaluation_valid_samples_per_120s_recording": 7631,
+      "temporal_context_label": "endpoint-window reconstruction"
+    },
+    {
+      "model": "happyquokka",
+      "implementation_identity": "happyquokka_meg102_chunk_adapter",
+      "input_representation": "mag102 window",
+      "window_size": 640,
+      "hop": 640,
+      "target_mode": "sequence",
+      "evaluation_valid_samples_per_120s_recording": 7680,
+      "temporal_context_label": "sequence-window reconstruction"
+    },
+    {
+      "model": "lasso",
+      "implementation_identity": "lasso",
+      "input_representation": "mag102 lagged samples",
+      "window_size": 0,
+      "hop": 1,
+      "target_mode": "sequence",
+      "evaluation_valid_samples_per_120s_recording": 7631,
+      "temporal_context_label": "lagged linear reconstruction"
+    },
+    {
+      "model": "linear",
+      "implementation_identity": "linear",
+      "input_representation": "mag102 lagged samples",
+      "window_size": 0,
+      "hop": 1,
+      "target_mode": "sequence",
+      "evaluation_valid_samples_per_120s_recording": 7631,
+      "temporal_context_label": "lagged linear reconstruction"
+    },
+    {
+      "model": "ridge",
+      "implementation_identity": "ridge",
+      "input_representation": "mag102 lagged samples",
+      "window_size": 0,
+      "hop": 1,
+      "target_mode": "sequence",
+      "evaluation_valid_samples_per_120s_recording": 7631,
+      "temporal_context_label": "lagged linear reconstruction"
+    },
+    {
+      "model": "vlaai",
+      "implementation_identity": "vlaai_meg102_adapter",
+      "input_representation": "mag102 window",
+      "window_size": 50,
+      "hop": 1,
+      "target_mode": "endpoint",
+      "evaluation_valid_samples_per_120s_recording": 7631,
+      "temporal_context_label": "endpoint-window reconstruction"
+    }
+  ]
+}

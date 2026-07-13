@@ -289,8 +289,11 @@ def split_trials(data: dict[str, Any], subject_cfg: dict[str, Any], output_dir: 
 def write_model_lock(config: dict[str, Any], output_dir: Path) -> None:
     if config["models"] != MODEL_SET or len(config["models"]) != 11:
         raise RuntimeError("model set is not exactly the locked 11-model roster")
-    source_cfg = read_json(config["model_lock_source"]["config_path"])
-    source_audit = read_json(config["model_lock_source"]["audit_manifest_path"])
+    source = config["model_lock_source"]
+    lock_path = Path(source.get("lock_path", ""))
+    if not lock_path.is_absolute():
+        lock_path = ROOT / lock_path
+    source_cfg = read_json(lock_path)
     write_json(
         output_dir / "meg_model_set_lock.json",
         {
@@ -298,12 +301,12 @@ def write_model_lock(config: dict[str, Any], output_dir: Path) -> None:
             "models": config["models"],
             "model_count": len(config["models"]),
             "excluded_models": config.get("excluded_models", EXCLUDED_MODELS),
-            "source_config_path": config["model_lock_source"]["config_path"],
-            "source_config_commit": config["model_lock_source"]["source_commit"],
+            "source_config_path": source.get("lock_path"),
+            "source_config_commit": source["source_commit"],
             "source_config_models": source_cfg["models"],
-            "audit_manifest_path": config["model_lock_source"]["audit_manifest_path"],
-            "audit_identity_conclusion": source_audit.get("identity_conclusion"),
-            "audit_roster_decision": source_audit.get("roster_decision"),
+            "audit_manifest_path": source.get("lock_path"),
+            "audit_identity_conclusion": source_cfg["audit_identity_conclusion"],
+            "audit_roster_decision": source_cfg["audit_roster_decision"],
         },
     )
 

@@ -1,0 +1,8 @@
+{
+  "status": "preflight_only",
+  "formal_repeats_completed": 0,
+  "single_batch_smoke_completed": true,
+  "checkpoint_written": false,
+  "prediction_dump_written": false,
+  "raw_data_written": false
+}

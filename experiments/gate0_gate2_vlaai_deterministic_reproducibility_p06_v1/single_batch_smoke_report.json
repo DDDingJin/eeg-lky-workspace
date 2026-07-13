@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "device": "cuda",
+  "initial_state_hash": "a254b3d1e89088188f5ab3ecd9680f54913f590087b0bcaf7c7873712895930c",
+  "first_train_batch_hash": "ba71d466c563bbe1d1dc904a6cf156c9bf0a6d89b819d3670b489c04f22c6533",
+  "after_first_optimizer_step_hash": "d7d1aefb3314ec6019bdaf6836d364b605b9848a4454a5bb591969eca8035e51",
+  "deterministic_algorithms_enabled": true,
+  "checkpoint_written": false,
+  "prediction_dump_written": false,
+  "raw_data_written": false
+}

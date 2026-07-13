@@ -1,0 +1,10 @@
+{
+  "mock_passed": true,
+  "mock_checkpoint_path": "local_checkpoints/gate0_gate2_decaf_context_assisted_p00_v1/weissbart_tf64__P00__decaf_twobranch__seed0__context_assisted_envelope_forecasting.mock.pt",
+  "mock_checkpoint_deleted": true,
+  "real_checkpoint_path": "local_checkpoints/gate0_gate2_decaf_context_assisted_p00_v1/weissbart_tf64__P00__decaf_twobranch__seed0__context_assisted_envelope_forecasting.pt",
+  "real_checkpoint_dir_gitignored": true,
+  "source": "local_checkpoints only; checkpoint files are not committed",
+  "best_epoch": null,
+  "best_val_score": null
+}

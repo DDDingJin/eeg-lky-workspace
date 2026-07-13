@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "mode": "preflight",
+  "checks": {
+    "genuine_twobranch_model": true,
+    "task_context_assisted": true,
+    "weighted_fusion": true,
+    "fixed_window_contract": true,
+    "mse_loss": true,
+    "max_epochs_100": true,
+    "patience_10": true,
+    "device_resolved": true,
+    "train_val_intersection_zero": true,
+    "train_test_intersection_zero": true,
+    "val_test_intersection_zero": true,
+    "train_only_scaler": true,
+    "train_val_test_windows_present": true,
+    "no_leakage_window_rule": true,
+    "coverage_rows_present": true,
+    "checkpoint_path_under_local_checkpoints": true,
+    "checkpoint_mock_passed": true,
+    "formal_checkpoint_manifest_has_best_epoch": true,
+    "formal_checkpoint_manifest_has_best_val_score": true,
+    "preflight_does_not_write_metrics": true
+  },
+  "device": "cuda",
+  "job_key": "weissbart_tf64:P00:decaf_twobranch:seed0:context_assisted_envelope_forecasting",
+  "split_disjointness": {
+    "recording_id_counts": {
+      "train": 15,
+      "val": 15,
+      "test": 15
+    },
+    "train_val_intersection_count": 0,
+    "train_test_intersection_count": 0,
+    "val_test_intersection_count": 0,
+    "train_val_intersection_ids": [],
+    "train_test_intersection_ids": [],
+    "val_test_intersection_ids": [],
+    "all_pairwise_intersections_empty": true
+  },
+  "window_counts": {
+    "train": 528,
+    "val": 52,
+    "test": 52
+  },
+  "checkpoint_path": "local_checkpoints/gate0_gate2_decaf_context_assisted_p00_v1/weissbart_tf64__P00__decaf_twobranch__seed0__context_assisted_envelope_forecasting.pt",
+  "expected_artifacts_after_formal_run": [
+    "subject_metrics.csv",
+    "recording_metrics.csv",
+    "completed_jobs.json",
+    "run_state.json",
+    "failure_report.json",
+    "schema_validation_report.json",
+    "coverage_summary.csv",
+    "checkpoint_manifest.json",
+    "logs/run.log"
+  ]
+}

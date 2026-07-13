@@ -1,0 +1,17 @@
+[STARTUP] config=configs\benchmark\gate0_gate2_decaf_context_assisted_p00_v1.json
+[STARTUP] output_dir=experiments/gate0_gate2_decaf_context_assisted_p00_v1 device=cuda
+[STARTUP] job_key=weissbart_tf64:P00:decaf_twobranch:seed0:context_assisted_envelope_forecasting
+[STARTUP] config=configs\benchmark\gate0_gate2_decaf_context_assisted_p00_v1.json
+[STARTUP] output_dir=experiments/gate0_gate2_decaf_context_assisted_p00_v1 device=cuda
+[STARTUP] job_key=weissbart_tf64:P00:decaf_twobranch:seed0:context_assisted_envelope_forecasting
+[DRY RUN] {"checkpoint_path": "local_checkpoints/gate0_gate2_decaf_context_assisted_p00_v1/weissbart_tf64__P00__decaf_twobranch__seed0__context_assisted_envelope_forecasting.pt", "expected_artifacts": ["subject_metrics.csv", "recording_metrics.csv", "completed_jobs.json", "run_state.json", "failure_report.json", "schema_validation_report.json", "coverage_summary.csv", "checkpoint_manifest.json", "logs/run.log"], "formal_training_started": false, "job_key": "weissbart_tf64:P00:decaf_twobranch:seed0:context_assisted_envelope_forecasting", "manual_run_will_train": true, "output_dir": "experiments/gate0_gate2_decaf_context_assisted_p00_v1", "selection_metric": "val_mean_recording_pearson_r"}
+[STARTUP] config=configs\benchmark\gate0_gate2_decaf_context_assisted_p00_v1.json
+[STARTUP] output_dir=experiments/gate0_gate2_decaf_context_assisted_p00_v1 device=cuda
+[STARTUP] job_key=weissbart_tf64:P00:decaf_twobranch:seed0:context_assisted_envelope_forecasting
+[CHECKPOINT] mock_passed=True path=local_checkpoints/gate0_gate2_decaf_context_assisted_p00_v1/weissbart_tf64__P00__decaf_twobranch__seed0__context_assisted_envelope_forecasting.pt
+[PREFLIGHT] schema_passed=True formal_training_started=false scientific_metric_generated=false
+[STARTUP] config=configs\benchmark\gate0_gate2_decaf_context_assisted_p00_v1.json
+[STARTUP] output_dir=experiments/gate0_gate2_decaf_context_assisted_p00_v1 device=cuda
+[STARTUP] job_key=weissbart_tf64:P00:decaf_twobranch:seed0:context_assisted_envelope_forecasting
+[CHECKPOINT] mock_passed=True path=local_checkpoints/gate0_gate2_decaf_context_assisted_p00_v1/weissbart_tf64__P00__decaf_twobranch__seed0__context_assisted_envelope_forecasting.pt
+[PREFLIGHT] schema_passed=True formal_training_started=false scientific_metric_generated=false

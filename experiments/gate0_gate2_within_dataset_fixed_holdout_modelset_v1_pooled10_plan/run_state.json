@@ -1,8 +1,8 @@
 {
   "status": "dry_run_only",
-  "stage": "zero_shot",
-  "planned_job_count": 22,
-  "displayed_execution_count": 22,
+  "stage": "pooled10",
+  "planned_job_count": 6,
+  "displayed_execution_count": 6,
   "training_started": false,
   "independent_training_loop_present": false
 }

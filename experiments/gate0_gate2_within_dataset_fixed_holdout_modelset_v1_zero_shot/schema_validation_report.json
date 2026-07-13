@@ -1,17 +1,20 @@
 {
   "passed": true,
   "stage": "zero_shot",
-  "engineering_smoke": false,
-  "engineering_smoke_policy": "",
   "planned_job_count": 22,
-  "pending_execution_count": 22,
-  "expected_full_stage_job_count": 22,
-  "split_no_overlap": true,
-  "dnn_excluded_as_fcnn_alias": true,
-  "linear_zero_shot_deferred_count": 10,
-  "checkpoint_paths_local_only": true,
-  "metrics_written": false,
-  "training_started": false,
-  "device": "cpu",
-  "failures": []
+  "expected_full_roster_count": 22,
+  "independent_training_loop_present": false,
+  "model_factory_present": false,
+  "train_forward_present": false,
+  "evaluate_model_present": false,
+  "uses_smoke_config_for_formal_params": false,
+  "linear_family_deferred": [
+    "cca",
+    "elasticnet",
+    "lasso",
+    "linear",
+    "ridge"
+  ],
+  "accepted_zero_shot_runner": "E:/decode/_fix_subject_holdout_pooled_finetune_v1/scripts/run_gate0_gate2_subject_holdout_fixed_split_v1.py",
+  "accepted_pooled10_runner": "E:/decode/_fix_subject_holdout_pooled_finetune_v1/scripts/run_gate0_gate2_subject_holdout_pooled_finetune_v1.py"
 }

@@ -1,11 +1,8 @@
 {
-  "status": "completed_with_deferred",
+  "status": "dry_run_only",
   "stage": "smoke",
   "planned_job_count": 22,
-  "completed_job_count": 12,
-  "deferred_job_count": 10,
-  "pending_job_count": 0,
-  "last_completed_job_key": "etard_tf64:happyquokka:seed0:stage=smoke",
-  "training_started": true,
-  "metrics_written": false
+  "displayed_execution_count": 22,
+  "training_started": false,
+  "independent_training_loop_present": false
 }

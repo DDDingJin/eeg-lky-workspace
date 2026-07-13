@@ -1,8 +1,8 @@
 {
   "passed": true,
-  "stage": "smoke",
-  "planned_job_count": 22,
-  "expected_full_roster_count": 22,
+  "stage": "pooled10",
+  "planned_job_count": 6,
+  "expected_full_roster_count": 6,
   "independent_training_loop_present": false,
   "model_factory_present": false,
   "train_forward_present": false,

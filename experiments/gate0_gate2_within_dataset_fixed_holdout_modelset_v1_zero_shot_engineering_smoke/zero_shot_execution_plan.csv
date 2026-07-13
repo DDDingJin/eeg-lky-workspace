@@ -1,0 +1,3 @@
+job_key,stage,dataset,model,seed,split_id,train_subject_count,val_subject_count,test_subject_count,status
+weissbart_tf64:fcnn:seed0:stage=zero_shot,zero_shot,weissbart_tf64,fcnn,0,subject_holdout_fixed_split_v1,8,2,3,pending
+etard_tf64:fcnn:seed0:stage=zero_shot,zero_shot,etard_tf64,fcnn,0,subject_holdout_fixed_split_v1,12,4,4,pending

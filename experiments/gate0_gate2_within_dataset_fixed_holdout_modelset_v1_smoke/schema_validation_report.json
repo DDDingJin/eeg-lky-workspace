@@ -1,15 +1,23 @@
 {
   "passed": true,
   "stage": "smoke",
+  "engineering_smoke": false,
+  "engineering_smoke_policy": "",
   "planned_job_count": 22,
-  "pending_execution_count": 22,
+  "pending_execution_count": 10,
   "expected_full_stage_job_count": 22,
+  "full_stage_plan_count_matches": true,
   "split_no_overlap": true,
   "dnn_excluded_as_fcnn_alias": true,
   "linear_zero_shot_deferred_count": 0,
   "checkpoint_paths_local_only": true,
   "metrics_written": false,
-  "training_started": false,
+  "training_started": true,
   "device": "cuda",
-  "failures": []
+  "failures": [],
+  "completed_job_count": 12,
+  "deferred_job_count": 10,
+  "pending_job_count": 0,
+  "failure_count": 0,
+  "nonlinear_executable_job_count": 12
 }

@@ -1,303 +1,287 @@
 # Start Here
 
-Last updated: 2026-07-10
+Last updated: 2026-07-13
 
-This file is the authoritative handoff note for the current worktree. Ignore older chat memory if it conflicts with the files and run artifacts described here.
+This file is the primary handoff note for the current worktree. If chat memory conflicts with this file or current branch artifacts, trust the files.
 
-## Current Active Task
+## Current Main Task
 
-- active round: `subject-specific-local-models-weissbart-full-v1`
-- current branch: `fix/ar-20260625-161300-a43831b-subject-specific-local-models-weissbart-full-v1`
-- current HEAD at handoff write time: `40ed8716a558dad7b1828bc3a1359451b1f736be`
-- base branch requested by user: `fix/ar-20260625-161300-a43831b-vlaai-happyquokka-training-budget-p00-v1`
-- base commit requested by user: `40ed8716a558dad7b1828bc3a1359451b1f736be`
-- current task status: full Weissbart subject-specific local-model expansion completed; reviewer-requested provenance, max-jobs, seed-smoke, and seeded HappyQuokka config fixes applied without training; compact artifacts are ready for review
-
-## Current Worktree
-
+- branch: `fix/ar-20260625-161300-a43831b-within-dataset-fixed-holdout-modelset-v1`
+- local HEAD: `ee5e118`
 - worktree: `E:\decode\_fix_fixed_split_pooled20_modelset_v1`
-- branch: `fix/ar-20260625-161300-a43831b-subject-specific-local-models-weissbart-full-v1`
-- remote push has not been done yet for this branch
+- task status: runner implementation and bounded engineering evidence completed; ready for review
+- smoke status: 22-job roster planned; 12 nonlinear jobs completed; 10 linear-family jobs deferred; 0 failures
+- zero-shot status: formal zero-shot not started; isolated 2-job FCNN engineering smoke completed
+- remote push status: pending at this handoff
 
-## Scope Of This Round
+## What This Branch Is For
 
-- dataset: `weissbart_tf64`
-- subjects: `P00-P12`
-- seed: `0`
-- new local candidate models:
-  - `linear`
-  - `lasso`
-  - `elasticnet`
-  - `vlaai`
-  - `happyquokka`
-- protocol:
-  - per-subject training on subject `train`
-  - selection on subject `val`
-  - final full evaluation on subject `test`
-  - no `256-window` eval cap
-  - each model keeps its own input contract
-- explicitly not in scope:
-  - no DECAF integration
-  - no all-dataset benchmark
-  - no rerun of already accepted 7 reference models in their original result directory
+Build a unified within-dataset cross-subject modelset runner on top of the accepted fixed subject-holdout split manifests.
 
-## Accepted Reference Status
+Datasets:
 
-The following 7 subject-specific models already have accepted Weissbart `seed=0` full-subject results and are reused as reference only:
+- `weissbart_tf64`
+- `etard_tf64`
 
+Main 11-method roster:
+
+- `linear`
 - `ridge`
+- `lasso`
+- `elasticnet`
 - `cca`
 - `fcnn`
-- `dnn`
 - `cnn`
 - `eegnet`
 - `adt`
+- `vlaai`
+- `happyquokka`
 
-Reference source:
+Do not add `dnn` to this roster. `dnn` remains excluded because it was already audited as `functional_alias_of=fcnn`.
 
-- `experiments/gate0_gate2_model_expansion_v1/subject_metrics.csv`
+## Fixed Subject-Holdout Splits To Reuse
 
-Verified coverage:
+These manifests were copied into this worktree and must be reused exactly as-is:
 
-- Weissbart `P00-P12`
-- `7 x 13 = 91` subject rows present in the accepted reference artifact
+- `splits/subject_holdout_fixed_split_v1/weissbart_tf64.json`
+- `splits/subject_holdout_fixed_split_v1/etard_tf64.json`
 
-These 7 models do not need rerun in this round.
+Subject lists:
+
+- `weissbart_tf64`
+  - train: `P00,P09,P02,P07,P11,P06,P04,P03`
+  - val: `P12,P10`
+  - test: `P08,P05,P01`
+- `etard_tf64`
+  - train: `P05,P02,P00,P01,P13,P04,P11,P07,P18,P06,P08,P12`
+  - val: `P09,P15,P14,P19`
+  - test: `P17,P16,P10,P03`
+
+No new subject split should be generated. Do not modify these manifests.
 
 ## New Runner And Config
 
 - runner:
-  - `scripts/run_gate0_gate2_subject_specific_local_models_weissbart_full_v1.py`
+  - `scripts/run_gate0_gate2_within_dataset_fixed_holdout_modelset_v1.py`
 - config:
-  - `configs/benchmark/gate0_gate2_subject_specific_local_models_weissbart_full_v1.json`
-- output dir:
-  - `experiments/gate0_gate2_subject_specific_local_models_weissbart_full_v1`
+  - `configs/benchmark/gate0_gate2_within_dataset_fixed_holdout_modelset_v1.json`
 
-Important config facts:
+Output dirs:
 
-- planned jobs: `13 subjects x 5 models = 65`
-- `linear/lasso/elasticnet` are intentionally marked as `budgeted linear-family baseline`
-- linear-family fit budget:
-  - `max_fit_samples_per_split = 12000`
-- `vlaai`:
-  - `max_epochs = 100`
-  - `early_stopping_patience = 10`
-- `happyquokka`:
-  - `max_epochs = 100`
-  - `early_stopping_patience = 10`
-  - `model_family_contract = 10s_chunk`
-  - `g_con = false`
+- smoke preflight artifacts:
+  - `experiments/gate0_gate2_within_dataset_fixed_holdout_modelset_v1_smoke`
+- zero-shot preflight artifacts:
+  - `experiments/gate0_gate2_within_dataset_fixed_holdout_modelset_v1_zero_shot`
+- isolated zero-shot engineering-smoke artifacts:
+  - `experiments/gate0_gate2_within_dataset_fixed_holdout_modelset_v1_zero_shot_engineering_smoke`
 
-## Protocol Audit Conclusion
+Checkpoint root reserved for future real runs only:
 
-Generated files:
+- `local_checkpoints/within_dataset_fixed_holdout_modelset_v1`
 
-- `experiments/gate0_gate2_subject_specific_local_models_weissbart_full_v1/accepted_protocol_audit.csv`
-- `experiments/gate0_gate2_subject_specific_local_models_weissbart_full_v1/accepted_protocol_audit.md`
+## What The Runner Currently Supports
 
-Audit summary:
+CLI flags already implemented:
 
-- `linear`: `partial`
-- `lasso`: `partial`
-- `elasticnet`: `partial`
-- `vlaai`: `true`
-- `happyquokka`: `partial`
+- `--datasets`
+- `--models`
+- `--stage smoke|zero_shot`
+- `--resume`
+- `--max-jobs`
+- `--startup-only`
+- `--dry-run-plan`
+- `--engineering-smoke`
+- `--device`
 
-Interpretation:
+Important current behavior:
 
-- `linear/lasso/elasticnet` share split/scorer/aggregation/full-test-eval with accepted reference, but use fit sample cap on train/val, so they are not fully identical to accepted `ridge`
-- `vlaai` is considered protocol-comparable
-- `happyquokka` keeps distinct `10s_chunk` contract and coverage behavior, but still uses aligned split/scorer/final test logic
+- `--stage smoke` can execute real selected nonlinear jobs
+- smoke loads fixed train/val/test subject splits and performs train forward/backward/optimizer step, val forward, and held-out test aggregation
+- smoke writes smoke-only artifacts and does not write formal subject/dataset metrics or checkpoints
+- `--stage zero_shot` has a real execution path for nonlinear jobs, with metrics and local-only checkpoint writes
+- formal zero-shot has not been started
+- `--engineering-smoke` isolates capped zero-shot engineering evidence from formal zero-shot artifacts
+- linear-family models remain in roster/plan but real execution is deferred pending validation-fix scope confirmation
 
-No model was `comparable=false`, so runtime execution is allowed.
+## Preflight And Engineering Result Already Achieved
 
-## Manual Long Run Status
+Both stages passed preflight:
 
-The user manually ran the real long run from PowerShell and it completed successfully. Do not start a duplicate run unless a future task explicitly requests a rerun.
+- smoke:
+  - planned jobs: `22`
+  - schema passed: `true`
+  - training started: `true`
+  - completed nonlinear jobs: `12`
+  - deferred linear-family jobs: `10`
+  - failures: `0`
+- zero_shot:
+  - planned jobs: `22`
+  - schema passed: `true`
+  - training started: `false`
+- zero_shot engineering smoke:
+  - isolated output dir: `experiments/gate0_gate2_within_dataset_fixed_holdout_modelset_v1_zero_shot_engineering_smoke`
+  - completed jobs: `2` (`weissbart_tf64:fcnn`, `etard_tf64:fcnn`)
+  - subject metric rows: `7`
+  - recording metric rows: `189`
+  - dataset metric rows: `2`
+  - failures: `0`
+  - checkpoint path: `local_checkpoints/within_dataset_fixed_holdout_modelset_v1/zero_shot_engineering_smoke/...`
 
-Manual command in use:
+The 22 jobs for each stage are:
 
-```powershell
-F:\miniconda\envs\decode-torch\python.exe E:\decode\_fix_fixed_split_pooled20_modelset_v1\scripts\run_gate0_gate2_subject_specific_local_models_weissbart_full_v1.py --config E:\decode\_fix_fixed_split_pooled20_modelset_v1\configs\benchmark\gate0_gate2_subject_specific_local_models_weissbart_full_v1.json --device auto --resume
-```
+- `2 datasets x 11 models = 22`
 
-## Runtime Bugfixes Already Applied
+Current dry-run job identity format:
 
-Two runtime issues were found and fixed in the Weissbart full runner:
+- `dataset:model:seed0:stage=<stage>`
 
-1. `subject_id` summary bug
-   - old failure: reused single-subject summary writer assumed `config['dataset']['subject_id']` always existed
-   - fix: aggregate summary paths now use a synthetic summary config with `subject_id = all_subjects`
+Examples:
 
-2. mixed-model training-summary/schema bug
-   - old failure: summary/schema assumed every success model had epoch metadata
-   - this is false for `linear/lasso/elasticnet`
-   - fix: runner now uses mixed-model summary/schema logic
-   - deep-model training curve checks apply only to `vlaai` and `happyquokka`
+- `weissbart_tf64:vlaai:seed0:stage=smoke`
+- `etard_tf64:happyquokka:seed0:stage=zero_shot`
 
-These fixes live only in:
+## Zero-Shot Defer Rule
 
-- `scripts/run_gate0_gate2_subject_specific_local_models_weissbart_full_v1.py`
+Formal zero-shot jobs currently deferred pending separate confirmation of linear-family validation-fix scope:
 
-Do not revert them.
+- `linear`
+- `ridge`
+- `lasso`
+- `elasticnet`
+- `cca`
 
-## Final Runtime Snapshot
+This defer applies to both datasets, so currently deferred zero-shot jobs count is:
 
-Observed artifact state after completion:
+- `10`
 
-- `completed_jobs.json` contains all `65` planned jobs
-- `failure_report.json` is empty
-- `schema_validation_report.json` has `passed = true`
-- `run_state.json` has `completed_job_count = 65`, `pending_job_count = 0`, and `last_completed_job_key = weissbart_tf64:P12:happyquokka:seed0`
-- `schema_validation_report.json` reports `subject_metric_rows = 65`, `recording_metric_rows = 975`, `training_curve_rows = 652`, and `failure_count = 0`
-- `dataset_metrics.csv` reports per-model dataset summaries rather than a cross-model aggregate
-- reviewer fix note: `dataset_metrics.csv` now reports per-`dataset/model/seed` rows with `n_subjects`, mean, std, median, min, and max; it no longer mixes all five models into one n=65 aggregate
-- reviewer fix note: `schema_validation_report.json` now checks dataset metric keys and `n_subjects` against `subject_metrics.csv`
-- reviewer fix note: `model_identity_audit.md` documents VLAAI and HappyQuokka as local adaptation / not yet reference-protocol parity
-- reviewer fix note: old HappyQuokka model-run entries are marked `seed_control=false`, `seed_control_status=not_present_in_original_run`, and `seed_control_patch_available=true`; existing metrics were not rerun
-- reviewer fix note: `--max-jobs` now truncates pending execution jobs after completed-job exclusion
-- reviewer fix note: HappyQuokka seed smoke now compares `initial_state_hash`, `first_train_batch_hash`, `best_state_hash`, and `fixed_prediction_hash`
-- reviewer fix note: new seeded HappyQuokka-only config is `configs/benchmark/gate0_gate2_subject_specific_happyquokka_seeded_weissbart_full_v1.json`, with output dir `experiments/gate0_gate2_subject_specific_happyquokka_seeded_weissbart_full_v1`
+Zero-shot jobs not deferred after this preflight:
 
-Per-model subject metric means:
+- `fcnn`
+- `cnn`
+- `eegnet`
+- `adt`
+- `vlaai`
+- `happyquokka`
 
-- `elasticnet`: `0.112541` over `13` subjects
-- `happyquokka`: `0.107702` over `13` subjects
-- `lasso`: `0.112112` over `13` subjects
-- `linear`: `0.091647` over `13` subjects
-- `vlaai`: `0.084339` over `13` subjects
+Across both datasets, that leaves:
 
-Reference of the final log source:
+- `12` non-deferred neural/nonlinear zero-shot jobs
 
-- `experiments/gate0_gate2_subject_specific_local_models_weissbart_full_v1/logs/run.log`
+Do not silently remove the linear-family models from the roster. They remain in smoke planning and future official zero-shot scope, but they are not yet allowed to start.
 
-## Non-Fatal Warning Seen During Runtime
+## Determinism Note
 
-The user reported `sklearn` `ConvergenceWarning` for `lasso/elasticnet`, e.g.:
+Do not retrofit strict deterministic execution into this runner in this branch.
 
-- `Objective did not converge ... increase number of iterations ... consider increasing regularisation`
+Read:
 
-Interpretation:
+- `workflow/DETERMINISM_POLICY_PENDING.md`
+- `workflow/START_HERE_1.md`
 
-- not a crash
-- expected sometimes for lag-matrix linear-family models with coordinate descent
-- current run should continue
-- if final results look suspicious, follow-up cleanup can raise `max_iter` or simplify the hyperparameter grid
+Those files document the accepted VLAAI deterministic reproducibility closure and the pending policy integration that should happen later for formal neural zero-shot jobs.
 
-Do not treat this warning alone as a failure.
+## Files Generated In This Round
 
-## Preflight Results Already Passed
+Smoke preflight:
 
-- `py_compile` for the new runner: passed
-- `startup-only`: passed
-- `dry-run-plan`: passed
-- `shape-check-only`: passed
-- planned jobs confirmed: `65`
-
-## Files Expected From This Round
-
-Main output directory:
-
-- `experiments/gate0_gate2_subject_specific_local_models_weissbart_full_v1`
-
-Expected compact artifacts:
-
-- `run_manifest.json`
-- `completed_jobs.json`
+- `smoke_job_plan.csv`
+- `smoke_execution_plan.csv`
+- `split_preflight.csv`
+- `shape_checkpoint_preflight.csv`
+- `schema_validation_report.json`
+- `failure_report.json`
+- `deferred_jobs.json`
 - `run_state.json`
+- `completed_jobs.json`
+- `smoke_job_results.csv`
+- `logs/runner.log`
+- `preflight_report.md`
+
+Zero-shot preflight:
+
+- `zero_shot_job_plan.csv`
+- `zero_shot_execution_plan.csv`
+- `split_preflight.csv`
+- `shape_checkpoint_preflight.csv`
+- `schema_validation_report.json`
+- `failure_report.json`
+- `run_state.json`
+- `preflight_report.md`
+
+Zero-shot engineering smoke:
+
+- `zero_shot_job_plan.csv`
+- `zero_shot_execution_plan.csv`
+- `split_preflight.csv`
+- `shape_checkpoint_preflight.csv`
+- `schema_validation_report.json`
+- `failure_report.json`
+- `run_state.json`
+- `completed_jobs.json`
 - `subject_metrics.csv`
 - `recording_metrics.csv`
 - `dataset_metrics.csv`
-- `model_run_entries.json`
-- `full_eval_matrix.csv`
-- `training_curve.csv`
-- `training_summary.md`
-- `coverage_summary.csv`
-- `accepted_protocol_audit.csv`
-- `accepted_protocol_audit.md`
-- `schema_validation_report.json`
-- `failure_report.json`
-- `result_summary.md`
-- `logs/*.log`
+- `logs/runner.log`
 
-## Git State At Handoff
+## What Must Happen Next
 
-Current untracked work relevant to this round:
+1. Push this branch if it is not already on origin.
+2. Let review/decision happen on:
+   - runner execution correctness
+   - split reuse correctness
+   - smoke accounting correctness: 12 completed nonlinear jobs + 10 deferred linear-family jobs
+   - smoke artifact boundary: no formal subject/dataset metrics and no checkpoint
+   - zero-shot engineering-smoke isolation from formal zero-shot artifacts
+   - zero-shot defer policy for linear-family models
+3. Do not start formal zero-shot until review approves the runner and artifact boundaries.
+4. Only after smoke review passes, implement a separate deterministic-policy patch for neural zero-shot jobs if required.
+5. Only then begin approved formal `zero_shot` execution, keeping the linear-family defer rule unless separately lifted.
 
-- `configs/benchmark/gate0_gate2_subject_specific_local_models_weissbart_full_v1.json`
-- `scripts/run_gate0_gate2_subject_specific_local_models_weissbart_full_v1.py`
-- `experiments/gate0_gate2_subject_specific_local_models_weissbart_full_v1/`
+## Current Resume Rule
 
-Also present locally and should remain untracked:
+If a future Codex session opens only this file, the intended behavior is:
 
-- `local_checkpoints/`
-- `__pycache__/`
+1. Treat this branch as ready for review.
+2. Do not start formal zero-shot automatically.
+3. First review smoke and zero-shot engineering-smoke artifacts.
+4. If this task is resumed, continue from reviewer findings or formal zero-shot approval.
 
-Do not stage or commit:
+## Manual Commands To Re-Establish Context
 
-- `local_checkpoints/`
-- `.pt/.pth/.npy/.npz/.h5/.mat`
-- raw data
-- prediction dumps
-- large per-job directories
-- `__pycache__`
-
-## What The Next Codex Should Do
-
-If the user comes back after updating Codex:
-
-1. Read this file first.
-2. Read:
-   - `experiments/gate0_gate2_subject_specific_local_models_weissbart_full_v1/run_state.json`
-   - `experiments/gate0_gate2_subject_specific_local_models_weissbart_full_v1/completed_jobs.json`
-   - `experiments/gate0_gate2_subject_specific_local_models_weissbart_full_v1/schema_validation_report.json`
-   - `experiments/gate0_gate2_subject_specific_local_models_weissbart_full_v1/failure_report.json`
-   - `experiments/gate0_gate2_subject_specific_local_models_weissbart_full_v1/logs/run.log`
-3. First determine whether the user-manual run is still in progress or already finished.
-4. If still running:
-   - do not start another copy
-   - only monitor or answer user questions
-5. If already finished:
-   - do not rerun
-   - verify `completed_jobs.json` still contains all `65` Weissbart jobs
-   - verify `failure_report.json` remains empty
-   - verify `schema_validation_report.json` remains `passed = true`
-   - check large-file / no-checkpoint-commit hygiene before any new commit
-   - publish only compact artifacts and necessary code/config/docs for review
-
-## Closure Target Status
-
-The run has:
-
-- `65` completed Weissbart jobs
-- `0` failures
-- full-eval metrics for:
-  - `linear`
-  - `lasso`
-  - `elasticnet`
-  - `vlaai`
-  - `happyquokka`
-- accepted-reference audit retained in the same output dir
-
-## Commands To Re-Establish Context
-
-Run from `E:\decode\_fix_fixed_split_pooled20_modelset_v1`:
+From `E:\decode\_fix_fixed_split_pooled20_modelset_v1`:
 
 ```powershell
 git status --short --branch
 git rev-parse HEAD
 Get-Content workflow\START_HERE.md
-Get-Content experiments\gate0_gate2_subject_specific_local_models_weissbart_full_v1\run_state.json
-Get-Content experiments\gate0_gate2_subject_specific_local_models_weissbart_full_v1\completed_jobs.json
-Get-Content experiments\gate0_gate2_subject_specific_local_models_weissbart_full_v1\schema_validation_report.json
-Get-Content experiments\gate0_gate2_subject_specific_local_models_weissbart_full_v1\failure_report.json
-Get-Content experiments\gate0_gate2_subject_specific_local_models_weissbart_full_v1\logs\run.log -Tail 60
+Get-Content workflow\START_HERE_1.md
+Get-Content experiments\gate0_gate2_within_dataset_fixed_holdout_modelset_v1_smoke\schema_validation_report.json
+Get-Content experiments\gate0_gate2_within_dataset_fixed_holdout_modelset_v1_zero_shot\schema_validation_report.json
+Get-Content experiments\gate0_gate2_within_dataset_fixed_holdout_modelset_v1_smoke\split_preflight.csv
+Get-Content experiments\gate0_gate2_within_dataset_fixed_holdout_modelset_v1_zero_shot\shape_checkpoint_preflight.csv
 ```
+
+## Manual Push Command
+
+If this branch still has not been pushed:
+
+```powershell
+git push -u origin fix/ar-20260625-161300-a43831b-within-dataset-fixed-holdout-modelset-v1
+```
+
+## Manual Smoke Command
+
+Use:
+
+```powershell
+F:\miniconda\envs\decode-torch\python.exe scripts\run_gate0_gate2_within_dataset_fixed_holdout_modelset_v1.py --config configs\benchmark\gate0_gate2_within_dataset_fixed_holdout_modelset_v1.json --stage smoke --device auto --resume
+```
+
+At this handoff, this command should report no pending work except already deferred linear-family jobs because the 12 nonlinear smoke jobs have completed.
 
 ## Resume Rule
 
-- Do not trust chat memory over file state.
-- Do not restart the Weissbart full run if the user-manual process is still alive.
-- Do not delete or overwrite the current output directory.
-- Use `--resume` only if the user explicitly wants to continue after interruption.
-- Preserve the already completed jobs.
+- Trust the current branch files over chat memory.
+- Do not start training from this branch unless the user explicitly asks.
+- Do not generate new subject splits.
+- Do not commit raw data, prediction dumps, checkpoints, model weights, `.pt/.pth/.npy/.npz/.h5/.mat`, `local_checkpoints/`, `jobs/`, or `__pycache__`.

@@ -1,11 +1,11 @@
-# Within-Dataset Fixed Holdout Modelset smoke
+# Within-Dataset Fixed Holdout Modelset zero_shot
 
-- stage: `smoke`
-- planned jobs: `22`
-- pending jobs after resume/max-jobs filtering: `10`
+- stage: `zero_shot`
+- planned jobs: `2`
+- pending jobs after resume/max-jobs filtering: `2`
 - training started: `false`
 - metrics written: `false`
-- engineering smoke: `false`
+- engineering smoke: `true`
 - DNN excluded: `functional_alias_of=fcnn`
 - linear-family zero-shot deferred jobs: `0`
 

@@ -1,6 +1,8 @@
 {
   "passed": true,
   "stage": "zero_shot",
+  "engineering_smoke": false,
+  "engineering_smoke_policy": "",
   "planned_job_count": 22,
   "pending_execution_count": 22,
   "expected_full_stage_job_count": 22,
@@ -10,6 +12,6 @@
   "checkpoint_paths_local_only": true,
   "metrics_written": false,
   "training_started": false,
-  "device": "cuda",
+  "device": "cpu",
   "failures": []
 }

@@ -31,6 +31,14 @@ ISSUE_STATUSES = {
     "reopened",
     "withdrawn",
 }
+DOMAIN_GATE_STATUSES = {
+    "not_applicable",
+    "design_only",
+    "approved_as_smoke_only",
+    "engineering_closure_required",
+    "approved_for_full_run",
+    "rejected_until_reproduced_cleanly",
+}
 SEVERITIES = {"blocker", "major", "minor"}
 CATEGORIES = {
     "benchmark_design",
@@ -134,6 +142,11 @@ def main() -> int:
     parser.add_argument("--check-git", action="store_true")
     parser.add_argument("--phase", choices=("review", "fix", "verification"))
     parser.add_argument("--base", help="Base commit used for role-owned diff validation.")
+    parser.add_argument(
+        "--require-domain-gate",
+        action="store_true",
+        help="Require a valid research-signal-envelope-benchmark domain gate.",
+    )
     args = parser.parse_args()
 
     round_dir = args.round_dir.resolve()
@@ -178,6 +191,28 @@ def main() -> int:
             fail(errors, f"invalid round status: {manifest.get('status')!r}")
         if round_id and round_id not in round_dir.name:
             fail(errors, "round directory name does not include manifest round_id")
+        domain_gate = manifest.get("domain_gate")
+        if args.require_domain_gate and not isinstance(domain_gate, dict):
+            fail(errors, "manifest requires a domain_gate object for this experiment round")
+        if isinstance(domain_gate, dict):
+            required_domain = {
+                "skill",
+                "study_id",
+                "run_id",
+                "gate_status",
+                "evidence_path",
+                "evidence_commit",
+            }
+            missing_domain = sorted(required_domain - set(domain_gate))
+            if missing_domain:
+                fail(errors, f"domain_gate missing keys: {', '.join(missing_domain)}")
+            if domain_gate.get("skill") != "research-signal-envelope-benchmark":
+                fail(errors, "domain_gate skill must be research-signal-envelope-benchmark")
+            if domain_gate.get("gate_status") not in DOMAIN_GATE_STATUSES:
+                fail(errors, f"invalid domain gate status: {domain_gate.get('gate_status')!r}")
+            evidence_commit = str(domain_gate.get("evidence_commit", ""))
+            if not SHA_RE.fullmatch(evidence_commit):
+                fail(errors, "domain_gate evidence_commit must be a full lowercase SHA")
     else:
         fail(errors, "manifest must be a mapping")
         target_commit = ""

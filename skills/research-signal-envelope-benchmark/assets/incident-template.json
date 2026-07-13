@@ -1,0 +1,20 @@
+{
+  "incident_id": "INC-YYYYMMDD-xxxxxxxx",
+  "date": "ISO-8601 timestamp",
+  "signature": "normalized-error-signature",
+  "stage": "P3",
+  "category": "runtime",
+  "environment": "environment identity",
+  "command": "exact command",
+  "job_key": "dataset|subject|model|seed",
+  "symptom": "observed failure",
+  "root_cause": "verified root cause",
+  "fix": "bounded fix",
+  "verification": "command and result",
+  "prevention": "test, script, or rule",
+  "affected_versions": [],
+  "recurrence_count": 1,
+  "duplicate_of": null,
+  "scope": "project",
+  "status": "verified"
+}

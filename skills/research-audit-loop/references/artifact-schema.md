@@ -1,5 +1,13 @@
 # Round Artifact Schema
 
+## Contents
+
+1. Manifest and optional domain gate
+2. Issues
+3. Review Markdown
+4. Implementation response
+5. Verification
+
 Use JSON for machine-readable artifacts so both endpoints can validate them with the Python standard library.
 
 ## Manifest
@@ -26,9 +34,36 @@ Required fields:
   "verification_commit": null,
   "verification_pr": null,
   "verified_tag": "audit-verified/AR-20260624-103000-9bf2f20",
+  "domain_gate": null,
   "status": "review_open"
 }
 ```
+
+For an experiment-style round, replace `domain_gate: null` with:
+
+```json
+{
+  "skill": "research-signal-envelope-benchmark",
+  "study_id": "study-id",
+  "run_id": "run-id",
+  "gate_status": "approved_as_smoke_only",
+  "evidence_path": "workflow/reports/domain_gate.json",
+  "evidence_commit": "9bf2f200885346914fe6de33b3b3e6ffcf82b834"
+}
+```
+
+Allowed domain gate statuses:
+
+- `not_applicable`
+- `design_only`
+- `approved_as_smoke_only`
+- `engineering_closure_required`
+- `approved_for_full_run`
+- `rejected_until_reproduced_cleanly`
+
+The implementer may produce or update domain evidence on an implementation
+branch. Only the reviewer may independently accept that evidence for issue
+verification or result promotion.
 
 Allowed round statuses:
 

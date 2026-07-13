@@ -9,5 +9,7 @@ For review, fix, response, or verification work:
 5. Do not push implementation or review changes directly to the protected target branch.
 6. For experiment/model/result/paper-material rounds, apply the Experiment Round Completion Gate in `skills/research-audit-loop/references/protocol.md`: local-only results are not reviewable, and push failures must be reported as `local_committed_push_blocked` with user help requested.
 7. Treat the branch/version register as reviewer-owned. Implementers report branch, commit, base, artifacts, validation status, and caveats; they do not edit the register directly.
+8. For neural-signal-to-envelope benchmark design, implementation, execution, result, or release work, also read `skills/research-signal-envelope-benchmark/SKILL.md` and the references it routes to.
+9. Treat the audit-loop gate and benchmark domain gate as independent requirements. If either blocks, do not continue a full run, verify a scientific issue, or promote results.
 
 On a `rule/*` branch, treat the protocol as a proposal. Propose changes from a separate feedback branch instead of overwriting the published rule branch.

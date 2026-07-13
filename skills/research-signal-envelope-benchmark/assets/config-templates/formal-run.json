@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "study_id": "signal-envelope-study",
+  "config_id": "article-v1",
+  "run_type": "article",
+  "code_commit": "replace-with-full-commit",
+  "split_version": "split-v1",
+  "models": ["ridge", "representative-model"],
+  "datasets": ["dataset-id"],
+  "protocol": {
+    "name": "subject-specific",
+    "split_before_windowing": true
+  },
+  "target": {
+    "name": "speech-envelope",
+    "version": "target-v1"
+  },
+  "metrics": ["pearson_r", "mse"],
+  "seeds": [1, 2, 3],
+  "runtime": {
+    "epochs": 100,
+    "batch_size": 32,
+    "num_workers": 0,
+    "persistent_workers": false,
+    "smoke_only": false
+  },
+  "output_dir": "results/article-v1"
+}

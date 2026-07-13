@@ -18,6 +18,7 @@ Read:
 
 - `references/protocol.md` before any branch, tag, commit, or PR action.
 - `references/artifact-schema.md` before creating or editing a round artifact.
+- the applicable domain Skill before judging domain-specific scientific or execution gates.
 
 Use `scripts/create_review_round.py` to initialize a reviewer round. Use `scripts/validate_round.py` before every review, fix, or verification commit.
 
@@ -41,6 +42,17 @@ For every completed or blocked round, the implementer must report enough informa
 
 If the register is stale or missing a round, the implementer should report the mismatch instead of editing the register directly.
 
+## Domain Benchmark Double Gate
+
+For neural-signal-to-envelope benchmarks, also use the sibling `../research-signal-envelope-benchmark/SKILL.md`.
+
+- This Skill remains authoritative for roles, branches, commits, tags, PRs, issue states, artifact ownership, publication state, and independent verification.
+- The benchmark Skill is authoritative for scientific design, model and data contracts, leakage, metrics, smoke-to-full invariance, runner state, statistics, and reproducible release evidence.
+- Record the benchmark gate in `manifest.json` for experiment-style rounds.
+- Validate experiment rounds with `validate_round.py --require-domain-gate`.
+- If either gate blocks, do not start a full run, mark an issue verified, or promote results.
+- Do not duplicate or weaken either protocol's detailed rules.
+
 ## Reviewer Workflow
 
 1. Fetch the target branch and record its full 40-character commit SHA.
@@ -50,9 +62,10 @@ If the register is stale or missing a round, the implementer should report the m
 5. Run `scripts/create_review_round.py`.
 6. Inspect code, tests, results, protocols, and documentation.
 7. Explicitly assess benchmark question design, dataset roles, task definitions, baseline grouping fairness, train/test comparability, claim support, and paper narrative consistency.
-8. Write findings in `review.md` and structured actions in `issues.json`.
-9. Do not edit implementation code on the review branch.
-10. Validate with `--phase review --base <target_commit>` and open a PR into the target branch.
+8. Load and independently inspect the applicable domain gate and evidence.
+9. Write findings in `review.md` and structured actions in `issues.json`.
+10. Do not edit implementation code on the review branch.
+11. Validate with `--phase review --base <target_commit>` and open a PR into the target branch.
 
 After the fix PR is merged:
 
@@ -75,9 +88,10 @@ Only the reviewer may set `verified`, `reopened`, or `withdrawn`.
 5. For each issue, set `accepted`, `in_progress`, `blocked`, or `disputed` with a reason.
 6. Modify implementation code, tests, generated results, and documentation only as required by accepted issues.
 7. Record changed files, commits, commands, tests, reruns, and remaining limitations in `implementation_response.md`.
-8. Set completed issues to `fixed_pending_verification`.
-9. Do not edit `review.md`, reviewer evidence, acceptance checks, or `verification.md`.
-10. Validate with `--phase fix --base <fix_base_commit>` and open a PR into the target branch.
+8. Re-run the smallest applicable domain gate after each accepted scientific or runner fix.
+9. Set completed issues to `fixed_pending_verification`.
+10. Do not edit `review.md`, reviewer evidence, acceptance checks, or `verification.md`.
+11. Validate with `--phase fix --base <fix_base_commit>` and open a PR into the target branch.
 
 Only the implementer may set `accepted`, `in_progress`, `blocked`, `disputed`, or `fixed_pending_verification`.
 
@@ -91,6 +105,7 @@ Only the implementer may set `accepted`, `in_progress`, `blocked`, `disputed`, o
 - Do not claim an issue is resolved because code changed. Resolution requires reviewer verification.
 - Do not merge the target branch into `master` until required issues are verified or explicitly withdrawn.
 - Treat benchmark design and unsupported scientific claims as auditable findings, not as optional editorial comments.
+- Treat a passed Git audit gate and a passed domain benchmark gate as separate requirements.
 
 ## Rule Negotiation
 

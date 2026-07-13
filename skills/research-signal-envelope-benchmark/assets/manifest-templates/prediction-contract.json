@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "model_id": "model-id",
+  "input_shape": ["batch", "channels", "time"],
+  "raw_output_shape": ["batch", "time", 1],
+  "prediction_shape": ["batch", "time"],
+  "target_shape": ["batch", "time"],
+  "scorer_input_shape": ["time"],
+  "alignment_rule": "prediction and target use the same cropped physical interval",
+  "overlap_aggregation": "mean",
+  "mask_rule": "exclude padded samples",
+  "variable_length_rule": "pad within batch and score valid masks only"
+}

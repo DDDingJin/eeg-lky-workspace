@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Signal Envelope Benchmark"
+  short_description: "Plan and audit paper-grade signal reconstruction benchmarks"
+  default_prompt: "Use $research-signal-envelope-benchmark to design, validate, run, review, or release this signal-envelope benchmark."

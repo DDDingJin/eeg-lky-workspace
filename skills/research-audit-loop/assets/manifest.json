@@ -17,5 +17,6 @@
   "verification_commit": null,
   "verification_pr": null,
   "verified_tag": "audit-verified/__ROUND_ID__",
+  "domain_gate": null,
   "status": "review_open"
 }

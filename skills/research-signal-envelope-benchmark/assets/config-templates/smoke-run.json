@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "study_id": "signal-envelope-study",
+  "config_id": "smoke-v1",
+  "run_type": "smoke",
+  "code_commit": "replace-with-full-commit",
+  "split_version": "split-v1",
+  "models": ["representative-model"],
+  "datasets": ["dataset-id"],
+  "protocol": {
+    "name": "subject-specific",
+    "split_before_windowing": true
+  },
+  "target": {
+    "name": "speech-envelope",
+    "version": "target-v1"
+  },
+  "metrics": ["pearson_r"],
+  "seeds": [1],
+  "runtime": {
+    "epochs": 1,
+    "batch_size": 4,
+    "num_workers": 0,
+    "persistent_workers": false,
+    "smoke_only": true
+  },
+  "output_dir": "results/smoke-v1"
+}

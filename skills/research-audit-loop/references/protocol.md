@@ -1,5 +1,24 @@
 # Version-Locked Review Protocol
 
+## Contents
+
+1. Long-lived branches
+2. Review scope
+3. Temporary branches
+4. Tags
+5. Round directory
+6. Pull request sequence
+7. Target branch movement
+8. File ownership
+9. Issue state machine
+10. Branch protection
+11. Validation commands
+12. Rule adoption
+13. Promotion to stable
+14. Experiment completion gate
+15. Branch-register ownership
+16. Domain benchmark double gate
+
 ## 1. Long-Lived Branches
 
 - `master`: stable public material.
@@ -345,6 +364,45 @@ Rules:
    not become the baseline for a new round until the reviewer records its
    status.
 
+## 16. Domain Benchmark Double Gate
+
+For a neural-signal-to-envelope experiment, benchmark, model expansion,
+analysis, paper-evidence, or release round, apply both
+`research-audit-loop` and `research-signal-envelope-benchmark`.
+
+Authority is non-overlapping:
+
+- this protocol owns role boundaries, version locking, branches, tags, PR
+  order, issue transitions, reviewer evidence, publication state, and final
+  independent verification;
+- the domain Skill owns scientific design, target and prediction contracts,
+  data leakage, comparison fairness, metric and aggregation definitions,
+  smoke-to-full invariance, long-run and resume evidence, statistics, and
+  reproducible release checks.
+
+For experiment-style rounds:
+
+1. Add a `domain_gate` object to `manifest.json`.
+2. Record the domain Skill name, study ID, run ID, gate status, evidence path,
+   and evidence commit.
+3. Require the evidence commit to match the reviewed target or identify an
+   accepted unchanged ancestor.
+4. Run `validate_round.py --require-domain-gate` before a formal review, fix,
+   or verification commit.
+5. Treat `approved_as_smoke_only` as permission for bounded engineering only.
+6. Treat `engineering_closure_required` and
+   `rejected_until_reproduced_cleanly` as blockers.
+7. Require `approved_for_full_run` before starting an article-grade full run.
+8. Require independent reviewer acceptance of the domain evidence before
+   verifying a scientific issue.
+9. If the target branch moves in model, data, protocol, metric, runner, or
+   result files, reconcile the audit round and re-evaluate affected domain
+   gates.
+10. If either protocol blocks, do not promote the result.
+
+Do not create a second role, branch, issue, or publication state machine in
+the domain Skill. Do not copy domain scientific rules into this protocol.
+
 ### Completion Report Template
 
 Every experiment-style round must end with this report:
@@ -390,6 +448,9 @@ GitHub branch/commit/PR link if available
 
 Register update info:
 round purpose / caveats / whether reviewer register update is needed
+
+Domain gate:
+skill / study / run / gate status / evidence path / evidence commit
 ```
 
 ### 中文说明

@@ -1,0 +1,8 @@
+{
+  "skill": "research-signal-envelope-benchmark",
+  "study_id": "signal-envelope-study",
+  "run_id": "run-id",
+  "gate_status": "approved_as_smoke_only",
+  "evidence_path": "workflow/reports/domain_gate.json",
+  "evidence_commit": "full-40-character-commit"
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "study_id": "signal-envelope-study",
+  "run_id": "run-id",
+  "run_type": "smoke",
+  "branch": "branch-name",
+  "code_commit": "full-40-character-commit",
+  "config_id": "config-id",
+  "resolved_config_path": "configs/resolved/config.json",
+  "dataset_version": "dataset-version",
+  "split_version": "split-version",
+  "target_protocol_id": "target-v1",
+  "metric_protocol_id": "metrics-v1",
+  "planned_scope": {
+    "datasets": [],
+    "subjects_or_folds": [],
+    "models": [],
+    "seeds": []
+  },
+  "command": "exact command",
+  "environment_id": "environment-id",
+  "output_dir": "results/run-id",
+  "resume_enabled": true,
+  "accepted_gate_evidence": null,
+  "domain_gate": "approved_as_smoke_only",
+  "audit_round_id": null,
+  "audit_publication_state": null,
+  "created_at": "ISO-8601 timestamp",
+  "updated_at": "ISO-8601 timestamp"
+}

@@ -1,0 +1,8 @@
+{
+  "dataset": "weissbart_tf64",
+  "subject": "P01",
+  "model": "eegnet",
+  "seed": 0,
+  "phase": "completed",
+  "timestamp": "2026-07-06 21:36:00"
+}

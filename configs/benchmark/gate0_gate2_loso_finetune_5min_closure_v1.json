@@ -1,0 +1,62 @@
+{
+  "protocol": "gate0_gate2_loso_finetune_5min_closure_v1",
+  "artifact_scope": "subject_adaptation_finetune_5min_closure_v1",
+  "base_branch": "fix/ar-20260625-161300-a43831b-loso-checkpoint-saving-closure-v1",
+  "base_commit": "2e8cd52",
+  "current_branch": "fix/ar-20260625-161300-a43831b-loso-finetune-closure-v1",
+  "config_fingerprint_version": 1,
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "subject_metric=mean_recording_pearson_r; fixed_test_subset; same_source_checkpoint; 5min_target_subject_calibration; seed0_only; weissbart_only",
+  "output_dir": "experiments/gate0_gate2_loso_finetune_5min_closure_v1",
+  "seed": 0,
+  "dataset": {
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "sampling_rate": 64,
+    "subject_id": "P01"
+  },
+  "source_checkpoint": {
+    "dataset": "weissbart_tf64",
+    "subject_id": "P01",
+    "model": "eegnet",
+    "seed": 0,
+    "checkpoint_local_id": "loso:eegnet:weissbart_tf64:P01:seed0:best_epoch_18",
+    "checkpoint_relative_path": "local_checkpoints/loso/eegnet/weissbart_tf64/P01/seed0/best_epoch_18.pt",
+    "loso_original_metric": 0.07957069452053424
+  },
+  "calibration": {
+    "calibration_budget_seconds": 300,
+    "fine_tune_train_budget_seconds": 240,
+    "fine_tune_val_budget_seconds": 60,
+    "selection_rule": "use target-subject train split recordings in sorted recording_id order until train budget is met; use target-subject val split recordings in sorted recording_id order until val budget is met; keep full target-subject test split fixed for evaluation; use complete recordings only"
+  },
+  "dataloader": {
+    "batch_size": 256,
+    "eval_batch_size": 1024,
+    "shuffle_train": true,
+    "num_workers": 0,
+    "persistent_workers": false
+  },
+  "heartbeat": {
+    "batch_interval": 100,
+    "time_interval_seconds": 30
+  },
+  "eegnet": {
+    "family": "eegnet_family",
+    "architecture_id": "eegnet_subject_finetune_from_loso_checkpoint_v1",
+    "implementation_file": "src/repro/mldecoders/models.py::EEGNetRegressor",
+    "selection_rule": "choose fine-tune checkpoint by target-subject fine_tune_val Pearson",
+    "training_protocol": "initialize from same-subject LOSO checkpoint; fine-tune only on target-subject train split calibration recordings; select on target-subject val split calibration recordings; evaluate on fixed target-subject test split only",
+    "window_size": 50,
+    "target_index": "last",
+    "temporal_filters": 8,
+    "depth_multiplier": 2,
+    "separable_filters": 16,
+    "dropout_rate": 0.25,
+    "batch_size": 256,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001
+  }
+}

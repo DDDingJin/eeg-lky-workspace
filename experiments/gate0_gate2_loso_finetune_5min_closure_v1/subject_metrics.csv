@@ -1,0 +1,2 @@
+dataset,model,task,protocol,seed,subject_id,metric_name,metric_value,num_recordings,checkpoint_id,artifact_scope
+weissbart_tf64,eegnet,reconstruction,gate0_gate2_loso_finetune_5min_closure_v1,0,P01,mean_recording_pearson_r,0.11290686684664797,15,finetune_epoch_25,subject_adaptation_finetune_5min_closure_v1

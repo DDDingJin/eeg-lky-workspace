@@ -1,1 +1,1 @@
-EPOCH job=sub-03:vlaai:seed0 epoch=1 train_loss=2.293848 val_r=-0.010868
+EPOCH job=sub-03:vlaai:seed0 epoch=1 train_loss=0.672037 val_r=-0.028223

@@ -1,1 +1,1 @@
-EPOCH job=sub-03:eegnet:seed0 epoch=1 train_loss=1.925079 val_r=-0.009477
+EPOCH job=sub-03:eegnet:seed0 epoch=1 train_loss=0.026459 val_r=-0.009894

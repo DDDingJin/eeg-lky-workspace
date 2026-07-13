@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "assertion": "validation/test CCA reconstruction uses X lag -> X scaler/PCA -> CCA.transform(X) -> ridge y_hat; target is used only for final Pearson scoring",
+  "checked_entries": [
+    {
+      "job_key": "sub-03:cca:seed0",
+      "subject_id": "sub-03",
+      "model": "cca",
+      "status": "success",
+      "metric": -0.007644986788405204,
+      "elapsed_seconds": 17.949616700061597,
+      "checkpoint_id": "cca_xpca_8_ypca_4_nc_1_alpha_0.1",
+      "best_val_score": 0.03406868220885172,
+      "legacy_concatenated_val_pearson_r": 0.03220197243732311,
+      "implementation_identity": "recording_safe_cca_meg_adapter",
+      "metric_definition": "reconstruction_y_hat_pearson_not_canonical_correlation",
+      "scaler_fit_scope": "train_recordings_only",
+      "cca_inference_uses_target": false
+    }
+  ]
+}

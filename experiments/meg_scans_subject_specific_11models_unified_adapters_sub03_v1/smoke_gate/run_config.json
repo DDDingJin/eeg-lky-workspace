@@ -104,14 +104,45 @@
     "tol": 1e-05
   },
   "window_models": {
-    "window_size": 50,
-    "target_index": "last",
-    "batch_size": 256,
-    "max_epochs": 100,
-    "early_stopping_patience": 10,
-    "learning_rate": 0.001,
-    "weight_decay": 0.0001,
-    "device": "cuda"
+    "fcnn": {
+      "window_size": 50,
+      "target_index": "last",
+      "batch_size": 256,
+      "max_epochs": 100,
+      "early_stopping_patience": 10,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.0001,
+      "optimizer": "NAdam",
+      "loss": "negative_batch_pearson_correlation",
+      "scheduler": "none",
+      "device": "cuda"
+    },
+    "cnn": {
+      "window_size": 50,
+      "target_index": "last",
+      "batch_size": 256,
+      "max_epochs": 100,
+      "early_stopping_patience": 10,
+      "learning_rate": 0.01,
+      "weight_decay": 1e-08,
+      "optimizer": "NAdam",
+      "loss": "negative_batch_pearson_correlation",
+      "scheduler": "none",
+      "device": "cuda"
+    },
+    "eegnet": {
+      "window_size": 50,
+      "target_index": "last",
+      "batch_size": 256,
+      "max_epochs": 100,
+      "early_stopping_patience": 10,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "optimizer": "NAdam",
+      "loss": "negative_batch_pearson_correlation",
+      "scheduler": "none",
+      "device": "cuda"
+    }
   },
   "adt": {
     "window_length": 320,
@@ -120,24 +151,32 @@
     "max_epochs": 100,
     "early_stopping_patience": 10,
     "learning_rate": 0.001,
+    "min_lr": 0.0001,
     "weight_decay": 0.0,
+    "optimizer": "Adam",
+    "loss": "pearson_loss",
+    "scheduler": "ReduceLROnPlateau",
     "device": "cuda"
   },
   "vlaai": {
     "implementation_identity": "vlaai_meg102_adapter",
     "window_size": 50,
     "hop": 1,
-    "batch_size": 128,
+    "batch_size": 64,
     "max_epochs": 100,
     "early_stopping_patience": 10,
     "learning_rate": 0.001,
-    "weight_decay": 0.0001,
+    "min_lr": 0.0001,
+    "weight_decay": 0.0,
+    "optimizer": "Adam",
+    "loss": "pearson_loss",
+    "scheduler": "ReduceLROnPlateau",
     "device": "cuda"
   },
   "happyquokka": {
     "implementation_identity": "happyquokka_meg102_chunk_adapter",
     "chunk_length": 640,
-    "batch_size": 8,
+    "batch_size": 4,
     "max_epochs": 100,
     "early_stopping_patience": 10,
     "learning_rate": 0.0005,
@@ -147,7 +186,11 @@
     "d_inner": 1024,
     "n_head": 2,
     "n_layers": 8,
-    "g_con": true,
+    "lambda_l1": 0.2,
+    "optimizer": "Adam",
+    "loss": "pearson_loss_plus_lambda_l1",
+    "scheduler": "StepLR",
+    "g_con": false,
     "device": "cuda"
   },
   "smoke": {

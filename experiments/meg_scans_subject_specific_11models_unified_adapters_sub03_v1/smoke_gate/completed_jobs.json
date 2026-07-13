@@ -34,37 +34,37 @@
       "job_key": "sub-03:fcnn:seed0",
       "subject_id": "sub-03",
       "model": "fcnn",
-      "metric": -0.028438079603187248
+      "metric": -0.025664940501356266
     },
     {
       "job_key": "sub-03:cnn:seed0",
       "subject_id": "sub-03",
       "model": "cnn",
-      "metric": -0.01726486927939725
+      "metric": -0.021573822084315165
     },
     {
       "job_key": "sub-03:eegnet:seed0",
       "subject_id": "sub-03",
       "model": "eegnet",
-      "metric": 0.009632262570562948
+      "metric": 0.009320630425620738
     },
     {
       "job_key": "sub-03:adt:seed0",
       "subject_id": "sub-03",
       "model": "adt",
-      "metric": 0.015214910267727613
+      "metric": 0.023275034618810746
     },
     {
       "job_key": "sub-03:vlaai:seed0",
       "subject_id": "sub-03",
       "model": "vlaai",
-      "metric": -0.006507536270262088
+      "metric": -0.026803203569854873
     },
     {
       "job_key": "sub-03:happyquokka:seed0",
       "subject_id": "sub-03",
       "model": "happyquokka",
-      "metric": 0.05450638454989591
+      "metric": 0.013202788029936437
     }
   ]
 }

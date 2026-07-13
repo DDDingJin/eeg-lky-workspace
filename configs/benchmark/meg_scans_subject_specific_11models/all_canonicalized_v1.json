@@ -1,12 +1,12 @@
 {
-  "protocol": "meg_scans_subject_specific_11models_all_eligible_v1",
-  "artifact_scope": "native_meg_subject_specific_11models_all_eligible",
+  "protocol": "meg_scans_subject_specific_11models_all_canonicalized_v1",
+  "artifact_scope": "native_meg_subject_specific_11models_all_canonicalized",
   "subject_ids": [
     "sub-03"
   ],
   "seed": 0,
   "sampling_rate": 64,
-  "output_dir": "experiments/meg_scans_subject_specific_11models_all_eligible_v1",
+  "output_dir": "experiments/meg_scans_subject_specific_11models_all_canonicalized_v1",
   "canonical_data_root": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1",
   "envelope_mat": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\stimuli\\sub-others_preprocessed_audiobook_envelopes_decoding.mat",
   "expected_envelope_sha256": "0aed00fa9a9990d45378627911255d98cd09afc70cdff07372837d296e2b269d",
@@ -118,14 +118,45 @@
     "tol": 1e-05
   },
   "window_models": {
-    "window_size": 50,
-    "target_index": "last",
-    "batch_size": 256,
-    "max_epochs": 100,
-    "early_stopping_patience": 10,
-    "learning_rate": 0.001,
-    "weight_decay": 0.0001,
-    "device": "cuda"
+    "fcnn": {
+      "window_size": 50,
+      "target_index": "last",
+      "batch_size": 256,
+      "max_epochs": 100,
+      "early_stopping_patience": 10,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.0001,
+      "optimizer": "NAdam",
+      "loss": "negative_batch_pearson_correlation",
+      "scheduler": "none",
+      "device": "cuda"
+    },
+    "cnn": {
+      "window_size": 50,
+      "target_index": "last",
+      "batch_size": 256,
+      "max_epochs": 100,
+      "early_stopping_patience": 10,
+      "learning_rate": 0.01,
+      "weight_decay": 1e-08,
+      "optimizer": "NAdam",
+      "loss": "negative_batch_pearson_correlation",
+      "scheduler": "none",
+      "device": "cuda"
+    },
+    "eegnet": {
+      "window_size": 50,
+      "target_index": "last",
+      "batch_size": 256,
+      "max_epochs": 100,
+      "early_stopping_patience": 10,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "optimizer": "NAdam",
+      "loss": "negative_batch_pearson_correlation",
+      "scheduler": "none",
+      "device": "cuda"
+    }
   },
   "adt": {
     "window_length": 320,
@@ -134,24 +165,32 @@
     "max_epochs": 100,
     "early_stopping_patience": 10,
     "learning_rate": 0.001,
+    "min_lr": 0.0001,
     "weight_decay": 0.0,
+    "optimizer": "Adam",
+    "loss": "pearson_loss",
+    "scheduler": "ReduceLROnPlateau",
     "device": "cuda"
   },
   "vlaai": {
     "implementation_identity": "vlaai_meg102_adapter",
     "window_size": 50,
     "hop": 1,
-    "batch_size": 128,
+    "batch_size": 64,
     "max_epochs": 100,
     "early_stopping_patience": 10,
     "learning_rate": 0.001,
-    "weight_decay": 0.0001,
+    "min_lr": 0.0001,
+    "weight_decay": 0.0,
+    "optimizer": "Adam",
+    "loss": "pearson_loss",
+    "scheduler": "ReduceLROnPlateau",
     "device": "cuda"
   },
   "happyquokka": {
     "implementation_identity": "happyquokka_meg102_chunk_adapter",
     "chunk_length": 640,
-    "batch_size": 8,
+    "batch_size": 4,
     "max_epochs": 100,
     "early_stopping_patience": 10,
     "learning_rate": 0.0005,
@@ -161,7 +200,11 @@
     "d_inner": 1024,
     "n_head": 2,
     "n_layers": 8,
-    "g_con": true,
+    "lambda_l1": 0.2,
+    "optimizer": "Adam",
+    "loss": "pearson_loss_plus_lambda_l1",
+    "scheduler": "StepLR",
+    "g_con": false,
     "device": "cuda"
   },
   "smoke": {
@@ -202,5 +245,6 @@
         ]
       }
     }
-  ]
+  ],
+  "subject_scope_note": "Subjects are included only if canonical 0.5-8 Hz / 64 Hz paired MAT already exists locally; this is not a scan of all raw SCANS participants."
 }

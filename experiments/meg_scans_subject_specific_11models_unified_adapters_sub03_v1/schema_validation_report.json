@@ -1,7 +1,7 @@
 {
   "status": "passed",
   "errors": [],
-  "checked_dir": "E:\\decode\\_meg_scans_11models_unified_adapters_v1\\experiments\\meg_scans_subject_specific_11models_all_eligible_v1",
+  "checked_dir": "E:\\decode\\_meg_scans_11models_unified_adapters_v1\\experiments\\meg_scans_subject_specific_11models_unified_adapters_sub03_v1",
   "expected_models": [
     "linear",
     "ridge",
@@ -25,5 +25,6 @@
     ".npz",
     ".pt",
     ".pth"
-  ]
+  ],
+  "run_status": "incomplete_or_failed"
 }

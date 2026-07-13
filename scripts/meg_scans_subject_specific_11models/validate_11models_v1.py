@@ -63,6 +63,8 @@ def main() -> int:
             errors.append("completed job key not unique")
         if set(completed_keys) & set(failure_keys):
             errors.append("same job appears as success and failure")
+        if any(row.get("status") == "success" for row in failures):
+            errors.append("failure masquerades as success")
         rec_rows = csv_rows(output_dir / "recording_metrics.csv")
         subj_rows = csv_rows(output_dir / "subject_metrics.csv")
         for job_key in completed_keys:
@@ -96,6 +98,10 @@ def main() -> int:
         "require_complete": args.require_complete,
         "banned_suffixes": sorted(BANNED_SUFFIXES),
     }
+    if args.require_complete:
+        report["run_status"] = "completed" if report["status"] == "passed" else "incomplete_or_failed"
+    else:
+        report["run_status"] = "incomplete_or_failed"
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "schema_validation_report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2, ensure_ascii=False))

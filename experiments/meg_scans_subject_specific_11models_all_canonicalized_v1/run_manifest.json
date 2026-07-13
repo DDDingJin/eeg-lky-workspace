@@ -1,5 +1,5 @@
 {
-  "protocol": "meg_scans_subject_specific_11models_all_eligible_v1",
+  "protocol": "meg_scans_subject_specific_11models_all_canonicalized_v1",
   "models": [
     "linear",
     "ridge",

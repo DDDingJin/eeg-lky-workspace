@@ -1,5 +1,5 @@
 {
-  "eligible_subjects": [
+  "canonicalized_subjects": [
     {
       "subject_id": "sub-03",
       "dataset_id": "meg_scans_canonical_05_08hz_64hz_sub-03",
@@ -34,6 +34,7 @@
       }
     }
   ],
-  "eligible_count": 1,
-  "selection_rule": "canonical paired MAT with 16 trials at 64 Hz"
+  "canonicalized_subject_count": 1,
+  "selection_rule": "canonical paired MAT already exists with 16 trials at 64 Hz",
+  "scope_note": "Subjects are included only if canonical 0.5-8 Hz / 64 Hz paired MAT already exists locally; this is not a scan of all raw SCANS participants."
 }

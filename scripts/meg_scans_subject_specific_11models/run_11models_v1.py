@@ -69,6 +69,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--max-jobs", type=int, default=None)
     parser.add_argument("--generate-all-eligible-config", action="store_true")
+    parser.add_argument("--generate-all-canonicalized-config", action="store_true")
     return parser.parse_args()
 
 
@@ -478,12 +479,9 @@ def cca_candidate_predictions(model: dict[str, Any], trials: list[dict[str, Any]
     valid_start = int(cfg["end_lag"]) - 1
     for trial in trials:
         x = x_scaler.transform(trial["x_mag102"]).astype(np.float32)
-        y = y_scaler.transform(trial["target"][:, None]).reshape(-1).astype(np.float32)
         x_lag = lag_dense(x, cfg["start_lag"], cfg["end_lag"])
-        y_lag = lag_dense(y[:, None], cfg["start_lag"], cfg["end_lag"])
         x_pca = model["x_pca"].transform(model["x_std"].transform(x_lag))
-        y_pca = model["y_pca"].transform(model["y_std"].transform(y_lag))
-        u, _ = model["cca"].transform(x_pca, y_pca)
+        u = model["cca"].transform(x_pca)
         pred_scaled = model["recon"].predict(u)
         pred = y_scaler.inverse_transform(pred_scaled.reshape(-1, 1)).reshape(-1).astype(np.float32)
         target = trial["target"][valid_start:].astype(np.float32)
@@ -571,6 +569,7 @@ def run_cca(config: dict[str, Any], subject_cfg: dict[str, Any], splits: dict[st
         "implementation_identity": "recording_safe_cca_meg_adapter",
         "metric_definition": "reconstruction_y_hat_pearson_not_canonical_correlation",
         "scaler_fit_scope": "train_recordings_only",
+        "cca_inference_uses_target": False,
     }
 
 
@@ -634,13 +633,13 @@ def build_torch_model(model_name: str, config: dict[str, Any]):
     from torch import nn
 
     if model_name == "fcnn":
-        return FCNNBaseline(num_input_channels=102, input_length=int(config["window_models"]["window_size"]))
+        return FCNNBaseline(num_input_channels=102, input_length=int(config["window_models"]["fcnn"]["window_size"]))
     if model_name == "cnn":
         if UpstreamCNN is None:
             raise RuntimeError("upstream CNN import unavailable")
-        return UpstreamCNN(num_input_channels=102, input_length=int(config["window_models"]["window_size"]))
+        return UpstreamCNN(num_input_channels=102, input_length=int(config["window_models"]["cnn"]["window_size"]))
     if model_name == "eegnet":
-        return EEGNetRegressor(num_input_channels=102, input_length=int(config["window_models"]["window_size"]))
+        return EEGNetRegressor(num_input_channels=102, input_length=int(config["window_models"]["eegnet"]["window_size"]))
     if model_name == "adt":
         return ADTExactRegressor(chans=102, seq_len=int(config["adt"]["window_length"]))
     if model_name == "vlaai":
@@ -686,7 +685,7 @@ def build_torch_model(model_name: str, config: dict[str, Any]):
 
 def torch_model_contract(model_name: str, config: dict[str, Any], smoke: bool = False) -> dict[str, Any]:
     if model_name in {"fcnn", "cnn", "eegnet"}:
-        cfg = config["window_models"]
+        cfg = config["window_models"][model_name]
         return {
             "window_size": int(cfg["window_size"]),
             "hop": 1,
@@ -699,6 +698,10 @@ def torch_model_contract(model_name: str, config: dict[str, Any], smoke: bool = 
             "weight_decay": float(cfg["weight_decay"]),
             "device": cfg["device"],
             "max_train_windows": int(config["smoke"]["max_train_windows"]) if smoke else None,
+            "optimizer": cfg["optimizer"],
+            "loss": cfg["loss"],
+            "scheduler": cfg["scheduler"],
+            "min_lr": None,
         }
     if model_name == "adt":
         cfg = config["adt"]
@@ -714,6 +717,10 @@ def torch_model_contract(model_name: str, config: dict[str, Any], smoke: bool = 
             "weight_decay": float(cfg["weight_decay"]),
             "device": cfg["device"],
             "max_train_windows": int(config["smoke"]["max_train_windows"]) if smoke else None,
+            "optimizer": cfg["optimizer"],
+            "loss": cfg["loss"],
+            "scheduler": cfg["scheduler"],
+            "min_lr": float(cfg["min_lr"]),
         }
     if model_name == "vlaai":
         cfg = config["vlaai"]
@@ -729,6 +736,10 @@ def torch_model_contract(model_name: str, config: dict[str, Any], smoke: bool = 
             "weight_decay": float(cfg["weight_decay"]),
             "device": cfg["device"],
             "max_train_windows": int(config["smoke"]["max_train_windows"]) if smoke else None,
+            "optimizer": cfg["optimizer"],
+            "loss": cfg["loss"],
+            "scheduler": cfg["scheduler"],
+            "min_lr": float(cfg["min_lr"]),
         }
     if model_name == "happyquokka":
         cfg = config["happyquokka"]
@@ -744,7 +755,72 @@ def torch_model_contract(model_name: str, config: dict[str, Any], smoke: bool = 
             "weight_decay": float(cfg["weight_decay"]),
             "device": cfg["device"],
             "max_train_windows": int(config["smoke"]["max_train_windows"]) if smoke else None,
+            "optimizer": cfg["optimizer"],
+            "loss": cfg["loss"],
+            "scheduler": cfg["scheduler"],
+            "min_lr": None,
+            "lambda_l1": float(cfg["lambda_l1"]),
         }
+    raise RuntimeError(model_name)
+
+
+def torch_correlation(y_true: Any, y_pred: Any, eps: float = 1e-8) -> Any:
+    y_true = y_true.reshape(-1)
+    y_pred = y_pred.reshape(-1)
+    y_true = y_true - y_true.mean()
+    y_pred = y_pred - y_pred.mean()
+    denom = (y_true.square().sum() * y_pred.square().sum()).sqrt().clamp_min(eps)
+    return (y_true * y_pred).sum() / denom
+
+
+def sequence_pearson_loss(y_true: Any, y_pred: Any, eps: float = 1e-8) -> Any:
+    if y_pred.shape != y_true.shape:
+        y_pred = y_pred.reshape_as(y_true)
+    yt = y_true - y_true.mean(dim=1, keepdim=True)
+    yp = y_pred - y_pred.mean(dim=1, keepdim=True)
+    denom = (yt.square().sum(dim=1, keepdim=True) * yp.square().sum(dim=1, keepdim=True)).sqrt().clamp_min(eps)
+    return -((yt * yp).sum(dim=1, keepdim=True) / denom).mean()
+
+
+def happyquokka_loss(y_true: Any, y_pred: Any, lambda_l1: float) -> Any:
+    if y_pred.shape != y_true.shape:
+        y_pred = y_pred.reshape_as(y_true)
+    pearson = sequence_pearson_loss(y_true, y_pred)
+    l1 = (y_pred - y_true).abs().mean(dim=1).mean()
+    return pearson + float(lambda_l1) * l1
+
+
+def make_optimizer(model_name: str, model: Any, contract: dict[str, Any]):
+    import torch
+
+    if contract["optimizer"] == "NAdam":
+        return torch.optim.NAdam(model.parameters(), lr=contract["learning_rate"], weight_decay=contract["weight_decay"])
+    if contract["optimizer"] == "Adam":
+        if model_name == "happyquokka":
+            return torch.optim.Adam(model.parameters(), lr=contract["learning_rate"], betas=(0.9, 0.98), eps=1e-9, weight_decay=contract["weight_decay"])
+        return torch.optim.Adam(model.parameters(), lr=contract["learning_rate"], weight_decay=contract["weight_decay"])
+    raise RuntimeError(f"unsupported optimizer {contract['optimizer']}")
+
+
+def make_scheduler(optimizer: Any, contract: dict[str, Any]):
+    import torch
+
+    if contract["scheduler"] == "none":
+        return None
+    if contract["scheduler"] == "ReduceLROnPlateau":
+        return torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", factor=0.5, patience=5, min_lr=float(contract["min_lr"]))
+    if contract["scheduler"] == "StepLR":
+        return torch.optim.lr_scheduler.StepLR(optimizer, step_size=50, gamma=0.9)
+    raise RuntimeError(f"unsupported scheduler {contract['scheduler']}")
+
+
+def compute_training_loss(model_name: str, y_true: Any, y_pred: Any, contract: dict[str, Any]) -> Any:
+    if model_name in {"fcnn", "cnn", "eegnet", "vlaai"}:
+        return -torch_correlation(y_true, y_pred)
+    if model_name == "adt":
+        return sequence_pearson_loss(y_true, y_pred)
+    if model_name == "happyquokka":
+        return happyquokka_loss(y_true, y_pred, float(contract["lambda_l1"]))
     raise RuntimeError(model_name)
 
 
@@ -811,8 +887,8 @@ def run_torch_model(model_name: str, config: dict[str, Any], subject_cfg: dict[s
     generator.manual_seed(int(config["seed"]))
     train_loader = DataLoader(train_ds, batch_size=contract["batch_size"], shuffle=True, num_workers=0, generator=generator)
     model = build_torch_model(model_name, config).to(device)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=contract["learning_rate"], weight_decay=contract["weight_decay"])
-    criterion = torch.nn.MSELoss()
+    optimizer = make_optimizer(model_name, model, contract)
+    scheduler = make_scheduler(optimizer, contract)
     best_state = None
     best_metric = -math.inf
     best_epoch = 0
@@ -820,6 +896,7 @@ def run_torch_model(model_name: str, config: dict[str, Any], subject_cfg: dict[s
     gpu_name = torch.cuda.get_device_name(0) if torch.cuda.is_available() else "cpu"
     history_fields = ["job_key", "subject_id", "model", "epoch", "train_loss", "val_mean_recording_pearson_r", "elapsed_seconds", "device", "gpu_name"]
     job_key = f"{subject_cfg['subject_id']}:{model_name}:seed{config['seed']}"
+    epochs_completed = 0
     for epoch in range(1, int(contract["max_epochs"]) + 1):
         epoch_start = time.perf_counter()
         model.train()
@@ -831,11 +908,18 @@ def run_torch_model(model_name: str, config: dict[str, Any], subject_cfg: dict[s
             pred = model(xb)
             if pred.shape != yb.shape:
                 pred = pred.reshape_as(yb)
-            loss = criterion(pred, yb)
+            loss = compute_training_loss(model_name, yb, pred, contract)
             loss.backward()
             optimizer.step()
             losses.append(float(loss.detach().cpu()))
         _, val_metric = eval_torch_recordings(model, cached["val"], contract, device, y_scaler)
+        val_loss_for_scheduler = -float(val_metric)
+        if scheduler is not None:
+            if contract["scheduler"] == "ReduceLROnPlateau":
+                scheduler.step(val_loss_for_scheduler)
+            else:
+                scheduler.step()
+        epochs_completed += 1
         row = {
             "job_key": job_key,
             "subject_id": subject_cfg["subject_id"],
@@ -878,13 +962,21 @@ def run_torch_model(model_name: str, config: dict[str, Any], subject_cfg: dict[s
         "checkpoint_id": f"best_epoch_{best_epoch}",
         "best_epoch": best_epoch,
         "best_val_score": best_metric,
-        "epochs_completed": int(contract["max_epochs"]),
+        "epochs_completed": epochs_completed,
         "device": str(device),
         "gpu_name": gpu_name,
         "implementation_identity": identities[model_name],
         "input_shape": [102, contract["window_size"]] if contract["layout"] == "channels_time" else [contract["window_size"], 102],
         "scaler_fit_scope": "train_recordings_only",
         "training_budget": "smoke" if smoke else "full_config",
+        "optimizer": contract["optimizer"],
+        "loss": contract["loss"],
+        "scheduler": contract["scheduler"],
+        "learning_rate": contract["learning_rate"],
+        "weight_decay": contract["weight_decay"],
+        "batch_size": contract["batch_size"],
+        "max_epochs": contract["max_epochs"],
+        "patience": contract["patience"],
     }
 
 
@@ -1006,20 +1098,102 @@ def scan_eligible_subjects(config: dict[str, Any]) -> list[dict[str, Any]]:
     return subjects
 
 
-def generate_all_eligible_config(config: dict[str, Any]) -> dict[str, Any]:
+def training_profiles(config: dict[str, Any]) -> dict[str, Any]:
+    source_commit = config["model_lock_source"]["source_commit"]
+    profiles: dict[str, Any] = {
+        "linear": {"implementation_identity": "recording_safe_linear_adapter", "profile_status": "benchmark_local", "optimizer": "sklearn LinearRegression", "loss": "least_squares", "scheduler": "none"},
+        "ridge": {"implementation_identity": "recording_safe_ridge_adapter", "profile_status": "benchmark_local", "optimizer": "sklearn Ridge", "loss": "least_squares", "scheduler": "none"},
+        "lasso": {"implementation_identity": "recording_safe_lasso_adapter", "profile_status": "benchmark_local", "optimizer": "sklearn Lasso", "loss": "least_squares_l1", "scheduler": "none"},
+        "elasticnet": {"implementation_identity": "benchmark_local_elasticnet", "profile_status": "benchmark_local", "optimizer": "sklearn ElasticNet", "loss": "least_squares_l1_l2", "scheduler": "none"},
+        "cca": {"implementation_identity": "recording_safe_cca_meg_adapter", "profile_status": "benchmark_local", "optimizer": "sklearn CCA + Ridge", "loss": "ridge_reconstruction_to_y_hat", "scheduler": "none"},
+    }
+    for model in ["fcnn", "cnn", "eegnet"]:
+        cfg = config["window_models"][model]
+        profiles[model] = {
+            "implementation_identity": f"accepted_{model}_mag102_adapter",
+            "EEG source branch": config["model_lock_source"]["source_commit"],
+            "EEG source commit": source_commit,
+            "EEG source file": "src/repro/reference_baselines.py",
+            "EEG source function": "train_dnn_reference_logged",
+            "optimizer": cfg["optimizer"],
+            "loss": cfg["loss"],
+            "scheduler": cfg["scheduler"],
+            "lr": cfg["learning_rate"],
+            "weight_decay": cfg["weight_decay"],
+            "batch_size": cfg["batch_size"],
+            "max_epochs": cfg["max_epochs"],
+            "patience": cfg["early_stopping_patience"],
+            "input adapter": "mag102 native window input",
+            "profile_status": "source_faithful_after_input_adapter",
+        }
+    for model, source_file, source_fn in [
+        ("adt", "src/repro/adt_exact.py", "train_adt_exact_reference"),
+        ("vlaai", "src/repro/vlaai_exact.py", "train_vlaai_exact_reference"),
+    ]:
+        cfg = config[model]
+        profiles[model] = {
+            "implementation_identity": "accepted_adt_mag102_adapter" if model == "adt" else "vlaai_meg102_adapter",
+            "EEG source branch": config["model_lock_source"]["source_commit"],
+            "EEG source commit": source_commit,
+            "EEG source file": source_file,
+            "EEG source function": source_fn,
+            "optimizer": cfg["optimizer"],
+            "loss": cfg["loss"],
+            "scheduler": cfg["scheduler"],
+            "lr": cfg["learning_rate"],
+            "min_lr": cfg.get("min_lr"),
+            "weight_decay": cfg.get("weight_decay", 0.0),
+            "batch_size": cfg["batch_size"],
+            "max_epochs": cfg["max_epochs"],
+            "patience": cfg["early_stopping_patience"],
+            "input adapter": "mag102 native" if model == "adt" else "trainable 102->64 MEG projection",
+            "profile_status": "source_faithful_after_input_adapter",
+        }
+    cfg = config["happyquokka"]
+    profiles["happyquokka"] = {
+        "implementation_identity": "happyquokka_meg102_chunk_adapter",
+        "EEG source branch": config["model_lock_source"]["source_commit"],
+        "EEG source commit": source_commit,
+        "EEG source file": "src/repro/happyquokka_reference.py",
+        "EEG source function": "train_happyquokka_reference",
+        "optimizer": cfg["optimizer"],
+        "loss": cfg["loss"],
+        "scheduler": cfg["scheduler"],
+        "lr": cfg["learning_rate"],
+        "weight_decay": cfg.get("weight_decay", 0.0),
+        "batch_size": cfg["batch_size"],
+        "max_epochs": cfg["max_epochs"],
+        "patience": cfg["early_stopping_patience"],
+        "input adapter": "trainable 102->64 MEG projection; 10s/640 sample chunks",
+        "profile_status": "source_faithful_after_input_adapter",
+        "g_con": cfg["g_con"],
+    }
+    return profiles
+
+
+def generate_all_canonicalized_config(config: dict[str, Any]) -> dict[str, Any]:
     subjects = scan_eligible_subjects(config)
     out_config = deepcopy(config)
-    out_config["protocol"] = "meg_scans_subject_specific_11models_all_eligible_v1"
-    out_config["artifact_scope"] = "native_meg_subject_specific_11models_all_eligible"
-    out_config["output_dir"] = "experiments/meg_scans_subject_specific_11models_all_eligible_v1"
+    out_config["protocol"] = "meg_scans_subject_specific_11models_all_canonicalized_v1"
+    out_config["artifact_scope"] = "native_meg_subject_specific_11models_all_canonicalized"
+    out_config["output_dir"] = "experiments/meg_scans_subject_specific_11models_all_canonicalized_v1"
     out_config["subjects"] = subjects
     out_config["subject_ids"] = [row["subject_id"] for row in subjects]
+    out_config["subject_scope_note"] = "Subjects are included only if canonical 0.5-8 Hz / 64 Hz paired MAT already exists locally; this is not a scan of all raw SCANS participants."
     for key in ["paired_mat", "expected_paired_sha256", "dataset_id"]:
         out_config.pop(key, None)
-    out_path = ROOT / "configs" / "benchmark" / "meg_scans_subject_specific_11models" / "all_eligible_v1.json"
+    out_path = ROOT / "configs" / "benchmark" / "meg_scans_subject_specific_11models" / "all_canonicalized_v1.json"
     write_json(out_path, out_config)
-    manifest_path = ROOT / "experiments" / "meg_scans_subject_specific_11models_all_eligible_v1" / "eligible_subject_manifest.json"
-    write_json(manifest_path, {"eligible_subjects": subjects, "eligible_count": len(subjects), "selection_rule": "canonical paired MAT with 16 trials at 64 Hz"})
+    manifest_path = ROOT / "experiments" / "meg_scans_subject_specific_11models_all_canonicalized_v1" / "canonicalized_subject_manifest.json"
+    write_json(
+        manifest_path,
+        {
+            "canonicalized_subjects": subjects,
+            "canonicalized_subject_count": len(subjects),
+            "selection_rule": "canonical paired MAT already exists with 16 trials at 64 Hz",
+            "scope_note": out_config["subject_scope_note"],
+        },
+    )
     return out_config
 
 
@@ -1065,6 +1239,8 @@ def validate_outputs(config: dict[str, Any], output_dir: Path, *, require_comple
     completed = read_json(output_dir / "completed_jobs.json").get("completed_jobs", []) if (output_dir / "completed_jobs.json").exists() else []
     failures = read_json(output_dir / "failure_report.json").get("failures", []) if (output_dir / "failure_report.json").exists() else []
     entries = read_json(output_dir / "model_run_entries.json") if (output_dir / "model_run_entries.json").exists() else []
+    if any(row.get("status") == "success" for row in failures):
+        errors.append("failure row masquerades as success")
     completed_keys = [row["job_key"] for row in completed]
     if len(completed_keys) != len(set(completed_keys)):
         errors.append("completed job key not unique")
@@ -1108,8 +1284,27 @@ def validate_outputs(config: dict[str, Any], output_dir: Path, *, require_comple
         "failed_jobs": sorted(failure_keys),
         "ready_for_full_manual_run": (not errors and require_complete),
     }
+    if require_complete:
+        report["run_status"] = "completed" if report["status"] == "passed" else "incomplete_or_failed"
+    else:
+        report["run_status"] = "incomplete_or_failed"
     write_json(output_dir / "schema_validation_report.json", report)
     return report
+
+
+def write_cca_x_only_assertion(output_dir: Path) -> None:
+    entries_path = output_dir / "model_run_entries.json"
+    entries = read_json(entries_path) if entries_path.exists() else []
+    cca_entries = [row for row in entries if row.get("model") == "cca" and row.get("status") == "success"]
+    status = "passed" if cca_entries and all(row.get("cca_inference_uses_target") is False for row in cca_entries) else "failed"
+    write_json(
+        output_dir / "cca_x_only_inference_assertion.json",
+        {
+            "status": status,
+            "assertion": "validation/test CCA reconstruction uses X lag -> X scaler/PCA -> CCA.transform(X) -> ridge y_hat; target is used only for final Pearson scoring",
+            "checked_entries": cca_entries,
+        },
+    )
 
 
 def write_run_manifest(config: dict[str, Any], output_dir: Path, status: str, training_started: bool) -> None:
@@ -1131,12 +1326,13 @@ def write_run_manifest(config: dict[str, Any], output_dir: Path, status: str, tr
 def main() -> int:
     args = parse_args()
     config = read_json(args.config)
-    if args.generate_all_eligible_config:
-        config = generate_all_eligible_config(config)
+    if args.generate_all_eligible_config or args.generate_all_canonicalized_config:
+        config = generate_all_canonicalized_config(config)
     output_dir = ROOT / config["output_dir"]
     output_dir.mkdir(parents=True, exist_ok=True)
     write_json(output_dir / "run_config.json", config)
     write_model_lock(config, output_dir)
+    write_json(output_dir / "model_training_profiles.json", training_profiles(config))
     loaded = load_all(config, output_dir)
     preflight = write_preflight(config, loaded, output_dir)
     write_run_manifest(config, output_dir, "preflight_complete", False)
@@ -1151,10 +1347,12 @@ def main() -> int:
         smoke_dir.mkdir(parents=True, exist_ok=True)
         write_json(smoke_dir / "run_config.json", config)
         write_model_lock(config, smoke_dir)
+        write_json(smoke_dir / "model_training_profiles.json", training_profiles(config))
         loaded_smoke = load_all(config, smoke_dir)
         write_preflight(config, loaded_smoke, smoke_dir)
         write_run_manifest(config, smoke_dir, "smoke_running", True)
         run_resume(config, loaded_smoke, smoke_dir, None, smoke=True)
+        write_cca_x_only_assertion(smoke_dir)
         report = validate_outputs(config, smoke_dir, require_complete=True)
         state_path = smoke_dir / "run_state.json"
         state = read_json(state_path)
@@ -1166,7 +1364,14 @@ def main() -> int:
         raise SystemExit("Use --resume for formal incremental execution.")
     write_run_manifest(config, output_dir, "running_or_resumable", True)
     run_resume(config, loaded, output_dir, args.max_jobs, smoke=False)
-    validate_outputs(config, output_dir, require_complete=False)
+    report = validate_outputs(config, output_dir, require_complete=(args.max_jobs is None))
+    if args.max_jobs is None and report["status"] != "passed":
+        write_run_manifest(config, output_dir, "incomplete_or_failed", True)
+        return 1
+    if args.max_jobs is None:
+        write_run_manifest(config, output_dir, "completed", True)
+    else:
+        write_run_manifest(config, output_dir, "incomplete_or_failed", True)
     return 0
 
 

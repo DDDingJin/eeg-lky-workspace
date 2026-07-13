@@ -1,7 +1,7 @@
 {
   "status": "passed",
   "errors": [],
-  "checked_dir": "E:\\decode\\_meg_scans_11models_unified_adapters_v1\\experiments\\meg_scans_subject_specific_11models_unified_adapters_sub03_v1\\smoke_gate",
+  "checked_dir": "E:\\decode\\_meg_scans_11models_unified_adapters_v1\\experiments\\meg_scans_subject_specific_11models_all_canonicalized_v1",
   "expected_models": [
     "linear",
     "ridge",
@@ -15,7 +15,7 @@
     "vlaai",
     "happyquokka"
   ],
-  "require_complete": true,
+  "require_complete": false,
   "banned_suffixes": [
     ".ckpt",
     ".fif",
@@ -26,5 +26,5 @@
     ".pt",
     ".pth"
   ],
-  "run_status": "completed"
+  "run_status": "incomplete_or_failed"
 }

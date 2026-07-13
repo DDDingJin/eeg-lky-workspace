@@ -17,5 +17,10 @@
     "prediction_dump",
     "raw_data",
     "local_checkpoints"
-  ]
+  ],
+  "manual_repeats": {
+    "completed": 2,
+    "expected": 2,
+    "failure_count": 0
+  }
 }

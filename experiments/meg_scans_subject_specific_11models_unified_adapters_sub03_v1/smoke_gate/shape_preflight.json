@@ -1,0 +1,158 @@
+{
+  "rows": [
+    {
+      "subject_id": "sub-03",
+      "model": "linear",
+      "status": "ok",
+      "input_shape": [
+        7631,
+        5100
+      ],
+      "target_shape": [
+        7631
+      ],
+      "device_path": "cpu"
+    },
+    {
+      "subject_id": "sub-03",
+      "model": "ridge",
+      "status": "ok",
+      "input_shape": [
+        7631,
+        5100
+      ],
+      "target_shape": [
+        7631
+      ],
+      "device_path": "cpu"
+    },
+    {
+      "subject_id": "sub-03",
+      "model": "lasso",
+      "status": "ok",
+      "input_shape": [
+        7631,
+        5100
+      ],
+      "target_shape": [
+        7631
+      ],
+      "device_path": "cpu"
+    },
+    {
+      "subject_id": "sub-03",
+      "model": "elasticnet",
+      "status": "ok",
+      "input_shape": [
+        7631,
+        5100
+      ],
+      "target_shape": [
+        7631
+      ],
+      "device_path": "cpu"
+    },
+    {
+      "subject_id": "sub-03",
+      "model": "cca",
+      "status": "ok",
+      "input_shape": [
+        7631,
+        5100
+      ],
+      "target_shape": [
+        7631
+      ],
+      "device_path": "cpu"
+    },
+    {
+      "subject_id": "sub-03",
+      "model": "fcnn",
+      "status": "ok",
+      "input_shape": [
+        2,
+        102,
+        50
+      ],
+      "output_shape": [
+        2
+      ],
+      "device_path": "cuda"
+    },
+    {
+      "subject_id": "sub-03",
+      "model": "cnn",
+      "status": "ok",
+      "input_shape": [
+        2,
+        102,
+        50
+      ],
+      "output_shape": [
+        2
+      ],
+      "device_path": "cuda"
+    },
+    {
+      "subject_id": "sub-03",
+      "model": "eegnet",
+      "status": "ok",
+      "input_shape": [
+        2,
+        102,
+        50
+      ],
+      "output_shape": [
+        2
+      ],
+      "device_path": "cuda"
+    },
+    {
+      "subject_id": "sub-03",
+      "model": "adt",
+      "status": "ok",
+      "input_shape": [
+        2,
+        320,
+        102
+      ],
+      "output_shape": [
+        2,
+        320,
+        1
+      ],
+      "device_path": "cuda"
+    },
+    {
+      "subject_id": "sub-03",
+      "model": "vlaai",
+      "status": "ok",
+      "input_shape": [
+        2,
+        102,
+        50
+      ],
+      "output_shape": [
+        2
+      ],
+      "device_path": "cuda"
+    },
+    {
+      "subject_id": "sub-03",
+      "model": "happyquokka",
+      "status": "ok",
+      "input_shape": [
+        2,
+        640,
+        102
+      ],
+      "output_shape": [
+        2,
+        640,
+        1
+      ],
+      "device_path": "cuda"
+    }
+  ],
+  "all_models_checked": true
+}

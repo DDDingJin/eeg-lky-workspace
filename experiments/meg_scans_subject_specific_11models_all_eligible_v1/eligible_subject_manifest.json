@@ -1,0 +1,39 @@
+{
+  "eligible_subjects": [
+    {
+      "subject_id": "sub-03",
+      "dataset_id": "meg_scans_canonical_05_08hz_64hz_sub-03",
+      "paired_mat": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\sub-03\\speech\\sub-03_preprocessed_audiobooks_decoding.mat",
+      "envelope_mat": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\stimuli\\sub-others_preprocessed_audiobook_envelopes_decoding.mat",
+      "expected_paired_sha256": "d7c189af6ba44031ce67745f1511162259af0a1ef07ea19eb8618b33367bf91e",
+      "expected_envelope_sha256": "0aed00fa9a9990d45378627911255d98cd09afc70cdff07372837d296e2b269d",
+      "split": {
+        "identity": "subject_specific_sub03_12train_2val_2test_recording_level_v1",
+        "train_global_trial_index": [
+          1,
+          2,
+          3,
+          5,
+          6,
+          7,
+          9,
+          10,
+          11,
+          13,
+          14,
+          15
+        ],
+        "val_global_trial_index": [
+          4,
+          12
+        ],
+        "test_global_trial_index": [
+          8,
+          16
+        ]
+      }
+    }
+  ],
+  "eligible_count": 1,
+  "selection_rule": "canonical paired MAT with 16 trials at 64 Hz"
+}

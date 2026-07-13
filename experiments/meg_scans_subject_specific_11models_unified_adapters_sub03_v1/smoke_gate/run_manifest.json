@@ -1,0 +1,24 @@
+{
+  "protocol": "meg_scans_subject_specific_11models_unified_adapters_sub03_v1",
+  "models": [
+    "linear",
+    "ridge",
+    "lasso",
+    "elasticnet",
+    "cca",
+    "fcnn",
+    "cnn",
+    "eegnet",
+    "adt",
+    "vlaai",
+    "happyquokka"
+  ],
+  "subjects": [
+    "sub-03"
+  ],
+  "status": "smoke_running",
+  "training_started": true,
+  "primary_metric": "mean_recording_pearson_r",
+  "recording_level_split": true,
+  "representation": "mag102"
+}

@@ -1,0 +1,6 @@
+job_key,model,implementation_identity,candidate,val_recording_pearson,val_mean_recording_pearson_r,legacy_concatenated_val_pearson_r
+sub-03:linear:seed0,linear,recording_safe_linear_adapter,linear_ols,"[-3.397349290885086e-05, 0.041965728506387655]",0.0209658775067394,0.023001440249714393
+sub-03:ridge:seed0,ridge,recording_safe_ridge_adapter,ridge_alpha_0.001,"[0.006960875822396902, 0.051768640065146865]",0.029364757943771885,0.031141196972640898
+sub-03:lasso:seed0,lasso,recording_safe_lasso_adapter,lasso_alpha_0.001,"[0.013367341339181844, 0.04829517446500453]",0.030831257902093186,0.03232112229676988
+sub-03:elasticnet:seed0,elasticnet,benchmark_local_elasticnet,elasticnet_alpha_0.001_l1_0.2,"[0.010532416090124974, 0.0442860590724181]",0.027409237581271537,0.028887287809074878
+sub-03:cca:seed0,cca,recording_safe_cca_meg_adapter,cca_xpca_8_ypca_4_nc_1_alpha_0.1,"[0.04858051321945091, 0.01955685119825253]",0.03406868220885172,0.03220197243732311

@@ -1,0 +1,17 @@
+{
+  "subjects": [
+    {
+      "status": "passed",
+      "subject_id": "sub-03",
+      "dataset_id": "meg_scans_canonical_05_08hz_64hz_sub-03",
+      "paired_sha256": "d7c189af6ba44031ce67745f1511162259af0a1ef07ea19eb8618b33367bf91e",
+      "envelope_sha256": "0aed00fa9a9990d45378627911255d98cd09afc70cdff07372837d296e2b269d",
+      "n_trials": 16,
+      "fs": 64,
+      "representation": "mag102",
+      "mag102_channel_order_sha256": "9e1c53ae8d218548df09c606ea51e6eeecd1eb3190aa8010b2c1eca49aea4756",
+      "channel_count": 102
+    }
+  ],
+  "status": "passed"
+}

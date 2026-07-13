@@ -1,15 +1,14 @@
 {
-  "protocol": "meg_scans_subject_specific_11models_unified_adapters_sub03_v1",
-  "artifact_scope": "native_meg_subject_specific_11models_unified_adapters",
-  "dataset_id": "meg_scans_canonical_05_08hz_64hz_sub03",
-  "subject_ids": ["sub-03"],
+  "protocol": "meg_scans_subject_specific_11models_all_eligible_v1",
+  "artifact_scope": "native_meg_subject_specific_11models_all_eligible",
+  "subject_ids": [
+    "sub-03"
+  ],
   "seed": 0,
   "sampling_rate": 64,
-  "output_dir": "experiments/meg_scans_subject_specific_11models_unified_adapters_sub03_v1",
+  "output_dir": "experiments/meg_scans_subject_specific_11models_all_eligible_v1",
   "canonical_data_root": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1",
-  "paired_mat": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\sub-03\\speech\\sub-03_preprocessed_audiobooks_decoding.mat",
   "envelope_mat": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\stimuli\\sub-others_preprocessed_audiobook_envelopes_decoding.mat",
-  "expected_paired_sha256": "d7c189af6ba44031ce67745f1511162259af0a1ef07ea19eb8618b33367bf91e",
   "expected_envelope_sha256": "0aed00fa9a9990d45378627911255d98cd09afc70cdff07372837d296e2b269d",
   "channel_inventory": "experiments/meg_scans_canonical_05_08hz_64hz_sub03_v1/channel_inventory.csv",
   "mag102_selection": "experiments/meg_scans_canonical_05_08hz_64hz_sub03_v1/mag102_selection.json",
@@ -20,23 +19,75 @@
     "source_commit": "6d86624",
     "decision": "original config has 12 rows; audit marks dnn as functional_alias_of=fcnn and excludes dnn, leaving 11 distinct methods"
   },
-  "models": ["linear", "ridge", "lasso", "elasticnet", "cca", "fcnn", "cnn", "eegnet", "adt", "vlaai", "happyquokka"],
-  "excluded_models": ["dnn"],
+  "models": [
+    "linear",
+    "ridge",
+    "lasso",
+    "elasticnet",
+    "cca",
+    "fcnn",
+    "cnn",
+    "eegnet",
+    "adt",
+    "vlaai",
+    "happyquokka"
+  ],
+  "excluded_models": [
+    "dnn"
+  ],
   "representation": "mag102",
   "split": {
     "identity": "subject_specific_sub03_12train_2val_2test_recording_level_v1",
-    "train_global_trial_index": [1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15],
-    "val_global_trial_index": [4, 12],
-    "test_global_trial_index": [8, 16]
+    "train_global_trial_index": [
+      1,
+      2,
+      3,
+      5,
+      6,
+      7,
+      9,
+      10,
+      11,
+      13,
+      14,
+      15
+    ],
+    "val_global_trial_index": [
+      4,
+      12
+    ],
+    "test_global_trial_index": [
+      8,
+      16
+    ]
   },
   "linear_family": {
     "start_lag": 0,
     "end_lag": 50,
     "max_fit_samples_per_split": 12000,
-    "ridge_alphas": [0.001, 0.01, 0.1, 1.0, 10.0, 100.0],
-    "lasso_alphas": [0.001, 0.01, 0.1],
-    "elasticnet_alphas": [0.001, 0.01, 0.1],
-    "elasticnet_l1_ratios": [0.2, 0.5, 0.8],
+    "ridge_alphas": [
+      0.001,
+      0.01,
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "lasso_alphas": [
+      0.001,
+      0.01,
+      0.1
+    ],
+    "elasticnet_alphas": [
+      0.001,
+      0.01,
+      0.1
+    ],
+    "elasticnet_l1_ratios": [
+      0.2,
+      0.5,
+      0.8
+    ],
     "max_iter": 5000
   },
   "cca": {
@@ -44,13 +95,27 @@
     "definition_source": "src/repro/mldecoders/cca.py::fit_cca_reconstruction mathematical path: lagged x/y, train-only scalers, PCA, sklearn CCA, Ridge reconstruction to y_hat",
     "start_lag": 0,
     "end_lag": 50,
-    "x_pca_grid": [8, 16],
-    "y_pca_grid": [4, 8],
-    "n_components_grid": [1, 2, 4],
-    "alpha_grid": [0.1, 1.0, 10.0],
+    "x_pca_grid": [
+      8,
+      16
+    ],
+    "y_pca_grid": [
+      4,
+      8
+    ],
+    "n_components_grid": [
+      1,
+      2,
+      4
+    ],
+    "alpha_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
     "max_fit_samples": 8000,
     "max_iter": 500,
-    "tol": 1e-5
+    "tol": 1e-05
   },
   "window_models": {
     "window_size": 50,
@@ -102,5 +167,40 @@
   "smoke": {
     "epochs": 1,
     "max_train_windows": 16
-  }
+  },
+  "subjects": [
+    {
+      "subject_id": "sub-03",
+      "dataset_id": "meg_scans_canonical_05_08hz_64hz_sub-03",
+      "paired_mat": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\sub-03\\speech\\sub-03_preprocessed_audiobooks_decoding.mat",
+      "envelope_mat": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\stimuli\\sub-others_preprocessed_audiobook_envelopes_decoding.mat",
+      "expected_paired_sha256": "d7c189af6ba44031ce67745f1511162259af0a1ef07ea19eb8618b33367bf91e",
+      "expected_envelope_sha256": "0aed00fa9a9990d45378627911255d98cd09afc70cdff07372837d296e2b269d",
+      "split": {
+        "identity": "subject_specific_sub03_12train_2val_2test_recording_level_v1",
+        "train_global_trial_index": [
+          1,
+          2,
+          3,
+          5,
+          6,
+          7,
+          9,
+          10,
+          11,
+          13,
+          14,
+          15
+        ],
+        "val_global_trial_index": [
+          4,
+          12
+        ],
+        "test_global_trial_index": [
+          8,
+          16
+        ]
+      }
+    }
+  ]
 }

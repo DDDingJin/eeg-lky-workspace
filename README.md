@@ -1,8 +1,15 @@
-# DECODE Audit Branch
+# Auditory neural-decoding benchmark — consolidation branch
 
-This branch is a review package for the current auditory EEG decoding benchmark workspace.
+`codex/open-source-latest` is the integration branch for the current latest EEG and MEG benchmark code.  It contains the leaf branches for MEG-SCANS, within-dataset fixed holdout, cross-dataset transfer, LOSO, subject-holdout fine-tuning, and DECAF, without raw data, checkpoints, or prediction dumps.
 
-It is not the full project snapshot. It is a compact audit bundle intended to let an external reviewer judge:
+It is the staging branch for a future public release, not yet a public-release candidate.  Start with:
+
+- [`docs/OPEN_SOURCE_BRANCH_STATUS.md`](docs/OPEN_SOURCE_BRANCH_STATUS.md) for the branch scope, what was integrated, and the remaining release work.
+- [`docs/meg_scans_single_subject_training_walkthrough_zh.md`](docs/meg_scans_single_subject_training_walkthrough_zh.md) for the first code-reading path: the successfully completed MEG-SCANS single-subject training run.
+
+The remainder of this README retains the earlier audit-package description and reading references.  It is useful context, but it does not replace the two consolidation documents above.
+
+This workspace remains a compact audit bundle intended to let an external reviewer judge:
 
 - whether the current reproduction workflow is methodologically reasonable
 - whether the current implementations and results look internally consistent

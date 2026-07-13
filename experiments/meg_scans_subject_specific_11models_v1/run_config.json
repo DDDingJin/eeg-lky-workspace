@@ -1,0 +1,124 @@
+{
+  "protocol": "meg_scans_subject_specific_11models_v1",
+  "artifact_scope": "native_meg_subject_specific_11models",
+  "dataset_id": "meg_scans_canonical_05_08hz_64hz_sub03",
+  "subject_ids": [
+    "sub-03"
+  ],
+  "seed": 0,
+  "sampling_rate": 64,
+  "output_dir": "experiments/meg_scans_subject_specific_11models_v1",
+  "paired_mat": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\sub-03\\speech\\sub-03_preprocessed_audiobooks_decoding.mat",
+  "envelope_mat": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\stimuli\\sub-others_preprocessed_audiobook_envelopes_decoding.mat",
+  "expected_paired_sha256": "d7c189af6ba44031ce67745f1511162259af0a1ef07ea19eb8618b33367bf91e",
+  "expected_envelope_sha256": "0aed00fa9a9990d45378627911255d98cd09afc70cdff07372837d296e2b269d",
+  "channel_inventory": "experiments/meg_scans_canonical_05_08hz_64hz_sub03_v1/channel_inventory.csv",
+  "mag102_selection": "experiments/meg_scans_canonical_05_08hz_64hz_sub03_v1/mag102_selection.json",
+  "expected_mag102_channel_order_sha256": "9e1c53ae8d218548df09c606ea51e6eeecd1eb3190aa8010b2c1eca49aea4756",
+  "model_lock_source": {
+    "config_path": "E:\\decode\\_fix_fixed_split_pooled20_modelset_v1\\configs\\benchmark\\gate0_gate2_subject_specific_modelset_etard_full_v1.json",
+    "audit_manifest_path": "E:\\decode\\_fix_fixed_split_pooled20_modelset_v1\\experiments\\gate0_gate2_negative_metric_audit_v1\\run_manifest.json",
+    "source_commit": "6d86624",
+    "decision": "original config has 12 rows; audit marks dnn as functional_alias_of=fcnn and excludes dnn, leaving 11 distinct methods"
+  },
+  "models": [
+    "linear",
+    "ridge",
+    "lasso",
+    "elasticnet",
+    "cca",
+    "fcnn",
+    "cnn",
+    "eegnet",
+    "adt",
+    "vlaai",
+    "happyquokka"
+  ],
+  "excluded_models": [
+    "dnn"
+  ],
+  "representation": "mag102",
+  "split": {
+    "identity": "subject_specific_sub03_12train_2val_2test_recording_level_v1",
+    "train_global_trial_index": [
+      1,
+      2,
+      3,
+      5,
+      6,
+      7,
+      9,
+      10,
+      11,
+      13,
+      14,
+      15
+    ],
+    "val_global_trial_index": [
+      4,
+      12
+    ],
+    "test_global_trial_index": [
+      8,
+      16
+    ]
+  },
+  "linear_family": {
+    "start_lag": 0,
+    "end_lag": 50,
+    "max_fit_samples_per_split": 12000,
+    "ridge_alphas": [
+      0.001,
+      0.01,
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "lasso_alphas": [
+      0.001,
+      0.01,
+      0.1
+    ],
+    "elasticnet_alphas": [
+      0.001,
+      0.01,
+      0.1
+    ],
+    "elasticnet_l1_ratios": [
+      0.2,
+      0.5,
+      0.8
+    ],
+    "max_iter": 5000
+  },
+  "cca": {
+    "status": "planned_failure_until_recording_safe_adapter_is_accepted",
+    "reason": "accepted CCA path has no recording-safe MEG adapter in this branch"
+  },
+  "window_models": {
+    "window_size": 50,
+    "target_index": "last",
+    "batch_size": 256,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "device": "cuda"
+  },
+  "adt": {
+    "window_length": 320,
+    "hop_length": 64,
+    "batch_size": 32,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0,
+    "device": "cuda"
+  },
+  "happyquokka": {
+    "status": "planned_failure_until_meg_adapter_is_accepted",
+    "chunk_length": 640,
+    "reason": "HappyQuokka upstream subject-specific adapter expects its own 10s EEG dataset contract; no accepted MEG mag102 adapter exists in this branch"
+  }
+}

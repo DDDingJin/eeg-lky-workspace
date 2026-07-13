@@ -1,0 +1,136 @@
+{
+  "rows": [
+    {
+      "model": "linear",
+      "status": "ok",
+      "input_shape": [
+        7631,
+        5100
+      ],
+      "target_shape": [
+        7631
+      ],
+      "device_path": "cpu"
+    },
+    {
+      "model": "ridge",
+      "status": "ok",
+      "input_shape": [
+        7631,
+        5100
+      ],
+      "target_shape": [
+        7631
+      ],
+      "device_path": "cpu"
+    },
+    {
+      "model": "lasso",
+      "status": "ok",
+      "input_shape": [
+        7631,
+        5100
+      ],
+      "target_shape": [
+        7631
+      ],
+      "device_path": "cpu"
+    },
+    {
+      "model": "elasticnet",
+      "status": "ok",
+      "input_shape": [
+        7631,
+        5100
+      ],
+      "target_shape": [
+        7631
+      ],
+      "device_path": "cpu"
+    },
+    {
+      "model": "cca",
+      "status": "failed",
+      "failure_reason": "accepted CCA path has no recording-safe MEG adapter in this branch"
+    },
+    {
+      "model": "fcnn",
+      "status": "ok",
+      "input_shape": [
+        2,
+        102,
+        50
+      ],
+      "output_shape": [
+        2
+      ],
+      "target_shape": [
+        2
+      ],
+      "device_path": "cuda"
+    },
+    {
+      "model": "cnn",
+      "status": "ok",
+      "input_shape": [
+        2,
+        102,
+        50
+      ],
+      "output_shape": [
+        2
+      ],
+      "target_shape": [
+        2
+      ],
+      "device_path": "cuda"
+    },
+    {
+      "model": "eegnet",
+      "status": "ok",
+      "input_shape": [
+        2,
+        102,
+        50
+      ],
+      "output_shape": [
+        2
+      ],
+      "target_shape": [
+        2
+      ],
+      "device_path": "cuda"
+    },
+    {
+      "model": "adt",
+      "status": "ok",
+      "input_shape": [
+        2,
+        320,
+        102
+      ],
+      "output_shape": [
+        2,
+        320,
+        1
+      ],
+      "target_shape": [
+        2,
+        320,
+        1
+      ],
+      "device_path": "cuda"
+    },
+    {
+      "model": "vlaai",
+      "status": "failed",
+      "failure_reason": "VLAAI exact official path has a fixed internal 64-channel contract and no accepted mag102 adapter in this branch"
+    },
+    {
+      "model": "happyquokka",
+      "status": "failed",
+      "failure_reason": "HappyQuokka upstream subject-specific adapter expects its own 10s EEG dataset contract; no accepted MEG mag102 adapter exists in this branch"
+    }
+  ],
+  "all_models_checked": true
+}

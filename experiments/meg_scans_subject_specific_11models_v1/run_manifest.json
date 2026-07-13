@@ -1,0 +1,18 @@
+{
+  "protocol": "meg_scans_subject_specific_11models_v1",
+  "models": [
+    "linear",
+    "ridge",
+    "lasso",
+    "elasticnet",
+    "cca",
+    "fcnn",
+    "cnn",
+    "eegnet",
+    "adt",
+    "vlaai",
+    "happyquokka"
+  ],
+  "status": "preflight_complete",
+  "training_started": false
+}

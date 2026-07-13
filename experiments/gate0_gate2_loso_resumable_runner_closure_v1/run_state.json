@@ -1,0 +1,84 @@
+{
+  "planned_jobs": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "eegnet",
+      "seed": 0
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "fcnn",
+      "seed": 0
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "adt",
+      "seed": 0
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "fcnn",
+      "seed": 0
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "adt",
+      "seed": 0
+    }
+  ],
+  "running_job": null,
+  "completed_jobs": [],
+  "failed_jobs": [],
+  "skipped_jobs": [],
+  "last_update_time": "2026-07-04 02:14:47",
+  "resume_enabled": true,
+  "pending_jobs": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "eegnet",
+      "seed": 0
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "fcnn",
+      "seed": 0
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "adt",
+      "seed": 0
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "fcnn",
+      "seed": 0
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "adt",
+      "seed": 0
+    }
+  ]
+}

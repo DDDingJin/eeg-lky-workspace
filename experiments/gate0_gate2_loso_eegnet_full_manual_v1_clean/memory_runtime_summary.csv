@@ -1,0 +1,2 @@
+dataset,model,seed,n_subjects,mean_train_preload_bytes,mean_val_preload_bytes,mean_total_preload_bytes,max_total_preload_bytes,total_runtime_seconds,mean_runtime_seconds,max_runtime_seconds
+weissbart_tf64,eegnet,0,13,380524560,47545680,428070240,428070240,31171.149852899995,2397.780757915384,3594.7977501999994

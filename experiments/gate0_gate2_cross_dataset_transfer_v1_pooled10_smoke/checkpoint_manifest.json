@@ -1,0 +1,69 @@
+{
+  "checkpoints": [
+    {
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": null,
+      "model": "eegnet",
+      "seed": 0,
+      "stage": "source_zero_shot",
+      "source_job_key": "weissbart_tf64:eegnet:seed0:source_zero_shot",
+      "checkpoint_local_id": "cross_dataset_source_only:eegnet:weissbart_tf64:seed0:best_epoch_4",
+      "checkpoint_relative_path": "local_checkpoints/cross_dataset/source_only/eegnet/weissbart_tf64/seed0/best_epoch_4.pt",
+      "checkpoint_artifact_status": "local_only_not_committed",
+      "best_epoch": 4,
+      "best_val_score": 0.14332639425190102,
+      "source_train_subjects": [
+        "P00",
+        "P09",
+        "P02",
+        "P07",
+        "P11",
+        "P06",
+        "P04",
+        "P03"
+      ],
+      "source_val_subjects": [
+        "P12",
+        "P10"
+      ],
+      "target_test_subjects": [],
+      "protocol": "gate0_gate2_cross_dataset_transfer_v1::source_zero_shot",
+      "config_path": "configs/benchmark/gate0_gate2_cross_dataset_transfer_v1.json",
+      "source_split_manifest_path": "splits/subject_holdout_fixed_split_v1/weissbart_tf64.json",
+      "target_split_manifest_path": null,
+      "branch": "fix/ar-20260625-161300-a43831b-cross-dataset-transfer-v1",
+      "commit_sha": "b3ee42e4088380bb113793ef1a0c785aed427ce1"
+    },
+    {
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": "etard_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "stage": "pooled10_target_calibration",
+      "source_job_key": "weissbart_tf64:eegnet:seed0:source_zero_shot",
+      "source_eval_job_key": "weissbart_tf64->etard_tf64:eegnet:seed0:cross_dataset_zero_shot_eval",
+      "source_checkpoint_local_id": "cross_dataset_source_only:eegnet:weissbart_tf64:seed0:best_epoch_4",
+      "source_checkpoint_relative_path": "local_checkpoints/cross_dataset/source_only/eegnet/weissbart_tf64/seed0/best_epoch_4.pt",
+      "source_checkpoint_load_verified": true,
+      "source_checkpoint_best_epoch": 4,
+      "source_checkpoint_best_val_score": 0.14332639425190102,
+      "checkpoint_local_id": "cross_dataset_pooled10_target_calibration:eegnet:weissbart_tf64->etard_tf64:seed0:best_epoch_0",
+      "checkpoint_relative_path": "local_checkpoints/cross_dataset/pooled10_target_calibration/eegnet/weissbart_tf64/etard_tf64/seed0/best_epoch_0.pt",
+      "checkpoint_artifact_status": "local_only_not_committed",
+      "best_epoch": 0,
+      "best_val_score": 0.13618506689866383,
+      "target_test_subjects": [
+        "P17",
+        "P16",
+        "P10",
+        "P03"
+      ],
+      "protocol": "gate0_gate2_cross_dataset_transfer_v1::pooled10_target_calibration",
+      "config_path": "configs/benchmark/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke.json",
+      "source_split_manifest_path": "splits/subject_holdout_fixed_split_v1/weissbart_tf64.json",
+      "target_split_manifest_path": "splits/subject_holdout_fixed_split_v1/etard_tf64.json",
+      "branch": "fix/ar-20260625-161300-a43831b-cross-dataset-transfer-v1",
+      "commit_sha": "291ce877957195f90f31cb6cc3360e71a32c0d31"
+    }
+  ]
+}

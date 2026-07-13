@@ -1,0 +1,20 @@
+{
+  "checkpoints": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0,
+      "source_job_key": "weissbart_tf64:P01:eegnet:seed0",
+      "checkpoint_local_id": "loso:eegnet:weissbart_tf64:P01:seed0:best_epoch_18",
+      "checkpoint_relative_path": "local_checkpoints/loso/eegnet/weissbart_tf64/P01/seed0/best_epoch_18.pt",
+      "checkpoint_artifact_status": "local_only_not_committed",
+      "best_epoch": 18,
+      "best_val_score": 0.12841451641847124,
+      "protocol": "gate0_gate2_loso_checkpoint_saving_real_closure_v1",
+      "config_path": "configs/benchmark/gate0_gate2_loso_checkpoint_saving_real_closure_v1.json",
+      "branch": "fix/ar-20260625-161300-a43831b-loso-checkpoint-saving-closure-v1",
+      "commit_sha": "4b3d753518b8d70ae8e869578d8c4f806489d87f"
+    }
+  ]
+}

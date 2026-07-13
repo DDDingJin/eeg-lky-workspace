@@ -1,0 +1,150 @@
+{
+  "jobs": [
+    {
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": "etard_tf64",
+      "model": "fcnn",
+      "source_job_key": "weissbart_tf64:fcnn:seed0:source_zero_shot",
+      "target_eval_job_key": "weissbart_tf64->etard_tf64:fcnn:seed0:cross_dataset_zero_shot_eval",
+      "source_train_subjects": [
+        "P00",
+        "P09",
+        "P02",
+        "P07",
+        "P11",
+        "P06",
+        "P04",
+        "P03"
+      ],
+      "source_val_subjects": [
+        "P12",
+        "P10"
+      ],
+      "target_test_subjects": [
+        "P17",
+        "P16",
+        "P10",
+        "P03"
+      ],
+      "target_pooled_train_recording_count": 16,
+      "target_pooled_val_recording_count": 33,
+      "target_final_test_recording_count": 144,
+      "target_pooled_train_window_count": 124100,
+      "target_pooled_val_window_count": 30669,
+      "input_tensor_contract": "[1, 64, 50] -> [1]",
+      "target_scorer_alignment": "scalar target per window, Pearson on valid overlap"
+    },
+    {
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": "etard_tf64",
+      "model": "adt",
+      "source_job_key": "weissbart_tf64:adt:seed0:source_zero_shot",
+      "target_eval_job_key": "weissbart_tf64->etard_tf64:adt:seed0:cross_dataset_zero_shot_eval",
+      "source_train_subjects": [
+        "P00",
+        "P09",
+        "P02",
+        "P07",
+        "P11",
+        "P06",
+        "P04",
+        "P03"
+      ],
+      "source_val_subjects": [
+        "P12",
+        "P10"
+      ],
+      "target_test_subjects": [
+        "P17",
+        "P16",
+        "P10",
+        "P03"
+      ],
+      "target_pooled_train_recording_count": 16,
+      "target_pooled_val_recording_count": 33,
+      "target_final_test_recording_count": 144,
+      "target_pooled_train_window_count": 124100,
+      "target_pooled_val_window_count": 30669,
+      "input_tensor_contract": "[1, 320, 64] -> [1, 320]",
+      "target_scorer_alignment": "sequence target per window, Pearson on valid overlap"
+    },
+    {
+      "source_dataset": "etard_tf64",
+      "target_dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "source_job_key": "etard_tf64:fcnn:seed0:source_zero_shot",
+      "target_eval_job_key": "etard_tf64->weissbart_tf64:fcnn:seed0:cross_dataset_zero_shot_eval",
+      "source_train_subjects": [
+        "P05",
+        "P02",
+        "P00",
+        "P01",
+        "P13",
+        "P04",
+        "P11",
+        "P07",
+        "P18",
+        "P06",
+        "P08",
+        "P12"
+      ],
+      "source_val_subjects": [
+        "P09",
+        "P15",
+        "P14",
+        "P19"
+      ],
+      "target_test_subjects": [
+        "P08",
+        "P05",
+        "P01"
+      ],
+      "target_pooled_train_recording_count": 12,
+      "target_pooled_val_recording_count": 24,
+      "target_final_test_recording_count": 45,
+      "target_pooled_train_window_count": 93297,
+      "target_pooled_val_window_count": 24096,
+      "input_tensor_contract": "[1, 64, 50] -> [1]",
+      "target_scorer_alignment": "scalar target per window, Pearson on valid overlap"
+    },
+    {
+      "source_dataset": "etard_tf64",
+      "target_dataset": "weissbart_tf64",
+      "model": "adt",
+      "source_job_key": "etard_tf64:adt:seed0:source_zero_shot",
+      "target_eval_job_key": "etard_tf64->weissbart_tf64:adt:seed0:cross_dataset_zero_shot_eval",
+      "source_train_subjects": [
+        "P05",
+        "P02",
+        "P00",
+        "P01",
+        "P13",
+        "P04",
+        "P11",
+        "P07",
+        "P18",
+        "P06",
+        "P08",
+        "P12"
+      ],
+      "source_val_subjects": [
+        "P09",
+        "P15",
+        "P14",
+        "P19"
+      ],
+      "target_test_subjects": [
+        "P08",
+        "P05",
+        "P01"
+      ],
+      "target_pooled_train_recording_count": 12,
+      "target_pooled_val_recording_count": 24,
+      "target_final_test_recording_count": 45,
+      "target_pooled_train_window_count": 93297,
+      "target_pooled_val_window_count": 24096,
+      "input_tensor_contract": "[1, 320, 64] -> [1, 320]",
+      "target_scorer_alignment": "sequence target per window, Pearson on valid overlap"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "protocol": "gate0_gate2_loso_pilot_v1",
+  "artifact_scope": "subject_independent_loso_pilot",
+  "previous_fix_branch": "fix/ar-20260625-161300-a43831b-model-expansion-v1-metadata-closure",
+  "previous_fix_commit": "d0ea16fe57c7a92bcbc459ed5f5e67fd529c86ae",
+  "current_branch": "fix/ar-20260625-161300-a43831b-loso-pilot-v1",
+  "dataset_id": "weissbart_tf64",
+  "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+  "sampling_rate": 64,
+  "model": "ridge",
+  "seed": 0,
+  "heldout_subjects": [
+    "P00",
+    "P01",
+    "P02"
+  ],
+  "job_accounting": {
+    "planned_jobs": 3,
+    "successful_jobs": 3,
+    "failed_jobs": 0
+  },
+  "model_runs": [
+    {
+      "heldout_subject": "P00",
+      "model": "ridge",
+      "status": "success",
+      "checkpoint_id": "ridge_alpha_0.001",
+      "best_alpha": 0.001,
+      "val_pearson": 0.11320758126792103,
+      "test_pearson_direct": 0.10532671568751216
+    },
+    {
+      "heldout_subject": "P01",
+      "model": "ridge",
+      "status": "success",
+      "checkpoint_id": "ridge_alpha_0.001",
+      "best_alpha": 0.001,
+      "val_pearson": 0.11874293985709532,
+      "test_pearson_direct": 0.044541195871889476
+    },
+    {
+      "heldout_subject": "P02",
+      "model": "ridge",
+      "status": "success",
+      "checkpoint_id": "ridge_alpha_0.001",
+      "best_alpha": 0.001,
+      "val_pearson": 0.12131887829533354,
+      "test_pearson_direct": 0.04856646829713734
+    }
+  ],
+  "artifacts": {
+    "recording_metrics": "experiments/gate0_gate2_loso_pilot_v1/recording_metrics.csv",
+    "subject_metrics": "experiments/gate0_gate2_loso_pilot_v1/subject_metrics.csv",
+    "leakage_check": "experiments/gate0_gate2_loso_pilot_v1/leakage_check.md",
+    "result_summary": "experiments/gate0_gate2_loso_pilot_v1/result_summary.md",
+    "schema_validation_report": "experiments/gate0_gate2_loso_pilot_v1/schema_validation_report.json"
+  }
+}

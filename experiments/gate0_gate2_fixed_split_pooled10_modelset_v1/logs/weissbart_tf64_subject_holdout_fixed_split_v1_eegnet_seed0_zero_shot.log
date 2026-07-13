@@ -1,0 +1,2 @@
+[2026-07-07 16:51:24] zero_shot_reused checkpoint_path=E:\decode\_fix_loso_resumable_runner_closure_v1\local_checkpoints\subject_holdout\eegnet\weissbart_tf64\subject_holdout_fixed_split_v1\seed0\best_epoch_5.pt
+[2026-07-07 16:51:25] job_completed mean_pearson=0.08114962659027194 n_test_subjects=3

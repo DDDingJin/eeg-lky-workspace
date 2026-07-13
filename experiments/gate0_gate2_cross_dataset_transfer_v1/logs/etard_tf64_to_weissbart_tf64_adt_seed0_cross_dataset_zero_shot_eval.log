@@ -1,0 +1,2 @@
+[2026-07-08 22:07:15] checkpoint_loaded_for_eval checkpoint_local_id=cross_dataset_source_only:adt:etard_tf64:seed0:best_epoch_2 checkpoint_path=local_checkpoints/cross_dataset/source_only/adt/etard_tf64/seed0/best_epoch_2.pt
+[2026-07-08 22:07:17] job_completed mean_pearson=0.05832931917974423 n_test_subjects=3

@@ -1,0 +1,165 @@
+[2026-07-05 04:00:46] job_started dataset=weissbart_tf64 subject=P08 model=eegnet seed=0 device=cuda torch_cuda_is_available=True gpu_name=NVIDIA GeForce RTX 5060 Ti
+[2026-07-05 04:00:50] data_preload_done dataset=weissbart_tf64 subject=P08 model=eegnet seed=0 train_bytes=380524560 val_bytes=47545680 train_recordings=180 val_recordings=180 train_window_count=1454736 val_window_count=174048 batch_size=256 eval_batch_size=1024 train_batches_per_epoch=5683 val_batches_per_epoch=680 data_preload_seconds=4.160967 device=cuda gpu_name=NVIDIA GeForce RTX 5060 Ti
+[2026-07-05 04:00:50] train_epoch_started subject=P08 epoch=1 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:00:50] first_train_batch_loaded subject=P08 epoch=1 max_epochs=100 batch=1 total_batches=5683 first_batch_seconds=0.071775 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:00:50] job_progress subject=P08 epoch=1 max_epochs=100 batch=1 total_batches=5683 job_progress_percent=10.000123 elapsed_seconds=4.245687 estimated_remaining_seconds=38.210672 current_loss=-0.004610 best_val_score=na gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:02:00] job_progress subject=P08 epoch=1 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=10.700000 elapsed_seconds=73.762493 estimated_remaining_seconds=615.606613 current_loss=0.077967 best_val_score=na gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:02:00] train_epoch_completed subject=P08 epoch=1 max_epochs=100 train_epoch_seconds=69.591399 train_loss=-0.084223 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:02:04] val_epoch_completed subject=P08 epoch=1 max_epochs=100 val_epoch_seconds=3.981447 val_score=0.092387 best_val_score=na gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:02:04] best_checkpoint_updated subject=P08 epoch=1 max_epochs=100 best_val_score=0.092387 checkpoint_id=eegnet_epoch_0 device=cuda
+[2026-07-05 04:02:04] train_epoch_started subject=P08 epoch=2 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:03:13] job_progress subject=P08 epoch=2 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=11.400000 elapsed_seconds=147.242752 estimated_remaining_seconds=1144.360355 current_loss=-0.077766 best_val_score=0.092387 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:03:13] train_epoch_completed subject=P08 epoch=2 max_epochs=100 train_epoch_seconds=69.487875 train_loss=-0.103960 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:03:17] val_epoch_completed subject=P08 epoch=2 max_epochs=100 val_epoch_seconds=4.000156 val_score=0.117744 best_val_score=0.092387 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:03:17] best_checkpoint_updated subject=P08 epoch=2 max_epochs=100 best_val_score=0.117744 checkpoint_id=eegnet_epoch_1 device=cuda
+[2026-07-05 04:03:17] train_epoch_started subject=P08 epoch=3 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:04:26] job_progress subject=P08 epoch=3 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=12.100000 elapsed_seconds=220.465372 estimated_remaining_seconds=1601.562505 current_loss=-0.202236 best_val_score=0.117744 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:04:26] train_epoch_completed subject=P08 epoch=3 max_epochs=100 train_epoch_seconds=69.212049 train_loss=-0.109814 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:04:30] val_epoch_completed subject=P08 epoch=3 max_epochs=100 val_epoch_seconds=3.990970 val_score=0.122381 best_val_score=0.117744 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:04:30] best_checkpoint_updated subject=P08 epoch=3 max_epochs=100 best_val_score=0.122381 checkpoint_id=eegnet_epoch_2 device=cuda
+[2026-07-05 04:04:30] train_epoch_started subject=P08 epoch=4 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:05:40] job_progress subject=P08 epoch=4 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=12.800000 elapsed_seconds=293.832094 estimated_remaining_seconds=2001.731153 current_loss=-0.080783 best_val_score=0.122381 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:05:40] train_epoch_completed subject=P08 epoch=4 max_epochs=100 train_epoch_seconds=69.364064 train_loss=-0.113856 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:05:44] val_epoch_completed subject=P08 epoch=4 max_epochs=100 val_epoch_seconds=4.145897 val_score=0.123404 best_val_score=0.122381 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:05:44] best_checkpoint_updated subject=P08 epoch=4 max_epochs=100 best_val_score=0.123404 checkpoint_id=eegnet_epoch_3 device=cuda
+[2026-07-05 04:05:44] train_epoch_started subject=P08 epoch=5 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:06:53] job_progress subject=P08 epoch=5 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=13.500000 elapsed_seconds=367.097433 estimated_remaining_seconds=2352.142824 current_loss=-0.069129 best_val_score=0.123404 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:06:53] train_epoch_completed subject=P08 epoch=5 max_epochs=100 train_epoch_seconds=69.107685 train_loss=-0.115946 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:06:57] val_epoch_completed subject=P08 epoch=5 max_epochs=100 val_epoch_seconds=3.957172 val_score=0.122127 best_val_score=0.123404 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:06:57] train_epoch_started subject=P08 epoch=6 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:08:06] job_progress subject=P08 epoch=6 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=14.200000 elapsed_seconds=440.466071 estimated_remaining_seconds=2661.407673 current_loss=-0.050874 best_val_score=0.123404 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:08:06] train_epoch_completed subject=P08 epoch=6 max_epochs=100 train_epoch_seconds=69.401218 train_loss=-0.116364 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:08:10] val_epoch_completed subject=P08 epoch=6 max_epochs=100 val_epoch_seconds=3.949528 val_score=0.127797 best_val_score=0.123404 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:08:10] best_checkpoint_updated subject=P08 epoch=6 max_epochs=100 best_val_score=0.127797 checkpoint_id=eegnet_epoch_5 device=cuda
+[2026-07-05 04:08:10] train_epoch_started subject=P08 epoch=7 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:09:20] job_progress subject=P08 epoch=7 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=14.900000 elapsed_seconds=513.907422 estimated_remaining_seconds=2935.135689 current_loss=-0.075673 best_val_score=0.127797 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:09:20] train_epoch_completed subject=P08 epoch=7 max_epochs=100 train_epoch_seconds=69.480157 train_loss=-0.117961 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:09:24] val_epoch_completed subject=P08 epoch=7 max_epochs=100 val_epoch_seconds=3.958708 val_score=0.127052 best_val_score=0.127797 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:09:24] train_epoch_started subject=P08 epoch=8 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:10:33] job_progress subject=P08 epoch=8 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=15.600000 elapsed_seconds=587.024073 estimated_remaining_seconds=3175.950767 current_loss=0.002734 best_val_score=0.127797 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:10:33] train_epoch_completed subject=P08 epoch=8 max_epochs=100 train_epoch_seconds=69.147728 train_loss=-0.119850 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:10:37] val_epoch_completed subject=P08 epoch=8 max_epochs=100 val_epoch_seconds=3.992491 val_score=0.124775 best_val_score=0.127797 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:10:37] train_epoch_started subject=P08 epoch=9 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:11:47] job_progress subject=P08 epoch=9 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=16.300000 elapsed_seconds=660.652127 estimated_remaining_seconds=3392.428413 current_loss=-0.058631 best_val_score=0.127797 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:11:47] train_epoch_completed subject=P08 epoch=9 max_epochs=100 train_epoch_seconds=69.626796 train_loss=-0.121068 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:11:51] val_epoch_completed subject=P08 epoch=9 max_epochs=100 val_epoch_seconds=3.986592 val_score=0.128185 best_val_score=0.127797 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:11:51] best_checkpoint_updated subject=P08 epoch=9 max_epochs=100 best_val_score=0.128185 checkpoint_id=eegnet_epoch_8 device=cuda
+[2026-07-05 04:11:51] train_epoch_started subject=P08 epoch=10 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:13:00] job_progress subject=P08 epoch=10 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=17.000000 elapsed_seconds=733.844488 estimated_remaining_seconds=3582.887800 current_loss=-0.142190 best_val_score=0.128185 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:13:00] train_epoch_completed subject=P08 epoch=10 max_epochs=100 train_epoch_seconds=69.196540 train_loss=-0.121275 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:13:04] val_epoch_completed subject=P08 epoch=10 max_epochs=100 val_epoch_seconds=3.911444 val_score=0.129215 best_val_score=0.128185 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:13:04] best_checkpoint_updated subject=P08 epoch=10 max_epochs=100 best_val_score=0.129215 checkpoint_id=eegnet_epoch_9 device=cuda
+[2026-07-05 04:13:04] train_epoch_started subject=P08 epoch=11 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:14:13] job_progress subject=P08 epoch=11 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=17.700000 elapsed_seconds=807.006055 estimated_remaining_seconds=3752.350194 current_loss=-0.112673 best_val_score=0.129215 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:14:13] train_epoch_completed subject=P08 epoch=11 max_epochs=100 train_epoch_seconds=69.240895 train_loss=-0.122612 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:14:17] val_epoch_completed subject=P08 epoch=11 max_epochs=100 val_epoch_seconds=3.939822 val_score=0.126996 best_val_score=0.129215 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:14:17] train_epoch_started subject=P08 epoch=12 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:15:26] job_progress subject=P08 epoch=12 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=18.400000 elapsed_seconds=880.294780 estimated_remaining_seconds=3903.915987 current_loss=-0.054497 best_val_score=0.129215 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:15:26] train_epoch_completed subject=P08 epoch=12 max_epochs=100 train_epoch_seconds=69.339366 train_loss=-0.122863 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:15:30] val_epoch_completed subject=P08 epoch=12 max_epochs=100 val_epoch_seconds=3.987551 val_score=0.129037 best_val_score=0.129215 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:15:30] train_epoch_started subject=P08 epoch=13 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:16:40] job_progress subject=P08 epoch=13 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=19.100000 elapsed_seconds=953.720759 estimated_remaining_seconds=4039.581651 current_loss=-0.161388 best_val_score=0.129215 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:16:40] train_epoch_completed subject=P08 epoch=13 max_epochs=100 train_epoch_seconds=69.429532 train_loss=-0.124229 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:16:44] val_epoch_completed subject=P08 epoch=13 max_epochs=100 val_epoch_seconds=4.113262 val_score=0.123755 best_val_score=0.129215 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:16:44] train_epoch_started subject=P08 epoch=14 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:17:53] job_progress subject=P08 epoch=14 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=19.800000 elapsed_seconds=1027.432864 estimated_remaining_seconds=4161.622009 current_loss=-0.182784 best_val_score=0.129215 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:17:53] train_epoch_completed subject=P08 epoch=14 max_epochs=100 train_epoch_seconds=69.588263 train_loss=-0.124717 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:17:57] val_epoch_completed subject=P08 epoch=14 max_epochs=100 val_epoch_seconds=4.009468 val_score=0.129164 best_val_score=0.129215 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:17:57] train_epoch_started subject=P08 epoch=15 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:19:07] job_progress subject=P08 epoch=15 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=20.500000 elapsed_seconds=1100.776624 estimated_remaining_seconds=4268.865449 current_loss=-0.218841 best_val_score=0.129215 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:19:07] train_epoch_completed subject=P08 epoch=15 max_epochs=100 train_epoch_seconds=69.324079 train_loss=-0.124379 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:19:11] val_epoch_completed subject=P08 epoch=15 max_epochs=100 val_epoch_seconds=3.922425 val_score=0.115689 best_val_score=0.129215 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:19:11] train_epoch_started subject=P08 epoch=16 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:20:20] job_progress subject=P08 epoch=16 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=21.200000 elapsed_seconds=1173.954156 estimated_remaining_seconds=4363.565454 current_loss=-0.204736 best_val_score=0.129215 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:20:20] train_epoch_completed subject=P08 epoch=16 max_epochs=100 train_epoch_seconds=69.244404 train_loss=-0.125163 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:20:24] val_epoch_completed subject=P08 epoch=16 max_epochs=100 val_epoch_seconds=3.955920 val_score=0.123144 best_val_score=0.129215 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:20:24] train_epoch_started subject=P08 epoch=17 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:21:33] job_progress subject=P08 epoch=17 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=21.900000 elapsed_seconds=1247.423545 estimated_remaining_seconds=4448.574380 current_loss=-0.180078 best_val_score=0.129215 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:21:33] train_epoch_completed subject=P08 epoch=17 max_epochs=100 train_epoch_seconds=69.503455 train_loss=-0.126656 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:21:37] val_epoch_completed subject=P08 epoch=17 max_epochs=100 val_epoch_seconds=3.973198 val_score=0.130815 best_val_score=0.129215 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:21:37] best_checkpoint_updated subject=P08 epoch=17 max_epochs=100 best_val_score=0.130815 checkpoint_id=eegnet_epoch_16 device=cuda
+[2026-07-05 04:21:37] train_epoch_started subject=P08 epoch=18 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:22:47] job_progress subject=P08 epoch=18 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=22.600000 elapsed_seconds=1321.169242 estimated_remaining_seconds=4524.712365 current_loss=-0.176031 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:22:47] train_epoch_completed subject=P08 epoch=18 max_epochs=100 train_epoch_seconds=69.761860 train_loss=-0.125757 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:22:51] val_epoch_completed subject=P08 epoch=18 max_epochs=100 val_epoch_seconds=3.959036 val_score=0.129340 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:22:51] train_epoch_started subject=P08 epoch=19 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:24:00] job_progress subject=P08 epoch=19 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=23.300000 elapsed_seconds=1394.614240 estimated_remaining_seconds=4590.854604 current_loss=-0.040888 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:24:00] train_epoch_completed subject=P08 epoch=19 max_epochs=100 train_epoch_seconds=69.476447 train_loss=-0.126375 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:24:04] val_epoch_completed subject=P08 epoch=19 max_epochs=100 val_epoch_seconds=4.011565 val_score=0.128385 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:24:05] train_epoch_started subject=P08 epoch=20 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:25:14] job_progress subject=P08 epoch=20 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=24.000000 elapsed_seconds=1468.342450 estimated_remaining_seconds=4649.751095 current_loss=-0.116754 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:25:14] train_epoch_completed subject=P08 epoch=20 max_epochs=100 train_epoch_seconds=69.706941 train_loss=-0.127279 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:25:18] val_epoch_completed subject=P08 epoch=20 max_epochs=100 val_epoch_seconds=3.903332 val_score=0.127250 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:25:18] train_epoch_started subject=P08 epoch=21 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:26:27] job_progress subject=P08 epoch=21 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=24.700000 elapsed_seconds=1541.610141 estimated_remaining_seconds=4699.726470 current_loss=-0.253114 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:26:27] train_epoch_completed subject=P08 epoch=21 max_epochs=100 train_epoch_seconds=69.354818 train_loss=-0.126969 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:26:31] val_epoch_completed subject=P08 epoch=21 max_epochs=100 val_epoch_seconds=3.973671 val_score=0.127115 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:26:31] train_epoch_started subject=P08 epoch=22 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:27:41] job_progress subject=P08 epoch=22 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=25.400000 elapsed_seconds=1615.220431 estimated_remaining_seconds=4743.915129 current_loss=-0.085949 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:27:41] train_epoch_completed subject=P08 epoch=22 max_epochs=100 train_epoch_seconds=69.628534 train_loss=-0.127993 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:27:45] val_epoch_completed subject=P08 epoch=22 max_epochs=100 val_epoch_seconds=4.165000 val_score=0.120176 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:27:45] train_epoch_started subject=P08 epoch=23 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:28:55] job_progress subject=P08 epoch=23 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=26.100000 elapsed_seconds=1688.645807 estimated_remaining_seconds=4781.261505 current_loss=-0.098237 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:28:55] train_epoch_completed subject=P08 epoch=23 max_epochs=100 train_epoch_seconds=69.250919 train_loss=-0.127694 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:28:58] val_epoch_completed subject=P08 epoch=23 max_epochs=100 val_epoch_seconds=3.940709 val_score=0.128765 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:28:58] train_epoch_started subject=P08 epoch=24 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:30:08] job_progress subject=P08 epoch=24 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=26.800000 elapsed_seconds=1761.845035 estimated_remaining_seconds=4812.203608 current_loss=-0.149502 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:30:08] train_epoch_completed subject=P08 epoch=24 max_epochs=100 train_epoch_seconds=69.249963 train_loss=-0.128461 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:30:12] val_epoch_completed subject=P08 epoch=24 max_epochs=100 val_epoch_seconds=4.089578 val_score=0.122362 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:30:12] train_epoch_started subject=P08 epoch=25 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:31:21] job_progress subject=P08 epoch=25 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=27.500000 elapsed_seconds=1835.198446 estimated_remaining_seconds=4838.250452 current_loss=-0.061415 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:31:21] train_epoch_completed subject=P08 epoch=25 max_epochs=100 train_epoch_seconds=69.255074 train_loss=-0.128266 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:31:25] val_epoch_completed subject=P08 epoch=25 max_epochs=100 val_epoch_seconds=3.974134 val_score=0.129141 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:31:25] train_epoch_started subject=P08 epoch=26 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:32:35] job_progress subject=P08 epoch=26 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=28.200000 elapsed_seconds=1908.652447 estimated_remaining_seconds=4859.618644 current_loss=-0.206604 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:32:35] train_epoch_completed subject=P08 epoch=26 max_epochs=100 train_epoch_seconds=69.470003 train_loss=-0.128412 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:32:38] val_epoch_completed subject=P08 epoch=26 max_epochs=100 val_epoch_seconds=3.963190 val_score=0.131440 best_val_score=0.130815 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:32:38] best_checkpoint_updated subject=P08 epoch=26 max_epochs=100 best_val_score=0.131440 checkpoint_id=eegnet_epoch_25 device=cuda
+[2026-07-05 04:32:38] train_epoch_started subject=P08 epoch=27 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:33:48] job_progress subject=P08 epoch=27 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=28.900000 elapsed_seconds=1982.242463 estimated_remaining_seconds=4876.728000 current_loss=-0.027830 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:33:48] train_epoch_completed subject=P08 epoch=27 max_epochs=100 train_epoch_seconds=69.615266 train_loss=-0.129624 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:33:52] val_epoch_completed subject=P08 epoch=27 max_epochs=100 val_epoch_seconds=3.975625 val_score=0.128840 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:33:52] train_epoch_started subject=P08 epoch=28 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:35:02] job_progress subject=P08 epoch=28 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=29.600000 elapsed_seconds=2055.719148 estimated_remaining_seconds=4889.277977 current_loss=-0.084770 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:35:02] train_epoch_completed subject=P08 epoch=28 max_epochs=100 train_epoch_seconds=69.492630 train_loss=-0.129647 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:35:06] val_epoch_completed subject=P08 epoch=28 max_epochs=100 val_epoch_seconds=4.007737 val_score=0.122497 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:35:06] train_epoch_started subject=P08 epoch=29 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:35:45] job_progress subject=P08 epoch=29 max_epochs=100 batch=3248 total_batches=5683 job_progress_percent=30.000070 elapsed_seconds=2099.485821 estimated_remaining_seconds=4898.783832 current_loss=-0.070834 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:36:15] job_progress subject=P08 epoch=29 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=30.300000 elapsed_seconds=2129.247684 estimated_remaining_seconds=4897.972398 current_loss=-0.170265 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:36:15] train_epoch_completed subject=P08 epoch=29 max_epochs=100 train_epoch_seconds=69.510577 train_loss=-0.129883 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:36:19] val_epoch_completed subject=P08 epoch=29 max_epochs=100 val_epoch_seconds=4.033467 val_score=0.118917 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:36:19] train_epoch_started subject=P08 epoch=30 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:37:28] job_progress subject=P08 epoch=30 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=31.000000 elapsed_seconds=2202.427164 estimated_remaining_seconds=4902.176594 current_loss=0.018036 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:37:28] train_epoch_completed subject=P08 epoch=30 max_epochs=100 train_epoch_seconds=69.136521 train_loss=-0.129805 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:37:32] val_epoch_completed subject=P08 epoch=30 max_epochs=100 val_epoch_seconds=4.065387 val_score=0.130063 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:37:32] train_epoch_started subject=P08 epoch=31 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:38:42] job_progress subject=P08 epoch=31 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=31.700000 elapsed_seconds=2276.033566 estimated_remaining_seconds=4903.883050 current_loss=-0.115677 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:38:42] train_epoch_completed subject=P08 epoch=31 max_epochs=100 train_epoch_seconds=69.533369 train_loss=-0.129896 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:38:46] val_epoch_completed subject=P08 epoch=31 max_epochs=100 val_epoch_seconds=4.103335 val_score=0.126228 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:38:46] train_epoch_started subject=P08 epoch=32 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:39:57] job_progress subject=P08 epoch=32 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=32.400000 elapsed_seconds=2350.678496 estimated_remaining_seconds=4904.502050 current_loss=-0.056453 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:39:57] train_epoch_completed subject=P08 epoch=32 max_epochs=100 train_epoch_seconds=70.533170 train_loss=-0.129822 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:40:00] val_epoch_completed subject=P08 epoch=32 max_epochs=100 val_epoch_seconds=3.940060 val_score=0.128192 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:40:00] train_epoch_started subject=P08 epoch=33 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:41:10] job_progress subject=P08 epoch=33 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=33.100000 elapsed_seconds=2424.404288 estimated_remaining_seconds=4900.079969 current_loss=-0.072193 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:41:10] train_epoch_completed subject=P08 epoch=33 max_epochs=100 train_epoch_seconds=69.775641 train_loss=-0.130442 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:41:14] val_epoch_completed subject=P08 epoch=33 max_epochs=100 val_epoch_seconds=3.996277 val_score=0.129974 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:41:14] train_epoch_started subject=P08 epoch=34 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:42:24] job_progress subject=P08 epoch=34 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=33.800000 elapsed_seconds=2498.065402 estimated_remaining_seconds=4892.660641 current_loss=-0.091440 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:42:24] train_epoch_completed subject=P08 epoch=34 max_epochs=100 train_epoch_seconds=69.655585 train_loss=-0.129723 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:42:28] val_epoch_completed subject=P08 epoch=34 max_epochs=100 val_epoch_seconds=4.035901 val_score=0.129667 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:42:28] train_epoch_started subject=P08 epoch=35 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:43:38] job_progress subject=P08 epoch=35 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=34.500000 elapsed_seconds=2571.737137 estimated_remaining_seconds=4882.573407 current_loss=-0.217014 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:43:38] train_epoch_completed subject=P08 epoch=35 max_epochs=100 train_epoch_seconds=69.626019 train_loss=-0.130147 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:43:42] val_epoch_completed subject=P08 epoch=35 max_epochs=100 val_epoch_seconds=3.941044 val_score=0.126554 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:43:42] train_epoch_started subject=P08 epoch=36 max_epochs=100 total_batches=5683 device=cuda
+[2026-07-05 04:44:51] job_progress subject=P08 epoch=36 max_epochs=100 batch=5683 total_batches=5683 job_progress_percent=35.200000 elapsed_seconds=2645.610373 estimated_remaining_seconds=4870.328188 current_loss=-0.108746 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:44:51] train_epoch_completed subject=P08 epoch=36 max_epochs=100 train_epoch_seconds=69.922697 train_loss=-0.129693 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:44:55] val_epoch_completed subject=P08 epoch=36 max_epochs=100 val_epoch_seconds=3.993500 val_score=0.124097 best_val_score=0.131440 gpu_memory_mb=308.000000 device=cuda
+[2026-07-05 04:44:55] early_stopping_triggered subject=P08 epoch=36 max_epochs=100 stale_epochs=10 best_epoch=26 best_val_score=0.131440 device=cuda
+[2026-07-05 04:44:55] test_prediction_started subject=P08 epoch=26 max_epochs=100 best_val_score=0.131440 device=cuda
+[2026-07-05 04:44:56] test_prediction_done input_shape=[990, 64, 50] raw_prediction_shape=[990] prediction_shape=[990] target_shape=[990] scorer_input_shape=[990]
+[2026-07-05 04:44:56] test_prediction_completed subject=P08 test_prediction_seconds=0.436862 prediction_shape=[990] target_shape=[990] device=cuda
+[2026-07-05 04:44:56] metrics_written subject=P08 subject_metric_rows=9 recording_metric_rows=135 metric_write_seconds=0.007340 device=cuda
+[2026-07-05 04:44:56] completed_jobs_written subject=P08 completed_jobs=9 completed_job_key=weissbart_tf64:P08:eegnet:seed0 device=cuda
+[2026-07-05 04:44:56] job_completed subject=P08 total_seconds=2650.095187 schema_validation_passed=False completed_job_key=weissbart_tf64:P08:eegnet:seed0 device=cuda

@@ -1,0 +1,18 @@
+{
+  "protocol": "gate0_gate2_loso_resumable_runner_closure_v1",
+  "passed": true,
+  "checks": {
+    "completed_jobs_key_contains_dataset_subject_model_seed": true,
+    "subject_metrics_align_with_completed_jobs": true,
+    "recording_metrics_cover_completed_jobs": true,
+    "pure_loso_leakage_check_passed": true,
+    "failure_report_empty": true
+  },
+  "details": {
+    "expected_jobs": 3,
+    "completed_jobs": 3,
+    "subject_metric_rows": 3,
+    "recording_metric_rows": 45,
+    "failure_rows": 0
+  }
+}

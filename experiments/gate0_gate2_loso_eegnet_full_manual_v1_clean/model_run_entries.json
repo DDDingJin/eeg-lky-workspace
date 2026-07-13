@@ -1,0 +1,446 @@
+{
+  "model_run_entries": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_18",
+      "epochs_completed": 29,
+      "best_epoch": 18,
+      "best_val_score": 0.12615611108836566,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_18",
+      "epochs_completed": 29,
+      "best_epoch": 18,
+      "best_val_score": 0.12840876052210018,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P02",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_20",
+      "epochs_completed": 31,
+      "best_epoch": 20,
+      "best_val_score": 0.1327229009814105,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P03",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_20",
+      "epochs_completed": 31,
+      "best_epoch": 20,
+      "best_val_score": 0.1294182685073739,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P04",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_18",
+      "epochs_completed": 29,
+      "best_epoch": 18,
+      "best_val_score": 0.1337143381654374,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P05",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_38",
+      "epochs_completed": 49,
+      "best_epoch": 38,
+      "best_val_score": 0.12437078133234,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P06",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_11",
+      "epochs_completed": 22,
+      "best_epoch": 11,
+      "best_val_score": 0.13235078675698947,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P07",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_25",
+      "epochs_completed": 36,
+      "best_epoch": 25,
+      "best_val_score": 0.1330298435490423,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P08",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_25",
+      "epochs_completed": 36,
+      "best_epoch": 25,
+      "best_val_score": 0.1314398705798393,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P09",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_13",
+      "epochs_completed": 24,
+      "best_epoch": 13,
+      "best_val_score": 0.12608074026519556,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P10",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_11",
+      "epochs_completed": 22,
+      "best_epoch": 11,
+      "best_val_score": 0.1302034670142936,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P11",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_32",
+      "epochs_completed": 43,
+      "best_epoch": 32,
+      "best_val_score": 0.13746095038154368,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P12",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_30",
+      "epochs_completed": 41,
+      "best_epoch": 30,
+      "best_val_score": 0.12410590509877212,
+      "input_tensor_shape_example": [
+        990,
+        64,
+        50
+      ],
+      "raw_model_output_shape": [
+        990
+      ],
+      "prediction_shape_example": [
+        990
+      ],
+      "target_shape_example": [
+        990
+      ],
+      "scorer_input_shape_example": [
+        990
+      ],
+      "prediction_target_alignment_ok": true,
+      "train_window_count": 1454736,
+      "val_window_count": 174048,
+      "test_recording_count": 15,
+      "batch_size": 256,
+      "eval_batch_size": 1024
+    }
+  ]
+}

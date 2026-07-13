@@ -1,0 +1,19 @@
+{
+  "protocol": "gate0_gate2_cross_dataset_transfer_v1",
+  "artifact_scope": "cross_dataset_transfer_zero_shot_plus_pooled10_target_calibration_v1",
+  "base_branch": "fix/ar-20260625-161300-a43831b-fixed-split-pooled10-modelset-v1",
+  "base_commit": "ac847dd508a9c63ae546049f6a62b82fc34afc38",
+  "current_branch": "fix/ar-20260625-161300-a43831b-cross-dataset-transfer-v1",
+  "config_path": "configs/benchmark/gate0_gate2_cross_dataset_transfer_v1.json",
+  "commit_sha": "2176dcb254e70fbeaef3b1d7988b3ee40b4c39c3",
+  "stage_scope": "preflight_only_no_training_started",
+  "artifacts": {
+    "transfer_plan": "experiments/gate0_gate2_cross_dataset_transfer_v1/preflight/transfer_plan.json",
+    "calibration_plan": "experiments/gate0_gate2_cross_dataset_transfer_v1/preflight/calibration_plan.json",
+    "checkpoint_manifest": "experiments/gate0_gate2_cross_dataset_transfer_v1/preflight/checkpoint_manifest.json",
+    "model_run_entries": "experiments/gate0_gate2_cross_dataset_transfer_v1/preflight/model_run_entries.json",
+    "schema_validation_report": "experiments/gate0_gate2_cross_dataset_transfer_v1/preflight/schema_validation_report.json",
+    "failure_report": "experiments/gate0_gate2_cross_dataset_transfer_v1/preflight/failure_report.json",
+    "job_plan_only": "experiments/gate0_gate2_cross_dataset_transfer_v1/preflight/job_plan_only.json"
+  }
+}

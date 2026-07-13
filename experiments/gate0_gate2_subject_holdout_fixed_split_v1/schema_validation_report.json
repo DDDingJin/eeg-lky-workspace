@@ -1,0 +1,10 @@
+{
+  "protocol": "gate0_gate2_subject_holdout_fixed_split_v1",
+  "passed": true,
+  "checks": {
+    "completed_job_key_contains_dataset_model_seed_split_id": true,
+    "checkpoint_saved_locally": true,
+    "failure_report_empty": true,
+    "split_no_overlap": true
+  }
+}

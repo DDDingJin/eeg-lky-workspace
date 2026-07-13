@@ -1,0 +1,202 @@
+{
+  "completed_jobs": [
+    {
+      "job_key": "weissbart_tf64:eegnet:seed0:source_zero_shot",
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": null,
+      "model": "eegnet",
+      "seed": 0,
+      "stage": "source_zero_shot",
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_4",
+      "checkpoint_local_id": "cross_dataset_source_only:eegnet:weissbart_tf64:seed0:best_epoch_4"
+    },
+    {
+      "job_key": "weissbart_tf64->etard_tf64:eegnet:seed0:cross_dataset_zero_shot_eval",
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": "etard_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "stage": "cross_dataset_zero_shot_eval",
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_4",
+      "checkpoint_local_id": "cross_dataset_source_only:eegnet:weissbart_tf64:seed0:best_epoch_4"
+    },
+    {
+      "job_key": "etard_tf64:eegnet:seed0:source_zero_shot",
+      "source_dataset": "etard_tf64",
+      "target_dataset": null,
+      "model": "eegnet",
+      "seed": 0,
+      "stage": "source_zero_shot",
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_4",
+      "checkpoint_local_id": "cross_dataset_source_only:eegnet:etard_tf64:seed0:best_epoch_4"
+    },
+    {
+      "job_key": "etard_tf64->weissbart_tf64:eegnet:seed0:cross_dataset_zero_shot_eval",
+      "source_dataset": "etard_tf64",
+      "target_dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "stage": "cross_dataset_zero_shot_eval",
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_4",
+      "checkpoint_local_id": "cross_dataset_source_only:eegnet:etard_tf64:seed0:best_epoch_4"
+    },
+    {
+      "job_key": "weissbart_tf64->etard_tf64:eegnet:seed0:pooled10_target_calibration",
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": "etard_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "stage": "pooled10_target_calibration",
+      "status": "success",
+      "checkpoint_id": "eegnet_pooled10_epoch_38",
+      "checkpoint_local_id": "cross_dataset_pooled10_target_calibration:eegnet:weissbart_tf64->etard_tf64:seed0:best_epoch_38"
+    },
+    {
+      "job_key": "etard_tf64->weissbart_tf64:eegnet:seed0:pooled10_target_calibration",
+      "source_dataset": "etard_tf64",
+      "target_dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "stage": "pooled10_target_calibration",
+      "status": "success",
+      "checkpoint_id": "eegnet_pooled10_epoch_20",
+      "checkpoint_local_id": "cross_dataset_pooled10_target_calibration:eegnet:etard_tf64->weissbart_tf64:seed0:best_epoch_20"
+    },
+    {
+      "job_key": "weissbart_tf64:fcnn:seed0:source_zero_shot",
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": null,
+      "model": "fcnn",
+      "seed": 0,
+      "stage": "source_zero_shot",
+      "status": "success",
+      "checkpoint_id": "fcnn_epoch_0",
+      "checkpoint_local_id": "cross_dataset_source_only:fcnn:weissbart_tf64:seed0:best_epoch_0"
+    },
+    {
+      "job_key": "weissbart_tf64->etard_tf64:fcnn:seed0:cross_dataset_zero_shot_eval",
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": "etard_tf64",
+      "model": "fcnn",
+      "seed": 0,
+      "stage": "cross_dataset_zero_shot_eval",
+      "status": "success",
+      "checkpoint_id": "fcnn_epoch_0",
+      "checkpoint_local_id": "cross_dataset_source_only:fcnn:weissbart_tf64:seed0:best_epoch_0"
+    },
+    {
+      "job_key": "weissbart_tf64->etard_tf64:fcnn:seed0:pooled10_target_calibration",
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": "etard_tf64",
+      "model": "fcnn",
+      "seed": 0,
+      "stage": "pooled10_target_calibration",
+      "status": "success",
+      "checkpoint_id": "fcnn_pooled10_epoch_8",
+      "checkpoint_local_id": "cross_dataset_pooled10_target_calibration:fcnn:weissbart_tf64->etard_tf64:seed0:best_epoch_8"
+    },
+    {
+      "job_key": "weissbart_tf64:adt:seed0:source_zero_shot",
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": null,
+      "model": "adt",
+      "seed": 0,
+      "stage": "source_zero_shot",
+      "status": "success",
+      "checkpoint_id": "adt_epoch_1",
+      "checkpoint_local_id": "cross_dataset_source_only:adt:weissbart_tf64:seed0:best_epoch_1"
+    },
+    {
+      "job_key": "weissbart_tf64->etard_tf64:adt:seed0:cross_dataset_zero_shot_eval",
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": "etard_tf64",
+      "model": "adt",
+      "seed": 0,
+      "stage": "cross_dataset_zero_shot_eval",
+      "status": "success",
+      "checkpoint_id": "adt_epoch_1",
+      "checkpoint_local_id": "cross_dataset_source_only:adt:weissbart_tf64:seed0:best_epoch_1"
+    },
+    {
+      "job_key": "weissbart_tf64->etard_tf64:adt:seed0:pooled10_target_calibration",
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": "etard_tf64",
+      "model": "adt",
+      "seed": 0,
+      "stage": "pooled10_target_calibration",
+      "status": "success",
+      "checkpoint_id": "adt_pooled10_epoch_12",
+      "checkpoint_local_id": "cross_dataset_pooled10_target_calibration:adt:weissbart_tf64->etard_tf64:seed0:best_epoch_12"
+    },
+    {
+      "job_key": "etard_tf64:fcnn:seed0:source_zero_shot",
+      "source_dataset": "etard_tf64",
+      "target_dataset": null,
+      "model": "fcnn",
+      "seed": 0,
+      "stage": "source_zero_shot",
+      "status": "success",
+      "checkpoint_id": "fcnn_epoch_10",
+      "checkpoint_local_id": "cross_dataset_source_only:fcnn:etard_tf64:seed0:best_epoch_10"
+    },
+    {
+      "job_key": "etard_tf64->weissbart_tf64:fcnn:seed0:cross_dataset_zero_shot_eval",
+      "source_dataset": "etard_tf64",
+      "target_dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "seed": 0,
+      "stage": "cross_dataset_zero_shot_eval",
+      "status": "success",
+      "checkpoint_id": "fcnn_epoch_10",
+      "checkpoint_local_id": "cross_dataset_source_only:fcnn:etard_tf64:seed0:best_epoch_10"
+    },
+    {
+      "job_key": "etard_tf64->weissbart_tf64:fcnn:seed0:pooled10_target_calibration",
+      "source_dataset": "etard_tf64",
+      "target_dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "seed": 0,
+      "stage": "pooled10_target_calibration",
+      "status": "success",
+      "checkpoint_id": "fcnn_pooled10_epoch_11",
+      "checkpoint_local_id": "cross_dataset_pooled10_target_calibration:fcnn:etard_tf64->weissbart_tf64:seed0:best_epoch_11"
+    },
+    {
+      "job_key": "etard_tf64:adt:seed0:source_zero_shot",
+      "source_dataset": "etard_tf64",
+      "target_dataset": null,
+      "model": "adt",
+      "seed": 0,
+      "stage": "source_zero_shot",
+      "status": "success",
+      "checkpoint_id": "adt_epoch_2",
+      "checkpoint_local_id": "cross_dataset_source_only:adt:etard_tf64:seed0:best_epoch_2"
+    },
+    {
+      "job_key": "etard_tf64->weissbart_tf64:adt:seed0:cross_dataset_zero_shot_eval",
+      "source_dataset": "etard_tf64",
+      "target_dataset": "weissbart_tf64",
+      "model": "adt",
+      "seed": 0,
+      "stage": "cross_dataset_zero_shot_eval",
+      "status": "success",
+      "checkpoint_id": "adt_epoch_2",
+      "checkpoint_local_id": "cross_dataset_source_only:adt:etard_tf64:seed0:best_epoch_2"
+    },
+    {
+      "job_key": "etard_tf64->weissbart_tf64:adt:seed0:pooled10_target_calibration",
+      "source_dataset": "etard_tf64",
+      "target_dataset": "weissbart_tf64",
+      "model": "adt",
+      "seed": 0,
+      "stage": "pooled10_target_calibration",
+      "status": "success",
+      "checkpoint_id": "adt_pooled10_epoch_4",
+      "checkpoint_local_id": "cross_dataset_pooled10_target_calibration:adt:etard_tf64->weissbart_tf64:seed0:best_epoch_4"
+    }
+  ]
+}

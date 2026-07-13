@@ -1,0 +1,38 @@
+{
+  "checkpoints": [
+    {
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": null,
+      "model": "eegnet",
+      "seed": 0,
+      "stage": "source_zero_shot",
+      "source_job_key": "weissbart_tf64:eegnet:seed0:source_zero_shot",
+      "checkpoint_local_id": "cross_dataset_source_only:eegnet:weissbart_tf64:seed0:best_epoch_0",
+      "checkpoint_relative_path": "local_checkpoints/cross_dataset/source_only/eegnet/weissbart_tf64/seed0/best_epoch_0.pt",
+      "checkpoint_artifact_status": "local_only_not_committed",
+      "best_epoch": 0,
+      "best_val_score": 0.10910212457308481,
+      "source_train_subjects": [
+        "P00",
+        "P09",
+        "P02",
+        "P07",
+        "P11",
+        "P06",
+        "P04",
+        "P03"
+      ],
+      "source_val_subjects": [
+        "P12",
+        "P10"
+      ],
+      "target_test_subjects": [],
+      "protocol": "gate0_gate2_cross_dataset_transfer_v1::source_zero_shot",
+      "config_path": "configs/benchmark/gate0_gate2_cross_dataset_transfer_v1_smoke.json",
+      "source_split_manifest_path": "splits/subject_holdout_fixed_split_v1/weissbart_tf64.json",
+      "target_split_manifest_path": null,
+      "branch": "fix/ar-20260625-161300-a43831b-cross-dataset-transfer-v1",
+      "commit_sha": "91ad558c0ca2c292848604daf1a0e0ba8a8fd35a"
+    }
+  ]
+}

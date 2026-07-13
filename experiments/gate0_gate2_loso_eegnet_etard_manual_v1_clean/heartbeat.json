@@ -1,0 +1,10 @@
+{
+  "dataset": "etard_tf64",
+  "subject": "P15",
+  "model": "eegnet",
+  "seed": 0,
+  "phase": "val",
+  "epoch": 20,
+  "batch": 2500,
+  "timestamp": "2026-07-06 18:33:47"
+}

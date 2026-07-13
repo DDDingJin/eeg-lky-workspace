@@ -1,0 +1,25 @@
+{
+  "protocol": "gate0_gate2_cross_dataset_transfer_v1",
+  "artifact_scope": "cross_dataset_transfer_zero_shot_plus_pooled10_target_calibration_v1",
+  "base_branch": "fix/ar-20260625-161300-a43831b-fixed-split-pooled10-modelset-v1",
+  "base_commit": "ac847dd508a9c63ae546049f6a62b82fc34afc38",
+  "current_branch": "fix/ar-20260625-161300-a43831b-cross-dataset-transfer-v1",
+  "config_path": "configs/benchmark/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke.json",
+  "commit_sha": "291ce877957195f90f31cb6cc3360e71a32c0d31",
+  "artifacts": {
+    "transfer_plan": "experiments/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke/transfer_plan.json",
+    "calibration_plan": "experiments/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke/calibration_plan.json",
+    "subject_metrics": "experiments/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke/subject_metrics.csv",
+    "recording_metrics": "experiments/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke/recording_metrics.csv",
+    "dataset_metrics": "experiments/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke/dataset_metrics.csv",
+    "comparison": "experiments/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke/cross_dataset_zero_shot_vs_calibrated_comparison.csv",
+    "checkpoint_manifest": "experiments/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke/checkpoint_manifest.json",
+    "model_run_entries": "experiments/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke/model_run_entries.json",
+    "completed_jobs": "experiments/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke/completed_jobs.json",
+    "run_state": "experiments/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke/run_state.json",
+    "failure_report": "experiments/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke/failure_report.json",
+    "schema_validation_report": "experiments/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke/schema_validation_report.json",
+    "transfer_or_leakage_summary": "experiments/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke/transfer_or_leakage_summary.md",
+    "logs": "experiments/gate0_gate2_cross_dataset_transfer_v1_pooled10_smoke/logs"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "protocol": "gate0_gate2_cross_dataset_transfer_v1",
+  "artifact_scope": "cross_dataset_transfer_zero_shot_plus_pooled10_target_calibration_v1",
+  "base_branch": "fix/ar-20260625-161300-a43831b-fixed-split-pooled10-modelset-v1",
+  "base_commit": "ac847dd508a9c63ae546049f6a62b82fc34afc38",
+  "current_branch": "fix/ar-20260625-161300-a43831b-cross-dataset-transfer-v1",
+  "config_fingerprint_version": 1,
+  "scorer_id": "benchmark.scoring.pearson_on_valid",
+  "aggregation_rule": "for each source_dataset/target_dataset/model/seed pair: train zero-shot checkpoint on source train subjects with source val subjects for checkpoint selection, evaluate on target fixed test subjects, then optionally fine-tune from the same checkpoint using pooled 10min target calibration from target original train/val splits while preserving target original test split for final evaluation",
+  "output_dir": "experiments/gate0_gate2_cross_dataset_transfer_v1_smoke",
+  "seed": 0,
+  "datasets": [
+    {
+      "dataset_id": "weissbart_tf64",
+      "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+      "sampling_rate": 64,
+      "split_manifest_path": "splits/subject_holdout_fixed_split_v1/weissbart_tf64.json"
+    },
+    {
+      "dataset_id": "etard_tf64",
+      "dataset_locator": "data/processed/reference_splits/etard_tf64",
+      "sampling_rate": 64,
+      "split_manifest_path": "splits/subject_holdout_fixed_split_v1/etard_tf64.json"
+    }
+  ],
+  "transfer_pairs": [
+    {
+      "source_dataset": "weissbart_tf64",
+      "target_dataset": "etard_tf64"
+    },
+    {
+      "source_dataset": "etard_tf64",
+      "target_dataset": "weissbart_tf64"
+    }
+  ],
+  "models": [
+    "eegnet"
+  ],
+  "dataloader": {
+    "batch_size": 256,
+    "eval_batch_size": 1024,
+    "shuffle_train": true,
+    "num_workers": 0,
+    "persistent_workers": false
+  },
+  "target_calibration": {
+    "calibration_budget_seconds": 600,
+    "train_budget_seconds": 480,
+    "val_budget_seconds": 120,
+    "selection_rule": "for each target fixed test subject, sort recording_ids ascending within target original train split and val split separately, take full recordings in order until cumulative duration reaches or exceeds 8min train and 2min val, then pool across all target fixed test subjects; target original test split remains final test only",
+    "calibration_window_size_for_audit": 50
+  },
+  "eegnet": {
+    "family": "eegnet_family",
+    "implementation_file": "src/repro/mldecoders/models.py::EEGNetRegressor",
+    "window_size": 50,
+    "target_index": "last",
+    "temporal_filters": 8,
+    "depth_multiplier": 2,
+    "separable_filters": 16,
+    "dropout_rate": 0.25,
+    "batch_size": 256,
+    "max_epochs": 1,
+    "early_stopping_patience": 1,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "fine_tune_learning_rate": 0.0001
+  }
+}

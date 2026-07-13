@@ -1,0 +1,2 @@
+dataset,model,task,protocol,seed,subject_id,metric_name,metric_value,num_recordings,checkpoint_id,artifact_scope
+weissbart_tf64,eegnet,reconstruction,gate0_gate2_loso_checkpoint_saving_real_closure_v1,0,P01,mean_recording_pearson_r,0.07957069452053424,15,eegnet_epoch_18,subject_independent_loso_checkpoint_saving_real_closure_v1

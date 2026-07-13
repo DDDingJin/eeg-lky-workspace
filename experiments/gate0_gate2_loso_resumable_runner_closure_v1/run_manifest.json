@@ -1,0 +1,42 @@
+{
+  "protocol": "gate0_gate2_loso_resumable_runner_closure_v1",
+  "artifact_scope": "subject_independent_loso_resumable_runner_closure_v1",
+  "base_branch": "fix/ar-20260625-161300-a43831b-loso-loader-engineering-closure-v1",
+  "base_commit": "f0dd2ae5db7eea19ee280c548c6b6645e638f0d3",
+  "current_branch": "fix/ar-20260625-161300-a43831b-loso-resumable-runner-closure-v1",
+  "seed": 0,
+  "models": [
+    "eegnet",
+    "fcnn",
+    "adt"
+  ],
+  "datasets": {
+    "weissbart_tf64": [
+      "P00"
+    ]
+  },
+  "dataloader": {
+    "batch_size": 256,
+    "eval_batch_size": 1024,
+    "shuffle_train": true,
+    "num_workers": 0,
+    "persistent_workers": false
+  },
+  "ridge_reference_filter_rule": "dataset == active dataset AND subject_id in active heldout subjects AND model == ridge AND seed == active seed",
+  "artifacts": {
+    "run_state": "experiments/gate0_gate2_loso_resumable_runner_closure_v1/run_state.json",
+    "heartbeat": "experiments/gate0_gate2_loso_resumable_runner_closure_v1/heartbeat.json",
+    "completed_jobs": "experiments/gate0_gate2_loso_resumable_runner_closure_v1/completed_jobs.json",
+    "failure_report": "experiments/gate0_gate2_loso_resumable_runner_closure_v1/failure_report.json",
+    "schema_validation_report": "experiments/gate0_gate2_loso_resumable_runner_closure_v1/schema_validation_report.json",
+    "subject_metrics": "experiments/gate0_gate2_loso_resumable_runner_closure_v1/subject_metrics.csv",
+    "recording_metrics": "experiments/gate0_gate2_loso_resumable_runner_closure_v1/recording_metrics.csv",
+    "leakage_summary": "experiments/gate0_gate2_loso_resumable_runner_closure_v1/leakage_summary.md",
+    "model_run_entries": "experiments/gate0_gate2_loso_resumable_runner_closure_v1/model_run_entries.json",
+    "memory_runtime_summary_csv": "experiments/gate0_gate2_loso_resumable_runner_closure_v1/memory_runtime_summary.csv",
+    "memory_runtime_summary_md": "experiments/gate0_gate2_loso_resumable_runner_closure_v1/memory_runtime_summary.md",
+    "result_summary": "experiments/gate0_gate2_loso_resumable_runner_closure_v1/result_summary.md",
+    "incremental_comparison": "experiments/gate0_gate2_loso_resumable_runner_closure_v1/incremental_comparison.md",
+    "logs": "experiments/gate0_gate2_loso_resumable_runner_closure_v1/logs"
+  }
+}

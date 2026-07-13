@@ -1,0 +1,11 @@
+{
+  "dataset": "weissbart_tf64",
+  "subject": "P12",
+  "model": "eegnet",
+  "seed": 0,
+  "phase": "completed_all_jobs",
+  "epoch": 31,
+  "batch": 0,
+  "timestamp": "2026-07-05 19:42:26",
+  "status": "all_jobs_completed"
+}

@@ -1,0 +1,32 @@
+{
+  "completed_jobs": [
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "eegnet",
+      "seed": 0,
+      "status": "success"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P00",
+      "model": "ridge",
+      "seed": 0,
+      "status": "reused_reference"
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "subject_id": "P01",
+      "model": "ridge",
+      "seed": 0,
+      "status": "reused_reference"
+    }
+  ]
+}

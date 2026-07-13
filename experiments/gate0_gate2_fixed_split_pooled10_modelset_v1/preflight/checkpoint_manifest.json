@@ -1,0 +1,76 @@
+{
+  "checkpoints": [
+    {
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "shared_reuse_checkpoint_path": "E:\\decode\\_fix_loso_resumable_runner_closure_v1\\local_checkpoints\\subject_holdout\\eegnet\\weissbart_tf64\\subject_holdout_fixed_split_v1\\seed0\\best_epoch_5.pt",
+      "shared_reuse_checkpoint_exists": true,
+      "zero_shot_checkpoint_path_pattern": "local_checkpoints/subject_holdout/eegnet/weissbart_tf64/subject_holdout_fixed_split_v1/seed0/best_epoch_PENDING.pt",
+      "pooled10_checkpoint_path_pattern": "local_checkpoints/finetune/subject_holdout_pooled10/eegnet/weissbart_tf64/subject_holdout_fixed_split_v1/seed0/best_epoch_PENDING.pt",
+      "torch_load_smoke": true,
+      "strict_load_state_dict_smoke": true
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "shared_reuse_checkpoint_path": null,
+      "shared_reuse_checkpoint_exists": false,
+      "zero_shot_checkpoint_path_pattern": "local_checkpoints/subject_holdout/fcnn/weissbart_tf64/subject_holdout_fixed_split_v1/seed0/best_epoch_PENDING.pt",
+      "pooled10_checkpoint_path_pattern": "local_checkpoints/finetune/subject_holdout_pooled10/fcnn/weissbart_tf64/subject_holdout_fixed_split_v1/seed0/best_epoch_PENDING.pt",
+      "torch_load_smoke": false,
+      "strict_load_state_dict_smoke": false
+    },
+    {
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "shared_reuse_checkpoint_path": null,
+      "shared_reuse_checkpoint_exists": false,
+      "zero_shot_checkpoint_path_pattern": "local_checkpoints/subject_holdout/adt/weissbart_tf64/subject_holdout_fixed_split_v1/seed0/best_epoch_PENDING.pt",
+      "pooled10_checkpoint_path_pattern": "local_checkpoints/finetune/subject_holdout_pooled10/adt/weissbart_tf64/subject_holdout_fixed_split_v1/seed0/best_epoch_PENDING.pt",
+      "torch_load_smoke": false,
+      "strict_load_state_dict_smoke": false
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "shared_reuse_checkpoint_path": null,
+      "shared_reuse_checkpoint_exists": false,
+      "zero_shot_checkpoint_path_pattern": "local_checkpoints/subject_holdout/eegnet/etard_tf64/subject_holdout_fixed_split_v1/seed0/best_epoch_PENDING.pt",
+      "pooled10_checkpoint_path_pattern": "local_checkpoints/finetune/subject_holdout_pooled10/eegnet/etard_tf64/subject_holdout_fixed_split_v1/seed0/best_epoch_PENDING.pt",
+      "torch_load_smoke": false,
+      "strict_load_state_dict_smoke": false
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "shared_reuse_checkpoint_path": null,
+      "shared_reuse_checkpoint_exists": false,
+      "zero_shot_checkpoint_path_pattern": "local_checkpoints/subject_holdout/fcnn/etard_tf64/subject_holdout_fixed_split_v1/seed0/best_epoch_PENDING.pt",
+      "pooled10_checkpoint_path_pattern": "local_checkpoints/finetune/subject_holdout_pooled10/fcnn/etard_tf64/subject_holdout_fixed_split_v1/seed0/best_epoch_PENDING.pt",
+      "torch_load_smoke": false,
+      "strict_load_state_dict_smoke": false
+    },
+    {
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "shared_reuse_checkpoint_path": null,
+      "shared_reuse_checkpoint_exists": false,
+      "zero_shot_checkpoint_path_pattern": "local_checkpoints/subject_holdout/adt/etard_tf64/subject_holdout_fixed_split_v1/seed0/best_epoch_PENDING.pt",
+      "pooled10_checkpoint_path_pattern": "local_checkpoints/finetune/subject_holdout_pooled10/adt/etard_tf64/subject_holdout_fixed_split_v1/seed0/best_epoch_PENDING.pt",
+      "torch_load_smoke": false,
+      "strict_load_state_dict_smoke": false
+    }
+  ]
+}

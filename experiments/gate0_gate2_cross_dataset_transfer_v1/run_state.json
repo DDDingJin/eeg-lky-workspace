@@ -1,0 +1,25 @@
+{
+  "phase": "completed",
+  "completed_job_keys": [
+    "etard_tf64->weissbart_tf64:adt:seed0:cross_dataset_zero_shot_eval",
+    "etard_tf64->weissbart_tf64:adt:seed0:pooled10_target_calibration",
+    "etard_tf64->weissbart_tf64:eegnet:seed0:cross_dataset_zero_shot_eval",
+    "etard_tf64->weissbart_tf64:eegnet:seed0:pooled10_target_calibration",
+    "etard_tf64->weissbart_tf64:fcnn:seed0:cross_dataset_zero_shot_eval",
+    "etard_tf64->weissbart_tf64:fcnn:seed0:pooled10_target_calibration",
+    "etard_tf64:adt:seed0:source_zero_shot",
+    "etard_tf64:eegnet:seed0:source_zero_shot",
+    "etard_tf64:fcnn:seed0:source_zero_shot",
+    "weissbart_tf64->etard_tf64:adt:seed0:cross_dataset_zero_shot_eval",
+    "weissbart_tf64->etard_tf64:adt:seed0:pooled10_target_calibration",
+    "weissbart_tf64->etard_tf64:eegnet:seed0:cross_dataset_zero_shot_eval",
+    "weissbart_tf64->etard_tf64:eegnet:seed0:pooled10_target_calibration",
+    "weissbart_tf64->etard_tf64:fcnn:seed0:cross_dataset_zero_shot_eval",
+    "weissbart_tf64->etard_tf64:fcnn:seed0:pooled10_target_calibration",
+    "weissbart_tf64:adt:seed0:source_zero_shot",
+    "weissbart_tf64:eegnet:seed0:source_zero_shot",
+    "weissbart_tf64:fcnn:seed0:source_zero_shot"
+  ],
+  "pending_jobs": [],
+  "last_update_time": "2026-07-08 22:08:16"
+}

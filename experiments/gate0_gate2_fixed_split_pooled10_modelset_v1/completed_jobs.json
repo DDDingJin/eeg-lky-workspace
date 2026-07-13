@@ -1,0 +1,142 @@
+{
+  "completed_jobs": [
+    {
+      "job_key": "weissbart_tf64:eegnet:seed0:subject_holdout_fixed_split_v1:zero_shot",
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "zero_shot",
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_5",
+      "checkpoint_local_id": "subject_holdout:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_5"
+    },
+    {
+      "job_key": "weissbart_tf64:eegnet:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+      "dataset": "weissbart_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "pooled10_finetune",
+      "status": "success",
+      "source_checkpoint_local_id": "subject_holdout:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_5",
+      "checkpoint_id": "eegnet_pooled10_epoch_31",
+      "checkpoint_local_id": "subject_holdout_pooled10_finetune:eegnet:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_31"
+    },
+    {
+      "job_key": "weissbart_tf64:fcnn:seed0:subject_holdout_fixed_split_v1:zero_shot",
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "zero_shot",
+      "status": "success",
+      "checkpoint_id": "fcnn_epoch_2",
+      "checkpoint_local_id": "subject_holdout:fcnn:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_2"
+    },
+    {
+      "job_key": "weissbart_tf64:fcnn:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+      "dataset": "weissbart_tf64",
+      "model": "fcnn",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "pooled10_finetune",
+      "status": "success",
+      "source_checkpoint_local_id": "subject_holdout:fcnn:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_2",
+      "checkpoint_id": "fcnn_pooled10_epoch_11",
+      "checkpoint_local_id": "subject_holdout_pooled10_finetune:fcnn:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_11"
+    },
+    {
+      "job_key": "weissbart_tf64:adt:seed0:subject_holdout_fixed_split_v1:zero_shot",
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "zero_shot",
+      "status": "success",
+      "checkpoint_id": "adt_epoch_2",
+      "checkpoint_local_id": "subject_holdout:adt:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_2"
+    },
+    {
+      "job_key": "weissbart_tf64:adt:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+      "dataset": "weissbart_tf64",
+      "model": "adt",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "pooled10_finetune",
+      "status": "success",
+      "source_checkpoint_local_id": "subject_holdout:adt:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_2",
+      "checkpoint_id": "adt_pooled10_epoch_1",
+      "checkpoint_local_id": "subject_holdout_pooled10_finetune:adt:weissbart_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_1"
+    },
+    {
+      "job_key": "etard_tf64:eegnet:seed0:subject_holdout_fixed_split_v1:zero_shot",
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "zero_shot",
+      "status": "success",
+      "checkpoint_id": "eegnet_epoch_8",
+      "checkpoint_local_id": "subject_holdout:eegnet:etard_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_8"
+    },
+    {
+      "job_key": "etard_tf64:eegnet:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+      "dataset": "etard_tf64",
+      "model": "eegnet",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "pooled10_finetune",
+      "status": "success",
+      "source_checkpoint_local_id": "subject_holdout:eegnet:etard_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_8",
+      "checkpoint_id": "eegnet_pooled10_epoch_48",
+      "checkpoint_local_id": "subject_holdout_pooled10_finetune:eegnet:etard_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_48"
+    },
+    {
+      "job_key": "etard_tf64:fcnn:seed0:subject_holdout_fixed_split_v1:zero_shot",
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "zero_shot",
+      "status": "success",
+      "checkpoint_id": "fcnn_epoch_6",
+      "checkpoint_local_id": "subject_holdout:fcnn:etard_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_6"
+    },
+    {
+      "job_key": "etard_tf64:fcnn:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+      "dataset": "etard_tf64",
+      "model": "fcnn",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "pooled10_finetune",
+      "status": "success",
+      "source_checkpoint_local_id": "subject_holdout:fcnn:etard_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_6",
+      "checkpoint_id": "fcnn_pooled10_epoch_9",
+      "checkpoint_local_id": "subject_holdout_pooled10_finetune:fcnn:etard_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_9"
+    },
+    {
+      "job_key": "etard_tf64:adt:seed0:subject_holdout_fixed_split_v1:zero_shot",
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "zero_shot",
+      "status": "success",
+      "checkpoint_id": "adt_epoch_7",
+      "checkpoint_local_id": "subject_holdout:adt:etard_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_7"
+    },
+    {
+      "job_key": "etard_tf64:adt:seed0:subject_holdout_fixed_split_v1:pooled10_finetune",
+      "dataset": "etard_tf64",
+      "model": "adt",
+      "seed": 0,
+      "split_id": "subject_holdout_fixed_split_v1",
+      "stage": "pooled10_finetune",
+      "status": "success",
+      "source_checkpoint_local_id": "subject_holdout:adt:etard_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_7",
+      "checkpoint_id": "adt_pooled10_epoch_10",
+      "checkpoint_local_id": "subject_holdout_pooled10_finetune:adt:etard_tf64:subject_holdout_fixed_split_v1:seed0:best_epoch_10"
+    }
+  ]
+}

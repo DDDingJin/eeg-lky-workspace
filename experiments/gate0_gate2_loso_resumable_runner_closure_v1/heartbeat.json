@@ -1,0 +1,10 @@
+{
+  "dataset": "weissbart_tf64",
+  "subject": "P00",
+  "model": "adt",
+  "seed": 0,
+  "phase": "val",
+  "epoch": 15,
+  "batch": 0,
+  "timestamp": "2026-07-04 01:45:26"
+}

@@ -1,0 +1,4 @@
+dataset,model,task,protocol,seed,subject_id,metric_name,metric_value,num_recordings,checkpoint_id,artifact_scope
+weissbart_tf64,ridge,reconstruction,gate0_gate2_loso_pilot_v1,0,P00,mean_recording_pearson_r,0.10532671568751216,15,ridge_alpha_0.001,subject_independent_loso_pilot
+weissbart_tf64,ridge,reconstruction,gate0_gate2_loso_pilot_v1,0,P01,mean_recording_pearson_r,0.044541195871889476,15,ridge_alpha_0.001,subject_independent_loso_pilot
+weissbart_tf64,ridge,reconstruction,gate0_gate2_loso_pilot_v1,0,P02,mean_recording_pearson_r,0.04856646829713734,15,ridge_alpha_0.001,subject_independent_loso_pilot

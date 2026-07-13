@@ -1,0 +1,61 @@
+{
+  "protocol": "gate0_gate2_loso_ridge_full_v1",
+  "passed": true,
+  "checks": {
+    "heldout_subject_inventory_exact": true,
+    "subject_metric_fields_consistent": true,
+    "recording_metric_fields_consistent": true,
+    "pearson_ranges_subject_metrics": true,
+    "pearson_ranges_recording_metrics": true,
+    "pearson_ranges_dataset_metrics": true,
+    "pearson_ranges_etard_condition_metrics": true,
+    "target_subject_excluded_from_train_val_selection": true,
+    "comparison_rows_complete": true
+  },
+  "details": {
+    "dataset_subjects": {
+      "weissbart_tf64": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P11",
+        "P12"
+      ],
+      "etard_tf64": [
+        "P00",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16",
+        "P17",
+        "P18",
+        "P19"
+      ]
+    },
+    "recording_rows": 867,
+    "subject_rows": 33,
+    "dataset_metric_rows": 2,
+    "etard_condition_rows": 6,
+    "comparison_rows": 33
+  }
+}

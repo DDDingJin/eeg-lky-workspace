@@ -1,0 +1,152 @@
+{
+  "getitem_calls": 51200,
+  "load_requests": 50039,
+  "recording_access_counts_top10": [
+    [
+      "train_-_P05_-_AUNP05",
+      388
+    ],
+    [
+      "train_-_P06_-_AUNP05",
+      383
+    ],
+    [
+      "train_-_P12_-_AUNP05",
+      375
+    ],
+    [
+      "train_-_P11_-_AUNP05",
+      372
+    ],
+    [
+      "train_-_P09_-_AUNP05",
+      369
+    ],
+    [
+      "train_-_P04_-_FLOP04",
+      365
+    ],
+    [
+      "train_-_P01_-_BROP02",
+      364
+    ],
+    [
+      "train_-_P07_-_FLOP04",
+      362
+    ],
+    [
+      "train_-_P10_-_AUNP05",
+      362
+    ],
+    [
+      "train_-_P03_-_FLOP04",
+      361
+    ]
+  ],
+  "recording_load_counts_top10": [
+    [
+      "train_-_P05_-_AUNP05",
+      377
+    ],
+    [
+      "train_-_P06_-_AUNP05",
+      365
+    ],
+    [
+      "train_-_P12_-_AUNP05",
+      365
+    ],
+    [
+      "train_-_P11_-_AUNP05",
+      361
+    ],
+    [
+      "train_-_P09_-_AUNP05",
+      359
+    ],
+    [
+      "train_-_P04_-_FLOP04",
+      358
+    ],
+    [
+      "train_-_P07_-_FLOP04",
+      356
+    ],
+    [
+      "train_-_P10_-_AUNP05",
+      356
+    ],
+    [
+      "train_-_P06_-_AUNP08",
+      355
+    ],
+    [
+      "train_-_P01_-_BROP02",
+      354
+    ]
+  ],
+  "recordings_loaded_more_than_once_count": 180,
+  "recordings_loaded_more_than_once_examples": [
+    [
+      "train_-_P05_-_AUNP05",
+      377
+    ],
+    [
+      "train_-_P06_-_AUNP05",
+      365
+    ],
+    [
+      "train_-_P12_-_AUNP05",
+      365
+    ],
+    [
+      "train_-_P11_-_AUNP05",
+      361
+    ],
+    [
+      "train_-_P09_-_AUNP05",
+      359
+    ],
+    [
+      "train_-_P04_-_FLOP04",
+      358
+    ],
+    [
+      "train_-_P07_-_FLOP04",
+      356
+    ],
+    [
+      "train_-_P10_-_AUNP05",
+      356
+    ],
+    [
+      "train_-_P06_-_AUNP08",
+      355
+    ],
+    [
+      "train_-_P01_-_BROP02",
+      354
+    ]
+  ],
+  "distinct_recordings_accessed": 180,
+  "distinct_recordings_loaded": 180,
+  "dataset_type": "cached_lazy",
+  "cache_hits": 1161,
+  "cache_misses": 50039,
+  "cache_hit_rate": 0.02267578125,
+  "recording_cache_size": 4,
+  "peak_cache_bytes": 13067600,
+  "elapsed_seconds": 102.76462600007653,
+  "batch_count_completed": 200,
+  "batch_shape": [
+    256,
+    64,
+    50
+  ],
+  "target_batch_shape": [
+    256
+  ],
+  "shuffle": true,
+  "num_workers": 0,
+  "batches_per_second": 1.9461949873670639
+}

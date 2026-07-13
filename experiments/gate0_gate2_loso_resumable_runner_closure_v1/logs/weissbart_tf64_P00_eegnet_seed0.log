@@ -1,0 +1,26 @@
+[2026-07-03 16:51:11] job_started
+[2026-07-03 16:51:11] preload_done train_bytes=31710380 val_bytes=3962140 train_recordings=15 val_recordings=15
+[2026-07-03 16:51:18] epoch=0 val_score=0.053293
+[2026-07-03 16:51:23] epoch=1 val_score=0.062432
+[2026-07-03 16:51:27] epoch=2 val_score=0.102741
+[2026-07-03 16:51:32] epoch=3 val_score=0.102500
+[2026-07-03 16:51:37] epoch=4 val_score=0.114395
+[2026-07-03 16:51:42] epoch=5 val_score=0.111664
+[2026-07-03 16:51:47] epoch=6 val_score=0.111855
+[2026-07-03 16:51:52] epoch=7 val_score=0.099153
+[2026-07-03 16:51:57] epoch=8 val_score=0.116203
+[2026-07-03 16:52:02] epoch=9 val_score=0.115889
+[2026-07-03 16:52:07] epoch=10 val_score=0.117555
+[2026-07-03 16:52:11] epoch=11 val_score=0.147436
+[2026-07-03 16:52:16] epoch=12 val_score=0.123633
+[2026-07-03 16:52:21] epoch=13 val_score=0.125904
+[2026-07-03 16:52:26] epoch=14 val_score=0.131997
+[2026-07-03 16:52:31] epoch=15 val_score=0.118107
+[2026-07-03 16:52:36] epoch=16 val_score=0.118291
+[2026-07-03 16:52:41] epoch=17 val_score=0.110823
+[2026-07-03 16:52:45] epoch=18 val_score=0.129461
+[2026-07-03 16:52:50] epoch=19 val_score=0.123702
+[2026-07-03 16:52:55] epoch=20 val_score=0.121681
+[2026-07-03 16:53:00] epoch=21 val_score=0.125963
+[2026-07-03 16:53:00] test_prediction_done input_shape=[990, 64, 50] prediction_shape=[990] target_shape=[990]
+[2026-07-03 16:53:00] job_completed total_seconds=109.347257

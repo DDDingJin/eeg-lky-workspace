@@ -1,0 +1,8 @@
+{
+  "status": "completed",
+  "planned_job_count": 3,
+  "completed_job_count": 3,
+  "pending_job_count": 0,
+  "failure_count": 0,
+  "last_completed_job_key": "etard_tf64:P11:elasticnet:seed0"
+}

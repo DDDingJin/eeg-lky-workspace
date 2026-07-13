@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "diagnostic_job_count": 3,
+  "completed_diagnostic_count": 3,
+  "failure_count": 0,
+  "prediction_dump_written": false,
+  "checkpoint_written": false,
+  "lag_sign_convention": "positive lag means prediction[t] is compared with target[t+lag]",
+  "lag_sweep_policy": "diagnostic only; not used for checkpoint, hyperparameter, or final score selection"
+}

@@ -1,0 +1,17 @@
+dataset,subject_id,model,seed,recording_id,metric_value,num_valid_samples,recording_length,coverage_ratio,dropped_samples_reason,checkpoint_id
+etard_tf64,P11,happyquokka,0,test_-_P11_-_cleanDutch_part_1,0.016679853169300225,640,990,0.6464646464646465,tail shorter than 10s chunk,happyquokka_epoch_6
+etard_tf64,P11,happyquokka,0,test_-_P11_-_cleanDutch_part_2,0.05278212040011084,640,1012,0.6324110671936759,tail shorter than 10s chunk,happyquokka_epoch_6
+etard_tf64,P11,happyquokka,0,test_-_P11_-_cleanDutch_part_3,-0.13989957213527088,640,1023,0.6256109481915934,tail shorter than 10s chunk,happyquokka_epoch_6
+etard_tf64,P11,happyquokka,0,test_-_P11_-_cleanDutch_part_4,0.14357685587310798,640,1019,0.6280667320902846,tail shorter than 10s chunk,happyquokka_epoch_6
+etard_tf64,P11,happyquokka,0,test_-_P11_-_hbDutch_part_1,-0.12465601153045623,640,1033,0.6195546950629235,tail shorter than 10s chunk,happyquokka_epoch_6
+etard_tf64,P11,happyquokka,0,test_-_P11_-_hbDutch_part_2,-0.020749357577669884,640,1047,0.6112702960840497,tail shorter than 10s chunk,happyquokka_epoch_6
+etard_tf64,P11,happyquokka,0,test_-_P11_-_hbDutch_part_3,0.04378688836372831,640,1066,0.600375234521576,tail shorter than 10s chunk,happyquokka_epoch_6
+etard_tf64,P11,happyquokka,0,test_-_P11_-_hbDutch_part_4,-0.0397013150432751,640,1050,0.6095238095238096,tail shorter than 10s chunk,happyquokka_epoch_6
+etard_tf64,P11,happyquokka,0,test_-_P11_-_lbDutch_part_1,-0.029116729895096113,640,1050,0.6095238095238096,tail shorter than 10s chunk,happyquokka_epoch_6
+etard_tf64,P11,happyquokka,0,test_-_P11_-_lbDutch_part_2,0.02054175842542521,640,1075,0.5953488372093023,tail shorter than 10s chunk,happyquokka_epoch_6
+etard_tf64,P11,happyquokka,0,test_-_P11_-_lbDutch_part_3,-0.02714658702714122,640,1040,0.6153846153846154,tail shorter than 10s chunk,happyquokka_epoch_6
+etard_tf64,P11,happyquokka,0,test_-_P11_-_lbDutch_part_4,0.0015955581765177648,640,1060,0.6037735849056604,tail shorter than 10s chunk,happyquokka_epoch_6
+etard_tf64,P11,happyquokka,0,test_-_P11_-_mbDutch_part_1,0.014838389161714769,640,1070,0.5981308411214953,tail shorter than 10s chunk,happyquokka_epoch_6
+etard_tf64,P11,happyquokka,0,test_-_P11_-_mbDutch_part_2,0.09300704787635704,640,1030,0.6213592233009708,tail shorter than 10s chunk,happyquokka_epoch_6
+etard_tf64,P11,happyquokka,0,test_-_P11_-_mbDutch_part_3,0.008567049146216888,640,1044,0.6130268199233716,tail shorter than 10s chunk,happyquokka_epoch_6
+etard_tf64,P11,happyquokka,0,test_-_P11_-_mbDutch_part_4,-0.017266781954562705,640,1049,0.6101048617731173,tail shorter than 10s chunk,happyquokka_epoch_6

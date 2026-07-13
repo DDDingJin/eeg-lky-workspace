@@ -1,0 +1,75 @@
+{
+  "protocol": "gate0_gate2_within_dataset_fixed_holdout_modelset_v1",
+  "artifact_scope": "within_dataset_fixed_subject_holdout_modelset_v1",
+  "seed": 0,
+  "output_root": "experiments/gate0_gate2_within_dataset_fixed_holdout_modelset_v1",
+  "smoke_output_dir": "experiments/gate0_gate2_within_dataset_fixed_holdout_modelset_v1_smoke",
+  "zero_shot_output_dir": "experiments/gate0_gate2_within_dataset_fixed_holdout_modelset_v1_zero_shot",
+  "checkpoint_dir": "local_checkpoints/within_dataset_fixed_holdout_modelset_v1",
+  "split_id": "subject_holdout_fixed_split_v1",
+  "datasets": {
+    "weissbart_tf64": {
+      "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+      "sampling_rate": 64,
+      "split_manifest_path": "splits/subject_holdout_fixed_split_v1/weissbart_tf64.json"
+    },
+    "etard_tf64": {
+      "dataset_locator": "data/processed/reference_splits/etard_tf64",
+      "sampling_rate": 64,
+      "split_manifest_path": "splits/subject_holdout_fixed_split_v1/etard_tf64.json"
+    }
+  },
+  "models": [
+    "linear",
+    "ridge",
+    "lasso",
+    "elasticnet",
+    "cca",
+    "fcnn",
+    "cnn",
+    "eegnet",
+    "adt",
+    "vlaai",
+    "happyquokka"
+  ],
+  "excluded_models": {
+    "dnn": "functional_alias_of=fcnn; retained only in prior implementation-equivalence audits, not in main 11-method roster"
+  },
+  "linear_family_zero_shot_policy": {
+    "models": [
+      "linear",
+      "ridge",
+      "lasso",
+      "elasticnet",
+      "cca"
+    ],
+    "status": "formal_zero_shot_deferred_pending_validation_fix_scope_confirmation",
+    "smoke_adapter_check": "required"
+  },
+  "contracts": {
+    "linear": {"input_contract": "lagged EEG matrix, lags 0..50, train-only normalization policy pending linear validation fix", "checkpoint_selection": "validation Pearson"},
+    "ridge": {"input_contract": "lagged EEG matrix, lags 0..50, train-only normalization policy pending linear validation fix", "checkpoint_selection": "validation Pearson"},
+    "lasso": {"input_contract": "lagged EEG matrix, lags 0..50, train-only normalization policy pending linear validation fix", "checkpoint_selection": "validation Pearson"},
+    "elasticnet": {"input_contract": "lagged EEG matrix, lags 0..50, train-only normalization policy pending linear validation fix", "checkpoint_selection": "validation Pearson"},
+    "cca": {"input_contract": "lagged EEG matrix, lags 0..50, CCA x/y scalers fit on train subjects only", "checkpoint_selection": "validation reconstruction correlation"},
+    "fcnn": {"input_contract": "50-sample EEG window, target_index=last", "checkpoint_selection": "best validation Pearson checkpoint"},
+    "cnn": {"input_contract": "50-sample EEG window, target_index=last", "checkpoint_selection": "best validation Pearson checkpoint"},
+    "eegnet": {"input_contract": "50-sample EEG window, target_index=last", "checkpoint_selection": "best validation Pearson checkpoint"},
+    "adt": {"input_contract": "320-sample EEG window, hop_length=64", "checkpoint_selection": "best validation checkpoint"},
+    "vlaai": {"input_contract": "50-sample EEG window, target_index=last", "checkpoint_selection": "best validation Pearson checkpoint"},
+    "happyquokka": {"input_contract": "10s EEG chunk at 64 Hz, g_con=false, no true envelope context input", "checkpoint_selection": "best validation Pearson checkpoint"}
+  },
+  "forbidden_outputs": [
+    "raw_data",
+    "prediction_dump",
+    "checkpoint_in_git",
+    "model_weights_in_git",
+    ".pt",
+    ".pth",
+    ".npy",
+    ".npz",
+    ".h5",
+    ".mat",
+    "__pycache__"
+  ]
+}

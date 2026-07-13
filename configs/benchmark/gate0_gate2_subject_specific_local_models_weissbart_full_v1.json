@@ -1,0 +1,81 @@
+{
+  "protocol": "gate0_gate2_subject_specific_local_models_weissbart_full_v1",
+  "artifact_scope": "subject_specific_local_models_weissbart_full",
+  "seed": 0,
+  "output_dir": "experiments/gate0_gate2_subject_specific_local_models_weissbart_full_v1",
+  "dataset": {
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "sampling_rate": 64
+  },
+  "fit_budget": {
+    "purpose": "budgeted linear-family baseline for local candidate expansion while preserving full test evaluation",
+    "max_fit_samples_per_split": 12000
+  },
+  "models": [
+    "linear",
+    "lasso",
+    "elasticnet",
+    "vlaai",
+    "happyquokka"
+  ],
+  "linear": {
+    "architecture_id": "lagged_linear_ols",
+    "selection_rule": "no regularization; fit on subject train split and record validation Pearson as auxiliary metadata",
+    "start_lag": 0,
+    "end_lag": 50
+  },
+  "lasso": {
+    "architecture_id": "lagged_lasso",
+    "selection_rule": "choose alpha by validation Pearson on subject val split",
+    "start_lag": 0,
+    "end_lag": 50,
+    "alphas": [
+      0.001,
+      0.01,
+      0.1
+    ],
+    "max_iter": 5000
+  },
+  "elasticnet": {
+    "architecture_id": "lagged_elasticnet",
+    "selection_rule": "choose alpha and l1_ratio by validation Pearson on subject val split",
+    "start_lag": 0,
+    "end_lag": 50,
+    "alphas": [
+      0.001,
+      0.01,
+      0.1
+    ],
+    "l1_ratios": [
+      0.2,
+      0.5,
+      0.8
+    ],
+    "max_iter": 5000
+  },
+  "vlaai": {
+    "architecture_id": "vlaai_exact_official_regressor",
+    "implementation_file": "src/repro/mldecoders/models.py::VLAAIExactOfficialRegressor",
+    "window_size": 50,
+    "target_index": "last",
+    "batch_size": 64,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001
+  },
+  "happyquokka": {
+    "architecture_id": "happyquokka_subject_specific_full_eval",
+    "implementation_file": "src/repro/happyquokka_reference.py + external/upstream/HappyQuokka_system_for_EEG_Challenge",
+    "win_len_seconds": 10,
+    "sample_rate": 64,
+    "batch_size": 4,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.0005,
+    "dropout": 0.3,
+    "lamda": 0.2,
+    "g_con": false
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "checks": {
+    "completed_job_count_expected": true,
+    "failure_report_empty": true,
+    "subject_metrics_one_row_per_completed_job": true,
+    "subject_metric_keys_unique": true,
+    "dataset_metrics_one_row_per_dataset_model_seed": true,
+    "dataset_metric_keys_unique": true,
+    "dataset_metrics_subject_counts_match": true,
+    "dataset_metrics_expected_subject_count": true,
+    "recording_metrics_cover_completed_jobs": true,
+    "recording_metric_rows_present": true
+  },
+  "completed_job_count": 240,
+  "pending_job_count": 0,
+  "failure_count": 0,
+  "expected_job_count": 240,
+  "subject_metric_rows": 240,
+  "dataset_metric_rows": 12,
+  "recording_metric_rows": 8064
+}

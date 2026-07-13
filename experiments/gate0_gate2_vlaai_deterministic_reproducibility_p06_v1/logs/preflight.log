@@ -1,0 +1,8 @@
+[STARTUP] config=configs\benchmark\gate0_gate2_vlaai_deterministic_reproducibility_p06_v1.json
+[STARTUP] output_dir=experiments/gate0_gate2_vlaai_deterministic_reproducibility_p06_v1 device=cuda
+[DRY RUN] planned_manual_repeats=2
+[DRY RUN] execution=weissbart_tf64:P06:vlaai:seed0 repeat=1
+[DRY RUN] execution=weissbart_tf64:P06:vlaai:seed0 repeat=2
+[DRY RUN] no_training_executed=true
+[SMOKE] passed=true forward_backward_optimizer_step=true
+[POLICY] no checkpoint, prediction dump, raw data, or model weights written

@@ -1,0 +1,3 @@
+subject_id,model,family,metric_value,reference_source,checkpoint_id
+P00,vlaai,local_full_eval,0.08163938835281748,experiments/gate0_gate2_vlaai_happyquokka_training_budget_p00_v1/subject_metrics.csv,vlaai_epoch_2
+P00,happyquokka,local_full_eval,0.08569685795111738,experiments/gate0_gate2_vlaai_happyquokka_training_budget_p00_v1/subject_metrics.csv,happyquokka_epoch_25

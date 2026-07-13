@@ -1,0 +1,11 @@
+job_key,stage,dataset,model,seed,split_id,train_subject_count,val_subject_count,test_subject_count,status
+weissbart_tf64:linear:seed0:stage=smoke,smoke,weissbart_tf64,linear,0,subject_holdout_fixed_split_v1,8,2,3,pending
+weissbart_tf64:ridge:seed0:stage=smoke,smoke,weissbart_tf64,ridge,0,subject_holdout_fixed_split_v1,8,2,3,pending
+weissbart_tf64:lasso:seed0:stage=smoke,smoke,weissbart_tf64,lasso,0,subject_holdout_fixed_split_v1,8,2,3,pending
+weissbart_tf64:elasticnet:seed0:stage=smoke,smoke,weissbart_tf64,elasticnet,0,subject_holdout_fixed_split_v1,8,2,3,pending
+weissbart_tf64:cca:seed0:stage=smoke,smoke,weissbart_tf64,cca,0,subject_holdout_fixed_split_v1,8,2,3,pending
+etard_tf64:linear:seed0:stage=smoke,smoke,etard_tf64,linear,0,subject_holdout_fixed_split_v1,12,4,4,pending
+etard_tf64:ridge:seed0:stage=smoke,smoke,etard_tf64,ridge,0,subject_holdout_fixed_split_v1,12,4,4,pending
+etard_tf64:lasso:seed0:stage=smoke,smoke,etard_tf64,lasso,0,subject_holdout_fixed_split_v1,12,4,4,pending
+etard_tf64:elasticnet:seed0:stage=smoke,smoke,etard_tf64,elasticnet,0,subject_holdout_fixed_split_v1,12,4,4,pending
+etard_tf64:cca:seed0:stage=smoke,smoke,etard_tf64,cca,0,subject_holdout_fixed_split_v1,12,4,4,pending

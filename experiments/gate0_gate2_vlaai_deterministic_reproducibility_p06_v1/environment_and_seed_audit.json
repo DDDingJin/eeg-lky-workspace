@@ -1,0 +1,19 @@
+{
+  "config_sha256": "bc4edf0fd143e7a027bd6c15d9c40bc631289f4bb163832459e647254918a43d",
+  "runner_source_sha256": "1a5974f285639dd246244b1ff06f8816730c6874f53e0073007fa37a72438394",
+  "python_version": "3.10.20",
+  "python_executable": "F:\\miniconda\\envs\\decode-torch\\python.exe",
+  "torch_version": "2.11.0+cu128",
+  "cuda_version": "12.8",
+  "cudnn_version": 91900,
+  "device": "cuda",
+  "cuda_available": true,
+  "cuda_device_name": "NVIDIA GeForce RTX 5060 Ti",
+  "deterministic_settings": {
+    "required_CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "actual_CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "torch_use_deterministic_algorithms": "enabled during smoke/repeats",
+    "warn_only": false,
+    "num_workers": 0
+  }
+}

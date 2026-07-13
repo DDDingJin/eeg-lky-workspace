@@ -1,0 +1,35 @@
+{
+  "protocol": "gate0_gate2_vlaai_deterministic_reproducibility_p06_v1",
+  "artifact_scope": "vlaai_deterministic_reproducibility_p06",
+  "output_dir": "experiments/gate0_gate2_vlaai_deterministic_reproducibility_p06_v1",
+  "source_config": "configs/benchmark/gate0_gate2_subject_specific_local_models_weissbart_full_v1.json",
+  "dataset": {
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "sampling_rate": 64
+  },
+  "subject_id": "P06",
+  "model": "vlaai",
+  "seed": 0,
+  "deterministic_mode": {
+    "python_random_seed": true,
+    "numpy_seed": true,
+    "torch_manual_seed": true,
+    "torch_cuda_manual_seed_all": true,
+    "dataloader_torch_generator_seed": true,
+    "num_workers": 0,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "torch_use_deterministic_algorithms": true,
+    "warn_only": false,
+    "requires_cublas_workspace_config_before_python": ":4096:8"
+  },
+  "manual_repeat_count": 2,
+  "forbidden_outputs": [
+    "checkpoint",
+    "model_weights",
+    "prediction_dump",
+    "raw_data",
+    "local_checkpoints"
+  ]
+}

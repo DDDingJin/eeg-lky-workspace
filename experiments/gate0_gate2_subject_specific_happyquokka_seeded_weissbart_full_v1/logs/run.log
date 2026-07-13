@@ -1,0 +1,24 @@
+job_start weissbart_tf64:P01:happyquokka:seed0
+job_completed weissbart_tf64:P01:happyquokka:seed0 metric=0.11985516571673505
+job_start weissbart_tf64:P02:happyquokka:seed0
+job_completed weissbart_tf64:P02:happyquokka:seed0 metric=0.08948923630210734
+job_start weissbart_tf64:P03:happyquokka:seed0
+job_completed weissbart_tf64:P03:happyquokka:seed0 metric=0.09016431516507921
+job_start weissbart_tf64:P04:happyquokka:seed0
+job_completed weissbart_tf64:P04:happyquokka:seed0 metric=0.06618615447026523
+job_start weissbart_tf64:P05:happyquokka:seed0
+job_completed weissbart_tf64:P05:happyquokka:seed0 metric=0.17538350771711173
+job_start weissbart_tf64:P06:happyquokka:seed0
+job_completed weissbart_tf64:P06:happyquokka:seed0 metric=0.010693212790145965
+job_start weissbart_tf64:P07:happyquokka:seed0
+job_completed weissbart_tf64:P07:happyquokka:seed0 metric=0.14078891437872484
+job_start weissbart_tf64:P08:happyquokka:seed0
+job_completed weissbart_tf64:P08:happyquokka:seed0 metric=0.08780414224816877
+job_start weissbart_tf64:P09:happyquokka:seed0
+job_completed weissbart_tf64:P09:happyquokka:seed0 metric=0.19395309012394638
+job_start weissbart_tf64:P10:happyquokka:seed0
+job_completed weissbart_tf64:P10:happyquokka:seed0 metric=0.08068507484370747
+job_start weissbart_tf64:P11:happyquokka:seed0
+job_completed weissbart_tf64:P11:happyquokka:seed0 metric=0.19741273404829585
+job_start weissbart_tf64:P12:happyquokka:seed0
+job_completed weissbart_tf64:P12:happyquokka:seed0 metric=0.2142479501669975

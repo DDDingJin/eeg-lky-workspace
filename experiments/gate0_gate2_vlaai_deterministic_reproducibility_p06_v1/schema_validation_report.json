@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "checks": {
+    "subject_is_p06": true,
+    "dataset_is_weissbart_tf64": true,
+    "model_is_vlaai": true,
+    "seed_is_0": true,
+    "independent_output_dir": true,
+    "no_checkpoint_written": true,
+    "no_prediction_dump_written": true,
+    "no_raw_data_written": true
+  },
+  "manual_repeat_policy": "not run by preflight; user must run with CUBLAS_WORKSPACE_CONFIG set before Python starts",
+  "forbidden_outputs": [
+    "checkpoint",
+    "model_weights",
+    "prediction_dump",
+    "raw_data",
+    "local_checkpoints"
+  ],
+  "manual_repeats": {
+    "completed": 2,
+    "expected": 2,
+    "failure_count": 0
+  }
+}

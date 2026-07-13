@@ -1,0 +1,32 @@
+[
+  {
+    "dataset": "weissbart_tf64",
+    "subject_id": "P06",
+    "model": "vlaai",
+    "seed": 0,
+    "source_config": "configs/benchmark/gate0_gate2_subject_specific_local_models_weissbart_full_v1.json",
+    "source_result_dir": "experiments/gate0_gate2_subject_specific_local_models_weissbart_full_v1",
+    "job_key": "weissbart_tf64:P06:vlaai:seed0",
+    "status": "success"
+  },
+  {
+    "dataset": "etard_tf64",
+    "subject_id": "P11",
+    "model": "happyquokka",
+    "seed": 0,
+    "source_config": "configs/benchmark/gate0_gate2_subject_specific_modelset_etard_full_v1.json",
+    "source_result_dir": "experiments/gate0_gate2_subject_specific_modelset_etard_full_v1",
+    "job_key": "etard_tf64:P11:happyquokka:seed0",
+    "status": "success"
+  },
+  {
+    "dataset": "etard_tf64",
+    "subject_id": "P11",
+    "model": "elasticnet",
+    "seed": 0,
+    "source_config": "configs/benchmark/gate0_gate2_subject_specific_modelset_etard_full_v1.json",
+    "source_result_dir": "experiments/gate0_gate2_subject_specific_modelset_etard_full_v1",
+    "job_key": "etard_tf64:P11:elasticnet:seed0",
+    "status": "success"
+  }
+]

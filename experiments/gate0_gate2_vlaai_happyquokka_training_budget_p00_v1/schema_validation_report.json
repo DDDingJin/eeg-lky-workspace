@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "checks": {
+    "subject_metrics_match_success_models": true,
+    "recording_metrics_match_success_models": true,
+    "training_curve_models_match_success_models": true,
+    "success_models_have_training_metadata": true,
+    "every_recording_has_num_valid_samples": true,
+    "every_recording_has_coverage_ratio": true,
+    "every_model_full_eval_not_capped": true,
+    "happyquokka_marked_10s_chunk": true,
+    "failure_report_empty_or_reasoned": true
+  },
+  "success_models": [
+    "happyquokka",
+    "vlaai"
+  ],
+  "subject_metric_rows": 2,
+  "recording_metric_rows": 30,
+  "training_curve_rows": 47,
+  "failure_count": 0
+}

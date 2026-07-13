@@ -1,0 +1,4 @@
+dataset,subject_id,model,seed,split,recording_id,eeg_shape,target_shape,input_contract,shape_status
+weissbart_tf64,P06,vlaai,0,test,test_-_P06_-_AUNP01,"(1039, 64)","(1039,)",window_size=50; target_index=last,ok
+etard_tf64,P11,happyquokka,0,test,test_-_P11_-_cleanDutch_part_1,"(990, 64)","(990,)",10s_chunk; input_length=640; g_con=False,ok
+etard_tf64,P11,elasticnet,0,test,test_-_P11_-_cleanDutch_part_1,"(990, 64)","(990,)",lagged EEG matrix; start_lag=0; end_lag=50; budgeted train/val fit samples,ok

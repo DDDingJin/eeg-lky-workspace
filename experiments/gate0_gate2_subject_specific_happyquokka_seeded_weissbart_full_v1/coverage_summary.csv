@@ -1,0 +1,2 @@
+model,recording_count,coverage_ratio_min,coverage_ratio_max,num_valid_samples_min,num_valid_samples_max,model_family_contract
+happyquokka,195,0.5071315372424723,0.9090909090909091,640,640,10s_chunk

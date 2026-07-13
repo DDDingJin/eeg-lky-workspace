@@ -22,13 +22,18 @@
         "raw": false,
         "maxfiltered": false,
         "events": false,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
+      },
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
       },
       "status": "missing",
       "missing_reason": "raw; maxfiltered; events",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": false,
+      "path_complete": false,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -37,13 +42,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -52,14 +62,19 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
-      "canonicalization_status": "passed",
-      "canonical_paired_path_local_only": "E:\\decode\\data\\derived\\meg_scans_canonical_05_08hz_64hz_v1\\sub-03\\speech\\sub-03_preprocessed_audiobooks_decoding.mat"
+      "path_complete": true,
+      "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
+      "canonical_paired_path_local_only": ""
     },
     {
       "subject_id": "sub-04",
@@ -67,13 +82,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -82,13 +102,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -97,13 +122,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -112,13 +142,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -127,13 +162,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -142,13 +182,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -157,13 +202,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -172,13 +222,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -187,13 +242,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -202,13 +262,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -217,13 +282,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -232,13 +302,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -247,13 +322,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -262,13 +342,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -277,13 +362,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -292,13 +382,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -307,13 +402,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -322,13 +422,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -337,13 +442,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -352,13 +462,18 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     },
     {
@@ -367,15 +482,45 @@
         "raw": true,
         "maxfiltered": true,
         "events": true,
-        "envelope": true,
-        "mri_or_coreg": true
+        "envelope": true
       },
-      "status": "ready",
+      "optional_source_local_assets": {
+        "mri": true,
+        "coreg": true
+      },
+      "status": "path_complete",
       "missing_reason": "",
-      "canonical_05_08hz_64hz_paired_trial_preprocessing": true,
+      "path_complete": true,
       "canonicalization_status": "not_run",
+      "canonicalization_passed": false,
+      "smoke_passed": false,
       "canonical_paired_path_local_only": ""
     }
+  ],
+  "path_complete_subjects": [
+    "sub-02",
+    "sub-03",
+    "sub-04",
+    "sub-05",
+    "sub-06",
+    "sub-07",
+    "sub-08",
+    "sub-09",
+    "sub-10",
+    "sub-11",
+    "sub-12",
+    "sub-13",
+    "sub-14",
+    "sub-15",
+    "sub-16",
+    "sub-17",
+    "sub-18",
+    "sub-19",
+    "sub-20",
+    "sub-21",
+    "sub-22",
+    "sub-23",
+    "sub-24"
   ],
   "ready_subjects": [
     "sub-02",
@@ -406,7 +551,5 @@
     "sub-01"
   ],
   "invalid_subjects": [],
-  "canonicalized_subjects": [
-    "sub-03"
-  ]
+  "canonicalized_subjects": []
 }

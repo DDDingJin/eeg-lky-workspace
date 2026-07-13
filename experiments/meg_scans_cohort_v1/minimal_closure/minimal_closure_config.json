@@ -1,0 +1,14 @@
+{
+  "cohort": [
+    "sub-02",
+    "sub-03",
+    "sub-04",
+    "sub-05",
+    "sub-06"
+  ],
+  "models": [
+    "ridge",
+    "eegnet"
+  ],
+  "scope": "Ridge actual sanity plus EEGNet one-epoch CUDA smoke; no full benchmark"
+}

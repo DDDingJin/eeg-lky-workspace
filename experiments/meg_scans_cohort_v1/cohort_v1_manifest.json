@@ -9,17 +9,8 @@
     "sub-06"
   ],
   "ready_subject_count": 23,
-  "canonicalized_subjects": [
-    "sub-03"
-  ],
+  "canonicalized_subjects": [],
   "full_benchmark_conclusion": false,
   "scope_note": "pre-registered cohort data basis only; no multi-subject full 11-model benchmark was run",
-  "subject_checks": [
-    {
-      "subject_id": "sub-03",
-      "ridge_minimal_sanity": "passed",
-      "eegnet_1_epoch_smoke": "passed",
-      "source": "existing smoke_gate artifacts"
-    }
-  ]
+  "subject_checks": []
 }

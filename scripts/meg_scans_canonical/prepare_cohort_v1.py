@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 
 
@@ -35,23 +36,27 @@ def scan(dataset_root: Path, derived_root: Path, output_dir: Path) -> None:
     rows = []
     for subject in subjects:
         required = required_paths(dataset_root, subject)
-        available = {kind: all(Path(path).is_file() for path in paths) for kind, paths in required.items()}
-        missing = [kind for kind, present in available.items() if not present]
-        status = "ready" if not missing else "missing"
+        readable = {kind: all(Path(path).is_file() and os.access(path, os.R_OK) for path in paths) for kind, paths in required.items()}
+        required_sensor = {kind: readable[kind] for kind in ("raw", "maxfiltered", "events", "envelope")}
+        missing = [kind for kind, present in required_sensor.items() if not present]
+        status = "path_complete" if not missing else "missing"
         canonical_paired = derived_root / subject / "speech" / f"{subject}_preprocessed_audiobooks_decoding.mat"
         canonical_envelope = derived_root / "stimuli" / "sub-others_preprocessed_audiobook_envelopes_decoding.mat"
         rows.append(
             {
                 "subject_id": subject,
-                "required_availability": available,
+                "required_availability": required_sensor,
+                "optional_source_local_assets": {"mri": readable["mri_or_coreg"], "coreg": readable["mri_or_coreg"]},
                 "status": status,
                 "missing_reason": "; ".join(missing) if missing else "",
-                "canonical_05_08hz_64hz_paired_trial_preprocessing": bool(status == "ready"),
+                "path_complete": bool(status == "path_complete"),
                 "canonicalization_status": "passed" if canonical_paired.is_file() and canonical_envelope.is_file() else "not_run",
+                "canonicalization_passed": bool(canonical_paired.is_file() and canonical_envelope.is_file()),
+                "smoke_passed": False,
                 "canonical_paired_path_local_only": str(canonical_paired) if canonical_paired.is_file() else "",
             }
         )
-    ready = [row["subject_id"] for row in rows if row["status"] == "ready"]
+    ready = [row["subject_id"] for row in rows if row["status"] == "path_complete"]
     selected = sorted(set(ready)) if len(ready) < 5 else sorted(set(ready))[:5]
     if len(ready) >= 5 and "sub-03" not in selected:
         selected[-1] = "sub-03"
@@ -62,6 +67,7 @@ def scan(dataset_root: Path, derived_root: Path, output_dir: Path) -> None:
         "dataset_root": "local configuration only; raw paths are not committed",
         "canonical_protocol": {"meg_band_hz": [0.5, 8], "envelope_band_hz": [0.5, 8], "sampling_rate_hz": 64, "trial_duration_seconds": 120, "event_logic": "official audiobook event/latency logic", "pairing_and_cleanup": "official MEG-SCANS wrapper"},
         "subjects": rows,
+        "path_complete_subjects": ready,
         "ready_subjects": ready,
         "missing_subjects": [row["subject_id"] for row in rows if row["status"] == "missing"],
         "invalid_subjects": [row["subject_id"] for row in rows if row["status"] == "invalid"],

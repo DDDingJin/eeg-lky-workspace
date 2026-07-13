@@ -9,19 +9,23 @@
       "input_representation": "mag102 window",
       "window_size": 320,
       "hop": 64,
-      "target_mode": "sequence",
+      "target_mode": "endpoint",
+      "lag_range": null,
+      "warmup_samples": 319,
       "evaluation_valid_samples_per_120s_recording": 7680,
       "temporal_context_label": "sequence-window reconstruction"
     },
     {
       "model": "cca",
       "implementation_identity": "cca",
-      "input_representation": "mag102 lagged samples",
-      "window_size": 0,
+      "input_representation": "mag102 lagged samples (lags 0-49)",
+      "window_size": 50,
       "hop": 1,
-      "target_mode": "sequence",
+      "target_mode": "endpoint",
+      "lag_range": "0-49",
+      "warmup_samples": 49,
       "evaluation_valid_samples_per_120s_recording": 7631,
-      "temporal_context_label": "lagged linear reconstruction"
+      "temporal_context_label": "50-lag endpoint reconstruction"
     },
     {
       "model": "cnn",
@@ -30,6 +34,8 @@
       "window_size": 50,
       "hop": 1,
       "target_mode": "endpoint",
+      "lag_range": null,
+      "warmup_samples": 49,
       "evaluation_valid_samples_per_120s_recording": 7631,
       "temporal_context_label": "endpoint-window reconstruction"
     },
@@ -40,18 +46,22 @@
       "window_size": 50,
       "hop": 1,
       "target_mode": "endpoint",
+      "lag_range": null,
+      "warmup_samples": 49,
       "evaluation_valid_samples_per_120s_recording": 7631,
       "temporal_context_label": "endpoint-window reconstruction"
     },
     {
       "model": "elasticnet",
       "implementation_identity": "elasticnet",
-      "input_representation": "mag102 lagged samples",
-      "window_size": 0,
+      "input_representation": "mag102 lagged samples (lags 0-49)",
+      "window_size": 50,
       "hop": 1,
-      "target_mode": "sequence",
+      "target_mode": "endpoint",
+      "lag_range": "0-49",
+      "warmup_samples": 49,
       "evaluation_valid_samples_per_120s_recording": 7631,
-      "temporal_context_label": "lagged linear reconstruction"
+      "temporal_context_label": "50-lag endpoint reconstruction"
     },
     {
       "model": "fcnn",
@@ -60,6 +70,8 @@
       "window_size": 50,
       "hop": 1,
       "target_mode": "endpoint",
+      "lag_range": null,
+      "warmup_samples": 49,
       "evaluation_valid_samples_per_120s_recording": 7631,
       "temporal_context_label": "endpoint-window reconstruction"
     },
@@ -69,39 +81,47 @@
       "input_representation": "mag102 window",
       "window_size": 640,
       "hop": 640,
-      "target_mode": "sequence",
+      "target_mode": "endpoint",
+      "lag_range": null,
+      "warmup_samples": 639,
       "evaluation_valid_samples_per_120s_recording": 7680,
       "temporal_context_label": "sequence-window reconstruction"
     },
     {
       "model": "lasso",
       "implementation_identity": "lasso",
-      "input_representation": "mag102 lagged samples",
-      "window_size": 0,
+      "input_representation": "mag102 lagged samples (lags 0-49)",
+      "window_size": 50,
       "hop": 1,
-      "target_mode": "sequence",
+      "target_mode": "endpoint",
+      "lag_range": "0-49",
+      "warmup_samples": 49,
       "evaluation_valid_samples_per_120s_recording": 7631,
-      "temporal_context_label": "lagged linear reconstruction"
+      "temporal_context_label": "50-lag endpoint reconstruction"
     },
     {
       "model": "linear",
       "implementation_identity": "linear",
-      "input_representation": "mag102 lagged samples",
-      "window_size": 0,
+      "input_representation": "mag102 lagged samples (lags 0-49)",
+      "window_size": 50,
       "hop": 1,
-      "target_mode": "sequence",
+      "target_mode": "endpoint",
+      "lag_range": "0-49",
+      "warmup_samples": 49,
       "evaluation_valid_samples_per_120s_recording": 7631,
-      "temporal_context_label": "lagged linear reconstruction"
+      "temporal_context_label": "50-lag endpoint reconstruction"
     },
     {
       "model": "ridge",
       "implementation_identity": "ridge",
-      "input_representation": "mag102 lagged samples",
-      "window_size": 0,
+      "input_representation": "mag102 lagged samples (lags 0-49)",
+      "window_size": 50,
       "hop": 1,
-      "target_mode": "sequence",
+      "target_mode": "endpoint",
+      "lag_range": "0-49",
+      "warmup_samples": 49,
       "evaluation_valid_samples_per_120s_recording": 7631,
-      "temporal_context_label": "lagged linear reconstruction"
+      "temporal_context_label": "50-lag endpoint reconstruction"
     },
     {
       "model": "vlaai",
@@ -110,6 +130,8 @@
       "window_size": 50,
       "hop": 1,
       "target_mode": "endpoint",
+      "lag_range": null,
+      "warmup_samples": 49,
       "evaluation_valid_samples_per_120s_recording": 7631,
       "temporal_context_label": "endpoint-window reconstruction"
     }

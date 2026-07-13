@@ -1,0 +1,47 @@
+{
+  "cohort": [
+    "sub-02",
+    "sub-03",
+    "sub-04",
+    "sub-05",
+    "sub-06"
+  ],
+  "models_run": [
+    "ridge",
+    "eegnet"
+  ],
+  "full_11model_run_started": false,
+  "statuses": [
+    {
+      "subject_id": "sub-02",
+      "ridge_sanity": "failed",
+      "eegnet_smoke": "blocked_by_ridge_failure",
+      "reason": "ridge: FileNotFoundError: [Errno 2] Unable to synchronously open file (unable to open file: name = 'E:\\decode\\data\\derived\\meg_scans_cohort_canonical_05_08hz_64hz_v1\\sub-02\\speech\\sub-02_preprocessed_audiobooks_decoding.mat', errno = 2, error message = 'No such file or directory', flags = 0, o_flags = 0)"
+    },
+    {
+      "subject_id": "sub-03",
+      "ridge_sanity": "passed",
+      "eegnet_smoke": "passed",
+      "reason": "reused accepted sub-03 smoke_gate evidence"
+    },
+    {
+      "subject_id": "sub-04",
+      "ridge_sanity": "failed",
+      "eegnet_smoke": "blocked_by_ridge_failure",
+      "reason": "ridge: FileNotFoundError: [Errno 2] Unable to synchronously open file (unable to open file: name = 'E:\\decode\\data\\derived\\meg_scans_cohort_canonical_05_08hz_64hz_v1\\sub-04\\speech\\sub-04_preprocessed_audiobooks_decoding.mat', errno = 2, error message = 'No such file or directory', flags = 0, o_flags = 0)"
+    },
+    {
+      "subject_id": "sub-05",
+      "ridge_sanity": "failed",
+      "eegnet_smoke": "blocked_by_ridge_failure",
+      "reason": "ridge: FileNotFoundError: [Errno 2] Unable to synchronously open file (unable to open file: name = 'E:\\decode\\data\\derived\\meg_scans_cohort_canonical_05_08hz_64hz_v1\\sub-05\\speech\\sub-05_preprocessed_audiobooks_decoding.mat', errno = 2, error message = 'No such file or directory', flags = 0, o_flags = 0)"
+    },
+    {
+      "subject_id": "sub-06",
+      "ridge_sanity": "failed",
+      "eegnet_smoke": "blocked_by_ridge_failure",
+      "reason": "ridge: FileNotFoundError: [Errno 2] Unable to synchronously open file (unable to open file: name = 'E:\\decode\\data\\derived\\meg_scans_cohort_canonical_05_08hz_64hz_v1\\sub-06\\speech\\sub-06_preprocessed_audiobooks_decoding.mat', errno = 2, error message = 'No such file or directory', flags = 0, o_flags = 0)"
+    }
+  ],
+  "cohort_ready_for_full_11model_run": false
+}

@@ -1,0 +1,29 @@
+{
+  "subjects": [
+    {
+      "subject_id": "sub-02",
+      "canonicalization_passed": false,
+      "invalid_reason": "paired MAT not generated"
+    },
+    {
+      "subject_id": "sub-03",
+      "canonicalization_passed": false,
+      "invalid_reason": "paired MAT not generated"
+    },
+    {
+      "subject_id": "sub-04",
+      "canonicalization_passed": false,
+      "invalid_reason": "paired MAT not generated"
+    },
+    {
+      "subject_id": "sub-05",
+      "canonicalization_passed": false,
+      "invalid_reason": "paired MAT not generated"
+    },
+    {
+      "subject_id": "sub-06",
+      "canonicalization_passed": false,
+      "invalid_reason": "paired MAT not generated"
+    }
+  ]
+}

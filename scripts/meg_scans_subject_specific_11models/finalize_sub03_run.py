@@ -14,6 +14,7 @@ MODEL_WINDOWS = {
     "adt": (320, 64, "sequence-window reconstruction"),
     "happyquokka": (640, 640, "sequence-window reconstruction"),
 }
+LINEAR_MODELS = {"linear", "ridge", "lasso", "elasticnet", "cca"}
 
 
 def read(path: Path):
@@ -61,7 +62,7 @@ def finalize(output_dir: Path) -> None:
                 model,
             )
         else:
-            window, hop, label, valid, representation, identity = 0, 1, "lagged linear reconstruction", 7631, "mag102 lagged samples", model
+            window, hop, label, valid, representation, identity = 50, 1, "50-lag endpoint reconstruction", 7631, "mag102 lagged samples (lags 0-49)", model
         contract.append(
             {
                 "model": model,
@@ -69,7 +70,9 @@ def finalize(output_dir: Path) -> None:
                 "input_representation": representation,
                 "window_size": window,
                 "hop": hop,
-                "target_mode": "endpoint" if "endpoint" in label else "sequence",
+                "target_mode": "endpoint",
+                "lag_range": "0-49" if model in LINEAR_MODELS else None,
+                "warmup_samples": 49 if model in LINEAR_MODELS else window - 1,
                 "evaluation_valid_samples_per_120s_recording": valid,
                 "temporal_context_label": label,
             }

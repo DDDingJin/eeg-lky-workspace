@@ -1,0 +1,142 @@
+{
+  "protocol": "gate0_gate2_subject_holdout_finetune_v1",
+  "dataset": "weissbart_tf64",
+  "model": "eegnet",
+  "seed": 0,
+  "split_id": "subject_holdout_fixed_split_v1",
+  "selection_rule": "sort target subject recording_ids ascending within train split and val split separately, then take full recordings in order until cumulative duration meets or exceeds the respective budget; keep fixed test recordings unchanged; no result-based selection",
+  "subjects": [
+    {
+      "subject_id": "P01",
+      "selection_rule": "sort target subject recording_ids ascending within train split and val split separately, then take full recordings in order until cumulative duration meets or exceeds the respective budget; keep fixed test recordings unchanged; no result-based selection",
+      "calibration_budget_seconds": 300.0,
+      "fine_tune_train_budget_seconds": 240.0,
+      "fine_tune_val_budget_seconds": 60.0,
+      "actual_calibration_seconds": 318.09375,
+      "actual_fine_tune_train_seconds": 257.0,
+      "actual_fine_tune_val_seconds": 61.09375,
+      "calibration_train_recording_ids": [
+        "train_-_P01_-_AUNP01",
+        "train_-_P01_-_AUNP02"
+      ],
+      "calibration_val_recording_ids": [
+        "val_-_P01_-_AUNP01",
+        "val_-_P01_-_AUNP02",
+        "val_-_P01_-_AUNP03",
+        "val_-_P01_-_AUNP04"
+      ],
+      "test_recording_ids": [
+        "test_-_P01_-_AUNP01",
+        "test_-_P01_-_AUNP02",
+        "test_-_P01_-_AUNP03",
+        "test_-_P01_-_AUNP04",
+        "test_-_P01_-_AUNP05",
+        "test_-_P01_-_AUNP06",
+        "test_-_P01_-_AUNP07",
+        "test_-_P01_-_AUNP08",
+        "test_-_P01_-_BROP01",
+        "test_-_P01_-_BROP02",
+        "test_-_P01_-_BROP03",
+        "test_-_P01_-_FLOP01",
+        "test_-_P01_-_FLOP02",
+        "test_-_P01_-_FLOP03",
+        "test_-_P01_-_FLOP04"
+      ],
+      "calibration_train_recording_count": 2,
+      "calibration_val_recording_count": 4,
+      "test_recording_count": 15,
+      "train_candidates_count": 15,
+      "val_candidates_count": 15,
+      "test_candidates_count": 15,
+      "no_overlap": true
+    },
+    {
+      "subject_id": "P05",
+      "selection_rule": "sort target subject recording_ids ascending within train split and val split separately, then take full recordings in order until cumulative duration meets or exceeds the respective budget; keep fixed test recordings unchanged; no result-based selection",
+      "calibration_budget_seconds": 300.0,
+      "fine_tune_train_budget_seconds": 240.0,
+      "fine_tune_val_budget_seconds": 60.0,
+      "actual_calibration_seconds": 318.09375,
+      "actual_fine_tune_train_seconds": 257.0,
+      "actual_fine_tune_val_seconds": 61.09375,
+      "calibration_train_recording_ids": [
+        "train_-_P05_-_AUNP01",
+        "train_-_P05_-_AUNP02"
+      ],
+      "calibration_val_recording_ids": [
+        "val_-_P05_-_AUNP01",
+        "val_-_P05_-_AUNP02",
+        "val_-_P05_-_AUNP03",
+        "val_-_P05_-_AUNP04"
+      ],
+      "test_recording_ids": [
+        "test_-_P05_-_AUNP01",
+        "test_-_P05_-_AUNP02",
+        "test_-_P05_-_AUNP03",
+        "test_-_P05_-_AUNP04",
+        "test_-_P05_-_AUNP05",
+        "test_-_P05_-_AUNP06",
+        "test_-_P05_-_AUNP07",
+        "test_-_P05_-_AUNP08",
+        "test_-_P05_-_BROP01",
+        "test_-_P05_-_BROP02",
+        "test_-_P05_-_BROP03",
+        "test_-_P05_-_FLOP01",
+        "test_-_P05_-_FLOP02",
+        "test_-_P05_-_FLOP03",
+        "test_-_P05_-_FLOP04"
+      ],
+      "calibration_train_recording_count": 2,
+      "calibration_val_recording_count": 4,
+      "test_recording_count": 15,
+      "train_candidates_count": 15,
+      "val_candidates_count": 15,
+      "test_candidates_count": 15,
+      "no_overlap": true
+    },
+    {
+      "subject_id": "P08",
+      "selection_rule": "sort target subject recording_ids ascending within train split and val split separately, then take full recordings in order until cumulative duration meets or exceeds the respective budget; keep fixed test recordings unchanged; no result-based selection",
+      "calibration_budget_seconds": 300.0,
+      "fine_tune_train_budget_seconds": 240.0,
+      "fine_tune_val_budget_seconds": 60.0,
+      "actual_calibration_seconds": 318.09375,
+      "actual_fine_tune_train_seconds": 257.0,
+      "actual_fine_tune_val_seconds": 61.09375,
+      "calibration_train_recording_ids": [
+        "train_-_P08_-_AUNP01",
+        "train_-_P08_-_AUNP02"
+      ],
+      "calibration_val_recording_ids": [
+        "val_-_P08_-_AUNP01",
+        "val_-_P08_-_AUNP02",
+        "val_-_P08_-_AUNP03",
+        "val_-_P08_-_AUNP04"
+      ],
+      "test_recording_ids": [
+        "test_-_P08_-_AUNP01",
+        "test_-_P08_-_AUNP02",
+        "test_-_P08_-_AUNP03",
+        "test_-_P08_-_AUNP04",
+        "test_-_P08_-_AUNP05",
+        "test_-_P08_-_AUNP06",
+        "test_-_P08_-_AUNP07",
+        "test_-_P08_-_AUNP08",
+        "test_-_P08_-_BROP01",
+        "test_-_P08_-_BROP02",
+        "test_-_P08_-_BROP03",
+        "test_-_P08_-_FLOP01",
+        "test_-_P08_-_FLOP02",
+        "test_-_P08_-_FLOP03",
+        "test_-_P08_-_FLOP04"
+      ],
+      "calibration_train_recording_count": 2,
+      "calibration_val_recording_count": 4,
+      "test_recording_count": 15,
+      "train_candidates_count": 15,
+      "val_candidates_count": 15,
+      "test_candidates_count": 15,
+      "no_overlap": true
+    }
+  ]
+}

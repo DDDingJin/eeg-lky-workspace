@@ -1,0 +1,8 @@
+{
+  "dataset": "weissbart_tf64",
+  "model": "eegnet",
+  "seed": 0,
+  "split_id": "subject_holdout_fixed_split_v1",
+  "phase": "completed",
+  "timestamp": "2026-07-07 10:53:14"
+}

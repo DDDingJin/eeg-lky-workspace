@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "stage": "zero_shot",
+  "planned_job_count": 22,
+  "pending_execution_count": 22,
+  "expected_full_stage_job_count": 22,
+  "split_no_overlap": true,
+  "dnn_excluded_as_fcnn_alias": true,
+  "linear_zero_shot_deferred_count": 10,
+  "checkpoint_paths_local_only": true,
+  "metrics_written": false,
+  "training_started": false,
+  "device": "cuda",
+  "failures": []
+}

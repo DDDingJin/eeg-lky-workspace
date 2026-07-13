@@ -1,0 +1,9 @@
+{
+  "status": "preflight_only",
+  "stage": "zero_shot",
+  "planned_job_count": 22,
+  "completed_job_count": 0,
+  "pending_job_count": 22,
+  "training_started": false,
+  "metrics_written": false
+}

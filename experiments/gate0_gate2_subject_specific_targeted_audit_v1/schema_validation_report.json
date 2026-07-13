@@ -4,7 +4,10 @@
     "vlaai_repeat_job_declared": true,
     "hq_manifest_exists": true,
     "elasticnet_runtime_config_hydrated": true,
-    "no_training_executed": true,
+    "no_training_executed_by_closure": true,
+    "manual_vlaai_repeatability_artifact_present": true,
+    "manual_elasticnet_standardized_summary_present": true,
+    "manual_elasticnet_standardized_recording_rows_present": true,
     "no_checkpoint_written": true,
     "no_prediction_dump_written": true,
     "independent_output_dir": true
@@ -14,6 +17,12 @@
     "vlaai_p06_repeatability_two_independent_repeats",
     "elasticnet_p11_train_only_standardized_diagnostic"
   ],
+  "manual_diagnostics_completed": {
+    "vlaai_p06_repeatability_runs": 2,
+    "elasticnet_p11_standardized_diagnostic": true,
+    "elasticnet_recording_rows": 16,
+    "published_result_replaced": false
+  },
   "hq_readonly_audit_safe_to_run": true,
   "elasticnet_preflight": {
     "formal_config_normalization_claim": "linear-family StandardScaler fitted on train split only",

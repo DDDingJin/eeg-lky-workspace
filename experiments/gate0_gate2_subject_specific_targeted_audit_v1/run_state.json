@@ -1,6 +1,10 @@
 {
-  "status": "preflight_only",
-  "training_started": false,
-  "manual_jobs_completed": 0,
-  "hq_readonly_audit_available": true
+  "status": "manual_targeted_diagnostics_completed",
+  "training_started_by_closure": false,
+  "manual_jobs_completed": 2,
+  "hq_readonly_audit_available": true,
+  "vlaai_repeatability_runs": 2,
+  "elasticnet_standardized_diagnostic_completed": true,
+  "published_result_replaced": false,
+  "forbidden_outputs_written": false
 }

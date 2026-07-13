@@ -1,0 +1,16 @@
+EPOCH job=sub-03:adt:seed0 epoch=1 train_loss=-0.188153 val_r=0.252487
+EPOCH job=sub-03:adt:seed0 epoch=2 train_loss=-0.293596 val_r=0.295575
+EPOCH job=sub-03:adt:seed0 epoch=3 train_loss=-0.334072 val_r=0.314811
+EPOCH job=sub-03:adt:seed0 epoch=4 train_loss=-0.361991 val_r=0.313093
+EPOCH job=sub-03:adt:seed0 epoch=5 train_loss=-0.381411 val_r=0.330394
+EPOCH job=sub-03:adt:seed0 epoch=6 train_loss=-0.401777 val_r=0.331065
+EPOCH job=sub-03:adt:seed0 epoch=7 train_loss=-0.421775 val_r=0.324503
+EPOCH job=sub-03:adt:seed0 epoch=8 train_loss=-0.437617 val_r=0.320567
+EPOCH job=sub-03:adt:seed0 epoch=9 train_loss=-0.459667 val_r=0.321038
+EPOCH job=sub-03:adt:seed0 epoch=10 train_loss=-0.481146 val_r=0.323242
+EPOCH job=sub-03:adt:seed0 epoch=11 train_loss=-0.495643 val_r=0.309280
+EPOCH job=sub-03:adt:seed0 epoch=12 train_loss=-0.516064 val_r=0.319956
+EPOCH job=sub-03:adt:seed0 epoch=13 train_loss=-0.538389 val_r=0.309187
+EPOCH job=sub-03:adt:seed0 epoch=14 train_loss=-0.552538 val_r=0.311475
+EPOCH job=sub-03:adt:seed0 epoch=15 train_loss=-0.563858 val_r=0.305295
+EPOCH job=sub-03:adt:seed0 epoch=16 train_loss=-0.572889 val_r=0.307356

@@ -1,6 +1,4 @@
 {
-  "status": "passed",
-  "errors": [],
   "planned_jobs": [
     "sub-03:linear:seed0",
     "sub-03:ridge:seed0",
@@ -14,7 +12,7 @@
     "sub-03:vlaai:seed0",
     "sub-03:happyquokka:seed0"
   ],
-  "completed_jobs": [
+  "completed_or_failed": [
     "sub-03:adt:seed0",
     "sub-03:cca:seed0",
     "sub-03:cnn:seed0",
@@ -27,7 +25,6 @@
     "sub-03:ridge:seed0",
     "sub-03:vlaai:seed0"
   ],
-  "failed_jobs": [],
-  "ready_for_full_manual_run": true,
-  "run_status": "completed"
+  "pending_jobs": [],
+  "ready_for_full_manual_run": false
 }

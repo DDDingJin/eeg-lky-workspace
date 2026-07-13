@@ -16,8 +16,8 @@
   "subjects": [
     "sub-03"
   ],
-  "status": "preflight_complete",
-  "training_started": false,
+  "status": "completed",
+  "training_started": true,
   "primary_metric": "mean_recording_pearson_r",
   "recording_level_split": true,
   "representation": "mag102"

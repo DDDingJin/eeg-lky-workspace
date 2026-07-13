@@ -1,0 +1,70 @@
+{
+  "completed_jobs": [
+    {
+      "job_key": "sub-03:linear:seed0",
+      "subject_id": "sub-03",
+      "model": "linear",
+      "metric": 0.25102032091495063
+    },
+    {
+      "job_key": "sub-03:ridge:seed0",
+      "subject_id": "sub-03",
+      "model": "ridge",
+      "metric": 0.1495035233413295
+    },
+    {
+      "job_key": "sub-03:lasso:seed0",
+      "subject_id": "sub-03",
+      "model": "lasso",
+      "metric": 0.2042744414375921
+    },
+    {
+      "job_key": "sub-03:elasticnet:seed0",
+      "subject_id": "sub-03",
+      "model": "elasticnet",
+      "metric": 0.20849037694098188
+    },
+    {
+      "job_key": "sub-03:cca:seed0",
+      "subject_id": "sub-03",
+      "model": "cca",
+      "metric": -0.010685809976829476
+    },
+    {
+      "job_key": "sub-03:fcnn:seed0",
+      "subject_id": "sub-03",
+      "model": "fcnn",
+      "metric": 0.1686058715678526
+    },
+    {
+      "job_key": "sub-03:cnn:seed0",
+      "subject_id": "sub-03",
+      "model": "cnn",
+      "metric": 0.16633733968593611
+    },
+    {
+      "job_key": "sub-03:eegnet:seed0",
+      "subject_id": "sub-03",
+      "model": "eegnet",
+      "metric": 0.24837301037875434
+    },
+    {
+      "job_key": "sub-03:adt:seed0",
+      "subject_id": "sub-03",
+      "model": "adt",
+      "metric": 0.32794373024821033
+    },
+    {
+      "job_key": "sub-03:vlaai:seed0",
+      "subject_id": "sub-03",
+      "model": "vlaai",
+      "metric": 0.1496360977903236
+    },
+    {
+      "job_key": "sub-03:happyquokka:seed0",
+      "subject_id": "sub-03",
+      "model": "happyquokka",
+      "metric": 0.37128831529409545
+    }
+  ]
+}

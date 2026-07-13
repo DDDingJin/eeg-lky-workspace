@@ -1,0 +1,87 @@
+{
+  "protocol": "gate0_gate2_loso_nonridge_adapter_smoke_matrix_v1",
+  "artifact_scope": "subject_independent_loso_nonridge_adapter_smoke_matrix",
+  "base_branch": "fix/ar-20260625-161300-a43831b-loso-ridge-full-v1",
+  "base_commit": "f546c08ab6e7a3e073e0b35ac9324d7b9bd3a57a",
+  "blocked_branch_context": "fix/ar-20260625-161300-a43831b-loso-all-models-single-seed-v1",
+  "blocked_branch_commit": "7b79e0b4b8b86926b1dd5e275ee014dda596eea0",
+  "current_branch": "fix/ar-20260625-161300-a43831b-loso-nonridge-data-interface-smoke-v1",
+  "device": "cuda",
+  "seed": 0,
+  "dataset": {
+    "dataset_id": "weissbart_tf64",
+    "dataset_locator": "data/processed/reference_splits/weissbart_tf64",
+    "sampling_rate": 64,
+    "heldout_subject": "P00"
+  },
+  "heldout_subject": "P00",
+  "models_requested": [
+    "eegnet",
+    "fcnn",
+    "cnn",
+    "adt",
+    "dnn",
+    "cca"
+  ],
+  "job_accounting": {
+    "planned_jobs": 6,
+    "successful_jobs": 5,
+    "failed_jobs": 0,
+    "skipped_jobs": 1
+  },
+  "commands_run": [
+    "F:/miniconda/envs/decode-torch/python.exe scripts/run_gate0_gate2_loso_nonridge_data_interface_smoke_v1.py --config configs/benchmark/gate0_gate2_loso_nonridge_data_interface_smoke_v1.json --device auto"
+  ],
+  "model_run_summaries": [
+    {
+      "model": "eegnet",
+      "status": "success",
+      "best_epoch": 0,
+      "epochs_completed": 1,
+      "subject_metric": 0.02235298908320685
+    },
+    {
+      "model": "fcnn",
+      "status": "success",
+      "best_epoch": 0,
+      "epochs_completed": 1,
+      "subject_metric": 0.02035225335175803
+    },
+    {
+      "model": "cnn",
+      "status": "success",
+      "best_epoch": 0,
+      "epochs_completed": 1,
+      "subject_metric": 0.00883514714026327
+    },
+    {
+      "model": "adt",
+      "status": "success",
+      "best_epoch": 0,
+      "epochs_completed": 1,
+      "subject_metric": 0.01310487321855682
+    },
+    {
+      "model": "dnn",
+      "status": "success",
+      "best_epoch": 0,
+      "epochs_completed": 1,
+      "subject_metric": 0.02035225335175803
+    },
+    {
+      "model": "cca",
+      "status": "skipped_with_reason"
+    }
+  ],
+  "artifacts": {
+    "data_interface_audit": "experiments/gate0_gate2_loso_nonridge_data_interface_smoke_v1/data_interface_audit.md",
+    "adapter_smoke_matrix": "experiments/gate0_gate2_loso_nonridge_data_interface_smoke_v1/adapter_smoke_matrix.csv",
+    "leakage_check": "experiments/gate0_gate2_loso_nonridge_data_interface_smoke_v1/leakage_check.md",
+    "smoke_result_summary": "experiments/gate0_gate2_loso_nonridge_data_interface_smoke_v1/smoke_result_summary.md",
+    "subject_metrics": "experiments/gate0_gate2_loso_nonridge_data_interface_smoke_v1/subject_metrics.csv",
+    "recording_metrics": "experiments/gate0_gate2_loso_nonridge_data_interface_smoke_v1/recording_metrics.csv",
+    "failure_report": "experiments/gate0_gate2_loso_nonridge_data_interface_smoke_v1/failure_report.json",
+    "schema_validation_report": "experiments/gate0_gate2_loso_nonridge_data_interface_smoke_v1/schema_validation_report.json",
+    "incremental_comparison": "experiments/gate0_gate2_loso_nonridge_data_interface_smoke_v1/incremental_comparison.md"
+  }
+}

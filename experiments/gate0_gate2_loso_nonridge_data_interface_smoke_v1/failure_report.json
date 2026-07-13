@@ -1,0 +1,11 @@
+{
+  "failures": [
+    {
+      "dataset": "weissbart_tf64",
+      "model": "cca",
+      "subject_id": "P00",
+      "status": "skipped_with_reason",
+      "error": "CCA-specific scalability issue: estimated pooled LOSO lag-matrix memory exceeds guard; train_estimated_bytes=37241241600, val_estimated_bytes=4455628800, guard=16000000000"
+    }
+  ]
+}
